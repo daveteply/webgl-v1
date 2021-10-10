@@ -1,10 +1,47 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, HostListener, Inject, NgZone, OnInit } from '@angular/core';
+import { SceneManagerService } from './services/scene-manager.service';
 
 @Component({
   selector: 'wgl-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'webgl-v1';
+export class AppComponent implements OnInit {
+  constructor(
+    private sceneManager: SceneManagerService,
+    private ngZone: NgZone,
+    @Inject(DOCUMENT) private readonly documentRef: Document
+  ) {
+    this.ngZone.runOutsideAngular(() => {
+      requestAnimationFrame(() => {});
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event) {
+      this.sceneManager.updateSize(
+        event.target?.innerWidth,
+        event.target?.innerHeight
+      );
+    }
+  }
+
+  ngOnInit(): void {
+    const winWidth = this.documentRef.defaultView?.innerWidth || 1;
+    const winHeight = this.documentRef.defaultView?.innerHeight || 1;
+
+    this.sceneManager.updateSize(winWidth, winHeight);
+  }
+
+  private animate(): void {
+    // this.objectManager.UpdateShapes(this.sceneManager.scene);
+
+    this.sceneManager.RenderScene();
+
+    requestAnimationFrame(() => {
+      this.animate();
+    });
+  }
 }
