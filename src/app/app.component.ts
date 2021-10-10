@@ -1,5 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject, NgZone, OnInit } from '@angular/core';
+import * as THREE from 'three';
+import { ObjectManagerService } from './services/object-manager.service';
 import { SceneManagerService } from './services/scene-manager.service';
 
 @Component({
@@ -10,6 +12,7 @@ import { SceneManagerService } from './services/scene-manager.service';
 export class AppComponent implements OnInit {
   constructor(
     private sceneManager: SceneManagerService,
+    private objectManager: ObjectManagerService,
     private ngZone: NgZone,
     @Inject(DOCUMENT) private readonly documentRef: Document
   ) {
@@ -33,10 +36,14 @@ export class AppComponent implements OnInit {
     const winHeight = this.documentRef.defaultView?.innerHeight || 1;
 
     this.sceneManager.updateSize(winWidth, winHeight);
+
+    this.sceneManager.SetCameraPos(new THREE.Vector3(5, 5, 15));
+
+    this.animate();
   }
 
   private animate(): void {
-    // this.objectManager.UpdateShapes(this.sceneManager.scene);
+    this.objectManager.UpdateShapes(this.sceneManager.scene);
 
     this.sceneManager.RenderScene();
 
