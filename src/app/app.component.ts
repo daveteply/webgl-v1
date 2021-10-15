@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     if (event) {
-      this.sceneManager.updateSize(
+      this.sceneManager.UpdateSize(
         event.target?.innerWidth,
         event.target?.innerHeight
       );
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     const winWidth = this.documentRef.defaultView?.innerWidth || 1;
     const winHeight = this.documentRef.defaultView?.innerHeight || 1;
 
-    this.sceneManager.updateSize(winWidth, winHeight);
+    this.sceneManager.UpdateSize(winWidth, winHeight);
 
     this.sceneManager.SetCameraPos(new THREE.Vector3(5, 5, 15));
 

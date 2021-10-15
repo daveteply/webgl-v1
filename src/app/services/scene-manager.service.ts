@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
-import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { PerspectiveCamera, Raycaster, Scene, WebGLRenderer } from 'three';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,10 @@ export class SceneManagerService {
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
+  private _cursorX!: number;
+  private _cursorY!: number;
+  private _rayCaster!: Raycaster;
+
   constructor() {
     this.initScene();
   }
@@ -21,7 +25,7 @@ export class SceneManagerService {
     return this._scene;
   }
 
-  public updateSize(width: number, height: number): void {
+  public UpdateSize(width: number, height: number): void {
     this._width = width;
     this._height = height;
 
@@ -61,6 +65,23 @@ export class SceneManagerService {
 
   public RenderScene(): void {
     this._renderer?.render(this._scene, this._camera);
+
+    // check ray cast
+    this._rayCaster.setFromCamera(
+      { x: this._cursorX, y: this._cursorY },
+      this._camera
+    );
+    const intersects = this._rayCaster.intersectObjects(this._scene.children);
+    if (intersects.length) {
+      // intersects[0].object.
+      // intersects[0].object.material.color.set(0xff0000);
+      console.log(intersects);
+    }
+  }
+
+  public UpdateCursorPosition(x: number, y: number): void {
+    this._cursorX = x;
+    this._cursorY = y;
   }
 
   private initScene(): void {
@@ -80,6 +101,9 @@ export class SceneManagerService {
 
       // const helper = new THREE.DirectionalLightHelper(light, 5);
       // this._scene.add(helper);
+
+      // ray caster
+      this._rayCaster = new THREE.Raycaster();
 
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.2));
     }
