@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { PerspectiveCamera, Raycaster, Scene, WebGLRenderer } from 'three';
+import { ObjectManagerService } from './object-manager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +14,7 @@ export class SceneManagerService {
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
-  private _cursorX!: number;
-  private _cursorY!: number;
-  private _rayCaster!: Raycaster;
-
-  constructor() {
+  constructor(private objectManager: ObjectManagerService) {
     this.initScene();
   }
 
@@ -33,6 +30,7 @@ export class SceneManagerService {
 
     if (!this._camera) {
       this._camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 25);
+
       // const helper = new THREE.CameraHelper(this._camera);
       // this._scene.add(helper);
     } else {
@@ -65,23 +63,6 @@ export class SceneManagerService {
 
   public RenderScene(): void {
     this._renderer?.render(this._scene, this._camera);
-
-    // check ray cast
-    this._rayCaster.setFromCamera(
-      { x: this._cursorX, y: this._cursorY },
-      this._camera
-    );
-    const intersects = this._rayCaster.intersectObjects(this._scene.children);
-    if (intersects.length) {
-      // intersects[0].object.
-      // intersects[0].object.material.color.set(0xff0000);
-      console.log(intersects);
-    }
-  }
-
-  public UpdateCursorPosition(x: number, y: number): void {
-    this._cursorX = x;
-    this._cursorY = y;
   }
 
   private initScene(): void {
@@ -89,8 +70,8 @@ export class SceneManagerService {
       this._scene = new THREE.Scene();
 
       // axes
-      const axesHelper = new THREE.AxesHelper(5);
-      this._scene.add(axesHelper);
+      // const axesHelper = new THREE.AxesHelper(5);
+      // this._scene.add(axesHelper);
 
       // lights
       const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -98,14 +79,12 @@ export class SceneManagerService {
       light.target.position.set(0, 0, 0);
       this._scene.add(light);
       this._scene.add(light.target);
+      this._scene.add(new THREE.AmbientLight(0xffffff, 0.2));
 
       // const helper = new THREE.DirectionalLightHelper(light, 5);
       // this._scene.add(helper);
 
-      // ray caster
-      this._rayCaster = new THREE.Raycaster();
-
-      this._scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+      this.objectManager.InitShapes(this._scene);
     }
   }
 }

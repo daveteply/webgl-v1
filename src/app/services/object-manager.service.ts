@@ -6,25 +6,30 @@ import { Scene } from 'three';
   providedIn: 'root',
 })
 export class ObjectManagerService {
-  box: THREE.BoxGeometry;
-  material: THREE.MeshStandardMaterial;
-  mesh: THREE.Mesh;
+  private _box: THREE.BoxGeometry;
+  private _material: THREE.MeshStandardMaterial;
 
-  meshAdded = false;
+  private _centerMesh!: THREE.Object3D;
+  private _grid: THREE.Mesh[] = [];
 
   constructor() {
-    this.box = new THREE.BoxGeometry();
-    this.material = new THREE.MeshStandardMaterial({ color: 'purple' });
-    this.mesh = new THREE.Mesh(this.box, this.material);
+    this._box = new THREE.BoxGeometry();
+    this._material = new THREE.MeshStandardMaterial({ color: 'purple' });
   }
 
-  public UpdateShapes(scene: Scene): void {
-    if (!this.meshAdded) {
-      scene.add(this.mesh);
-      this.meshAdded = true;
-    }
+  public InitShapes(scene: Scene): void {
+    this._centerMesh = new THREE.Object3D();
 
-    this.mesh.rotateX(0.02);
-    this.mesh.rotateY(0.03);
+    this._grid.push(new THREE.Mesh(this._box, this._material));
+
+    this._centerMesh.add(...this._grid);
+
+    scene.add(this._centerMesh);
+  }
+
+  public UpdateShapes(): void {
+    this._grid[0].rotateX(0.02);
+    this._grid[0].rotateY(0.03);
+    this._grid[0].rotateZ(0.01);
   }
 }
