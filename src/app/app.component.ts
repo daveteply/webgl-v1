@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject, NgZone, OnInit } from '@angular/core';
-import * as THREE from 'three';
 import { ObjectManagerService } from './services/object-manager.service';
 import { SceneManagerService } from './services/scene-manager.service';
 
