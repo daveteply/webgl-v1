@@ -81,6 +81,8 @@ export class SceneManagerService {
       this._scene.add(light.target);
       this._scene.add(new THREE.AmbientLight(0xffffff, 0.2));
 
+      this._scene.background = new THREE.Color(0xf0f0f0f);
+
       // const helper = new THREE.DirectionalLightHelper(light, 5);
       // this._scene.add(helper);
 
