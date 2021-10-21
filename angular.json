@@ -100,7 +100,7 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-            "baseHref": "/webgl-v0/"
+            "baseHref": "/webgl-v1/"
           }
         }
       }
