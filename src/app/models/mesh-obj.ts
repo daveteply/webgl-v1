@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Mesh } from 'three';
+import { COLORS } from '../wgl-constants';
 
 export class MeshObj {
   private _tumble: THREE.Vector3;
@@ -19,7 +20,9 @@ export class MeshObj {
 
     this._boxGeo = new THREE.BoxGeometry();
     this._material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(Math.random() * 0xfffff),
+      color: new THREE.Color(
+        COLORS[Math.floor(Math.random() * COLORS.length)].hexString
+      ),
     });
 
     this._mesh = new Mesh(this._boxGeo, this._material);
