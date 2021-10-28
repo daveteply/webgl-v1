@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 
 @Injectable({
@@ -14,7 +15,10 @@ export class SceneManagerService {
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
-  constructor(private objectManager: ObjectManagerService) {
+  constructor(
+    private objectManager: ObjectManagerService,
+    private interactionManager: InteractionManagerService
+  ) {
     this.initScene();
   }
 
@@ -30,7 +34,6 @@ export class SceneManagerService {
 
     if (!this._camera) {
       this._camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 25);
-
       // const helper = new THREE.CameraHelper(this._camera);
       // this._scene.add(helper);
     } else {
@@ -41,6 +44,8 @@ export class SceneManagerService {
     if (this._renderer) {
       this._renderer.setSize(width, height);
     }
+
+    this.interactionManager.UpdateWidth(this._width);
   }
 
   public InitRenderer(canvas: HTMLCanvasElement): void {

@@ -1,13 +1,6 @@
-import { DOCUMENT } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  Inject,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { SceneManagerService } from '../services/scene-manager.service';
+import { InteractionManagerService } from '../services/interaction-manager.service';
 
 @Component({
   selector: 'wgl-canvas',
@@ -20,10 +13,11 @@ export class CanvasComponent implements AfterViewInit {
 
   constructor(
     private sceneManager: SceneManagerService,
-    @Inject(DOCUMENT) private readonly documentRef: Document
+    private interactionManager: InteractionManagerService
   ) {}
 
   ngAfterViewInit(): void {
     this.sceneManager.InitRenderer(this.canvas.nativeElement);
+    this.interactionManager.InitInteractions(this.canvas.nativeElement);
   }
 }

@@ -25,16 +25,22 @@ export class ObjectManagerService {
       meshObj.Mesh.position.x = x;
       meshObj.Mesh.position.z = z;
 
+      // DEBUG help find the 1st object
+      if (i === 0) {
+        meshObj.Mesh.scale.x *= 2;
+      }
+
       this._grid.push(meshObj);
       this._centerMesh.add(meshObj.Mesh);
     }
     scene.add(this._centerMesh);
   }
 
-  public UpdateShapes(): void {
-    this._centerMesh.rotateY(0.004);
-    this._centerMesh.rotateX(0.002);
+  public Rotate(rotationRadianAmount: number): void {
+    this._centerMesh.rotation.y = rotationRadianAmount;
+  }
 
+  public UpdateShapes(): void {
     this._grid.forEach((meshObj) => {
       meshObj.Mesh.rotateX(meshObj.Tumble.x);
       meshObj.Mesh.rotateY(meshObj.Tumble.y);
