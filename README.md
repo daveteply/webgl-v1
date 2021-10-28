@@ -2,4 +2,4 @@
 
 A simple application utilizing the Angular (v12) framework and [three.js](https://threejs.org/) to learn more about object graphs and user interactivity.
 
-See [demo](https://daveteply.github.io/webgl-v1?v=1)!
+See [demo](https://daveteply.github.io/webgl-v1?v=2)!
