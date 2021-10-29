@@ -23,12 +23,7 @@ export class InteractionManagerService {
       if (!this._panning) {
         this._panning = true;
       } else {
-        const deltaX = panEvent.center.x - this._x;
-        this._theta += MathUtils.degToRad(deltaX) * (75 / this._width) * -1;
-        if (Math.abs(this._theta) > 2 * Math.PI) {
-          this._theta = 0;
-        }
-        this.objectManager.Rotate(this._theta);
+        this.deviceCordRotation(panEvent.center.x);
       }
 
       if (panEvent.isFinal) {
@@ -50,6 +45,15 @@ export class InteractionManagerService {
 
   public UpdateWidth(width: number): void {
     this._width = width;
+  }
+
+  private deviceCordRotation(x: number): void {
+    const deltaX = x - this._x;
+    this._theta += MathUtils.degToRad(deltaX) * (75 / this._width) * -1;
+    if (Math.abs(this._theta) > 2 * Math.PI) {
+      this._theta = 0;
+    }
+    this.objectManager.Rotate(this._theta);
   }
 
   private snapToGrid(): void {
