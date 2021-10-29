@@ -18,6 +18,7 @@ export class ObjectManagerService {
 
     for (let i = 0; i < 360; i += GRID_ITERATION) {
       const rad = MathUtils.degToRad(i);
+
       const x = GRID_RADIUS * Math.cos(rad);
       const z = GRID_RADIUS * Math.sin(rad);
 

@@ -3,6 +3,7 @@ import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
 import * as THREE from 'three';
 import { MathUtils } from 'three';
+import { GRID_ITERATION, ROTATIONAL_CONSTANT } from '../wgl-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class InteractionManagerService {
   private _theta: number = 0;
   private _x: number = 0;
   private _panning: boolean = false;
+  private _gridInc: number = MathUtils.degToRad(GRID_ITERATION);
 
   constructor(private objectManager: ObjectManagerService) {}
 
@@ -49,7 +51,8 @@ export class InteractionManagerService {
 
   private deviceCordRotation(x: number): void {
     const deltaX = x - this._x;
-    this._theta += MathUtils.degToRad(deltaX) * (75 / this._width) * -1;
+    this._theta +=
+      MathUtils.degToRad(deltaX) * (ROTATIONAL_CONSTANT / this._width) * -1;
     if (Math.abs(this._theta) > 2 * Math.PI) {
       this._theta = 0;
     }
@@ -57,6 +60,18 @@ export class InteractionManagerService {
   }
 
   private snapToGrid(): void {
-    console.log(this._theta);
+    const tier = Math.ceil(this._theta / this._gridInc);
+    const next = tier * this._gridInc;
+    const prev = (tier - 1) * this._gridInc;
+    const deltaNext = Math.abs(this._theta - next);
+    const deltaPrev = Math.abs(this._theta - prev);
+
+    if (deltaNext < deltaPrev) {
+      this._theta += deltaNext;
+    } else {
+      this._theta -= deltaPrev;
+    }
+
+    this.objectManager.Rotate(this._theta);
   }
 }
