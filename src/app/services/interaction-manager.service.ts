@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
-import * as THREE from 'three';
 import { MathUtils } from 'three';
 import { GRID_ITERATION, ROTATIONAL_CONSTANT } from '../wgl-constants';
 
@@ -14,6 +13,8 @@ export class InteractionManagerService {
   private _theta: number = 0;
   private _x: number = 0;
   private _panning: boolean = false;
+
+  // establish single "step" around the radian circle
   private _gridInc: number = MathUtils.degToRad(GRID_ITERATION);
 
   constructor(private objectManager: ObjectManagerService) {}
@@ -60,12 +61,14 @@ export class InteractionManagerService {
   }
 
   private snapToGrid(): void {
+    // find where the circle has "landed"
     const tier = Math.ceil(this._theta / this._gridInc);
-    const next = tier * this._gridInc;
-    const prev = (tier - 1) * this._gridInc;
-    const deltaNext = Math.abs(this._theta - next);
-    const deltaPrev = Math.abs(this._theta - prev);
 
+    // calculate the next and previous "steps" of the snap grid
+    const deltaNext = Math.abs(this._theta - tier * this._gridInc);
+    const deltaPrev = Math.abs(this._theta - (tier - 1) * this._gridInc);
+
+    // snap to grid
     if (deltaNext < deltaPrev) {
       this._theta += deltaNext;
     } else {
