@@ -54,9 +54,12 @@ export class InteractionManagerService {
     const deltaX = x - this._x;
     this._theta +=
       MathUtils.degToRad(deltaX) * (ROTATIONAL_CONSTANT / this._width) * -1;
+
+    // restart if full rotation
     if (Math.abs(this._theta) > 2 * Math.PI) {
       this._theta = 0;
     }
+
     this.objectManager.Rotate(this._theta);
   }
 
