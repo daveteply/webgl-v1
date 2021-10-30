@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { MathUtils, Scene } from 'three';
 import { MeshObj } from '../models/mesh-obj';
+import { RotateEase } from '../models/rotate-ease';
 import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
 export class ObjectManagerService {
   private _centerMesh!: THREE.Object3D;
   private _grid: MeshObj[] = [];
+  private _rotateEase!: RotateEase;
 
   constructor() {}
 
@@ -41,11 +43,21 @@ export class ObjectManagerService {
     this._centerMesh.rotation.y = rotationRadianAmount;
   }
 
+  public RotateEase(rotateEase: RotateEase): void {
+    this._rotateEase = rotateEase;
+  }
+
   public UpdateShapes(): void {
+    // tumble objects
     this._grid.forEach((meshObj) => {
       meshObj.Mesh.rotateX(meshObj.Tumble.x);
       meshObj.Mesh.rotateY(meshObj.Tumble.y);
       meshObj.Mesh.rotateZ(meshObj.Tumble.z);
     });
+
+    // easing
+    if (this._rotateEase?.HasNext) {
+      this.Rotate(this._rotateEase.Next);
+    }
   }
 }

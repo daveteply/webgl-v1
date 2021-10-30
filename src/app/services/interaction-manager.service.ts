@@ -3,6 +3,7 @@ import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
 import { MathUtils } from 'three';
 import { GRID_ITERATION, ROTATIONAL_CONSTANT } from '../wgl-constants';
+import { RotateEase } from '../models/rotate-ease';
 
 @Injectable({
   providedIn: 'root',
@@ -72,12 +73,13 @@ export class InteractionManagerService {
     const deltaPrev = Math.abs(this._theta - (tier - 1) * this._gridInc);
 
     // snap to grid
+    const currentTheta = this._theta;
     if (deltaNext < deltaPrev) {
       this._theta += deltaNext;
     } else {
       this._theta -= deltaPrev;
     }
 
-    this.objectManager.Rotate(this._theta);
+    this.objectManager.RotateEase(new RotateEase(currentTheta, this._theta, 5));
   }
 }
