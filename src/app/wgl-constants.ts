@@ -2,7 +2,7 @@ export const GRID_RADIUS = 10;
 export const GRID_ITERATION = 10;
 export const ROTATIONAL_CONSTANT = 75;
 
-export const COLORS = [
+export const COLORS_256 = [
   {
     colorId: 0,
     hexString: '#000000',

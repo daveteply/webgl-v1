@@ -37,14 +37,6 @@ export class InteractionManagerService {
 
       this._x = panEvent.center.x;
     });
-
-    // this._hammer.on('swipe', (swipeEvent) => {
-    //   console.log('swipe', swipeEvent);
-    // });
-
-    // this._hammer.on('press', (pressEvent) => {
-    //   console.log('press', pressEvent);
-    // });
   }
 
   public UpdateWidth(width: number): void {
