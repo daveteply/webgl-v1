@@ -1,27 +1,33 @@
-import * as THREE from 'three';
-import { Mesh } from 'three';
+import {
+  BoxGeometry,
+  Color,
+  MathUtils,
+  Mesh,
+  MeshStandardMaterial,
+  Vector3,
+} from 'three';
 import { COLORS_256 } from '../wgl-constants';
 
 export class MeshObj {
-  private _tumble: THREE.Vector3;
-  private _boxGeo: THREE.BoxGeometry;
-  private _material: THREE.MeshStandardMaterial;
-  private _mesh: THREE.Mesh;
+  private _tumble: Vector3;
+  private _boxGeo: BoxGeometry;
+  private _material: MeshStandardMaterial;
+  private _mesh: Mesh;
 
   private readonly floatMin = -0.02;
   private readonly floatMax = 0.02;
 
   constructor(x: number, y: number, z: number) {
-    this._tumble = new THREE.Vector3(
-      THREE.MathUtils.randFloat(this.floatMin, this.floatMax),
-      THREE.MathUtils.randFloat(this.floatMin, this.floatMax),
-      THREE.MathUtils.randFloat(this.floatMin, this.floatMax)
+    this._tumble = new Vector3(
+      MathUtils.randFloat(this.floatMin, this.floatMax),
+      MathUtils.randFloat(this.floatMin, this.floatMax),
+      MathUtils.randFloat(this.floatMin, this.floatMax)
     );
 
-    this._boxGeo = new THREE.BoxGeometry();
+    this._boxGeo = new BoxGeometry();
 
-    this._material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(
+    this._material = new MeshStandardMaterial({
+      color: new Color(
         COLORS_256[Math.floor(Math.random() * COLORS_256.length)].hexString
       ),
     });
@@ -32,11 +38,11 @@ export class MeshObj {
     this._mesh.position.z = z;
   }
 
-  public get Mesh(): THREE.Mesh {
+  public get Mesh(): Mesh {
     return this._mesh;
   }
 
-  public get Tumble(): THREE.Vector3 {
+  public get Tumble(): Vector3 {
     return this._tumble;
   }
 }

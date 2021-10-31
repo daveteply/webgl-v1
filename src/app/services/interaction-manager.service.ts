@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
-import { MathUtils } from 'three';
+import { MathUtils, Raycaster } from 'three';
 import { GRID_ITERATION, ROTATIONAL_CONSTANT } from '../wgl-constants';
 import { RotateEase } from '../models/rotate-ease';
 
@@ -14,14 +14,19 @@ export class InteractionManagerService {
   private _theta: number = 0;
   private _x: number = 0;
   private _panning: boolean = false;
+  private _rayCaster!: Raycaster;
 
   // establish single "step" around the radian circle
   private _gridInc: number = MathUtils.degToRad(GRID_ITERATION);
 
-  constructor(private objectManager: ObjectManagerService) {}
+  constructor(private objectManager: ObjectManagerService) {
+    this._rayCaster = new Raycaster();
+  }
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
+
+    this._hammer.on('panstart', (panStartEvent) => {});
 
     this._hammer.on('pan', (panEvent) => {
       if (!this._panning) {

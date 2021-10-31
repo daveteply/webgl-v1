@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as THREE from 'three';
-import { MathUtils, Scene } from 'three';
+import { MathUtils, Scene, Vector3 } from 'three';
 import { Plate } from '../models/plate';
 import { RotateEase } from '../models/rotate-ease';
 import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
@@ -9,7 +8,7 @@ import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
   providedIn: 'root',
 })
 export class ObjectManagerService {
-  private _polarCoords: THREE.Vector3[] = [];
+  private _polarCoords: Vector3[] = [];
   private _axis: Plate[] = [];
   private _rotateEase!: RotateEase;
 
@@ -55,11 +54,7 @@ export class ObjectManagerService {
     for (let i = 0; i < 360; i += GRID_ITERATION) {
       const rad = MathUtils.degToRad(i);
       this._polarCoords.push(
-        new THREE.Vector3(
-          GRID_RADIUS * Math.cos(rad),
-          0,
-          GRID_RADIUS * Math.sin(rad)
-        )
+        new Vector3(GRID_RADIUS * Math.cos(rad), 0, GRID_RADIUS * Math.sin(rad))
       );
     }
   }
