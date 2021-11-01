@@ -1,32 +1,48 @@
 import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
-import { MathUtils, Raycaster } from 'three';
-import { GRID_ITERATION, ROTATIONAL_CONSTANT } from '../wgl-constants';
-import { RotateEase } from '../models/rotate-ease';
+import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
+import { ROTATIONAL_CONSTANT } from '../wgl-constants';
+import { Plate } from '../models/plate';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InteractionManagerService {
   private _hammer!: HammerManager;
-  private _width!: number;
-  private _theta: number = 0;
+
+  private _clientSize: Vector2;
+  private _pointerPos: Vector2;
+
   private _x: number = 0;
   private _panning: boolean = false;
-  private _rayCaster!: Raycaster;
+  private _activePlate: Plate | undefined;
 
-  // establish single "step" around the radian circle
-  private _gridInc: number = MathUtils.degToRad(GRID_ITERATION);
+  private _rayCaster!: Raycaster;
+  private _camera!: PerspectiveCamera;
 
   constructor(private objectManager: ObjectManagerService) {
     this._rayCaster = new Raycaster();
+    this._clientSize = new Vector2();
+    this._pointerPos = new Vector2();
   }
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
 
-    this._hammer.on('panstart', (panStartEvent) => {});
+    this._hammer.on('panstart', (panStartEvent) => {
+      const uuid = this.pickedMeshUUID(
+        panStartEvent.center.x,
+        panStartEvent.center.y
+      );
+      if (uuid) {
+        const targetPlate = this.objectManager.FindPlate(uuid);
+        if (targetPlate) {
+          this._activePlate = targetPlate;
+          this.objectManager.SetActivePlate(targetPlate);
+        }
+      }
+    });
 
     this._hammer.on('pan', (panEvent) => {
       if (!this._panning) {
@@ -37,46 +53,47 @@ export class InteractionManagerService {
 
       if (panEvent.isFinal) {
         this._panning = false;
-        this.snapToGrid();
+        this._activePlate?.SnapToGrid();
+        this._activePlate = undefined;
       }
 
       this._x = panEvent.center.x;
     });
   }
 
-  public UpdateWidth(width: number): void {
-    this._width = width;
+  public OnResize(
+    width: number,
+    height: number,
+    camera: PerspectiveCamera
+  ): void {
+    this._clientSize.x = width;
+    this._clientSize.y = height;
+    this._camera = camera;
   }
 
   private deviceCordRotation(x: number): void {
     const deltaX = x - this._x;
-    this._theta +=
-      MathUtils.degToRad(deltaX) * (ROTATIONAL_CONSTANT / this._width) * -1;
 
-    // restart if full rotation
-    if (Math.abs(this._theta) > 2 * Math.PI) {
-      this._theta = 0;
+    if (this._activePlate) {
+      this._activePlate.UpdateTheta(
+        MathUtils.degToRad(deltaX) *
+          (ROTATIONAL_CONSTANT / this._clientSize.x) *
+          -1
+      );
     }
-
-    this.objectManager.Rotate(this._theta);
   }
 
-  private snapToGrid(): void {
-    // find where the circle has "landed"
-    const tier = Math.ceil(this._theta / this._gridInc);
+  private pickedMeshUUID(x: number, y: number): string | undefined {
+    if (this._camera) {
+      this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
+      this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
+      this._rayCaster.setFromCamera(this._pointerPos, this._camera);
+      const intersects = this._rayCaster.intersectObjects(
+        this.objectManager.Axis.map((m) => m.Hub)
+      );
 
-    // calculate the next and previous "steps" of the snap grid
-    const deltaNext = Math.abs(this._theta - tier * this._gridInc);
-    const deltaPrev = Math.abs(this._theta - (tier - 1) * this._gridInc);
-
-    // snap to grid
-    const currentTheta = this._theta;
-    if (deltaNext < deltaPrev) {
-      this._theta += deltaNext;
-    } else {
-      this._theta -= deltaPrev;
+      return intersects[0]?.object?.uuid;
     }
-
-    this.objectManager.RotateEase(new RotateEase(currentTheta, this._theta, 5));
+    return undefined;
   }
 }

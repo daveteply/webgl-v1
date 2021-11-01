@@ -42,7 +42,9 @@ export class MeshObj {
     return this._mesh;
   }
 
-  public get Tumble(): Vector3 {
-    return this._tumble;
+  public Tumble(): void {
+    this._mesh.rotateX(this._tumble.x);
+    this._mesh.rotateY(this._tumble.y);
+    this._mesh.rotateZ(this._tumble.z);
   }
 }

@@ -52,7 +52,7 @@ export class SceneManagerService {
       this._renderer.setSize(width, height);
     }
 
-    this.interactionManager.UpdateWidth(this._width);
+    this.interactionManager.OnResize(this._width, this._height, this._camera);
   }
 
   public InitRenderer(canvas: HTMLCanvasElement): void {
