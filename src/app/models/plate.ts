@@ -1,25 +1,29 @@
-import { Object3D, Vector3 } from 'three';
+import { Object3D } from 'three';
 import { GRID_INC } from '../wgl-constants';
 import { MeshObj } from './mesh-obj';
+import { MeshPoints } from './mesh-points';
 import { RotateEase } from './rotate-ease';
 
 export class Plate {
   private _hub: Object3D;
   private _grid: MeshObj[] = [];
-  private _polarCoords: Vector3[] = [];
 
   private _rotateEase!: RotateEase;
 
   private _theta: number = 0;
 
-  constructor(y: number, polarCoords: Vector3[]) {
-    this._polarCoords = polarCoords;
-
+  constructor(y: number, meshPoints: MeshPoints[]) {
     this._hub = new Object3D();
     this._hub.position.y = y;
 
-    this._polarCoords.forEach((polarCord) => {
-      const meshObj = new MeshObj(polarCord.x, 0, polarCord.z);
+    meshPoints.forEach((meshPoint) => {
+      const meshObj = new MeshObj(
+        meshPoint.polarCoords.x,
+        0,
+        meshPoint.polarCoords.z
+      );
+      meshObj.Mesh.rotateY(meshPoint.rotationY);
+
       this._grid.push(meshObj);
       this._hub.add(meshObj.Mesh);
     });
