@@ -7,6 +7,81 @@ export const ROTATIONAL_CONSTANT = 75;
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_ITERATION);
 
+export const COLORS_THEME1 = [
+  {
+    name: 'Slimy Green',
+    hex: '#188f09',
+    rgb: [24, 143, 9],
+    cmyk: [83, 0, 94, 44],
+    hsb: [113, 94, 56],
+    hsl: [113, 88, 30],
+    lab: [52, -54, 53],
+  },
+  {
+    name: 'Space Cadet',
+    hex: '#30284d',
+    rgb: [48, 40, 77],
+    cmyk: [38, 48, 0, 70],
+    hsb: [253, 48, 30],
+    hsl: [253, 32, 23],
+    lab: [19, 14, -22],
+  },
+  {
+    name: 'Middle Blue Purple',
+    hex: '#8779b8',
+    rgb: [135, 121, 184],
+    cmyk: [27, 34, 0, 28],
+    hsb: [253, 34, 72],
+    hsl: [253, 31, 60],
+    lab: [54, 19, -31],
+  },
+  {
+    name: 'Russian Violet',
+    hex: '#150a3b',
+    rgb: [21, 10, 59],
+    cmyk: [64, 83, 0, 77],
+    hsb: [253, 83, 23],
+    hsl: [253, 71, 14],
+    lab: [6, 21, -29],
+  },
+  {
+    name: 'Trypan Blue',
+    hex: '#2f0bb3',
+    rgb: [47, 11, 179],
+    cmyk: [74, 94, 0, 30],
+    hsb: [253, 94, 70],
+    hsl: [253, 88, 37],
+    lab: [24, 59, -78],
+  },
+  {
+    name: 'Forest Green Traditional',
+    hex: '#193b15',
+    rgb: [25, 59, 21],
+    cmyk: [58, 0, 64, 77],
+    hsb: [114, 64, 23],
+    hsl: [114, 48, 16],
+    lab: [22, -21, 20],
+  },
+  {
+    name: 'Ocean Blue',
+    hex: '#563db3',
+    rgb: [86, 61, 179],
+    cmyk: [52, 66, 0, 30],
+    hsb: [253, 66, 70],
+    hsl: [253, 49, 47],
+    lab: [35, 41, -59],
+  },
+  {
+    name: 'Red Purple',
+    hex: '#de1f75',
+    rgb: [222, 31, 117],
+    cmyk: [0, 86, 47, 13],
+    hsb: [333, 86, 87],
+    hsl: [333, 75, 50],
+    lab: [49, 73, 2],
+  },
+];
+
 export const COLORS_256 = [
   {
     colorId: 0,

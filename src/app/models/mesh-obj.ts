@@ -6,7 +6,7 @@ import {
   MeshStandardMaterial,
   Vector3,
 } from 'three';
-import { COLORS_256 } from '../wgl-constants';
+import { COLORS_THEME1 } from '../wgl-constants';
 
 export class MeshObj {
   private _tumble: Vector3;
@@ -28,7 +28,7 @@ export class MeshObj {
 
     this._material = new MeshStandardMaterial({
       color: new Color(
-        COLORS_256[Math.floor(Math.random() * COLORS_256.length)].hexString
+        COLORS_THEME1[Math.floor(Math.random() * COLORS_THEME1.length)].hex
       ),
     });
 
