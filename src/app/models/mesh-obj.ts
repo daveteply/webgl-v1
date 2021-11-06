@@ -6,7 +6,7 @@ import {
   MeshStandardMaterial,
   Vector3,
 } from 'three';
-import { COLORS_THEME1 } from '../wgl-constants';
+import { MaterialColor } from './material-color';
 
 export class MeshObj {
   private _tumble: Vector3;
@@ -17,7 +17,7 @@ export class MeshObj {
   private readonly floatMin = -0.02;
   private readonly floatMax = 0.02;
 
-  constructor(x: number, y: number, z: number) {
+  constructor(x: number, y: number, z: number, colors: MaterialColor[]) {
     this._tumble = new Vector3(
       MathUtils.randFloat(this.floatMin, this.floatMax),
       MathUtils.randFloat(this.floatMin, this.floatMax),
@@ -28,7 +28,7 @@ export class MeshObj {
 
     this._material = new MeshStandardMaterial({
       color: new Color(
-        COLORS_THEME1[Math.floor(Math.random() * COLORS_THEME1.length)].hex
+        colors[Math.floor(Math.random() * colors.length)].hexString
       ),
     });
 

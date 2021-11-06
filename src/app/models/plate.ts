@@ -1,5 +1,6 @@
 import { Object3D } from 'three';
 import { GRID_INC } from '../wgl-constants';
+import { MaterialColor } from './material-color';
 import { MeshObj } from './mesh-obj';
 import { MeshPoints } from './mesh-points';
 import { RotateEase } from './rotate-ease';
@@ -12,7 +13,7 @@ export class Plate {
 
   private _theta: number = 0;
 
-  constructor(y: number, meshPoints: MeshPoints[]) {
+  constructor(y: number, meshPoints: MeshPoints[], colors: MaterialColor[]) {
     this._hub = new Object3D();
     this._hub.position.y = y;
 
@@ -20,7 +21,8 @@ export class Plate {
       const meshObj = new MeshObj(
         meshPoint.polarCoords.x,
         0,
-        meshPoint.polarCoords.z
+        meshPoint.polarCoords.z,
+        colors
       );
       meshObj.Mesh.rotateY(meshPoint.rotationY);
 
