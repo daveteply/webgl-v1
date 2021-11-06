@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MathUtils, Scene, Vector3 } from 'three';
-import { COLORS_256, MaterialColor } from '../models/material-color';
 import { MeshPoints } from '../models/mesh-points';
 import { Plate } from '../models/plate';
 import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
+import { MaterialManagerService } from './material-manager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,16 +13,17 @@ export class ObjectManagerService {
   private _axis: Plate[] = [];
   private _activePlate: Plate | undefined;
 
-  constructor() {
+  constructor(private materialManager: MaterialManagerService) {
     this.initPolarCoords();
   }
 
   public InitShapes(scene: Scene): void {
-    // select some random color
-    const colors = this.getRandomColors(7);
-
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
-      const plate = new Plate(axisInx * 1.2, this._meshPoints, colors);
+      const plate = new Plate(
+        axisInx * 1.2,
+        this._meshPoints,
+        this.materialManager.Materials
+      );
       this._axis.push(plate);
       scene.add(plate.Hub);
     }
@@ -71,13 +72,5 @@ export class ObjectManagerService {
         rotationY: rad * -1,
       });
     }
-  }
-
-  private getRandomColors(count: number): MaterialColor[] {
-    // shuffle
-    const shuffled = COLORS_256.map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-    return shuffled.slice(0, count);
   }
 }

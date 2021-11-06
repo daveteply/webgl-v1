@@ -1,50 +1,44 @@
-import {
-  BoxGeometry,
-  Color,
-  MathUtils,
-  Mesh,
-  MeshStandardMaterial,
-  Vector3,
-} from 'three';
-import { MaterialColor } from './material-color';
+import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three';
 
 export class MeshObj {
-  private _tumble: Vector3;
+  // private _tumble: Vector3;
   private _boxGeo: BoxGeometry;
-  private _material: MeshStandardMaterial;
   private _mesh: Mesh;
 
   private readonly floatMin = -0.02;
   private readonly floatMax = 0.02;
 
-  constructor(x: number, y: number, z: number, colors: MaterialColor[]) {
-    this._tumble = new Vector3(
-      MathUtils.randFloat(this.floatMin, this.floatMax),
-      MathUtils.randFloat(this.floatMin, this.floatMax),
-      MathUtils.randFloat(this.floatMin, this.floatMax)
-    );
+  constructor(
+    x: number,
+    y: number,
+    z: number,
+    materials: MeshStandardMaterial[]
+  ) {
+    // this._tumble = new Vector3(
+    //   MathUtils.randFloat(this.floatMin, this.floatMax),
+    //   MathUtils.randFloat(this.floatMin, this.floatMax),
+    //   MathUtils.randFloat(this.floatMin, this.floatMax)
+    // );
 
     this._boxGeo = new BoxGeometry();
 
-    this._material = new MeshStandardMaterial({
-      color: new Color(
-        colors[Math.floor(Math.random() * colors.length)].hexString
-      ),
-    });
+    // create mesh
+    this._mesh = new Mesh(
+      this._boxGeo,
+      materials[Math.floor(Math.random() * materials.length)]
+    );
 
-    this._mesh = new Mesh(this._boxGeo, this._material);
-    this._mesh.position.x = x;
-    this._mesh.position.y = y;
-    this._mesh.position.z = z;
+    // position mesh
+    this._mesh.position.set(x, y, z);
   }
 
   public get Mesh(): Mesh {
     return this._mesh;
   }
 
-  public Tumble(): void {
-    this._mesh.rotateX(this._tumble.x);
-    this._mesh.rotateY(this._tumble.y);
-    this._mesh.rotateZ(this._tumble.z);
-  }
+  // public Tumble(): void {
+  //   this._mesh.rotateX(this._tumble.x);
+  //   this._mesh.rotateY(this._tumble.y);
+  //   this._mesh.rotateZ(this._tumble.z);
+  // }
 }
