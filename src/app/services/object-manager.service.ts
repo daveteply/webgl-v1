@@ -58,8 +58,6 @@ export class ObjectManagerService {
   private initPolarCoords(): void {
     for (let i = 0; i < 360; i += GRID_ITERATION) {
       const rad = MathUtils.degToRad(i);
-      console.log(rad);
-
       this._meshPoints.push({
         polarCoords: new Vector3(
           GRID_RADIUS * Math.cos(rad),
