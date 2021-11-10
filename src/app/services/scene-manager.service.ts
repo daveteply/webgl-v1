@@ -15,8 +15,8 @@ import { ObjectManagerService } from './object-manager.service';
   providedIn: 'root',
 })
 export class SceneManagerService {
-  private _width: number = 640;
-  private _height: number = 480;
+  private _width: number = 0;
+  private _height: number = 0;
 
   private _renderer!: WebGLRenderer;
   private _scene!: Scene;
