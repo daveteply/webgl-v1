@@ -25,9 +25,9 @@ export class Plate {
         meshPoint.polarCoords.x,
         0,
         meshPoint.polarCoords.z,
+        meshPoint.rotationY,
         materials
       );
-      meshObj.Mesh.rotateY(meshPoint.rotationY);
 
       this._grid.push(meshObj);
       this._hub.add(meshObj.Mesh);

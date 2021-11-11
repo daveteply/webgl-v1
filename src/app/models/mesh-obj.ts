@@ -1,8 +1,8 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three';
+import { BoxGeometry, BufferGeometry, Mesh, MeshStandardMaterial } from 'three';
 
 export class MeshObj {
   // private _tumble: Vector3;
-  private _boxGeo: BoxGeometry;
+  private _boxGeo: BufferGeometry;
   private _mesh: Mesh;
 
   private readonly floatMin = -0.02;
@@ -12,6 +12,7 @@ export class MeshObj {
     x: number,
     y: number,
     z: number,
+    rotation: number,
     materials: MeshStandardMaterial[]
   ) {
     // this._tumble = new Vector3(
@@ -30,6 +31,7 @@ export class MeshObj {
 
     // position mesh
     this._mesh.position.set(x, y, z);
+    this._mesh.rotateY(rotation);
   }
 
   public get Mesh(): Mesh {
