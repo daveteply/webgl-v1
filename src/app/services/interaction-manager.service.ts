@@ -31,12 +31,12 @@ export class InteractionManagerService {
     this._hammer = new Hammer(el);
 
     this._hammer.on('panstart', (panStartEvent) => {
-      const uuid = this.pickedWheelUUID(
+      const gamePieceId = this.getPickedGamePieceId(
         panStartEvent.center.x,
         panStartEvent.center.y
       );
-      if (uuid) {
-        const targetWheel = this.objectManager.FindWheel(uuid);
+      if (gamePieceId) {
+        const targetWheel = this.objectManager.FindWheel(gamePieceId);
         if (targetWheel) {
           this._activeWheel = targetWheel;
           this.objectManager.SetActiveWheel(targetWheel);
@@ -86,16 +86,13 @@ export class InteractionManagerService {
     }
   }
 
-  private pickedWheelUUID(x: number, y: number): string | undefined {
-    if (this._camera) {
-      this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
-      this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
-      this._rayCaster.setFromCamera(this._pointerPos, this._camera);
-      const intersects = this._rayCaster.intersectObjects(
-        this.objectManager.Axle.map((m) => m.Hub)
-      );
-      return intersects[0]?.object?.uuid;
-    }
-    return undefined;
+  private getPickedGamePieceId(x: number, y: number): number | undefined {
+    this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
+    this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
+    this._rayCaster.setFromCamera(this._pointerPos, this._camera);
+    const intersects = this._rayCaster.intersectObjects(
+      this.objectManager.Axle.map((m) => m.Hub)
+    );
+    return intersects[0]?.object?.id;
   }
 }

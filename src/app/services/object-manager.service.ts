@@ -36,27 +36,14 @@ export class ObjectManagerService {
   }
 
   public UpdateShapes(): void {
-    // tumble objects (for debugging)
-    // this._axis.forEach((a) => {
-    //   a.Grid.forEach((obj) => {
-    //     obj.Tumble();
-    //   });
-    // });
-
-    // DEBUG
-    // this._plateStack[0].Hub.children[28].rotateX(0.01);
-    // const target = new Vector3();
-    // this._plateStack[0].Hub.children[28].getWorldPosition(target);
-    // console.log(target);
-
     // easing (after pan)
     if (this._activeWheel?.RotateEase?.HasNext) {
       this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
   }
 
-  public FindWheel(uuid: string): GameWheel | undefined {
-    return this._axle.find((a) => a.Hub.children.find((g) => g.uuid === uuid));
+  public FindWheel(id: number): GameWheel | undefined {
+    return this._axle.find((a) => a.Hub.children.find((g) => g.id === id));
   }
 
   public get Axle(): GameWheel[] {
