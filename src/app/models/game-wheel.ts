@@ -1,31 +1,33 @@
 import { MeshStandardMaterial, Object3D } from 'three';
 import { GRID_INC } from '../wgl-constants';
-import { MeshObj } from './mesh-obj';
-import { MeshPoints } from './mesh-points';
+import { GamePiece } from './game-piece';
+import { PeicePoints } from './piece-points';
 import { RotateEase } from './rotate-ease';
 
-export class Plate {
+export class GameWheel extends Object3D {
   private _theta: number = 0;
   private _hub: Object3D;
   private _rotateEase!: RotateEase;
 
   constructor(
     y: number,
-    meshPoints: MeshPoints[],
+    meshPoints: PeicePoints[],
     materials: MeshStandardMaterial[]
   ) {
+    super();
+
+    // create hub
     this._hub = new Object3D();
     this._hub.position.y = y;
-
     meshPoints.forEach((meshPoint) => {
-      const meshObj = new MeshObj(
+      const gamePeice = new GamePiece(
         meshPoint.polarCoords.x,
         0,
         meshPoint.polarCoords.z,
         meshPoint.rotationY,
         materials
       );
-      this._hub.add(meshObj.Mesh);
+      this._hub.add(gamePeice.Mesh);
     });
   }
 

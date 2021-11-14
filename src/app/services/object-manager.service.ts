@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MathUtils, Scene, Vector3 } from 'three';
-import { MeshPoints } from '../models/mesh-points';
-import { Plate } from '../models/plate';
+import { GameWheel } from '../models/game-wheel';
+import { PeicePoints } from '../models/piece-points';
 import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
 import { MaterialManagerService } from './material-manager.service';
 
@@ -9,9 +9,9 @@ import { MaterialManagerService } from './material-manager.service';
   providedIn: 'root',
 })
 export class ObjectManagerService {
-  private _meshPoints: MeshPoints[] = [];
-  private _plateStack: Plate[] = [];
-  private _activePlate: Plate | undefined;
+  private _peicePoints: PeicePoints[] = [];
+  private _axle: GameWheel[] = [];
+  private _activeWheel: GameWheel | undefined;
 
   constructor(private materialManager: MaterialManagerService) {
     this.initPolarCoords();
@@ -19,19 +19,19 @@ export class ObjectManagerService {
 
   public InitShapes(scene: Scene): void {
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
-      const plate = new Plate(
+      const gameWheel = new GameWheel(
         axisInx * 1.2,
-        this._meshPoints,
+        this._peicePoints,
         this.materialManager.Materials
       );
-      this._plateStack.push(plate);
-      scene.add(plate.Hub);
+      this._axle.push(gameWheel);
+      scene.add(gameWheel.Hub);
     }
   }
 
-  public SetActivePlate(plate: Plate): void {
-    if (plate) {
-      this._activePlate = plate;
+  public SetActiveWheel(wheel: GameWheel): void {
+    if (wheel) {
+      this._activeWheel = wheel;
     }
   }
 
@@ -50,25 +50,23 @@ export class ObjectManagerService {
     // console.log(target);
 
     // easing (after pan)
-    if (this._activePlate?.RotateEase?.HasNext) {
-      this._activePlate.Rotate(this._activePlate?.RotateEase?.Next);
+    if (this._activeWheel?.RotateEase?.HasNext) {
+      this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
   }
 
-  public FindPlate(uuid: string): Plate | undefined {
-    return this._plateStack.find((a) =>
-      a.Hub.children.find((g) => g.uuid === uuid)
-    );
+  public FindWheel(uuid: string): GameWheel | undefined {
+    return this._axle.find((a) => a.Hub.children.find((g) => g.uuid === uuid));
   }
 
-  public get Axis(): Plate[] {
-    return this._plateStack;
+  public get Axle(): GameWheel[] {
+    return this._axle;
   }
 
   private initPolarCoords(): void {
     for (let i = 0; i < 360; i += GRID_ITERATION) {
       const rad = MathUtils.degToRad(i);
-      this._meshPoints.push({
+      this._peicePoints.push({
         polarCoords: new Vector3(
           GRID_RADIUS * Math.cos(rad),
           0,

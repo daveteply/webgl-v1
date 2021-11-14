@@ -3,7 +3,7 @@ import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 import { ROTATIONAL_CONSTANT } from '../wgl-constants';
-import { Plate } from '../models/plate';
+import { GameWheel } from '../models/game-wheel';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class InteractionManagerService {
 
   private _x: number = 0;
   private _panning: boolean = false;
-  private _activePlate: Plate | undefined;
+  private _activeWheel: GameWheel | undefined;
 
   private _rayCaster!: Raycaster;
   private _camera!: PerspectiveCamera;
@@ -31,15 +31,15 @@ export class InteractionManagerService {
     this._hammer = new Hammer(el);
 
     this._hammer.on('panstart', (panStartEvent) => {
-      const uuid = this.pickedMeshUUID(
+      const uuid = this.pickedWheelUUID(
         panStartEvent.center.x,
         panStartEvent.center.y
       );
       if (uuid) {
-        const targetPlate = this.objectManager.FindPlate(uuid);
-        if (targetPlate) {
-          this._activePlate = targetPlate;
-          this.objectManager.SetActivePlate(targetPlate);
+        const targetWheel = this.objectManager.FindWheel(uuid);
+        if (targetWheel) {
+          this._activeWheel = targetWheel;
+          this.objectManager.SetActiveWheel(targetWheel);
         }
       }
     });
@@ -53,8 +53,8 @@ export class InteractionManagerService {
 
       if (panEvent.isFinal) {
         this._panning = false;
-        this._activePlate?.SnapToGrid();
-        this._activePlate = undefined;
+        this._activeWheel?.SnapToGrid();
+        this._activeWheel = undefined;
       }
 
       this._x = panEvent.center.x;
@@ -77,8 +77,8 @@ export class InteractionManagerService {
 
   private deviceCordRotation(x: number): void {
     const deltaX = x - this._x;
-    if (this._activePlate) {
-      this._activePlate.UpdateTheta(
+    if (this._activeWheel) {
+      this._activeWheel.UpdateTheta(
         MathUtils.degToRad(deltaX) *
           (ROTATIONAL_CONSTANT / this._clientSize.x) *
           -1
@@ -86,15 +86,14 @@ export class InteractionManagerService {
     }
   }
 
-  private pickedMeshUUID(x: number, y: number): string | undefined {
+  private pickedWheelUUID(x: number, y: number): string | undefined {
     if (this._camera) {
       this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
       this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
       this._rayCaster.setFromCamera(this._pointerPos, this._camera);
       const intersects = this._rayCaster.intersectObjects(
-        this.objectManager.Axis.map((m) => m.Hub)
+        this.objectManager.Axle.map((m) => m.Hub)
       );
-
       return intersects[0]?.object?.uuid;
     }
     return undefined;
