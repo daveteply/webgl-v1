@@ -5,12 +5,9 @@ import { MeshPoints } from './mesh-points';
 import { RotateEase } from './rotate-ease';
 
 export class Plate {
-  private _hub: Object3D;
-  private _grid: MeshObj[] = [];
-
-  private _rotateEase!: RotateEase;
-
   private _theta: number = 0;
+  private _hub: Object3D;
+  private _rotateEase!: RotateEase;
 
   constructor(
     y: number,
@@ -28,18 +25,12 @@ export class Plate {
         meshPoint.rotationY,
         materials
       );
-
-      this._grid.push(meshObj);
       this._hub.add(meshObj.Mesh);
     });
   }
 
   public get Hub(): Object3D {
     return this._hub;
-  }
-
-  public get Grid(): MeshObj[] {
-    return this._grid;
   }
 
   public get RotateEase(): RotateEase {

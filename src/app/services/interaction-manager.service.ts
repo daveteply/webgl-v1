@@ -59,6 +59,10 @@ export class InteractionManagerService {
 
       this._x = panEvent.center.x;
     });
+
+    this._hammer.on('press', (pressEvent) => {
+      console.log('press', pressEvent);
+    });
   }
 
   public OnResize(
@@ -73,7 +77,6 @@ export class InteractionManagerService {
 
   private deviceCordRotation(x: number): void {
     const deltaX = x - this._x;
-
     if (this._activePlate) {
       this._activePlate.UpdateTheta(
         MathUtils.degToRad(deltaX) *

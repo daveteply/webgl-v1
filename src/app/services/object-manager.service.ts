@@ -10,7 +10,7 @@ import { MaterialManagerService } from './material-manager.service';
 })
 export class ObjectManagerService {
   private _meshPoints: MeshPoints[] = [];
-  private _axis: Plate[] = [];
+  private _plateStack: Plate[] = [];
   private _activePlate: Plate | undefined;
 
   constructor(private materialManager: MaterialManagerService) {
@@ -24,7 +24,7 @@ export class ObjectManagerService {
         this._meshPoints,
         this.materialManager.Materials
       );
-      this._axis.push(plate);
+      this._plateStack.push(plate);
       scene.add(plate.Hub);
     }
   }
@@ -43,6 +43,12 @@ export class ObjectManagerService {
     //   });
     // });
 
+    // DEBUG
+    // this._plateStack[0].Hub.children[28].rotateX(0.01);
+    // const target = new Vector3();
+    // this._plateStack[0].Hub.children[28].getWorldPosition(target);
+    // console.log(target);
+
     // easing (after pan)
     if (this._activePlate?.RotateEase?.HasNext) {
       this._activePlate.Rotate(this._activePlate?.RotateEase?.Next);
@@ -50,14 +56,13 @@ export class ObjectManagerService {
   }
 
   public FindPlate(uuid: string): Plate | undefined {
-    const target = this._axis.find((a) =>
-      a.Grid.find((g) => g.Mesh.uuid === uuid)
+    return this._plateStack.find((a) =>
+      a.Hub.children.find((g) => g.uuid === uuid)
     );
-    return target;
   }
 
   public get Axis(): Plate[] {
-    return this._axis;
+    return this._plateStack;
   }
 
   private initPolarCoords(): void {
