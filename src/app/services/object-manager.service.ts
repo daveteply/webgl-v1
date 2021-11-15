@@ -42,8 +42,10 @@ export class ObjectManagerService {
     }
   }
 
-  public FindWheel(id: number): GameWheel | undefined {
-    return this._axle.find((a) => a.Hub.children.find((g) => g.id === id));
+  public FindWheel(gamePieceId: number): GameWheel | undefined {
+    return this._axle.find((a) =>
+      a.Hub.children.find((g) => g.id === gamePieceId)
+    );
   }
 
   public get Axle(): GameWheel[] {
