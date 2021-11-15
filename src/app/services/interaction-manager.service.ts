@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
 import 'hammerjs';
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
-import { ROTATIONAL_CONSTANT } from '../wgl-constants';
+import { ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 
 @Injectable({

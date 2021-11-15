@@ -1,5 +1,5 @@
 import { MeshStandardMaterial, Object3D } from 'three';
-import { GRID_INC } from '../wgl-constants';
+import { GRID_INC, TWO_PI } from '../game-constants';
 import { GamePiece } from './game-piece';
 import { PeicePoints } from './piece-points';
 import { RotateEase } from './rotate-ease';
@@ -47,7 +47,7 @@ export class GameWheel extends Object3D {
     this._theta += theta;
 
     // restart if full rotation
-    if (Math.abs(this._theta) > 2 * Math.PI) {
+    if (Math.abs(this._theta) > TWO_PI) {
       this._theta = 0;
     }
 

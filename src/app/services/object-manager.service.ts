@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MathUtils, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PeicePoints } from '../models/piece-points';
-import { GRID_ITERATION, GRID_RADIUS } from '../wgl-constants';
+import { GRID_ITERATION, GRID_RADIUS } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 
 @Injectable({
