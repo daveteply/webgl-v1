@@ -4,6 +4,7 @@ import { GameWheel } from '../models/game-wheel';
 import { PeicePoints } from '../models/piece-points';
 import { GRID_ITERATION, GRID_RADIUS } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
+import { GamePiece } from '../models/game-piece';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class ObjectManagerService {
         this.materialManager.Materials
       );
       this._axle.push(gameWheel);
-      scene.add(gameWheel.Hub);
+      scene.add(gameWheel);
     }
   }
 
@@ -40,12 +41,13 @@ export class ObjectManagerService {
     if (this._activeWheel?.RotateEase?.HasNext) {
       this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
+
+    // this._axle[0].children[25].rotateZ(0.03);
+    // console.log((this._axle[0].children[25] as GamePiece).CurrentTheta);
   }
 
   public FindWheel(gamePieceId: number): GameWheel | undefined {
-    return this._axle.find((a) =>
-      a.Hub.children.find((g) => g.id === gamePieceId)
-    );
+    return this._axle.find((a) => a.children.find((g) => g.id === gamePieceId));
   }
 
   public get Axle(): GameWheel[] {

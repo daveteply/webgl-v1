@@ -91,7 +91,7 @@ export class InteractionManagerService {
     this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
     this._rayCaster.setFromCamera(this._pointerPos, this._camera);
     const intersects = this._rayCaster.intersectObjects(
-      this.objectManager.Axle.map((m) => m.Hub)
+      this.objectManager.Axle
     );
     return intersects[0]?.object?.id;
   }

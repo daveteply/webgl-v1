@@ -1,14 +1,8 @@
-import {
-  BoxGeometry,
-  BufferGeometry,
-  Mesh,
-  MeshStandardMaterial,
-  Object3D,
-} from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three';
 
-export class GamePiece extends Object3D {
-  private _boxGeo: BufferGeometry;
-  private _mesh: Mesh;
+export class GamePiece extends Mesh {
+  private _origTheta: number;
+  private _currentTheta: number;
 
   constructor(
     x: number,
@@ -17,21 +11,23 @@ export class GamePiece extends Object3D {
     rotation: number,
     materials: MeshStandardMaterial[]
   ) {
-    super();
-
-    // geometry
-    this._boxGeo = new BoxGeometry();
-
-    // mesh
-    this._mesh = new Mesh(
-      this._boxGeo,
+    super(
+      new BoxGeometry(),
       materials[Math.floor(Math.random() * materials.length)]
     );
-    this._mesh.position.set(x, y, z);
-    this._mesh.rotateY(rotation);
+
+    this.position.set(x, y, z);
+    this.rotateY(rotation);
+
+    this._origTheta = rotation;
+    this._currentTheta = rotation;
   }
 
-  public get Mesh(): Mesh {
-    return this._mesh;
+  set CurrentTheta(theta: number) {
+    this._currentTheta = this._origTheta + theta;
+  }
+
+  get CurrentTheta(): number {
+    return this._currentTheta;
   }
 }

@@ -6,7 +6,6 @@ import { RotateEase } from './rotate-ease';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
-  private _hub: Object3D;
   private _rotateEase!: RotateEase;
 
   constructor(
@@ -15,10 +14,9 @@ export class GameWheel extends Object3D {
     materials: MeshStandardMaterial[]
   ) {
     super();
+    this.position.y = y;
 
-    // create hub
-    this._hub = new Object3D();
-    this._hub.position.y = y;
+    // add game pieces
     meshPoints.forEach((meshPoint) => {
       const gamePeice = new GamePiece(
         meshPoint.polarCoords.x,
@@ -27,12 +25,8 @@ export class GameWheel extends Object3D {
         meshPoint.rotationY,
         materials
       );
-      this._hub.add(gamePeice.Mesh);
+      this.add(gamePeice);
     });
-  }
-
-  public get Hub(): Object3D {
-    return this._hub;
   }
 
   public get RotateEase(): RotateEase {
@@ -40,7 +34,7 @@ export class GameWheel extends Object3D {
   }
 
   public Rotate(theta: number): void {
-    this._hub.rotation.y = theta;
+    this.rotation.y = theta;
   }
 
   public UpdateTheta(theta: number): void {
@@ -70,6 +64,12 @@ export class GameWheel extends Object3D {
       this._theta -= deltaPrev;
     }
 
+    // this will be used later during draw loop
     this._rotateEase = new RotateEase(currentTheta, this._theta, 10);
+
+    // recalculate game peice theta
+    for (const gamePiece of this.children as GamePiece[]) {
+      gamePiece.CurrentTheta = this._theta;
+    }
   }
 }
