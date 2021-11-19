@@ -40,7 +40,7 @@ export class SceneManagerService {
     const aspectRatio = this._width / this._height;
 
     if (!this._camera) {
-      this._camera = new PerspectiveCamera(75, aspectRatio, 0.1, 25);
+      this._camera = new PerspectiveCamera(60, aspectRatio, 1, 25);
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
     } else {

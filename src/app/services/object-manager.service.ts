@@ -6,6 +6,7 @@ import {
   GRID_STEP_DEGREES,
   GRID_MAX_DEGREES,
   GRID_RADIUS,
+  GRID_VERTICLE_OFFSET,
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece';
@@ -30,7 +31,7 @@ export class ObjectManagerService {
     // create game plates
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(
-        axisInx * 1.2,
+        axisInx * GRID_VERTICLE_OFFSET,
         this._peicePoints,
         this.materialManager.Materials
       );
