@@ -4,6 +4,8 @@ import 'hammerjs';
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 import { ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
+import { GameEngineService } from './game-engine.service';
+import { GamePiece } from '../models/game-piece';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,10 @@ export class InteractionManagerService {
   private _rayCaster!: Raycaster;
   private _camera!: PerspectiveCamera;
 
-  constructor(private objectManager: ObjectManagerService) {
+  constructor(
+    private objectManager: ObjectManagerService,
+    private gameEngine: GameEngineService
+  ) {
     this._rayCaster = new Raycaster();
     this._clientSize = new Vector2();
     this._pointerPos = new Vector2();
@@ -31,16 +36,13 @@ export class InteractionManagerService {
     this._hammer = new Hammer(el);
 
     this._hammer.on('panstart', (panStartEvent) => {
-      const gamePieceId = this.getPickedGamePieceId(
+      const gamePiece = this.getPickedGamePiece(
         panStartEvent.center.x,
         panStartEvent.center.y
       );
-      if (gamePieceId) {
-        const targetWheel = this.objectManager.FindWheel(gamePieceId);
-        if (targetWheel) {
-          this._activeWheel = targetWheel;
-          this.objectManager.SetActiveWheel(targetWheel);
-        }
+      if (gamePiece) {
+        this._activeWheel = gamePiece.parent as GameWheel;
+        this.objectManager.SetActiveWheel(this._activeWheel);
       }
     });
 
@@ -61,7 +63,13 @@ export class InteractionManagerService {
     });
 
     this._hammer.on('press', (pressEvent) => {
-      console.log('press', pressEvent);
+      const gamePiece = this.getPickedGamePiece(
+        pressEvent.center.x,
+        pressEvent.center.y
+      );
+      if (gamePiece) {
+        this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
+      }
     });
   }
 
@@ -86,13 +94,13 @@ export class InteractionManagerService {
     }
   }
 
-  private getPickedGamePieceId(x: number, y: number): number | undefined {
+  private getPickedGamePiece(x: number, y: number): GamePiece | undefined {
     this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
     this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
     this._rayCaster.setFromCamera(this._pointerPos, this._camera);
     const intersects = this._rayCaster.intersectObjects(
       this.objectManager.Axle
     );
-    return intersects[0]?.object?.id;
+    return intersects[0]?.object as GamePiece;
   }
 }

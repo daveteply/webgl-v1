@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { MathUtils, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PeicePoints } from '../models/piece-points';
-import { GRID_ITERATION, GRID_RADIUS } from '../game-constants';
+import {
+  GRID_STEP_DEGREES,
+  GRID_MAX_DEGREES,
+  GRID_RADIUS,
+} from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece';
 
@@ -18,7 +22,12 @@ export class ObjectManagerService {
     this.initPolarCoords();
   }
 
+  public get Axle(): GameWheel[] {
+    return this._axle;
+  }
+
   public InitShapes(scene: Scene): void {
+    // create game plates
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(
         axisInx * 1.2,
@@ -27,6 +36,22 @@ export class ObjectManagerService {
       );
       this._axle.push(gameWheel);
       scene.add(gameWheel);
+    }
+
+    // assign iteration values (wheels are built bottom-up)
+    for (let i = 0; i < this._axle.length; i++) {
+      if (i === 0) {
+        // "bottom" of wheel stack
+        this._axle[i].Above = this._axle[i + 1];
+        this._axle[i].Below = undefined;
+      } else if (i === this._axle.length - 1) {
+        // "top" of wheel stack
+        this._axle[i].Above = undefined;
+        this._axle[i].Below = this._axle[i - 1];
+      } else {
+        this._axle[i].Above = this._axle[i + 1];
+        this._axle[i].Below = this._axle[i - 1];
+      }
     }
   }
 
@@ -42,20 +67,19 @@ export class ObjectManagerService {
       this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
 
-    // this._axle[0].children[25].rotateZ(0.03);
-    // console.log((this._axle[0].children[25] as GamePiece).CurrentTheta);
-  }
-
-  public FindWheel(gamePieceId: number): GameWheel | undefined {
-    return this._axle.find((a) => a.children.find((g) => g.id === gamePieceId));
-  }
-
-  public get Axle(): GameWheel[] {
-    return this._axle;
+    // TEMP animate match
+    this._axle.forEach((axle) => {
+      for (const gamePiece of axle.children as GamePiece[]) {
+        if (gamePiece.IsMatch) {
+          gamePiece.rotateY(0.03);
+          gamePiece.rotateX(0.02);
+        }
+      }
+    });
   }
 
   private initPolarCoords(): void {
-    for (let i = 0; i < 360; i += GRID_ITERATION) {
+    for (let i = 0; i < GRID_MAX_DEGREES; i += GRID_STEP_DEGREES) {
       const rad = MathUtils.degToRad(i);
       this._peicePoints.push({
         polarCoords: new Vector3(

@@ -1,3 +1,11 @@
+import { MeshStandardMaterial } from 'three';
+
+export interface GameMaterial {
+  materialColor: MaterialColor;
+  material: MeshStandardMaterial;
+  matchKey: number;
+}
+
 export interface MaterialColorRGB {
   r: number;
   g: number;

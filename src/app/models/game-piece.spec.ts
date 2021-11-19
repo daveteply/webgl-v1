@@ -6,6 +6,9 @@ describe('GamePiece', () => {
     const mockY = 0;
     const mockZ = 0;
     const mockRot = 0;
-    expect(new GamePiece(mockX, mockY, mockZ, mockRot, [])).toBeTruthy();
+    const mockMaterial = Object.assign({});
+    expect(
+      new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterial)
+    ).toBeTruthy();
   });
 });
