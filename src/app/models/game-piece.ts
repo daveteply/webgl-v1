@@ -14,7 +14,7 @@ export class GamePiece extends Mesh {
   private _prevPiece!: GamePiece;
   private _isMatch: boolean = false;
 
-  private _gameMaterial: GameMaterial;
+  private _matchKey: number;
 
   constructor(
     x: number,
@@ -30,7 +30,7 @@ export class GamePiece extends Mesh {
 
     this._thetaStart = rotation;
     this._thetaOffset = rotation;
-    this._gameMaterial = gameMaterial;
+    this._matchKey = gameMaterial.matchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -55,7 +55,7 @@ export class GamePiece extends Mesh {
   }
 
   get MatchKey(): number {
-    return this._gameMaterial.matchKey;
+    return this._matchKey;
   }
 
   set IsMatch(isMatch: boolean) {
