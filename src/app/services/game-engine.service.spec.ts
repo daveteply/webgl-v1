@@ -41,6 +41,41 @@ describe('GameEngineService', () => {
   });
 
   describe('Match Tests', () => {
+    it('should match none', () => {
+      // mark all game peices with a different game key
+      let mockGameKey = 0;
+      mockAxle.forEach((gameWheel) => {
+        for (const gamePiece of gameWheel.children as GamePiece[]) {
+          gamePiece['_matchKey'] = mockGameKey++;
+        }
+      });
+
+      const initialGamePiece = mockAxle[0].children[0] as GamePiece;
+
+      // find matches
+      service.FindMatches(initialGamePiece, mockAxle);
+
+      // perform tests
+      mockAxle.forEach((gameWheel) => {
+        for (const gamePiece of gameWheel.children as GamePiece[]) {
+          // initial game piece will be marked as match
+          if (gamePiece.id !== initialGamePiece.id) {
+            expect(gamePiece.IsMatch).toBeFalse();
+          }
+        }
+      });
+    });
+
+    it('should match app', () => {
+      // note: all mocked game keys are set to 0
+      service.FindMatches(mockAxle[0].children[0] as GamePiece, mockAxle);
+      mockAxle.forEach((gameWheel) => {
+        for (const gamePiece of gameWheel.children as GamePiece[]) {
+          expect(gamePiece.IsMatch).toBeTrue();
+        }
+      });
+    });
+
     it('should match 2 adjacent', () => {
       (mockAxle[0].children[0] as GamePiece)['_matchKey'] = 1;
       (mockAxle[0].children[1] as GamePiece)['_matchKey'] = 1;
