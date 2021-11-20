@@ -11,4 +11,6 @@ export const COLOR_COUNT = 5;
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 
+// math related constants
 export const TWO_PI = 2 * Math.PI;
+export const DECIMAL_COMPARISON_TOLERANCE = 0.001;

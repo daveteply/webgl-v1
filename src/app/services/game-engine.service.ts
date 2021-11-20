@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DECIMAL_COMPARISON_TOLERANCE } from '../game-constants';
 import { GamePiece } from '../models/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -102,15 +103,19 @@ export class GameEngineService {
 
   private matchAbove(gamePiece: GamePiece): GamePiece | undefined {
     const parentWheel = gamePiece.parent as GameWheel;
-    if (parentWheel.Above) {
-      for (const aboveGamePiece of parentWheel.Above.children as GamePiece[]) {
-        if (
-          !aboveGamePiece.IsMatch &&
-          aboveGamePiece.ThetaOffset === gamePiece.ThetaOffset &&
-          aboveGamePiece.MatchKey === gamePiece.MatchKey
-        ) {
-          return aboveGamePiece;
-        }
+    if (!parentWheel.Above) {
+      return undefined;
+    }
+
+    for (const aboveGamePiece of parentWheel.Above.children as GamePiece[]) {
+      if (
+        !aboveGamePiece.IsMatch &&
+        // good 'ole decimal comparison in JavaScript :P
+        Math.abs(aboveGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
+          DECIMAL_COMPARISON_TOLERANCE &&
+        aboveGamePiece.MatchKey === gamePiece.MatchKey
+      ) {
+        return aboveGamePiece;
       }
     }
 
@@ -119,15 +124,19 @@ export class GameEngineService {
 
   private matchBelow(gamePiece: GamePiece): GamePiece | undefined {
     const parentWheel = gamePiece.parent as GameWheel;
-    if (parentWheel.Below) {
-      for (const belowGamePiece of parentWheel.Below.children as GamePiece[]) {
-        if (
-          !belowGamePiece.IsMatch &&
-          belowGamePiece.ThetaOffset === gamePiece.ThetaOffset &&
-          belowGamePiece.MatchKey === gamePiece.MatchKey
-        ) {
-          return belowGamePiece;
-        }
+    if (!parentWheel.Below) {
+      return undefined;
+    }
+
+    for (const belowGamePiece of parentWheel.Below.children as GamePiece[]) {
+      if (
+        !belowGamePiece.IsMatch &&
+        // good 'ole decimal comparison in JavaScript :P
+        Math.abs(belowGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
+          DECIMAL_COMPARISON_TOLERANCE &&
+        belowGamePiece.MatchKey === gamePiece.MatchKey
+      ) {
+        return belowGamePiece;
       }
     }
 
