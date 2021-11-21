@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MathUtils, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
-import { PeicePoints } from '../models/piece-points';
+import { PiecePoints } from '../models/piece-points';
 import {
   GRID_STEP_DEGREES,
   GRID_MAX_DEGREES,
   GRID_RADIUS,
-  GRID_VERTICLE_OFFSET,
+  GRID_VERTICAL_OFFSET,
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece';
@@ -15,7 +15,7 @@ import { GamePiece } from '../models/game-piece';
   providedIn: 'root',
 })
 export class ObjectManagerService {
-  private _peicePoints: PeicePoints[] = [];
+  private _piecePoints: PiecePoints[] = [];
   private _axle: GameWheel[] = [];
   private _activeWheel: GameWheel | undefined;
 
@@ -31,8 +31,8 @@ export class ObjectManagerService {
     // create game plates
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(
-        axisInx * GRID_VERTICLE_OFFSET,
-        this._peicePoints,
+        axisInx * GRID_VERTICAL_OFFSET,
+        this._piecePoints,
         this.materialManager.Materials
       );
       this._axle.push(gameWheel);
@@ -82,7 +82,7 @@ export class ObjectManagerService {
   private initPolarCoords(): void {
     for (let i = 0; i < GRID_MAX_DEGREES; i += GRID_STEP_DEGREES) {
       const rad = MathUtils.degToRad(i);
-      this._peicePoints.push({
+      this._piecePoints.push({
         polarCoords: new Vector3(
           GRID_RADIUS * Math.cos(rad),
           0,

@@ -42,7 +42,7 @@ describe('GameEngineService', () => {
 
   describe('Match Tests', () => {
     it('should match none', () => {
-      // mark all game peices with a different game key
+      // mark all game pieces with a different game key
       let mockGameKey = 0;
       mockAxle.forEach((gameWheel) => {
         for (const gamePiece of gameWheel.children as GamePiece[]) {

@@ -2,7 +2,7 @@ import { Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { GamePiece } from './game-piece';
-import { PeicePoints } from './piece-points';
+import { PiecePoints } from './piece-points';
 import { RotateEase } from './rotate-ease';
 
 export class GameWheel extends Object3D {
@@ -13,20 +13,20 @@ export class GameWheel extends Object3D {
   private _wheelAbove: GameWheel | undefined;
   private _wheelBelow: GameWheel | undefined;
 
-  constructor(y: number, meshPoints: PeicePoints[], materials: GameMaterial[]) {
+  constructor(y: number, meshPoints: PiecePoints[], materials: GameMaterial[]) {
     super();
     this.position.y = y;
 
     // add game pieces
     meshPoints.forEach((meshPoint) => {
-      const gamePeice = new GamePiece(
+      const gamePiece = new GamePiece(
         meshPoint.polarCoords.x,
         0,
         meshPoint.polarCoords.z,
         meshPoint.rotationY,
         materials[Math.floor(Math.random() * materials.length)]
       );
-      this.add(gamePeice);
+      this.add(gamePiece);
     });
 
     // add next and previous iteration references
@@ -99,7 +99,7 @@ export class GameWheel extends Object3D {
     // this will be used later during draw loop
     this._rotateEase = new RotateEase(currentTheta, this._theta, 10);
 
-    // recalculate game peice theta
+    // recalculate game piece theta
     for (const gamePiece of this.children as GamePiece[]) {
       gamePiece.ThetaOffset = this._theta;
     }

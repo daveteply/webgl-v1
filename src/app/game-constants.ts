@@ -3,7 +3,7 @@ import { MathUtils } from 'three';
 export const GRID_RADIUS = 6.5;
 export const GRID_STEP_DEGREES = 10;
 export const GRID_MAX_DEGREES = 360;
-export const GRID_VERTICLE_OFFSET = 1.05;
+export const GRID_VERTICAL_OFFSET = 1.05;
 export const ROTATIONAL_CONSTANT = 75;
 
 export const COLOR_COUNT = 5;

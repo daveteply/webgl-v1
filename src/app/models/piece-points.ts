@@ -1,6 +1,6 @@
 import { Vector3 } from 'three';
 
-export interface PeicePoints {
+export interface PiecePoints {
   polarCoords: Vector3;
   rotationY: number;
 }
