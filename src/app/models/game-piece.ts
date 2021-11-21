@@ -2,19 +2,20 @@ import { BoxGeometry, Mesh } from 'three';
 import { GameMaterial } from './game-material';
 
 export class GamePiece extends Mesh {
-  // Original theta (angle) where the peice was drawn.
+  // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
-  // This will evetually be used to understand if the peice is
+  // This will eventually be used to understand if the piece is
   //   within the current view frustum.
   private _thetaStart: number;
   private _thetaOffset: number;
 
-  // for iterating over pieces checking for matches
-  private _nextPiece!: GamePiece;
-  private _prevPiece!: GamePiece;
-  private _isMatch: boolean = false;
-
   private _matchKey: number;
+
+  // for iterating over pieces checking for matches
+  public Next!: GamePiece;
+  public Prev!: GamePiece;
+
+  public IsMatch: boolean = false;
 
   constructor(
     x: number,
@@ -40,28 +41,7 @@ export class GamePiece extends Mesh {
     return this._thetaOffset;
   }
 
-  set Next(piece: GamePiece) {
-    this._nextPiece = piece;
-  }
-  get Next(): GamePiece {
-    return this._nextPiece;
-  }
-
-  set Prev(piece: GamePiece) {
-    this._prevPiece = piece;
-  }
-  get Prev(): GamePiece {
-    return this._prevPiece;
-  }
-
   get MatchKey(): number {
     return this._matchKey;
-  }
-
-  set IsMatch(isMatch: boolean) {
-    this._isMatch = isMatch;
-  }
-  get IsMatch(): boolean {
-    return this._isMatch;
   }
 }
