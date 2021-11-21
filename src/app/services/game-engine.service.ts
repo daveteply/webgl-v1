@@ -29,7 +29,7 @@ export class GameEngineService {
     // set isMatch for initial piece
     gamePiece.IsMatch = true;
 
-    // reset all existing matchs and start with the initial piece
+    // reset all existing matches and start with the initial piece
     this._matches = [gamePiece];
 
     // begin recursive search
