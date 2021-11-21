@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DECIMAL_COMPARISON_TOLERANCE } from '../game-constants';
+import {
+  DECIMAL_COMPARISON_TOLERANCE,
+  MINIMUM_MATCH_COUNT,
+} from '../game-constants';
 import { GamePiece } from '../models/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -20,7 +23,7 @@ export class GameEngineService {
 
   constructor() {}
 
-  public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): void {
+  public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): boolean {
     // reset all game piece isMatch
     for (const wheel of axle) {
       wheel.ResetIsMatch();
@@ -40,6 +43,7 @@ export class GameEngineService {
       this._matches.map((m) => m.id),
       this._matches[0].MatchKey
     );
+    return this._matches.length >= MINIMUM_MATCH_COUNT;
   }
 
   private directionalSearch(gamePiece: GamePiece): void {

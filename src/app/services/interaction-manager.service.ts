@@ -23,6 +23,8 @@ export class InteractionManagerService {
   private _rayCaster!: Raycaster;
   private _camera!: PerspectiveCamera;
 
+  private _boardLocked: boolean = false;
+
   constructor(
     private objectManager: ObjectManagerService,
     private gameEngine: GameEngineService
@@ -36,39 +38,50 @@ export class InteractionManagerService {
     this._hammer = new Hammer(el);
 
     this._hammer.on('panstart', (panStartEvent) => {
-      const gamePiece = this.getPickedGamePiece(
-        panStartEvent.center.x,
-        panStartEvent.center.y
-      );
-      if (gamePiece) {
-        this._activeWheel = gamePiece.parent as GameWheel;
-        this.objectManager.SetActiveWheel(this._activeWheel);
+      if (!this._boardLocked) {
+        const gamePiece = this.getPickedGamePiece(
+          panStartEvent.center.x,
+          panStartEvent.center.y
+        );
+        if (gamePiece) {
+          this._activeWheel = gamePiece.parent as GameWheel;
+          this.objectManager.SetActiveWheel(this._activeWheel);
+        }
       }
     });
 
     this._hammer.on('pan', (panEvent) => {
-      if (!this._panning) {
-        this._panning = true;
-      } else {
-        this.deviceCordRotation(panEvent.center.x);
-      }
+      if (!this._boardLocked) {
+        if (!this._panning) {
+          this._panning = true;
+        } else {
+          this.deviceCordRotation(panEvent.center.x);
+        }
 
-      if (panEvent.isFinal) {
-        this._panning = false;
-        this._activeWheel?.SnapToGrid();
-        this._activeWheel = undefined;
-      }
+        if (panEvent.isFinal) {
+          this._panning = false;
+          this._activeWheel?.SnapToGrid();
+          this._activeWheel = undefined;
+        }
 
-      this._x = panEvent.center.x;
+        this._x = panEvent.center.x;
+      }
     });
 
     this._hammer.on('press', (pressEvent) => {
-      const gamePiece = this.getPickedGamePiece(
-        pressEvent.center.x,
-        pressEvent.center.y
-      );
-      if (gamePiece) {
-        this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
+      if (!this._boardLocked) {
+        const gamePiece = this.getPickedGamePiece(
+          pressEvent.center.x,
+          pressEvent.center.y
+        );
+        if (gamePiece) {
+          // lock the game board if minimum matches found
+          this._boardLocked = this.gameEngine.FindMatches(
+            gamePiece,
+            this.objectManager.Axle
+          );
+          this.objectManager.LockBoard(this._boardLocked);
+        }
       }
     });
   }

@@ -1,7 +1,9 @@
-import { BoxGeometry, Mesh } from 'three';
+import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three';
 import { GameMaterial } from './game-material';
 
 export class GamePiece extends Mesh {
+  private _material: MeshStandardMaterial;
+
   // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
   // This will eventually be used to understand if the piece is
@@ -31,8 +33,13 @@ export class GamePiece extends Mesh {
 
     this._thetaStart = rotation;
     this._thetaOffset = rotation;
+    this._material = gameMaterial.material;
     this._matchKey = gameMaterial.matchKey;
   }
+
+  // public LockPiece(): void {
+  //   this._material.opacity = 0.5;
+  // }
 
   set ThetaOffset(theta: number) {
     this._thetaOffset = this._thetaStart + theta;

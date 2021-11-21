@@ -19,6 +19,8 @@ export class ObjectManagerService {
   private _axle: GameWheel[] = [];
   private _activeWheel: GameWheel | undefined;
 
+  private _boardLocked: boolean = false;
+
   constructor(private materialManager: MaterialManagerService) {
     this.initPolarCoords();
   }
@@ -28,7 +30,6 @@ export class ObjectManagerService {
   }
 
   public InitShapes(scene: Scene): void {
-    // create game plates
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(
         axisInx * GRID_VERTICAL_OFFSET,
@@ -56,6 +57,7 @@ export class ObjectManagerService {
     }
   }
 
+  // for panning interaction
   public SetActiveWheel(wheel: GameWheel): void {
     if (wheel) {
       this._activeWheel = wheel;
@@ -68,15 +70,18 @@ export class ObjectManagerService {
       this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
 
-    // TEMP animate match
+    // check game piece states
     this._axle.forEach((axle) => {
       for (const gamePiece of axle.children as GamePiece[]) {
-        if (gamePiece.IsMatch) {
-          gamePiece.rotateY(0.03);
-          gamePiece.rotateX(0.02);
+        if (this._boardLocked && !gamePiece.IsMatch) {
+          // gamePiece.LockPiece();
         }
       }
     });
+  }
+
+  public LockBoard(locked: boolean): void {
+    this._boardLocked = locked;
   }
 
   private initPolarCoords(): void {
