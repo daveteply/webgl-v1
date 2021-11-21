@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color, MeshStandardMaterial } from 'three';
+import { Color, MathUtils, MeshStandardMaterial } from 'three';
 import { COLOR_COUNT } from '../game-constants';
 import { GameMaterial } from '../models/game-material';
 import 'node_modules/color-scheme/lib/color-scheme.js';
@@ -40,12 +40,20 @@ export class MaterialManagerService {
   }
 
   private getColorScheme(): string[] {
-    const scheme = new ColorScheme();
-    scheme
-      .from_hue(Math.random() * 360)
-      .scheme('contrast')
+    // https://github.com/c0bra/color-scheme-js
+    const colorScheme = new ColorScheme();
+
+    // get random scheme
+    const schemes = ['contrast', 'triade', 'tetrade', 'analogic'];
+    const scheme = schemes[MathUtils.randInt(0, schemes.length - 1)];
+
+    // generate scheme
+    colorScheme
+      .from_hue(MathUtils.randInt(126, 360))
+      .scheme(scheme)
       .variation('hard');
-    const colors = scheme.colors() as [];
+    const colors = colorScheme.colors() as [];
+
     return colors.map((c) => `#${c}`).slice(0, COLOR_COUNT);
   }
 }
