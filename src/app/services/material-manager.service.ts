@@ -32,6 +32,7 @@ export class MaterialManagerService {
       this._currentMaterials.push({
         material: new MeshStandardMaterial({
           color: new Color(color),
+          transparent: true,
         }),
         materialColorHex: color,
         matchKey: matchKey++,
