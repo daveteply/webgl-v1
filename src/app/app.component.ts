@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
     const winHeight = this.documentRef.defaultView?.innerHeight || 1;
 
     this.sceneManager.UpdateSize(winWidth, winHeight);
-    // this.sceneManager.SetCameraPos(new Vector3(0, 0, 5));
 
     this.animate();
   }

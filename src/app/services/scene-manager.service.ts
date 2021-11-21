@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  AmbientLight,
   Color,
   DirectionalLight,
   PerspectiveCamera,
   Scene,
-  Vector3,
   WebGLRenderer,
 } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
@@ -40,7 +38,9 @@ export class SceneManagerService {
     const aspectRatio = this._width / this._height;
 
     if (!this._camera) {
-      this._camera = new PerspectiveCamera(60, aspectRatio, 1, 25);
+      this._camera = new PerspectiveCamera(45, aspectRatio, 1, 25);
+      this._camera.position.set(0, 0, 5);
+
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
     } else {
@@ -67,12 +67,6 @@ export class SceneManagerService {
     }
   }
 
-  public SetCameraPos(position: Vector3): void {
-    if (this._camera) {
-      this._camera.position.set(position.x, position.y, position.z);
-    }
-  }
-
   public RenderScene(): void {
     this._renderer?.render(this._scene, this._camera);
   }
@@ -87,11 +81,10 @@ export class SceneManagerService {
 
       // lights
       const light = new DirectionalLight(0xffffff, 1);
-      light.position.set(1, 1, 2);
+      light.position.set(0, 0, 5);
       light.target.position.set(0, 0, 0);
       this._scene.add(light);
       this._scene.add(light.target);
-      this._scene.add(new AmbientLight(0xffffff, 0.2));
 
       this._scene.background = new Color(0xf0f0f0f);
 
