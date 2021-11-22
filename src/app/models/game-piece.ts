@@ -26,20 +26,24 @@ export class GamePiece extends Mesh {
     rotation: number,
     gameMaterial: GameMaterial
   ) {
-    super(new BoxGeometry(), gameMaterial.material);
+    super(new BoxGeometry());
 
     this.position.set(x, y, z);
     this.rotateY(rotation);
 
+    // grab a clone of the material so each
+    //  game piece can manipulate it's own material
+    this._material = gameMaterial.material.clone();
+    this.material = this._material;
+
     this._thetaStart = rotation;
     this._thetaOffset = rotation;
-    this._material = gameMaterial.material;
     this._matchKey = gameMaterial.matchKey;
   }
 
-  // public LockPiece(): void {
-  //   this._material.opacity = 0.5;
-  // }
+  public LockPiece(): void {
+    this._material.opacity = 0.1;
+  }
 
   set ThetaOffset(theta: number) {
     this._thetaOffset = this._thetaStart + theta;

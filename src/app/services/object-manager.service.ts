@@ -57,13 +57,14 @@ export class ObjectManagerService {
     }
   }
 
-  // for panning interaction
+  // for panning/horizontal scrubbing interaction
   public SetActiveWheel(wheel: GameWheel): void {
     if (wheel) {
       this._activeWheel = wheel;
     }
   }
 
+  // animation loop
   public UpdateShapes(): void {
     // easing (after pan)
     if (this._activeWheel?.RotateEase?.HasNext) {
@@ -74,7 +75,7 @@ export class ObjectManagerService {
     this._axle.forEach((axle) => {
       for (const gamePiece of axle.children as GamePiece[]) {
         if (this._boardLocked && !gamePiece.IsMatch) {
-          // gamePiece.LockPiece();
+          gamePiece.LockPiece();
         }
       }
     });
