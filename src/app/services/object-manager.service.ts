@@ -29,6 +29,10 @@ export class ObjectManagerService {
     return this._axle;
   }
 
+  public get BoardLocked(): boolean {
+    return this._boardLocked;
+  }
+
   public InitShapes(scene: Scene): void {
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(

@@ -23,8 +23,6 @@ export class InteractionManagerService {
   private _rayCaster!: Raycaster;
   private _camera!: PerspectiveCamera;
 
-  private _boardLocked: boolean = false;
-
   constructor(
     private objectManager: ObjectManagerService,
     private gameEngine: GameEngineService
@@ -38,7 +36,7 @@ export class InteractionManagerService {
     this._hammer = new Hammer(el);
 
     this._hammer.on('panstart', (panStartEvent) => {
-      if (!this._boardLocked) {
+      if (!this.objectManager.BoardLocked) {
         const gamePiece = this.getPickedGamePiece(
           panStartEvent.center.x,
           panStartEvent.center.y
@@ -51,7 +49,7 @@ export class InteractionManagerService {
     });
 
     this._hammer.on('pan', (panEvent) => {
-      if (!this._boardLocked) {
+      if (!this.objectManager.BoardLocked) {
         if (!this._panning) {
           this._panning = true;
         } else {
@@ -63,24 +61,23 @@ export class InteractionManagerService {
           this._activeWheel?.SnapToGrid();
           this._activeWheel = undefined;
         }
-
         this._x = panEvent.center.x;
       }
     });
 
     this._hammer.on('press', (pressEvent) => {
-      if (!this._boardLocked) {
+      if (!this.objectManager.BoardLocked) {
         const gamePiece = this.getPickedGamePiece(
           pressEvent.center.x,
           pressEvent.center.y
         );
         if (gamePiece) {
           // lock the game board if minimum matches found
-          this._boardLocked = this.gameEngine.FindMatches(
+          const limitReached = this.gameEngine.FindMatches(
             gamePiece,
             this.objectManager.Axle
           );
-          this.objectManager.LockBoard(this._boardLocked);
+          this.objectManager.LockBoard(limitReached);
         }
       }
     });

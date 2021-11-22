@@ -19,6 +19,9 @@ export class GamePiece extends Mesh {
 
   public IsMatch: boolean = false;
 
+  // TODO: create clean up for geometries and materials
+  // TODO: create inner/outer geometries
+
   constructor(
     x: number,
     y: number,
