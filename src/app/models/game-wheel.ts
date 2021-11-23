@@ -96,10 +96,10 @@ export class GameWheel extends Object3D {
       this._theta -= deltaPrev;
     }
 
-    // this will be used later during draw loop
+    // this will be used in main draw loop
     this._rotateEase = new RotateEase(currentTheta, this._theta, 10);
 
-    // recalculate game piece theta
+    // recalculate game piece theta (for matching algorithm)
     for (const gamePiece of this.children as GamePiece[]) {
       gamePiece.ThetaOffset = this._theta;
     }

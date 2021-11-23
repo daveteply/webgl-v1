@@ -1,5 +1,6 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three';
+import { BoxGeometry, MathUtils, Mesh, MeshStandardMaterial } from 'three';
 import { GameMaterial } from './game-material';
+import { PieceRemove } from './piece-remove';
 
 export class GamePiece extends Mesh {
   private _material: MeshStandardMaterial;
@@ -18,6 +19,9 @@ export class GamePiece extends Mesh {
   public Prev!: GamePiece;
 
   public IsMatch: boolean = false;
+
+  private _pieceRemoval!: PieceRemove;
+  public IsRemoved: boolean = false;
 
   // TODO: create clean up for geometries and materials
   // TODO: create inner/outer geometries
@@ -44,10 +48,6 @@ export class GamePiece extends Mesh {
     this._matchKey = gameMaterial.matchKey;
   }
 
-  public LockPiece(): void {
-    this._material.opacity = 0.1;
-  }
-
   set ThetaOffset(theta: number) {
     this._thetaOffset = this._thetaStart + theta;
   }
@@ -57,5 +57,29 @@ export class GamePiece extends Mesh {
 
   get MatchKey(): number {
     return this._matchKey;
+  }
+
+  public LockPiece(lock: boolean): void {
+    // TODO keyframes
+    if (!this.IsRemoved) {
+      this._material.opacity = lock ? 0.4 : 1.0;
+    }
+  }
+
+  public InitRemove(): void {
+    this._pieceRemoval = new PieceRemove(MathUtils.randInt(100, 150));
+  }
+
+  public Remove(): void {
+    if (this._pieceRemoval.HasNext) {
+      // TODO: create the 'outer' and 'inner' game piece
+      // this.translateX(this._pieceRemoval.Velocity);
+      this._material.opacity -= this._pieceRemoval.OpacityRate;
+
+      this._pieceRemoval.Next();
+    } else {
+      this.IsMatch = false;
+      this.IsRemoved = true;
+    }
   }
 }

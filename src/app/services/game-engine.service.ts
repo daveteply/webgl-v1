@@ -23,7 +23,7 @@ export class GameEngineService {
 
   constructor() {}
 
-  public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): boolean {
+  public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): GamePiece[] {
     // reset all game piece isMatch
     for (const wheel of axle) {
       wheel.ResetIsMatch();
@@ -43,10 +43,15 @@ export class GameEngineService {
       this._matches.map((m) => m.id),
       this._matches[0].MatchKey
     );
-    return this._matches.length >= MINIMUM_MATCH_COUNT;
+
+    return this._matches.length >= MINIMUM_MATCH_COUNT ? this._matches : [];
   }
 
   private directionalSearch(gamePiece: GamePiece): void {
+    if (gamePiece.IsRemoved) {
+      return;
+    }
+
     let match: GamePiece | undefined;
 
     for (const direction in Direction) {

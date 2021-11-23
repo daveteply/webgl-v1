@@ -41,7 +41,7 @@ export class InteractionManagerService {
           panStartEvent.center.x,
           panStartEvent.center.y
         );
-        if (gamePiece) {
+        if (gamePiece && !gamePiece?.IsRemoved) {
           this._activeWheel = gamePiece.parent as GameWheel;
           this.objectManager.SetActiveWheel(this._activeWheel);
         }
@@ -71,13 +71,17 @@ export class InteractionManagerService {
           pressEvent.center.x,
           pressEvent.center.y
         );
-        if (gamePiece) {
+        if (gamePiece && !gamePiece?.IsRemoved) {
           // lock the game board if minimum matches found
-          const limitReached = this.gameEngine.FindMatches(
+          //   FindMatches will return empty array if minimum not met
+          const matchingPieces = this.gameEngine.FindMatches(
             gamePiece,
             this.objectManager.Axle
           );
-          this.objectManager.LockBoard(limitReached);
+          if (matchingPieces.length) {
+            this.objectManager.LockBoard(true);
+            this.objectManager.SetMatches(matchingPieces);
+          }
         }
       }
     });

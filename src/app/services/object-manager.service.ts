@@ -19,6 +19,8 @@ export class ObjectManagerService {
   private _axle: GameWheel[] = [];
   private _activeWheel: GameWheel | undefined;
 
+  private _matchPieces!: GamePiece[];
+  private _boardLocking: boolean = false;
   private _boardLocked: boolean = false;
 
   constructor(private materialManager: MaterialManagerService) {
@@ -61,13 +63,6 @@ export class ObjectManagerService {
     }
   }
 
-  // for panning/horizontal scrubbing interaction
-  public SetActiveWheel(wheel: GameWheel): void {
-    if (wheel) {
-      this._activeWheel = wheel;
-    }
-  }
-
   // animation loop
   public UpdateShapes(): void {
     // easing (after pan)
@@ -75,18 +70,52 @@ export class ObjectManagerService {
       this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
     }
 
+    if (this._boardLocking) {
+      this.animateLock(this._boardLocking);
+      // TODO: frames
+      this._boardLocked = true;
+    }
+
     // check game piece states
+    if (this._boardLocked) {
+      this.animateRemoval();
+    }
+  }
+
+  // for panning/horizontal scrubbing interaction
+  public SetActiveWheel(wheel: GameWheel): void {
+    if (wheel) {
+      this._activeWheel = wheel;
+    }
+  }
+
+  public SetMatches(matchingGamePieces: GamePiece[]): void {
+    this._matchPieces = matchingGamePieces;
+    this._matchPieces.forEach((piece) => piece.InitRemove());
+  }
+
+  public LockBoard(locked: boolean): void {
+    this._boardLocking = locked;
+  }
+
+  private animateLock(lock: boolean): void {
     this._axle.forEach((axle) => {
       for (const gamePiece of axle.children as GamePiece[]) {
-        if (this._boardLocked && !gamePiece.IsMatch) {
-          gamePiece.LockPiece();
+        if (!gamePiece.IsMatch) {
+          gamePiece.LockPiece(lock);
         }
       }
     });
   }
 
-  public LockBoard(locked: boolean): void {
-    this._boardLocked = locked;
+  private animateRemoval(): void {
+    if (this._matchPieces.some((p) => p.IsMatch)) {
+      this._matchPieces.forEach((p) => p.Remove());
+    } else {
+      // removal animations complete, unlock board
+      this._boardLocked = false;
+      this.animateLock(false);
+    }
   }
 
   private initPolarCoords(): void {
