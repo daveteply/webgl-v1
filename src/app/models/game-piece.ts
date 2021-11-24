@@ -67,7 +67,7 @@ export class GamePiece extends Mesh {
   }
 
   public InitRemove(): void {
-    this._pieceRemoval = new PieceRemove(MathUtils.randInt(100, 150));
+    this._pieceRemoval = new PieceRemove(MathUtils.randInt(30, 60));
   }
 
   public Remove(): void {

@@ -10,7 +10,7 @@ export class PieceRemove {
   constructor(limit: number) {
     this._limit = limit;
 
-    this._velocity = MathUtils.randFloat(0.03, 0.06);
+    this._velocity = MathUtils.randFloat(0.04, 0.06);
     this._opacityRate = 1 / limit;
   }
 
