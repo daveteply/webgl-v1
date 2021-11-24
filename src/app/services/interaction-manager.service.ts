@@ -115,6 +115,16 @@ export class InteractionManagerService {
     const intersects = this._rayCaster.intersectObjects(
       this.objectManager.Axle
     );
-    return intersects[0]?.object as GamePiece;
+    if (intersects.length) {
+      const castTarget = intersects[0].object;
+      // target may be "inner" game piece
+      if (castTarget.parent instanceof GamePiece) {
+        return castTarget.parent;
+      } else {
+        return castTarget as GamePiece;
+      }
+    } else {
+      return undefined;
+    }
   }
 }
