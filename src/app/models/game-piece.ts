@@ -97,6 +97,11 @@ export class GamePiece extends Mesh {
   public Remove(): void {
     if (this._pieceRemoval.HasNext) {
       this._material.opacity -= this._pieceRemoval.OpacityRate;
+      this._mesh.translateX(this._pieceRemoval.Velocity);
+      this._mesh.rotateX(this._pieceRemoval.Tumble.x);
+      this._mesh.rotateY(this._pieceRemoval.Tumble.y);
+      this._mesh.rotateZ(this._pieceRemoval.Tumble.z);
+
       this._pieceRemoval.Next();
     } else {
       this.IsMatch = false;
