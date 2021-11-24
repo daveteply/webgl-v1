@@ -48,10 +48,6 @@ export class GameEngineService {
   }
 
   private directionalSearch(gamePiece: GamePiece): void {
-    if (gamePiece.IsRemoved) {
-      return;
-    }
-
     let match: GamePiece | undefined;
 
     for (const direction in Direction) {
@@ -84,7 +80,7 @@ export class GameEngineService {
     // TODO: stop conditions
     //  if the next piece is not in the frustum
 
-    if (gamePiece.Next.IsMatch) {
+    if (gamePiece.Next.IsMatch || gamePiece.Next.IsRemoved) {
       return undefined;
     }
 
@@ -99,7 +95,7 @@ export class GameEngineService {
     // TODO: stop conditions
     //  if the prev piece is not in the frustum
 
-    if (gamePiece.Prev.IsMatch) {
+    if (gamePiece.Prev.IsMatch || gamePiece.Prev.IsRemoved) {
       return undefined;
     }
 
@@ -119,6 +115,7 @@ export class GameEngineService {
     for (const aboveGamePiece of parentWheel.Above.children as GamePiece[]) {
       if (
         !aboveGamePiece.IsMatch &&
+        !aboveGamePiece.IsRemoved &&
         // good 'ole decimal comparison in JavaScript :P
         Math.abs(aboveGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
           DECIMAL_COMPARISON_TOLERANCE &&
@@ -140,6 +137,7 @@ export class GameEngineService {
     for (const belowGamePiece of parentWheel.Below.children as GamePiece[]) {
       if (
         !belowGamePiece.IsMatch &&
+        !belowGamePiece.IsRemoved &&
         // good 'ole decimal comparison in JavaScript :P
         Math.abs(belowGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
           DECIMAL_COMPARISON_TOLERANCE &&
