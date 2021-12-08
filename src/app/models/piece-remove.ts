@@ -12,11 +12,11 @@ export class PieceRemove {
     this._limit = limit;
 
     this._opacityRate = 1 / limit;
-    this._velocity = MathUtils.randFloat(0.02, 0.46);
+    this._velocity = MathUtils.randFloat(0.02, 0.4);
     this._tumble = new Vector3(
-      MathUtils.randFloat(-0.06, 0.06),
-      MathUtils.randFloat(-0.06, 0.06),
-      MathUtils.randFloat(-0.06, 0.06)
+      MathUtils.randFloat(-0.05, 0.05),
+      MathUtils.randFloat(-0.05, 0.05),
+      MathUtils.randFloat(-0.05, 0.05)
     );
   }
 
