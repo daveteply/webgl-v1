@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshBasicMaterial,
 } from 'three';
+import { TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { PieceRemove } from './piece-remove';
 
@@ -67,13 +68,13 @@ export class GamePiece extends Mesh {
     this.add(this._mesh);
 
     // interaction and matching values
-    this._thetaStart = rotation;
-    this._thetaOffset = rotation;
+    this._thetaStart = Math.abs(rotation);
+    this._thetaOffset = this._thetaStart;
     this._matchKey = gameMaterial.matchKey;
   }
 
   set ThetaOffset(theta: number) {
-    this._thetaOffset = this._thetaStart + theta;
+    this._thetaOffset = this.mod(this._thetaStart - theta, TWO_PI);
   }
   get ThetaOffset(): number {
     return this._thetaOffset;
@@ -126,5 +127,9 @@ export class GamePiece extends Mesh {
     const scale = 1.05;
     this._shellGeometry = new BoxGeometry(scale, scale, scale);
     this.geometry = this._shellGeometry;
+  }
+
+  private mod(a: number, n: number): number {
+    return ((a % n) + n) % n;
   }
 }

@@ -73,7 +73,7 @@ export class GameWheel extends Object3D {
     this._theta += theta;
 
     // restart if full rotation
-    if (Math.abs(this._theta) > TWO_PI) {
+    if (Math.abs(this._theta) >= TWO_PI) {
       this._theta = 0;
     }
 

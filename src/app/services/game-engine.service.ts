@@ -112,20 +112,15 @@ export class GameEngineService {
       return undefined;
     }
 
-    for (const aboveGamePiece of parentWheel.Above.children as GamePiece[]) {
-      if (
-        !aboveGamePiece.IsMatch &&
-        !aboveGamePiece.IsRemoved &&
-        // good 'ole decimal comparison in JavaScript :P
-        Math.abs(aboveGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
-          DECIMAL_COMPARISON_TOLERANCE &&
-        aboveGamePiece.MatchKey === gamePiece.MatchKey
-      ) {
-        return aboveGamePiece;
-      }
-    }
-
-    return undefined;
+    const pieces = parentWheel.Above.children as GamePiece[];
+    return pieces.find(
+      (p) =>
+        !p.IsMatch &&
+        !p.IsRemoved &&
+        p.MatchKey === gamePiece.MatchKey &&
+        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) <
+          DECIMAL_COMPARISON_TOLERANCE
+    );
   }
 
   private matchBelow(gamePiece: GamePiece): GamePiece | undefined {
@@ -134,19 +129,14 @@ export class GameEngineService {
       return undefined;
     }
 
-    for (const belowGamePiece of parentWheel.Below.children as GamePiece[]) {
-      if (
-        !belowGamePiece.IsMatch &&
-        !belowGamePiece.IsRemoved &&
-        // good 'ole decimal comparison in JavaScript :P
-        Math.abs(belowGamePiece.ThetaOffset - gamePiece.ThetaOffset) <
-          DECIMAL_COMPARISON_TOLERANCE &&
-        belowGamePiece.MatchKey === gamePiece.MatchKey
-      ) {
-        return belowGamePiece;
-      }
-    }
-
-    return undefined;
+    const pieces = parentWheel.Below.children as GamePiece[];
+    return pieces.find(
+      (p) =>
+        !p.IsMatch &&
+        !p.IsRemoved &&
+        p.MatchKey === gamePiece.MatchKey &&
+        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) <
+          DECIMAL_COMPARISON_TOLERANCE
+    );
   }
 }
