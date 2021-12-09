@@ -59,7 +59,7 @@ export class GamePiece extends Mesh {
 
     // grab a clone of the material so each
     //  game piece can manipulate it's own material
-    this._material = gameMaterial.material.clone();
+    this._material = gameMaterial.material?.clone();
 
     this._mesh = new Mesh(this._geometry, this._material);
     // TODO: Why is this needed in order to see the mesh?
