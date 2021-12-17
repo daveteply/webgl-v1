@@ -13,7 +13,7 @@ import { GamePiece } from '../models/game-piece';
 export class InteractionManagerService {
   private _hammer!: HammerManager;
 
-  private _clientSize: Vector2;
+  private _canvasRect!: DOMRect;
   private _pointerPos: Vector2;
 
   private _x: number = 0;
@@ -28,14 +28,13 @@ export class InteractionManagerService {
     private gameEngine: GameEngineService
   ) {
     this._rayCaster = new Raycaster();
-    this._clientSize = new Vector2();
     this._pointerPos = new Vector2();
   }
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
 
-    this._hammer.on('panstart', (panStartEvent) => {
+    this._hammer.on('panstart', (panStartEvent: HammerInput) => {
       if (!this.objectManager.BoardLocked) {
         const gamePiece = this.getPickedGamePiece(
           panStartEvent.center.x,
@@ -87,13 +86,8 @@ export class InteractionManagerService {
     });
   }
 
-  public OnResize(
-    width: number,
-    height: number,
-    camera: PerspectiveCamera
-  ): void {
-    this._clientSize.x = width;
-    this._clientSize.y = height;
+  public UpdateSize(rect: DOMRect, camera: PerspectiveCamera): void {
+    this._canvasRect = rect;
     this._camera = camera;
   }
 
@@ -102,15 +96,25 @@ export class InteractionManagerService {
     if (this._activeWheel) {
       this._activeWheel.UpdateTheta(
         MathUtils.degToRad(deltaX) *
-          (ROTATIONAL_CONSTANT / this._clientSize.x) *
+          (ROTATIONAL_CONSTANT / this._canvasRect.width) *
           -1
       );
     }
   }
 
   private getPickedGamePiece(x: number, y: number): GamePiece | undefined {
-    this._pointerPos.x = (x / this._clientSize.x) * 2 - 1;
-    this._pointerPos.y = -(y / this._clientSize.y) * 2 + 1;
+    this._pointerPos.x =
+      ((x - this._canvasRect.left) /
+        (this._canvasRect.right - this._canvasRect.left)) *
+        2 -
+      1;
+    this._pointerPos.y =
+      -(
+        (y - this._canvasRect.top) /
+        (this._canvasRect.bottom - this._canvasRect.top)
+      ) *
+        2 +
+      1;
     this._rayCaster.setFromCamera(this._pointerPos, this._camera);
     const intersects = this._rayCaster.intersectObjects(
       this.objectManager.Axle

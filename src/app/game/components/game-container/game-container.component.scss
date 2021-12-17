@@ -1,0 +1,39 @@
+.game-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .game-scoring {
+    padding: 1em;
+    flex: unset;
+  }
+  .game-canvas {
+    flex: 1 1 auto;
+  }
+  .level-progress {
+    padding: 1em;
+    flex: unset;
+  }
+}
+
+@media screen and (min-aspect-ratio: 3/5) {
+  .game-container {
+    flex-direction: row;
+    .game-scoring {
+      flex: 1 1 auto;
+    }
+    .game-canvas {
+      width: 45em;
+      flex: unset;
+      @media only screen and (min-aspect-ratio: 5/3) {
+        width: 35em;
+      }
+      @media only screen and (min-aspect-ratio: 14/10) {
+        width: 25em;
+      }
+    }
+    .level-progress {
+      flex: 1 1 auto;
+    }
+  }
+}

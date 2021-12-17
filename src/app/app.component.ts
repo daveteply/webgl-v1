@@ -1,7 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Inject, NgZone, OnInit } from '@angular/core';
-import { ObjectManagerService } from './services/object-manager.service';
-import { SceneManagerService } from './services/scene-manager.service';
+import { Component, NgZone, OnInit } from '@angular/core';
 
 @Component({
   selector: 'wgl-root',
@@ -9,42 +6,11 @@ import { SceneManagerService } from './services/scene-manager.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private sceneManager: SceneManagerService,
-    private objectManager: ObjectManagerService,
-    private ngZone: NgZone,
-    @Inject(DOCUMENT) private readonly documentRef: Document
-  ) {
+  constructor(private ngZone: NgZone) {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(() => {});
     });
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    if (event) {
-      this.sceneManager.UpdateSize(
-        event.target?.innerWidth,
-        event.target?.innerHeight
-      );
-    }
-  }
-
-  ngOnInit(): void {
-    const winWidth = this.documentRef.defaultView?.innerWidth || 1;
-    const winHeight = this.documentRef.defaultView?.innerHeight || 1;
-
-    this.sceneManager.UpdateSize(winWidth, winHeight);
-
-    this.animate();
-  }
-
-  private animate(): void {
-    this.objectManager.UpdateShapes();
-    this.sceneManager.RenderScene();
-
-    requestAnimationFrame(() => {
-      this.animate();
-    });
-  }
+  ngOnInit(): void {}
 }

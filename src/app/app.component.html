@@ -1,1 +1,11 @@
-<wgl-canvas></wgl-canvas>
+<div class="main-container">
+  <mat-toolbar color="primary" class="mat-elevation-z4">
+    <span>WebGL Demo</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/intro">Intro</button>
+  </mat-toolbar>
+  <main class="spacer">
+    <router-outlet></router-outlet>
+  </main>
+  <footer class="main-footer">Footer content</footer>
+</div>

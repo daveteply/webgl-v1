@@ -31,9 +31,9 @@ export class SceneManagerService {
     return this._scene;
   }
 
-  public UpdateSize(width: number, height: number): void {
-    this._width = width;
-    this._height = height;
+  public UpdateSize(rect: DOMRect): void {
+    this._width = rect.width;
+    this._height = rect.height;
 
     const aspectRatio = this._width / this._height;
 
@@ -49,16 +49,16 @@ export class SceneManagerService {
     }
 
     if (this._renderer) {
-      this._renderer.setSize(width, height);
+      this._renderer.setSize(this._width, this._height, false);
     }
 
-    this.interactionManager.OnResize(this._width, this._height, this._camera);
+    this.interactionManager.UpdateSize(rect, this._camera);
   }
 
   public InitRenderer(canvas: HTMLCanvasElement): void {
     if (canvas && !this._renderer) {
       this._renderer = new WebGLRenderer({ canvas: canvas });
-      this._renderer.setSize(this._width, this._height);
+      this._renderer.setSize(this._width, this._height, false);
 
       // orbit controls
       // this._controls = new OrbitControls(this._camera, this._canvas);

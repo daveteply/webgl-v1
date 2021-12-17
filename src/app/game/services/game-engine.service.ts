@@ -39,7 +39,7 @@ export class GameEngineService {
     this.directionalSearch(gamePiece);
 
     // all matches should be complete
-    console.log(
+    console.info(
       this._matches.map((m) => m.id),
       this._matches[0].MatchKey
     );
