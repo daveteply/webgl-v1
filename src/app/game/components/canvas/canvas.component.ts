@@ -45,7 +45,6 @@ export class CanvasComponent implements AfterViewInit, AfterContentChecked {
   ngAfterViewInit(): void {
     const el = this.canvas?.nativeElement;
     if (el) {
-      this.sceneManager.UpdateSize(el.getBoundingClientRect());
       this.sceneManager.InitRenderer(el);
       this.interactionManager.InitInteractions(el);
     }
