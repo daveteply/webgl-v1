@@ -15,6 +15,7 @@ export class GameContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sceneManager.InitScene();
     this.animate();
   }
 
