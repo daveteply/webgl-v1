@@ -1,4 +1,5 @@
 import {
+  AfterContentChecked,
   AfterViewInit,
   Component,
   ElementRef,
@@ -13,7 +14,9 @@ import { InteractionManagerService } from '../../services/interaction-manager.se
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.scss'],
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements AfterViewInit, AfterContentChecked {
+  private _initialRectCalculated = false;
+
   @ViewChild('mainCanvas')
   public canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -28,6 +31,16 @@ export class CanvasComponent implements AfterViewInit {
     private sceneManager: SceneManagerService,
     private interactionManager: InteractionManagerService
   ) {}
+
+  ngAfterContentChecked(): void {
+    if (!this._initialRectCalculated) {
+      const rect = this.canvas?.nativeElement.getBoundingClientRect();
+      if (rect) {
+        this.sceneManager.UpdateSize(rect);
+        this._initialRectCalculated = true;
+      }
+    }
+  }
 
   ngAfterViewInit(): void {
     const el = this.canvas?.nativeElement;

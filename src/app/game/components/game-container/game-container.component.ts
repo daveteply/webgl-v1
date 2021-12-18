@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 
@@ -9,6 +9,7 @@ import { SceneManagerService } from '../../services/scene-manager.service';
 })
 export class GameContainerComponent implements OnInit {
   constructor(
+    private ngZone: NgZone,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService
   ) {}
@@ -18,11 +19,13 @@ export class GameContainerComponent implements OnInit {
   }
 
   private animate(): void {
-    this.objectManager.UpdateShapes();
-    this.sceneManager.RenderScene();
+    this.ngZone.runOutsideAngular(() => {
+      this.objectManager.UpdateShapes();
+      this.sceneManager.RenderScene();
 
-    requestAnimationFrame(() => {
-      this.animate();
+      requestAnimationFrame(() => {
+        this.animate();
+      });
     });
   }
 }
