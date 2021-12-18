@@ -3,6 +3,7 @@ import {
   DECIMAL_COMPARISON_TOLERANCE,
   MINIMUM_MATCH_COUNT,
 } from '../game-constants';
+import { GameModule } from '../game.module';
 import { GamePiece } from '../models/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -14,9 +15,7 @@ enum Direction {
   Prev = 'Prev',
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class GameEngineService {
   // reset matches
   private _matches: GamePiece[] = [];

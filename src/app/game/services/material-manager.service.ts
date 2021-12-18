@@ -6,9 +6,7 @@ import 'node_modules/color-scheme/lib/color-scheme.js';
 
 declare var ColorScheme: any;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MaterialManagerService {
   private _currentMaterials: GameMaterial[] = [];
 

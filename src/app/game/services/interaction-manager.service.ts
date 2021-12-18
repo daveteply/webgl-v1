@@ -7,9 +7,7 @@ import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class InteractionManagerService {
   private _hammer!: HammerManager;
 

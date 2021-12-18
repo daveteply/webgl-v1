@@ -9,9 +9,7 @@ import {
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SceneManagerService {
   private _width: number = 0;
   private _height: number = 0;

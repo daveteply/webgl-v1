@@ -11,9 +11,7 @@ import {
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ObjectManagerService {
   private _piecePoints: PiecePoints[] = [];
   private _axle: GameWheel[] = [];
