@@ -6,7 +6,7 @@ describe('MaterialManagerService', () => {
   let service: MaterialManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: [MaterialManagerService] });
     service = TestBed.inject(MaterialManagerService);
   });
 

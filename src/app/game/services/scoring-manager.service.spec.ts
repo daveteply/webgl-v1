@@ -6,7 +6,7 @@ describe('ScoringManagerService', () => {
   let service: ScoringManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: [ScoringManagerService] });
     service = TestBed.inject(ScoringManagerService);
   });
 

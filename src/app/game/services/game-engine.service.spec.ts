@@ -27,7 +27,11 @@ describe('GameEngineService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ObjectManagerService, MaterialManagerService],
+      providers: [
+        ObjectManagerService,
+        MaterialManagerService,
+        GameEngineService,
+      ],
     });
     service = TestBed.inject(GameEngineService);
     objectManagerService = new ObjectManagerService(
