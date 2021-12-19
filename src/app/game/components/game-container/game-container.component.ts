@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
+import { ScoringManagerService } from '../../services/scoring-manager.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -11,7 +12,8 @@ export class GameContainerComponent implements OnInit {
   constructor(
     private ngZone: NgZone,
     private sceneManager: SceneManagerService,
-    private objectManager: ObjectManagerService
+    private objectManager: ObjectManagerService,
+    public scoringManager: ScoringManagerService
   ) {}
 
   ngOnInit(): void {

@@ -14,6 +14,14 @@ export class ScoringManagerService {
     this._timestamp = Date.now();
   }
 
+  get Level(): number {
+    return this._level;
+  }
+
+  get Score(): number {
+    return this._score;
+  }
+
   public UpdateScore(pieceCount: number): void {
     // update since previous match
     const timeDiff = Date.now() - this._timestamp;
@@ -27,7 +35,7 @@ export class ScoringManagerService {
     // match speed multiplier
     // TODO
 
-    this._score = scoreDelta;
+    this._score += scoreDelta;
   }
 
   public UpdateLevel(pieceCount: number): boolean {

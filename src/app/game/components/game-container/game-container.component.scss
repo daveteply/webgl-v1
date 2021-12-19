@@ -4,6 +4,8 @@
   display: flex;
   flex-direction: column;
   .game-scoring {
+    display: flex;
+    justify-content: space-between;
     padding: 1em;
     flex: unset;
   }
@@ -20,6 +22,8 @@
   .game-container {
     flex-direction: row;
     .game-scoring {
+      flex-direction: column;
+      justify-content: start;
       flex: 1 1 auto;
     }
     .game-canvas {
