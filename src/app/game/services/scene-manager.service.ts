@@ -77,7 +77,7 @@ export class SceneManagerService {
 
   public InitRenderer(canvas: HTMLCanvasElement): void {
     if (canvas) {
-      this._renderer = new WebGLRenderer({ canvas: canvas });
+      this._renderer = new WebGLRenderer({ canvas: canvas, antialias: true });
     }
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
