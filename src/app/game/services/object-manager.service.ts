@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MathUtils, Scene, Vector3 } from 'three';
+import { MathUtils, Object3D, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
 import {
@@ -15,14 +15,19 @@ import { GamePiece } from '../models/game-piece';
 export class ObjectManagerService {
   private _piecePoints: PiecePoints[] = [];
   private _axle: GameWheel[] = [];
+  private _stack: Object3D;
   private _activeWheel: GameWheel | undefined;
+
+  private _scene!: Scene;
 
   private _matchPieces!: GamePiece[];
   private _boardLocking: boolean = false;
   private _boardLocked: boolean = false;
+  private _pendingLevelChange: boolean = false;
 
   constructor(private materialManager: MaterialManagerService) {
     this.initPolarCoords();
+    this._stack = new Object3D();
   }
 
   public get Axle(): GameWheel[] {
@@ -33,7 +38,17 @@ export class ObjectManagerService {
     return this._boardLocked;
   }
 
-  public InitShapes(scene: Scene): void {
+  public InitShapes(scene?: Scene): void {
+    // store reference to scene for later level change
+    if (scene && !this._scene) {
+      this._scene = scene;
+    }
+
+    // clear existing objects
+    this.dispose();
+
+    // create new objects
+    this.materialManager.InitColorsMaterials();
     for (let axisInx = -3; axisInx <= 3; axisInx++) {
       const gameWheel = new GameWheel(
         axisInx * GRID_VERTICAL_OFFSET,
@@ -41,8 +56,10 @@ export class ObjectManagerService {
         this.materialManager.Materials
       );
       this._axle.push(gameWheel);
-      scene.add(gameWheel);
+      this._stack.add(gameWheel);
     }
+
+    this._scene.add(this._stack);
 
     // assign iteration values (wheels are built bottom-up)
     for (let i = 0; i < this._axle.length; i++) {
@@ -76,7 +93,17 @@ export class ObjectManagerService {
 
     // check game piece states
     if (this._boardLocked) {
-      this.animateRemoval();
+      if (this.animateRemoval()) {
+        // removal animations complete, unlock board
+        this.animateLock(false);
+        this._boardLocked = false;
+
+        // check for level change
+        if (this._pendingLevelChange) {
+          this.InitShapes();
+          this._pendingLevelChange = false;
+        }
+      }
     }
   }
 
@@ -96,6 +123,10 @@ export class ObjectManagerService {
     this._boardLocking = locked;
   }
 
+  public SetLevelChange(): void {
+    this._pendingLevelChange = true;
+  }
+
   private animateLock(lock: boolean): void {
     this._axle.forEach((axle) => {
       for (const gamePiece of axle.children as GamePiece[]) {
@@ -106,27 +137,34 @@ export class ObjectManagerService {
     });
   }
 
-  private animateRemoval(): void {
-    if (this._matchPieces.some((p) => p.IsMatch)) {
+  private animateRemoval(): boolean {
+    const complete = !this._matchPieces.some((p) => p.IsMatch);
+    if (!complete) {
       this._matchPieces.forEach((p) => p.Remove());
-    } else {
-      // removal animations complete, unlock board
-      this._boardLocked = false;
-      this.animateLock(false);
     }
+    return complete;
   }
 
   private initPolarCoords(): void {
     for (let i = 0; i < GRID_MAX_DEGREES; i += GRID_STEP_DEGREES) {
       const rad = MathUtils.degToRad(i);
+      const x = GRID_RADIUS * Math.cos(rad);
+      const z = GRID_RADIUS * Math.sin(rad);
       this._piecePoints.push({
-        polarCoords: new Vector3(
-          GRID_RADIUS * Math.cos(rad),
-          0,
-          GRID_RADIUS * Math.sin(rad)
-        ),
+        polarCoords: new Vector3(x, 0, z),
         rotationY: rad * -1,
       });
     }
+  }
+
+  private dispose(): void {
+    // cascade dispose through all game pieces
+    if (this._axle.length) {
+      this._axle.forEach((a) => a.Dispose());
+    }
+    // reset array
+    this._axle = [];
+    // remove all objects
+    this._stack.clear();
   }
 }

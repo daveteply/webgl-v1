@@ -10,19 +10,21 @@ declare var ColorScheme: any;
 export class MaterialManagerService {
   private _currentMaterials: GameMaterial[] = [];
 
-  constructor() {
-    this.initColorsMaterials(COLOR_COUNT);
-  }
-
   public get Materials(): GameMaterial[] {
     return this._currentMaterials;
   }
 
-  private initColorsMaterials(count: number): void {
+  public InitColorsMaterials(): void {
     // colors
     const selectedColors = this.getColorScheme();
 
     let matchKey = 0;
+
+    // clean up existing materials
+    if (this._currentMaterials.length) {
+      this._currentMaterials.forEach((m) => m.material.dispose());
+      this._currentMaterials = [];
+    }
 
     // materials
     this._currentMaterials = [];

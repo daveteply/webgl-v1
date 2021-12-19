@@ -110,4 +110,10 @@ export class GameWheel extends Object3D {
       gamePiece.IsMatch = false;
     }
   }
+
+  public Dispose(): void {
+    for (const gamePiece of this.children as GamePiece[]) {
+      gamePiece.Dispose();
+    }
+  }
 }

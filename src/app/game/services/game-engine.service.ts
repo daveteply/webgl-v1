@@ -3,7 +3,6 @@ import {
   DECIMAL_COMPARISON_TOLERANCE,
   MINIMUM_MATCH_COUNT,
 } from '../game-constants';
-import { GameModule } from '../game.module';
 import { GamePiece } from '../models/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -38,11 +37,6 @@ export class GameEngineService {
     this.directionalSearch(gamePiece);
 
     // all matches should be complete
-    console.info(
-      this._matches.map((m) => m.id),
-      this._matches[0].MatchKey
-    );
-
     return this._matches.length >= MINIMUM_MATCH_COUNT ? this._matches : [];
   }
 

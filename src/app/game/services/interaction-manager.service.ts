@@ -6,6 +6,7 @@ import { ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece';
+import { ScoringManagerService } from './scoring-manager.service';
 
 @Injectable()
 export class InteractionManagerService {
@@ -23,7 +24,8 @@ export class InteractionManagerService {
 
   constructor(
     private objectManager: ObjectManagerService,
-    private gameEngine: GameEngineService
+    private gameEngine: GameEngineService,
+    private scoringManager: ScoringManagerService
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
@@ -70,7 +72,6 @@ export class InteractionManagerService {
         );
         if (gamePiece && !gamePiece?.IsRemoved) {
           // lock the game board if minimum matches found
-          //   FindMatches will return empty array if minimum not met
           const matchingPieces = this.gameEngine.FindMatches(
             gamePiece,
             this.objectManager.Axle
@@ -78,6 +79,10 @@ export class InteractionManagerService {
           if (matchingPieces.length) {
             this.objectManager.LockBoard(true);
             this.objectManager.SetMatches(matchingPieces);
+            this.scoringManager.UpdateScore(matchingPieces.length);
+            if (this.scoringManager.UpdateLevel(matchingPieces.length)) {
+              this.objectManager.SetLevelChange();
+            }
           }
         }
       }

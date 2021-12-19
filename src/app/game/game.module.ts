@@ -9,6 +9,7 @@ import { InteractionManagerService } from './services/interaction-manager.servic
 import { SceneManagerService } from './services/scene-manager.service';
 import { MaterialManagerService } from './services/material-manager.service';
 import { ObjectManagerService } from './services/object-manager.service';
+import { ScoringManagerService } from './services/scoring-manager.service';
 
 @NgModule({
   declarations: [CanvasComponent, GameContainerComponent],
@@ -19,6 +20,7 @@ import { ObjectManagerService } from './services/object-manager.service';
     ObjectManagerService,
     InteractionManagerService,
     GameEngineService,
+    ScoringManagerService,
   ],
 })
 export class GameModule {}

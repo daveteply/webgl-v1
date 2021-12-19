@@ -110,11 +110,10 @@ export class GamePiece extends Mesh {
     }
   }
 
-  public CleanUp(): void {
-    //TODO: test and use
+  public Dispose(): void {
     this._shellMaterial.dispose();
-    this._material.dispose();
     this._shellGeometry.dispose();
+    this._material.dispose();
     this._geometry.dispose();
   }
 

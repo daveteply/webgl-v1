@@ -17,3 +17,4 @@ export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 
 // game rules
 export const MINIMUM_MATCH_COUNT = 3;
+export const LEVEL_COMPLETION_MULTIPLIER = 5;
