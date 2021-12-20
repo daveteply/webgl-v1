@@ -100,8 +100,7 @@ export class GamePiece extends Mesh {
       this._material.opacity -= this._pieceRemoval.OpacityRate;
       this._mesh.translateX(this._pieceRemoval.Velocity);
       this._mesh.rotateX(this._pieceRemoval.Tumble.x);
-      //this._mesh.rotateY(this._pieceRemoval.Tumble.y);
-      this._mesh.rotateZ(this._pieceRemoval.Tumble.z);
+      this._mesh.rotateZ(this._pieceRemoval.Tumble.y);
 
       this._pieceRemoval.Next();
     } else {
