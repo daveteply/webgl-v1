@@ -5,6 +5,22 @@
   </div>
   <wgl-canvas class="game-canvas"></wgl-canvas>
   <div class="level-progress">
-    <p>Progress</p>
+    <mat-progress-bar
+      class="progress-horizontal"
+      value="{{
+        (scoringManager.CurrentLevelPieceCount /
+          scoringManager.CurrentLevelTarget) *
+          100
+      }}"
+    ></mat-progress-bar>
+    <mat-spinner
+      class="progress-spinner"
+      mode="determinate"
+      value="{{
+        (scoringManager.CurrentLevelPieceCount /
+          scoringManager.CurrentLevelTarget) *
+          100
+      }}"
+    ></mat-spinner>
   </div>
 </div>

@@ -22,6 +22,14 @@ export class ScoringManagerService {
     return this._score;
   }
 
+  get CurrentLevelPieceCount(): number {
+    return this._levelPieceCount;
+  }
+
+  get CurrentLevelTarget(): number {
+    return this._level * LEVEL_COMPLETION_MULTIPLIER;
+  }
+
   public UpdateScore(pieceCount: number): void {
     // update since previous match
     const timeDiff = Date.now() - this._timestamp;
@@ -39,10 +47,8 @@ export class ScoringManagerService {
   }
 
   public UpdateLevel(pieceCount: number): boolean {
-    const countTarget = this._level * LEVEL_COMPLETION_MULTIPLIER;
     this._levelPieceCount += pieceCount;
-
-    const levelChange = this._levelPieceCount >= countTarget;
+    const levelChange = this._levelPieceCount >= this.CurrentLevelTarget;
     if (levelChange) {
       this._level++;
       this._levelPieceCount = 0;

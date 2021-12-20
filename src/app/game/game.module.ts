@@ -11,9 +11,17 @@ import { MaterialManagerService } from './services/material-manager.service';
 import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [CanvasComponent, GameContainerComponent],
-  imports: [CommonModule, GameRoutingModule],
+  imports: [
+    CommonModule,
+    GameRoutingModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+  ],
   providers: [
     SceneManagerService,
     MaterialManagerService,
