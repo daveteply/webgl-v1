@@ -13,14 +13,22 @@
           100
       }}"
     ></mat-progress-bar>
-    <mat-spinner
-      class="progress-spinner"
-      mode="determinate"
-      value="{{
-        (scoringManager.CurrentLevelPieceCount /
-          scoringManager.CurrentLevelTarget) *
-          100
-      }}"
-    ></mat-spinner>
+    <div class="progress-spinner">
+      <mat-spinner
+        mode="determinate"
+        value="{{
+          (scoringManager.CurrentLevelPieceCount /
+            scoringManager.CurrentLevelTarget) *
+            100
+        }}"
+      ></mat-spinner>
+      <div>
+        {{
+          scoringManager.CurrentLevelPieceCount /
+            scoringManager.CurrentLevelTarget | percent
+        }}
+        Complete
+      </div>
+    </div>
   </div>
 </div>
