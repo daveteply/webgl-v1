@@ -13,7 +13,12 @@ import { GamePiece } from '../models/game-piece';
 
 @Injectable()
 export class ObjectManagerService {
+  // create and store polar coordinates to draw game pieces
   private _piecePoints: PiecePoints[] = [];
+
+  // store destination vertical (y axis) coordinates
+  private _verticalTargets: number[] = [];
+
   private _axle: GameWheel[] = [];
   private _stack: Object3D;
   private _activeWheel: GameWheel | undefined;
@@ -26,7 +31,7 @@ export class ObjectManagerService {
   private _pendingLevelChange: boolean = false;
 
   constructor(private materialManager: MaterialManagerService) {
-    this.initPolarCoords();
+    this.initCoords();
     this._stack = new Object3D();
   }
 
@@ -49,33 +54,20 @@ export class ObjectManagerService {
 
     // create new objects
     this.materialManager.InitColorsMaterials();
-    for (let axisInx = -3; axisInx <= 3; axisInx++) {
+    this._verticalTargets.forEach((y) => {
       const gameWheel = new GameWheel(
-        axisInx * GRID_VERTICAL_OFFSET,
+        y,
         this._piecePoints,
         this.materialManager.Materials
       );
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
-    }
+    });
 
     this._scene.add(this._stack);
 
     // assign iteration values (wheels are built bottom-up)
-    for (let i = 0; i < this._axle.length; i++) {
-      if (i === 0) {
-        // "bottom" of wheel stack
-        this._axle[i].Above = this._axle[i + 1];
-        this._axle[i].Below = undefined;
-      } else if (i === this._axle.length - 1) {
-        // "top" of wheel stack
-        this._axle[i].Above = undefined;
-        this._axle[i].Below = this._axle[i - 1];
-      } else {
-        this._axle[i].Above = this._axle[i + 1];
-        this._axle[i].Below = this._axle[i - 1];
-      }
-    }
+    this.assignIterationValues();
   }
 
   // animation loop
@@ -145,7 +137,25 @@ export class ObjectManagerService {
     return complete;
   }
 
-  private initPolarCoords(): void {
+  private assignIterationValues(): void {
+    for (let i = 0; i < this._axle.length; i++) {
+      if (i === 0) {
+        // "bottom" of wheel stack
+        this._axle[i].Above = this._axle[i + 1];
+        this._axle[i].Below = undefined;
+      } else if (i === this._axle.length - 1) {
+        // "top" of wheel stack
+        this._axle[i].Above = undefined;
+        this._axle[i].Below = this._axle[i - 1];
+      } else {
+        this._axle[i].Above = this._axle[i + 1];
+        this._axle[i].Below = this._axle[i - 1];
+      }
+    }
+  }
+
+  private initCoords(): void {
+    // polar coordinates to draw shapes
     for (let i = 0; i < GRID_MAX_DEGREES; i += GRID_STEP_DEGREES) {
       const rad = MathUtils.degToRad(i);
       const x = GRID_RADIUS * Math.cos(rad);
@@ -154,6 +164,11 @@ export class ObjectManagerService {
         polarCoords: new Vector3(x, 0, z),
         rotationY: rad * -1,
       });
+    }
+
+    // vertical targets
+    for (let axisInx = -3; axisInx <= 3; axisInx++) {
+      this._verticalTargets.push(axisInx * GRID_VERTICAL_OFFSET);
     }
   }
 
