@@ -2,12 +2,12 @@ import { Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { GamePiece } from './game-piece';
-import { RotateEase } from './keyframes/rotate-ease';
+import { Betweener } from './keyframes/betweener';
 import { PiecePoints } from './piece-points';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
-  private _rotateEase!: RotateEase;
+  private _betweener!: Betweener;
 
   // 'above' and 'below' are in reference to the y axis
   private _wheelAbove: GameWheel | undefined;
@@ -61,8 +61,8 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public get RotateEase(): RotateEase {
-    return this._rotateEase;
+  get EaseBetweener(): Betweener {
+    return this._betweener;
   }
 
   public Rotate(theta: number): void {
@@ -97,7 +97,7 @@ export class GameWheel extends Object3D {
     }
 
     // this will be used in main draw loop
-    this._rotateEase = new RotateEase(currentTheta, this._theta, 10);
+    this._betweener = new Betweener(currentTheta, this._theta, 10);
 
     // recalculate game piece theta (for matching algorithm)
     for (const gamePiece of this.children as GamePiece[]) {

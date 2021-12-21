@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { EffectsManagerService } from '../../services/effects-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { InteractionManagerService } from '../../services/interaction-manager.service';
 import { MaterialManagerService } from '../../services/material-manager.service';
@@ -22,6 +23,7 @@ describe('CanvasComponent', () => {
         InteractionManagerService,
         GameEngineService,
         ScoringManagerService,
+        EffectsManagerService,
       ],
     }).compileComponents();
   });

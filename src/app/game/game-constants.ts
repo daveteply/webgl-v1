@@ -15,6 +15,9 @@ export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 export const TWO_PI = 2 * Math.PI;
 export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 
+// effects
+export const INTRO_VERTICAL_CASCADE = 15;
+
 // game rules
 export const MINIMUM_MATCH_COUNT = 3;
 export const LEVEL_COMPLETION_MULTIPLIER = 5;

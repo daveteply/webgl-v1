@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { EffectsManagerService } from './effects-manager.service';
 import { GameEngineService } from './game-engine.service';
 import { InteractionManagerService } from './interaction-manager.service';
 import { MaterialManagerService } from './material-manager.service';
@@ -19,6 +20,7 @@ describe('SceneManagerService', () => {
         InteractionManagerService,
         GameEngineService,
         ScoringManagerService,
+        EffectsManagerService,
       ],
     });
     service = TestBed.inject(SceneManagerService);

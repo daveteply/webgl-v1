@@ -10,6 +10,7 @@ import {
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece';
+import { EffectsManagerService } from './effects-manager.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -30,16 +31,19 @@ export class ObjectManagerService {
   private _boardLocked: boolean = false;
   private _pendingLevelChange: boolean = false;
 
-  constructor(private materialManager: MaterialManagerService) {
-    this.initCoords();
+  constructor(
+    private materialManager: MaterialManagerService,
+    private effectsManager: EffectsManagerService
+  ) {
     this._stack = new Object3D();
+    this.initCoords();
   }
 
-  public get Axle(): GameWheel[] {
+  get Axle(): GameWheel[] {
     return this._axle;
   }
 
-  public get BoardLocked(): boolean {
+  get BoardLocked(): boolean {
     return this._boardLocked;
   }
 
@@ -52,11 +56,13 @@ export class ObjectManagerService {
     // clear existing objects
     this.dispose();
 
-    // create new objects
+    // select colors for the current level
     this.materialManager.InitColorsMaterials();
+
+    // create all the objects
     this._verticalTargets.forEach((y) => {
       const gameWheel = new GameWheel(
-        y,
+        10,
         this._piecePoints,
         this.materialManager.Materials
       );
@@ -68,13 +74,23 @@ export class ObjectManagerService {
 
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
+
+    this.effectsManager.BuildLevelChange(this._axle, this._verticalTargets);
   }
 
   // animation loop
   public UpdateShapes(): void {
+    if (this.effectsManager.IntroAnimating) {
+      this.effectsManager.IntroFrame.forEach((frame, inx) => {
+        if (frame.HasNext) {
+          this._axle[inx].position.y = frame.Next;
+        }
+      });
+    }
+
     // easing (after pan)
-    if (this._activeWheel?.RotateEase?.HasNext) {
-      this._activeWheel.Rotate(this._activeWheel?.RotateEase?.Next);
+    if (this._activeWheel?.EaseBetweener?.HasNext) {
+      this._activeWheel.Rotate(this._activeWheel?.EaseBetweener?.Next);
     }
 
     if (this._boardLocking) {
