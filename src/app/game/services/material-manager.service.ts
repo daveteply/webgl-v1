@@ -26,8 +26,7 @@ export class MaterialManagerService {
       this._currentMaterials = [];
     }
 
-    // materials
-    this._currentMaterials = [];
+    // create materials
     selectedColors.forEach((color) => {
       this._currentMaterials.push({
         material: new MeshStandardMaterial({
@@ -50,7 +49,7 @@ export class MaterialManagerService {
 
     // generate scheme
     colorScheme
-      .from_hue(MathUtils.randInt(126, 360))
+      .from_hue(MathUtils.randInt(0, 359))
       .scheme(scheme)
       .variation('hard');
     const colors = colorScheme.colors() as [];
