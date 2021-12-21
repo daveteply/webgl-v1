@@ -23,7 +23,7 @@ export class SceneManagerService {
     private interactionManager: InteractionManagerService
   ) {}
 
-  public get scene(): Scene {
+  get scene(): Scene {
     return this._scene;
   }
 

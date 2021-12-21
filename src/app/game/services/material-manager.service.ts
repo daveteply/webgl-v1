@@ -10,7 +10,7 @@ declare var ColorScheme: any;
 export class MaterialManagerService {
   private _currentMaterials: GameMaterial[] = [];
 
-  public get Materials(): GameMaterial[] {
+  get Materials(): GameMaterial[] {
     return this._currentMaterials;
   }
 
