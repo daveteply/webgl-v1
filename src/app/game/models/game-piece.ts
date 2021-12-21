@@ -8,7 +8,7 @@ import {
 } from 'three';
 import { TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
-import { PieceRemove } from './piece-remove';
+import { PieceRemove } from './keyframes/piece-remove';
 
 export class GamePiece extends Mesh {
   // "Shell" is the containing box geometry for interaction.

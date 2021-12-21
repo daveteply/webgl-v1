@@ -2,8 +2,8 @@ import { Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { GamePiece } from './game-piece';
+import { RotateEase } from './keyframes/rotate-ease';
 import { PiecePoints } from './piece-points';
-import { RotateEase } from './rotate-ease';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
