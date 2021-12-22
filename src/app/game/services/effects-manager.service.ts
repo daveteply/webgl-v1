@@ -21,17 +21,30 @@ export class EffectsManagerService {
 
   public BuildIntoAnimation(
     gameWheels: GameWheel[],
-    verticalTargets: number[]
+    verticalTargets: number[],
+    startY: number
   ): void {
     this._introBetweeners = [];
-    for (let i = 0; i < gameWheels.length; i++) {
-      const tweener = new Betweener(
-        gameWheels[i].position.y,
-        verticalTargets[i],
-        INTRO_VERTICAL_CASCADE * (i + 1)
-      );
-      this._introBetweeners.push(tweener);
+    if (startY < 0) {
+      for (let i = gameWheels.length - 1; i > -1; i--) {
+        const tweener = new Betweener(
+          gameWheels[i].position.y,
+          verticalTargets[i],
+          INTRO_VERTICAL_CASCADE * (gameWheels.length - i)
+        );
+        this._introBetweeners.push(tweener);
+      }
+    } else {
+      for (let i = 0; i < gameWheels.length; i++) {
+        const tweener = new Betweener(
+          gameWheels[i].position.y,
+          verticalTargets[i],
+          INTRO_VERTICAL_CASCADE * (i + 1)
+        );
+        this._introBetweeners.push(tweener);
+      }
     }
+
     this._activeEffects.push(EffectTypes.Intro);
   }
 

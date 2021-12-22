@@ -60,9 +60,10 @@ export class ObjectManagerService {
     this.materialManager.InitColorsMaterials();
 
     // create all the objects
-    this._verticalTargets.forEach((y) => {
+    const startY = MathUtils.randInt(1, 3) === 1 ? 10 : -10;
+    this._verticalTargets.forEach(() => {
       const gameWheel = new GameWheel(
-        10,
+        startY,
         this._piecePoints,
         this.materialManager.Materials
       );
@@ -75,7 +76,11 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.effectsManager.BuildIntoAnimation(this._axle, this._verticalTargets);
+    this.effectsManager.BuildIntoAnimation(
+      this._axle,
+      this._verticalTargets,
+      startY
+    );
   }
 
   // animation loop
