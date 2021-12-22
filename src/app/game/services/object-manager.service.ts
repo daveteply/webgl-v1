@@ -75,18 +75,12 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.effectsManager.BuildLevelChange(this._axle, this._verticalTargets);
+    this.effectsManager.BuildIntoAnimation(this._axle, this._verticalTargets);
   }
 
   // animation loop
   public UpdateShapes(): void {
-    if (this.effectsManager.IntroAnimating) {
-      this.effectsManager.IntroFrame.forEach((frame, inx) => {
-        if (frame.HasNext) {
-          this._axle[inx].position.y = frame.Next;
-        }
-      });
-    }
+    this.effectsManager.UpdateEffects(this._axle);
 
     // easing (after pan)
     if (this._activeWheel?.EaseBetweener?.HasNext) {
