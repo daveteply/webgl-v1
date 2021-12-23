@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
-import 'hammerjs';
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 import { ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece';
 import { ScoringManagerService } from './scoring-manager.service';
+import { DIRECTION_UP } from 'hammerjs';
+import 'hammerjs';
 
 @Injectable()
 export class InteractionManagerService {
@@ -33,6 +34,7 @@ export class InteractionManagerService {
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
+    this._hammer.get('swipe').set({ direction: Hammer.DIRECTION_VERTICAL });
 
     this._hammer.on('panstart', (panStartEvent: HammerInput) => {
       if (!this.objectManager.BoardLocked) {
@@ -84,6 +86,21 @@ export class InteractionManagerService {
               this.objectManager.SetLevelChange();
             }
           }
+        }
+      }
+    });
+
+    this._hammer.on('swipe', (swipeEvent) => {
+      if (!this.objectManager.BoardLocked) {
+        const gamePiece = this.getPickedGamePiece(
+          swipeEvent.center.x,
+          swipeEvent.center.y - swipeEvent.deltaY
+        );
+        if (gamePiece) {
+          this.objectManager.FlipGamePiece(
+            gamePiece,
+            swipeEvent.direction === DIRECTION_UP
+          );
         }
       }
     });

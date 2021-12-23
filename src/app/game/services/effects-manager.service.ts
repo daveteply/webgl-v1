@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { MathUtils } from 'three';
 import { INTRO_VERTICAL_CASCADE } from '../game-constants';
+import { GamePiece } from '../models/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { Betweener } from '../models/keyframes/betweener';
 
 enum EffectTypes {
-  Intro,
+  Intro = 1,
+  Flip,
 }
 
 @Injectable()
@@ -13,9 +16,17 @@ export class EffectsManagerService {
 
   private _introBetweeners: Betweener[] = [];
 
+  private _flipTarget!: GamePiece;
+  private _flipBetweener!: Betweener;
+
   public UpdateEffects(axle: GameWheel[]): void {
     if (this._activeEffects.length) {
-      this.animateIntro(axle);
+      if (this._activeEffects.find((e) => e === EffectTypes.Intro)) {
+        this.animateIntro(axle);
+      }
+      if (this._activeEffects.find((e) => e === EffectTypes.Flip)) {
+        this.animateFlip();
+      }
     }
   }
 
@@ -56,10 +67,34 @@ export class EffectsManagerService {
         }
       });
     } else {
-      this._activeEffects.splice(
-        this._activeEffects.findIndex((a) => a === EffectTypes.Intro),
-        1
-      );
+      this.removeActiveEffect(EffectTypes.Intro);
     }
+  }
+
+  public BuildFlip(
+    gamePiece: GamePiece,
+    start: number,
+    directionUp: boolean
+  ): void {
+    this._flipTarget = gamePiece;
+    const target = MathUtils.degToRad(90) * (directionUp ? -1 : 1);
+    this._flipBetweener = new Betweener(start, target, 10);
+
+    this._activeEffects.push(EffectTypes.Flip);
+  }
+
+  private animateFlip(): void {
+    if (this._flipBetweener.HasNext) {
+      this._flipTarget.rotation.z = this._flipBetweener.Next;
+    } else {
+      this.removeActiveEffect(EffectTypes.Flip);
+    }
+  }
+
+  private removeActiveEffect(effect: EffectTypes): void {
+    this._activeEffects.splice(
+      this._activeEffects.findIndex((a) => a === effect),
+      1
+    );
   }
 }

@@ -134,6 +134,10 @@ export class ObjectManagerService {
     this._pendingLevelChange = true;
   }
 
+  public FlipGamePiece(gamePiece: GamePiece, directionUp: boolean): void {
+    this.effectsManager.BuildFlip(gamePiece, 0, directionUp);
+  }
+
   private animateLock(lock: boolean): void {
     this._axle.forEach((axle) => {
       for (const gamePiece of axle.children as GamePiece[]) {

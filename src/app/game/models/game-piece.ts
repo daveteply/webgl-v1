@@ -1,22 +1,11 @@
-import {
-  BoxGeometry,
-  BufferGeometry,
-  Material,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-} from 'three';
+import { BoxGeometry, Material, MathUtils, Mesh, Object3D } from 'three';
 import { TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { PieceRemove } from './keyframes/piece-remove';
 
-export class GamePiece extends Mesh {
-  // "Shell" is the containing box geometry for interaction.
-  //  Allows the "inner" to be any geometry, etc.
-  private _shellMaterial!: Material;
-  private _material: Material;
-  private _shellGeometry!: BoxGeometry;
-  private _geometry: BufferGeometry;
+export class GamePiece extends Object3D {
+  private _innerGeometry: BoxGeometry;
+  private _innerMaterial: Material;
 
   // visual game piece
   private _mesh: Mesh;
@@ -29,6 +18,8 @@ export class GamePiece extends Mesh {
   private _thetaOffset: number;
 
   private _matchKey: number;
+
+  // private _flipTweener!: Betweener;
 
   // for iterating over pieces checking for matches
   public Next!: GamePiece;
@@ -48,22 +39,19 @@ export class GamePiece extends Mesh {
   ) {
     super();
 
-    this.initShell();
-
     // position shell in grid
     this.position.set(x, y, z);
     this.rotateY(rotation);
 
     // set up visual piece
-    this._geometry = new BoxGeometry();
+    this._innerGeometry = new BoxGeometry();
 
     // grab a clone of the material so each
     //  game piece can manipulate it's own material
-    this._material = gameMaterial.material?.clone();
+    this._innerMaterial = gameMaterial.material?.clone();
 
-    this._mesh = new Mesh(this._geometry, this._material);
-    // TODO: Why is this needed in order to see the mesh?
-    this._mesh.translateX(0.01);
+    this._mesh = new Mesh(this._innerGeometry, this._innerMaterial);
+    //this._mesh.translateX(0.01);
 
     this.add(this._mesh);
 
@@ -87,7 +75,7 @@ export class GamePiece extends Mesh {
   public LockPiece(lock: boolean): void {
     // TODO keyframes
     if (!this.IsRemoved) {
-      this._material.opacity = lock ? 0.4 : 1.0;
+      this._innerMaterial.opacity = lock ? 0.4 : 1.0;
     }
   }
 
@@ -97,7 +85,7 @@ export class GamePiece extends Mesh {
 
   public Remove(): void {
     if (this._pieceRemoval.HasNext) {
-      this._material.opacity -= this._pieceRemoval.OpacityRate;
+      this._innerMaterial.opacity -= this._pieceRemoval.OpacityRate;
       this._mesh.translateX(this._pieceRemoval.Velocity);
       this._mesh.rotateX(this._pieceRemoval.Tumble.x);
       this._mesh.rotateZ(this._pieceRemoval.Tumble.y);
@@ -110,21 +98,8 @@ export class GamePiece extends Mesh {
   }
 
   public Dispose(): void {
-    this._shellMaterial.dispose();
-    this._shellGeometry.dispose();
-    this._material.dispose();
-    this._geometry.dispose();
-  }
-
-  private initShell(): void {
-    this._shellMaterial = new MeshBasicMaterial({
-      transparent: true,
-      opacity: 0,
-    });
-    this.material = this._shellMaterial;
-    const scale = 1.05;
-    this._shellGeometry = new BoxGeometry(scale, scale, scale);
-    this.geometry = this._shellGeometry;
+    this._innerMaterial.dispose();
+    this._innerGeometry.dispose();
   }
 
   private mod(a: number, n: number): number {
