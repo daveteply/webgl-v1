@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MathUtils, Object3D, Scene, Vector3 } from 'three';
+import { Group, MathUtils, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
 import {
@@ -21,7 +21,7 @@ export class ObjectManagerService {
   private _verticalTargets: number[] = [];
 
   private _axle: GameWheel[] = [];
-  private _stack: Object3D;
+  private _stack: Group;
   private _activeWheel: GameWheel | undefined;
 
   private _scene!: Scene;
@@ -35,7 +35,7 @@ export class ObjectManagerService {
     private materialManager: MaterialManagerService,
     private effectsManager: EffectsManagerService
   ) {
-    this._stack = new Object3D();
+    this._stack = new Group();
     this.initCoords();
   }
 
