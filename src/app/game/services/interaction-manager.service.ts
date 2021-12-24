@@ -90,6 +90,7 @@ export class InteractionManagerService {
       }
     });
 
+    // swipe recognizer is only configured for vertical
     this._hammer.on('swipe', (swipeEvent) => {
       if (!this.objectManager.BoardLocked) {
         const gamePiece = this.getPickedGamePiece(
@@ -97,10 +98,8 @@ export class InteractionManagerService {
           swipeEvent.center.y - swipeEvent.deltaY
         );
         if (gamePiece) {
-          this.objectManager.FlipGamePiece(
-            gamePiece,
-            swipeEvent.direction === DIRECTION_UP
-          );
+          gamePiece.InitFlip(swipeEvent.direction === DIRECTION_UP);
+          this.objectManager.FlipGamePiece(gamePiece);
         }
       }
     });

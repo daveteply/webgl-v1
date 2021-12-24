@@ -134,8 +134,8 @@ export class ObjectManagerService {
     this._pendingLevelChange = true;
   }
 
-  public FlipGamePiece(gamePiece: GamePiece, directionUp: boolean): void {
-    this.effectsManager.BuildFlip(gamePiece, 0, directionUp);
+  public FlipGamePiece(gamePiece: GamePiece): void {
+    this.effectsManager.Flip(gamePiece);
   }
 
   private animateLock(lock: boolean): void {

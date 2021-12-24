@@ -10,6 +10,8 @@ export const COLOR_COUNT = 6;
 
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
+// rotation
+export const QUARTER_CIRCLE = MathUtils.degToRad(90);
 
 // math related constants
 export const TWO_PI = 2 * Math.PI;

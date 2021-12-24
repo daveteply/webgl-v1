@@ -24,7 +24,7 @@ export class GameWheel extends Object3D {
         0,
         meshPoint.polarCoords.z,
         meshPoint.rotationY,
-        materials[Math.floor(Math.random() * materials.length)]
+        materials
       );
       this.add(gamePiece);
     });
