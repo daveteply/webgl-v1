@@ -91,7 +91,9 @@ export class GamePiece extends Object3D {
   public LockPiece(lock: boolean): void {
     // TODO keyframes
     if (!this._isRemoved) {
-      this._innerMaterials[0].material.opacity = lock ? 0.4 : 1.0;
+      this._innerMaterials.forEach(
+        (m) => (m.material.opacity = lock ? 0.4 : 1.0)
+      );
     }
   }
 

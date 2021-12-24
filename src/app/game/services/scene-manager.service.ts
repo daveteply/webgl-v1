@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   Color,
-  DirectionalLight,
   PerspectiveCamera,
+  PointLight,
   Scene,
   WebGLRenderer,
 } from 'three';
@@ -18,6 +18,8 @@ export class SceneManagerService {
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
+  private _pointLight!: PointLight;
+
   constructor(
     private objectManager: ObjectManagerService,
     private interactionManager: InteractionManagerService
@@ -30,22 +32,15 @@ export class SceneManagerService {
   public InitScene(): void {
     if (!this._scene) {
       this._scene = new Scene();
+      this._scene.background = new Color(0xf0f0f0f);
 
       // axes
       // const axesHelper = new AxesHelper(5);
       // this._scene.add(axesHelper);
 
       // lights
-      const light = new DirectionalLight(0xffffff, 1);
-      light.position.set(0, 0, 5);
-      light.target.position.set(0, 0, 0);
-      this._scene.add(light);
-      this._scene.add(light.target);
-
-      this._scene.background = new Color(0xf0f0f0f);
-
-      // const helper = new DirectionalLightHelper(light, 5);
-      // this._scene.add(helper);
+      this._pointLight = new PointLight(0xffffff, 1);
+      this._scene.add(this._pointLight);
 
       this.objectManager.InitShapes(this._scene);
     }
@@ -60,6 +55,7 @@ export class SceneManagerService {
     if (!this._camera) {
       this._camera = new PerspectiveCamera(45, aspectRatio, 1, 25);
       this._camera.position.set(0, 0, 5);
+      this._pointLight.position.copy(this._camera.position);
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
