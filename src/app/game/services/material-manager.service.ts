@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Color, MathUtils, MeshStandardMaterial } from 'three';
+import {
+  Color,
+  LoadingManager,
+  MathUtils,
+  MeshPhongMaterial,
+  TextureLoader,
+} from 'three';
 import { COLOR_COUNT } from '../game-constants';
 import { GameMaterial } from '../models/game-material';
 import 'node_modules/color-scheme/lib/color-scheme.js';
@@ -9,6 +15,27 @@ declare var ColorScheme: any;
 @Injectable()
 export class MaterialManagerService {
   private _currentMaterials: GameMaterial[] = [];
+
+  private _loaderManager: LoadingManager;
+  private _textureLoader: TextureLoader;
+
+  private _bumpMaps: string[] = [
+    'assets/maps-bump/Brick 2371 bump map.jpg',
+    'assets/maps-bump/Brick 2852b bump map.jpg',
+    'assets/maps-bump/Concrete 3035 bump map.jpg',
+    'assets/maps-bump/Gravel 2486 bump map.jpg',
+    'assets/maps-bump/Metal 2350 bump map.jpg',
+    'assets/maps-bump/Metal 2860 bump map.jpg',
+  ];
+
+  constructor() {
+    this._loaderManager = new LoadingManager(
+      this.texturesLoaded,
+      this.texturesLoading,
+      this.textureLoadError
+    );
+    this._textureLoader = new TextureLoader(this._loaderManager);
+  }
 
   get Materials(): GameMaterial[] {
     return this._currentMaterials;
@@ -27,10 +54,12 @@ export class MaterialManagerService {
     }
 
     // create materials
-    selectedColors.forEach((color) => {
+    selectedColors.forEach((color, inx) => {
       this._currentMaterials.push({
-        material: new MeshStandardMaterial({
+        material: new MeshPhongMaterial({
           color: new Color(color),
+          bumpMap: this._textureLoader.load(this._bumpMaps[inx]),
+          bumpScale: 0.03,
           transparent: true,
         }),
         materialColorHex: color,
@@ -55,5 +84,21 @@ export class MaterialManagerService {
     const colors = colorScheme.colors() as [];
 
     return colors.map((c) => `#${c}`).slice(0, COLOR_COUNT);
+  }
+
+  private texturesLoaded(): void {
+    console.log('textures loaded');
+  }
+
+  private texturesLoading(
+    url: string,
+    itemsLoaded: number,
+    itemsTotal: number
+  ): void {
+    console.log('loading', url, itemsLoaded, itemsTotal);
+  }
+
+  private textureLoadError(url: string): void {
+    console.log('error', url);
   }
 }

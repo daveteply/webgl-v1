@@ -1,4 +1,10 @@
-import { BoxGeometry, MathUtils, Mesh, Object3D } from 'three';
+import {
+  BoxBufferGeometry,
+  BoxGeometry,
+  MathUtils,
+  Mesh,
+  Object3D,
+} from 'three';
 import { QUARTER_CIRCLE, TWO_PI } from '../game-constants';
 import { GameMaterial } from './game-material';
 import { Betweener } from './keyframes/betweener';
@@ -57,7 +63,7 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // set up visual piece
-    this._innerGeometry = new BoxGeometry();
+    this._innerGeometry = new BoxBufferGeometry(1, 1, 1, 4, 4, 4);
 
     // materials
     this.initMaterials(gameMaterials);
