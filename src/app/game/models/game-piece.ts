@@ -80,7 +80,7 @@ export class GamePiece extends Object3D {
     this._thetaOffset = this._thetaStart;
 
     // 1 is the default (or "front"), will change when piece is flipped
-    this._matchKey = this._innerMaterials[this._matchKeySequence[0]].matchKey;
+    this._matchKey = this._innerMaterials[this._matchKeySequence[0]]?.matchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -157,14 +157,16 @@ export class GamePiece extends Object3D {
     // 1 'front'
     // 2 'top'
     // 3 'bottom'
-    for (let i = 0; i < 6; i++) {
-      const randMaterial =
-        materials[Math.floor(Math.random() * materials.length)];
-      this._innerMaterials.push({
-        materialColorHex: randMaterial.materialColorHex,
-        material: randMaterial.material.clone(),
-        matchKey: randMaterial.matchKey,
-      });
+    if (materials.length) {
+      for (let i = 0; i < 6; i++) {
+        const randMaterial =
+          materials[Math.floor(Math.random() * materials.length)];
+        this._innerMaterials.push({
+          materialColorHex: randMaterial.materialColorHex,
+          material: randMaterial.material.clone(),
+          matchKey: randMaterial.matchKey,
+        });
+      }
     }
   }
 
