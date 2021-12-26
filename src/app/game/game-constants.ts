@@ -6,7 +6,7 @@ export const GRID_MAX_DEGREES = 360;
 export const GRID_VERTICAL_OFFSET = 1.05;
 export const ROTATIONAL_CONSTANT = 75;
 
-export const COLOR_COUNT = 6;
+export const PLAYABLE_PIECE_COUNT = 6;
 
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);

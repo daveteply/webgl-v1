@@ -1,7 +1,7 @@
-import { MeshPhongMaterial } from 'three';
+import { Material } from 'three';
 
 export interface GameMaterial {
-  materialColorHex: string;
-  material: MeshPhongMaterial;
+  materialColorHex?: string;
+  material: Material;
   matchKey: number;
 }

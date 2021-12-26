@@ -57,7 +57,7 @@ export class ObjectManagerService {
     this.dispose();
 
     // select colors for the current level
-    this.materialManager.InitColorsMaterials();
+    this.materialManager.InitMaterials();
 
     // create all the objects
     const startY = MathUtils.randInt(1, 3) === 1 ? 10 : -10;
