@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
-  Color,
   LoadingManager,
   MathUtils,
   MeshBasicMaterial,
@@ -71,7 +70,9 @@ export class MaterialManagerService {
     // select style for current level
     const levelStyle = MathUtils.randInt(0, 3);
     switch (levelStyle) {
+      // colors
       case 0:
+      // include bump maps
       case 1:
         const selectedColors = this.initColorScheme();
         let bumpTexture = undefined;
@@ -95,9 +96,7 @@ export class MaterialManagerService {
         }
         break;
 
-      case 1:
-        break;
-
+      // default to emojis
       default:
         const dataURLs = this.initEmojiTextures();
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
@@ -110,21 +109,6 @@ export class MaterialManagerService {
           });
         }
     }
-
-    // create materials
-    // for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-    //   this._currentMaterials.push({
-    //     material: new MeshBasicMaterial({
-    //       // color: new Color(color),
-    //       // bumpMap: this._textureLoader.load(this._bumpMaps[inx]),
-    //       // bumpScale: 0.03,
-    //       // map: this._textureLoader.load(dataURLs[i]),
-    //       transparent: true,
-    //     }),
-    //     // materialColorHex: color,
-    //     matchKey: matchKey++,
-    //   });
-    // }
   }
 
   private initColorScheme(): string[] {
