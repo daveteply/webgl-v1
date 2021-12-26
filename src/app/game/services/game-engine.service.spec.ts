@@ -23,7 +23,11 @@ function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
 
 describe('GameEngineService', () => {
   let service: GameEngineService;
+
+  let mockMaterialService: MaterialManagerService;
+  let effectManagerService: EffectsManagerService;
   let objectManagerService: ObjectManagerService;
+
   let mockAxle: GameWheel[];
 
   beforeEach(() => {
@@ -32,12 +36,15 @@ describe('GameEngineService', () => {
         ObjectManagerService,
         MaterialManagerService,
         GameEngineService,
+        EffectsManagerService,
       ],
     });
     service = TestBed.inject(GameEngineService);
+    mockMaterialService = TestBed.inject(MaterialManagerService);
+    effectManagerService = TestBed.inject(EffectsManagerService);
     objectManagerService = new ObjectManagerService(
-      new MaterialManagerService(),
-      new EffectsManagerService()
+      mockMaterialService,
+      effectManagerService
     );
     mockAxle = createMockAxle(objectManagerService);
   });
