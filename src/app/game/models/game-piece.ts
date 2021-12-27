@@ -70,7 +70,7 @@ export class GamePiece extends Object3D {
 
     this._mesh = new Mesh(
       this._innerGeometry,
-      this._innerMaterials.map((m) => m.material)
+      this._innerMaterials.map((m) => m.Material)
     );
 
     this.add(this._mesh);
@@ -80,7 +80,7 @@ export class GamePiece extends Object3D {
     this._thetaOffset = this._thetaStart;
 
     // 1 is the default (or "front"), will change when piece is flipped
-    this._matchKey = this._innerMaterials[this._matchKeySequence[0]]?.matchKey;
+    this._matchKey = this._innerMaterials[this._matchKeySequence[0]]?.MatchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -98,7 +98,7 @@ export class GamePiece extends Object3D {
     // TODO keyframes
     if (!this._isRemoved) {
       this._innerMaterials.forEach(
-        (m) => (m.material.opacity = lock ? 0.4 : 1.0)
+        (m) => (m.Material.opacity = lock ? 0.4 : 1.0)
       );
     }
   }
@@ -110,7 +110,7 @@ export class GamePiece extends Object3D {
   public Remove(): void {
     if (this._pieceRemoval.HasNext) {
       this._innerMaterials.forEach(
-        (m) => (m.material.opacity -= this._pieceRemoval.OpacityRate)
+        (m) => (m.Material.opacity -= this._pieceRemoval.OpacityRate)
       );
       this._mesh.translateX(this._pieceRemoval.Velocity);
       this._mesh.rotateX(this._pieceRemoval.Tumble.x);
@@ -135,7 +135,7 @@ export class GamePiece extends Object3D {
         directionUp ? this._matchKeySequence.length - 1 : 1
       )
     );
-    this._matchKey = this._innerMaterials[this._matchKeySequence[0]].matchKey;
+    this._matchKey = this._innerMaterials[this._matchKeySequence[0]].MatchKey;
   }
 
   public Flip(): boolean {
@@ -147,7 +147,7 @@ export class GamePiece extends Object3D {
   }
 
   public Dispose(): void {
-    this._innerMaterials.forEach((m) => m.material.dispose());
+    this._innerMaterials.forEach((m) => m.Dispose());
     this._innerGeometry.dispose();
   }
 
@@ -161,11 +161,7 @@ export class GamePiece extends Object3D {
       for (let i = 0; i < 6; i++) {
         const randMaterial =
           materials[Math.floor(Math.random() * materials.length)];
-        this._innerMaterials.push({
-          materialColorHex: randMaterial.materialColorHex,
-          material: randMaterial.material.clone(),
-          matchKey: randMaterial.matchKey,
-        });
+        this._innerMaterials.push(randMaterial.Clone());
       }
     }
   }

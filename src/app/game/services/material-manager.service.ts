@@ -1,13 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import {
-  LoadingManager,
-  MathUtils,
-  MeshBasicMaterial,
-  MeshPhongMaterial,
-  Texture,
-  TextureLoader,
-} from 'three';
+import { LoadingManager, MathUtils, Texture, TextureLoader } from 'three';
 import { PLAYABLE_PIECE_COUNT } from '../game-constants';
 import { GameMaterial } from '../models/game-material';
 import 'node_modules/color-scheme/lib/color-scheme.js';
@@ -63,7 +56,7 @@ export class MaterialManagerService {
 
     // clean up existing materials
     if (this._currentMaterials.length) {
-      this._currentMaterials.forEach((m) => m.material.dispose());
+      this._currentMaterials.forEach((m) => m.Dispose());
       this._currentMaterials = [];
     }
 
@@ -81,18 +74,14 @@ export class MaterialManagerService {
             this._textures[MathUtils.randInt(0, this._textures.length - 1)];
         }
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-          const gameMaterial = {
-            material: new MeshPhongMaterial({
-              color: selectedColors[i],
-              transparent: true,
-            }),
-            matchKey: matchKey++,
-          };
-          if (bumpTexture) {
-            gameMaterial.material.bumpMap = bumpTexture;
-            gameMaterial.material.bumpScale = 0.03;
-          }
-          this._currentMaterials.push(gameMaterial);
+          this._currentMaterials.push(
+            new GameMaterial(
+              matchKey++,
+              undefined,
+              bumpTexture,
+              selectedColors[i]
+            )
+          );
         }
         break;
 
@@ -100,13 +89,9 @@ export class MaterialManagerService {
       default:
         const dataURLs = this.initEmojiTextures();
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-          this._currentMaterials.push({
-            material: new MeshBasicMaterial({
-              map: this._textureLoader.load(dataURLs[i]),
-              transparent: true,
-            }),
-            matchKey: matchKey++,
-          });
+          this._currentMaterials.push(
+            new GameMaterial(matchKey++, this._textureLoader.load(dataURLs[i]))
+          );
         }
     }
   }
