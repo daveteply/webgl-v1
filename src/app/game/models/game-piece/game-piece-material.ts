@@ -1,9 +1,10 @@
 import { Material, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
 
-export class GameMaterial {
+export class GamePieceMaterial {
+  private _matchKey!: number;
   private _texture!: Texture;
+  private _bumpTexture!: Texture;
   private _material!: Material;
-  private _matchKey: number;
 
   constructor(
     matchKey: number,
@@ -44,12 +45,6 @@ export class GameMaterial {
 
   get Material(): Material {
     return this._material;
-  }
-
-  public Clone(): GameMaterial {
-    const cloneGameMaterial = new GameMaterial(this._matchKey);
-    cloneGameMaterial._material = this._material.clone();
-    return cloneGameMaterial;
   }
 
   public Dispose(): void {

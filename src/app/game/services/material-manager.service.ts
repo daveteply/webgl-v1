@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { LoadingManager, MathUtils, Texture, TextureLoader } from 'three';
 import { PLAYABLE_PIECE_COUNT } from '../game-constants';
-import { GameMaterial } from '../models/game-material';
+import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-data';
 import 'node_modules/color-scheme/lib/color-scheme.js';
 
 declare var ColorScheme: any;
 
 @Injectable()
 export class MaterialManagerService {
-  private _currentMaterials: GameMaterial[] = [];
+  private _currentMaterials: GamePieceMaterialData[] = [];
 
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
@@ -39,7 +39,7 @@ export class MaterialManagerService {
     this._textureLoader = new TextureLoader(this._loaderManager);
   }
 
-  get Materials(): GameMaterial[] {
+  get MaterialData(): GamePieceMaterialData[] {
     return this._currentMaterials;
   }
 
@@ -51,14 +51,11 @@ export class MaterialManagerService {
       );
     }
 
+    // reset array
+    this._currentMaterials = [];
+
     // match keys are simply iterated to ensure unique key per piece
     let matchKey = 1;
-
-    // clean up existing materials
-    if (this._currentMaterials.length) {
-      this._currentMaterials.forEach((m) => m.Dispose());
-      this._currentMaterials = [];
-    }
 
     // select style for current level
     const levelStyle = MathUtils.randInt(0, 3);
@@ -74,14 +71,11 @@ export class MaterialManagerService {
             this._textures[MathUtils.randInt(0, this._textures.length - 1)];
         }
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-          this._currentMaterials.push(
-            new GameMaterial(
-              matchKey++,
-              undefined,
-              bumpTexture,
-              selectedColors[i]
-            )
-          );
+          this._currentMaterials.push(<GamePieceMaterialData>{
+            MatchKey: matchKey++,
+            BumpTexture: bumpTexture,
+            Color: selectedColors[i],
+          });
         }
         break;
 
@@ -89,9 +83,10 @@ export class MaterialManagerService {
       default:
         const dataURLs = this.initEmojiTextures();
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-          this._currentMaterials.push(
-            new GameMaterial(matchKey++, this._textureLoader.load(dataURLs[i]))
-          );
+          this._currentMaterials.push(<GamePieceMaterialData>{
+            MatchKey: matchKey++,
+            Texture: this._textureLoader.load(dataURLs[i]),
+          });
         }
     }
   }
@@ -127,7 +122,7 @@ export class MaterialManagerService {
   }
 
   private textureLoadError(url: string): void {
-    console.log('error', url);
+    console.error('error', url);
   }
 
   private initEmojiTextures(): string[] {

@@ -9,7 +9,7 @@ import {
   GRID_VERTICAL_OFFSET,
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
-import { GamePiece } from '../models/game-piece';
+import { GamePiece } from '../models/game-piece/game-piece';
 import { EffectsManagerService } from './effects-manager.service';
 
 @Injectable()
@@ -59,13 +59,14 @@ export class ObjectManagerService {
     // select colors for the current level
     this.materialManager.InitMaterials();
 
-    // create all the objects
+    // start off-screen below or above (part of intro animation)
     const startY = MathUtils.randInt(1, 3) === 1 ? 10 : -10;
+    // create all the objects
     this._verticalTargets.forEach(() => {
       const gameWheel = new GameWheel(
         startY,
         this._piecePoints,
-        this.materialManager.Materials
+        this.materialManager.MaterialData
       );
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);

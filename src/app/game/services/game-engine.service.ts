@@ -3,7 +3,7 @@ import {
   DECIMAL_COMPARISON_TOLERANCE,
   MINIMUM_MATCH_COUNT,
 } from '../game-constants';
-import { GamePiece } from '../models/game-piece';
+import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
 // forcing strings in enum

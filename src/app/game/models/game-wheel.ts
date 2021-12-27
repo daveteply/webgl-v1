@@ -1,7 +1,7 @@
 import { Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
-import { GameMaterial } from './game-material';
-import { GamePiece } from './game-piece';
+import { GamePiece } from './game-piece/game-piece';
+import { GamePieceMaterialData } from './game-piece/game-piece-material-data';
 import { Betweener } from './keyframes/betweener';
 import { PiecePoints } from './piece-points';
 
@@ -13,7 +13,11 @@ export class GameWheel extends Object3D {
   private _wheelAbove: GameWheel | undefined;
   private _wheelBelow: GameWheel | undefined;
 
-  constructor(y: number, meshPoints: PiecePoints[], materials: GameMaterial[]) {
+  constructor(
+    y: number,
+    meshPoints: PiecePoints[],
+    materialData: GamePieceMaterialData[]
+  ) {
     super();
     this.position.y = y;
 
@@ -24,7 +28,7 @@ export class GameWheel extends Object3D {
         0,
         meshPoint.polarCoords.z,
         meshPoint.rotationY,
-        materials
+        materialData
       );
       this.add(gamePiece);
     });

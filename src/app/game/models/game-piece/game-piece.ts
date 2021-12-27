@@ -5,14 +5,15 @@ import {
   Mesh,
   Object3D,
 } from 'three';
-import { QUARTER_CIRCLE, TWO_PI } from '../game-constants';
-import { GameMaterial } from './game-material';
-import { Betweener } from './keyframes/betweener';
-import { PieceRemove } from './keyframes/piece-remove';
+import { TWO_PI, QUARTER_CIRCLE } from '../../game-constants';
+import { Betweener } from '../keyframes/betweener';
+import { PieceRemove } from '../keyframes/piece-remove';
+import { GamePieceMaterial } from './game-piece-material';
+import { GamePieceMaterialData } from './game-piece-material-data';
 
 export class GamePiece extends Object3D {
   private _innerGeometry: BoxGeometry;
-  private _innerMaterials: GameMaterial[] = [];
+  private _gamePieceMaterials: GamePieceMaterial[] = [];
 
   // visual game piece
   private _mesh: Mesh;
@@ -54,7 +55,7 @@ export class GamePiece extends Object3D {
     y: number,
     z: number,
     rotation: number,
-    gameMaterials: GameMaterial[]
+    materialData: GamePieceMaterialData[]
   ) {
     super();
 
@@ -66,11 +67,11 @@ export class GamePiece extends Object3D {
     this._innerGeometry = new BoxBufferGeometry(1, 1, 1, 4, 4, 4);
 
     // materials
-    this.initMaterials(gameMaterials);
+    this.initMaterials(materialData);
 
     this._mesh = new Mesh(
       this._innerGeometry,
-      this._innerMaterials.map((m) => m.Material)
+      this._gamePieceMaterials.map((m) => m.Material)
     );
 
     this.add(this._mesh);
@@ -80,7 +81,8 @@ export class GamePiece extends Object3D {
     this._thetaOffset = this._thetaStart;
 
     // 1 is the default (or "front"), will change when piece is flipped
-    this._matchKey = this._innerMaterials[this._matchKeySequence[0]]?.MatchKey;
+    this._matchKey =
+      this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -97,7 +99,7 @@ export class GamePiece extends Object3D {
   public LockPiece(lock: boolean): void {
     // TODO keyframes
     if (!this._isRemoved) {
-      this._innerMaterials.forEach(
+      this._gamePieceMaterials.forEach(
         (m) => (m.Material.opacity = lock ? 0.4 : 1.0)
       );
     }
@@ -109,7 +111,7 @@ export class GamePiece extends Object3D {
 
   public Remove(): void {
     if (this._pieceRemoval.HasNext) {
-      this._innerMaterials.forEach(
+      this._gamePieceMaterials.forEach(
         (m) => (m.Material.opacity -= this._pieceRemoval.OpacityRate)
       );
       this._mesh.translateX(this._pieceRemoval.Velocity);
@@ -135,7 +137,8 @@ export class GamePiece extends Object3D {
         directionUp ? this._matchKeySequence.length - 1 : 1
       )
     );
-    this._matchKey = this._innerMaterials[this._matchKeySequence[0]].MatchKey;
+    this._matchKey =
+      this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
   }
 
   public Flip(): boolean {
@@ -147,11 +150,11 @@ export class GamePiece extends Object3D {
   }
 
   public Dispose(): void {
-    this._innerMaterials.forEach((m) => m.Dispose());
+    this._gamePieceMaterials.forEach((m) => m.Dispose());
     this._innerGeometry.dispose();
   }
 
-  private initMaterials(materials: GameMaterial[]): void {
+  private initMaterials(materials: GamePieceMaterialData[]): void {
     // initial index
     // 0 'back'
     // 1 'front'
@@ -161,7 +164,14 @@ export class GamePiece extends Object3D {
       for (let i = 0; i < 6; i++) {
         const randMaterial =
           materials[Math.floor(Math.random() * materials.length)];
-        this._innerMaterials.push(randMaterial.Clone());
+        this._gamePieceMaterials.push(
+          new GamePieceMaterial(
+            randMaterial.MatchKey,
+            randMaterial.Texture,
+            randMaterial.BumpTexture,
+            randMaterial.Color
+          )
+        );
       }
     }
   }

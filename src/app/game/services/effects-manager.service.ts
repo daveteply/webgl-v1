@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { INTRO_VERTICAL_CASCADE } from '../game-constants';
-import { GamePiece } from '../models/game-piece';
+import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { Betweener } from '../models/keyframes/betweener';
 

@@ -4,7 +4,7 @@ import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 import { ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
-import { GamePiece } from '../models/game-piece';
+import { GamePiece } from '../models/game-piece/game-piece';
 import { ScoringManagerService } from './scoring-manager.service';
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Scene } from 'three';
-import { GamePiece } from '../models/game-piece';
+import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
 import { GameEngineService } from './game-engine.service';
