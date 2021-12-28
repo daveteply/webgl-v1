@@ -32,9 +32,18 @@ export class MaterialManagerService {
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this._loaderManager = new LoadingManager(
-      this.texturesLoaded,
-      this.texturesLoading,
-      this.textureLoadError
+      // all images loaded
+      () => {
+        console.log('textures loaded');
+      },
+      // progress
+      (url: string, itemsLoaded: number, itemsTotal: number) => {
+        console.log('loading', url, itemsLoaded, itemsTotal);
+      },
+      // error
+      (url: string) => {
+        console.error('error', url);
+      }
     );
     this._textureLoader = new TextureLoader(this._loaderManager);
   }
@@ -107,22 +116,6 @@ export class MaterialManagerService {
     const colors = colorScheme.colors() as [];
 
     return colors.map((c) => `#${c}`).slice(0, PLAYABLE_PIECE_COUNT);
-  }
-
-  private texturesLoaded(): void {
-    console.log('textures loaded');
-  }
-
-  private texturesLoading(
-    url: string,
-    itemsLoaded: number,
-    itemsTotal: number
-  ): void {
-    console.log('loading', url, itemsLoaded, itemsTotal);
-  }
-
-  private textureLoadError(url: string): void {
-    console.error('error', url);
   }
 
   private initEmojiTextures(): string[] {
