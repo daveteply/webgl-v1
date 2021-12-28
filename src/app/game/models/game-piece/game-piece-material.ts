@@ -1,4 +1,10 @@
-import { Material, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
+import {
+  Material,
+  MeshBasicMaterial,
+  MeshPhongMaterial,
+  Texture,
+  Vector2,
+} from 'three';
 
 export class GamePieceMaterial {
   private _matchKey!: number;
@@ -21,16 +27,20 @@ export class GamePieceMaterial {
     }
 
     if (bumpTexture && color) {
+      this._bumpTexture = bumpTexture;
+      this._bumpTexture.center = new Vector2(0.5, 0.5);
       this._material = new MeshPhongMaterial({
         color: color,
-        bumpMap: bumpTexture,
+        bumpMap: this._bumpTexture,
         bumpScale: 0.03,
       });
     }
 
     if (texture) {
+      this._texture = texture;
+      this._texture.center = new Vector2(0.5, 0.5);
       this._material = new MeshBasicMaterial({
-        map: texture,
+        map: this._texture,
       });
     }
 
@@ -49,6 +59,7 @@ export class GamePieceMaterial {
 
   public Dispose(): void {
     this._texture?.dispose();
+    this._bumpTexture?.dispose();
     this._material?.dispose();
   }
 }
