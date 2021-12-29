@@ -1,0 +1,16 @@
+<h2>Welcome!</h2>
+<mat-dialog-content>
+  <p>
+    Game pieces can move <b>right</b> or <b>left</b>, or be flipped <b>up</b> or
+    <b>down</b>. Press a game piece to make a match!
+  </p>
+  <p>
+    Must match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
+    side-to-side.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close>
+    Play!
+  </button>
+</mat-dialog-actions>

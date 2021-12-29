@@ -55,13 +55,14 @@ export class SceneManagerService {
     if (!this._camera) {
       this._camera = new PerspectiveCamera(45, aspectRatio, 1, 25);
       this._camera.position.set(0, 0, 5);
-      this._pointLight.position.copy(this._camera.position);
+      this._pointLight?.position.copy(this._camera.position);
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
     } else {
       this._camera.aspect = aspectRatio;
       this._camera.updateProjectionMatrix();
+      this._pointLight.position.copy(this._camera.position);
     }
 
     if (this._renderer) {

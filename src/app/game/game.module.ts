@@ -12,16 +12,22 @@ import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
 
+import { IntroDialogComponent } from './components/dialogs/intro-dialog/intro-dialog.component';
+
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [CanvasComponent, GameContainerComponent],
+  declarations: [CanvasComponent, GameContainerComponent, IntroDialogComponent],
   imports: [
     CommonModule,
     GameRoutingModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatButtonModule,
   ],
   providers: [
     SceneManagerService,
