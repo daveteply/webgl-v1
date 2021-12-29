@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Group, MathUtils, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
@@ -30,6 +30,8 @@ export class ObjectManagerService {
   private _boardLocking: boolean = false;
   private _boardLocked: boolean = false;
   private _pendingLevelChange: boolean = false;
+
+  public LevelCompleted: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,
@@ -108,8 +110,10 @@ export class ObjectManagerService {
 
         // check for level change
         if (this._pendingLevelChange) {
-          this.InitShapes();
           this._pendingLevelChange = false;
+          console.log('about to level complete ');
+
+          this.LevelCompleted.next();
         }
       }
     }
