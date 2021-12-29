@@ -160,19 +160,17 @@ export class GamePiece extends Object3D {
     // 1 'front'
     // 2 'top'
     // 3 'bottom'
-    if (materials.length) {
-      for (let i = 0; i < 6; i++) {
-        const randMaterial =
-          materials[Math.floor(Math.random() * materials.length)];
-        this._gamePieceMaterials.push(
-          new GamePieceMaterial(
-            randMaterial.MatchKey,
-            randMaterial.Texture,
-            randMaterial.BumpTexture,
-            randMaterial.Color
-          )
-        );
-      }
+    for (let i = 0; i < 6; i++) {
+      const randMaterial =
+        materials[Math.floor(Math.random() * materials.length)];
+      this._gamePieceMaterials.push(
+        new GamePieceMaterial(
+          randMaterial.MatchKey,
+          randMaterial.Texture,
+          randMaterial.BumpTexture,
+          randMaterial.Color
+        )
+      );
     }
   }
 

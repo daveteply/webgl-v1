@@ -1,4 +1,5 @@
 import { GamePiece } from './game-piece';
+import { GamePieceMaterialData } from './game-piece-material-data';
 
 describe('GamePiece', () => {
   it('should create an instance', () => {
@@ -6,9 +7,9 @@ describe('GamePiece', () => {
     const mockY = 0;
     const mockZ = 0;
     const mockRot = 0;
-    const mockMaterial = Object.assign({});
+    const mockMaterialData: GamePieceMaterialData[] = [{ MatchKey: 1 }];
     expect(
-      new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterial)
+      new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterialData)
     ).toBeTruthy();
   });
 });
