@@ -111,8 +111,6 @@ export class ObjectManagerService {
         // check for level change
         if (this._pendingLevelChange) {
           this._pendingLevelChange = false;
-          console.log('about to level complete ');
-
           this.LevelCompleted.next();
         }
       }

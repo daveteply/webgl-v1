@@ -1,9 +1,10 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { MathUtils } from 'three';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
-import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
+import { TextureManagerService } from '../../services/texture-manager.service';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 
 @Component({
@@ -12,46 +13,57 @@ import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.compo
   styleUrls: ['./game-container.component.scss'],
 })
 export class GameContainerComponent implements OnInit {
-  private introDialogRef!: MatDialogRef<IntroDialogComponent>;
-  private levelDialogRef!: MatDialogRef<LevelDialogComponent>;
-
   constructor(
     private ngZone: NgZone,
     private dialog: MatDialog,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
+    private textureManager: TextureManagerService,
     public scoringManager: ScoringManagerService
   ) {}
 
   ngOnInit(): void {
-    this.introDialogRef = this.dialog.open(IntroDialogComponent, {
+    const materialType = this.startNextLevel();
+
+    let welcomeDialog = this.dialog.open(LevelDialogComponent, {
       maxWidth: '25em',
       disableClose: true,
+      data: { level: this.scoringManager.Level, materialType: materialType },
     });
 
-    this.introDialogRef.afterClosed().subscribe(() => {
+    // level close event
+    welcomeDialog.afterClosed().subscribe(() => {
       this.sceneManager.InitScene();
       this.animate();
     });
 
     this.objectManager.LevelCompleted.subscribe(() => {
-      this.levelDialogRef = this.dialog.open(LevelDialogComponent, {
+      const materialType = this.startNextLevel();
+      const levelDialog = this.dialog.open(LevelDialogComponent, {
+        maxWidth: '25em',
         disableClose: true,
+        data: { level: this.scoringManager.Level, materialType: materialType },
       });
-      this.levelDialogRef.afterClosed().subscribe(() => {
+      levelDialog.afterClosed().subscribe(() => {
         this.objectManager.InitShapes();
       });
     });
   }
 
-  private animate(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.objectManager.UpdateShapes();
-      this.sceneManager.RenderScene();
+  private startNextLevel(): number {
+    const textureType = MathUtils.randInt(1, 3);
+    this.textureManager.InitLevelTextures(textureType);
+    return textureType;
+  }
 
-      requestAnimationFrame(() => {
-        this.animate();
-      });
+  private animate(): void {
+    this.objectManager.UpdateShapes();
+    this.ngZone.runOutsideAngular(() => {
+      this.sceneManager.RenderScene();
+    });
+
+    requestAnimationFrame(() => {
+      this.animate();
     });
   }
 }

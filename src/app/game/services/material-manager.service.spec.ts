@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MaterialManagerService } from './material-manager.service';
+import { TextureManagerService } from './texture-manager.service';
 
 describe('MaterialManagerService', () => {
   let service: MaterialManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [MaterialManagerService] });
+    TestBed.configureTestingModule({
+      providers: [MaterialManagerService, TextureManagerService],
+    });
     service = TestBed.inject(MaterialManagerService);
   });
 

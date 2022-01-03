@@ -1,9 +1,31 @@
-<h2>Level Complete!</h2>
+<h2>
+  <span *ngIf="data.level === 1; else levelHeader">Welcome!</span>
+  <ng-template #levelHeader>Level Complete!</ng-template>
+</h2>
+
 <mat-dialog-content>
-  <p>Nice moves.</p>
+  <div class="intro" *ngIf="data.level === 1; else levelContent">
+    <p>
+      Game pieces can move <b>right</b> or <b>left</b>, or be flipped
+      <b>up</b> or <b>down</b>. Press a game piece to make a match!
+    </p>
+    <p>
+      Must match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
+      side-to-side.
+    </p>
+  </div>
+  <ng-template #levelContent>
+    <p>Level complete</p>
+  </ng-template>
+  <mat-progress-bar
+    *ngIf="data.materialType !== levelMaterialType.ColorOnly"
+    [value]="progress"
+  ></mat-progress-bar>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close>
-    Next Level!
+  <button mat-raised-button color="primary" mat-dialog-close>
+    <span *ngIf="data.level === 1; else levelButtonContent">Play!</span>
+    <ng-template #levelButtonContent>Next Level!</ng-template>
   </button>
 </mat-dialog-actions>

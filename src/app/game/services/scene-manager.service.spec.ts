@@ -7,6 +7,7 @@ import { ObjectManagerService } from './object-manager.service';
 
 import { SceneManagerService } from './scene-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
+import { TextureManagerService } from './texture-manager.service';
 
 describe('SceneManagerService', () => {
   let service: SceneManagerService;
@@ -21,6 +22,7 @@ describe('SceneManagerService', () => {
         GameEngineService,
         ScoringManagerService,
         EffectsManagerService,
+        TextureManagerService,
       ],
     });
     service = TestBed.inject(SceneManagerService);

@@ -3,6 +3,7 @@ import { EffectsManagerService } from './effects-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 
 import { ObjectManagerService } from './object-manager.service';
+import { TextureManagerService } from './texture-manager.service';
 
 describe('ObjectManagerService', () => {
   let service: ObjectManagerService;
@@ -13,6 +14,7 @@ describe('ObjectManagerService', () => {
         ObjectManagerService,
         MaterialManagerService,
         EffectsManagerService,
+        TextureManagerService,
       ],
     });
     service = TestBed.inject(ObjectManagerService);

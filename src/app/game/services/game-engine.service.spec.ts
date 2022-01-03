@@ -7,6 +7,7 @@ import { GameEngineService } from './game-engine.service';
 import { ObjectManagerService } from './object-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
+import { TextureManagerService } from './texture-manager.service';
 
 function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
   const scene = new Scene();
@@ -37,6 +38,7 @@ describe('GameEngineService', () => {
         MaterialManagerService,
         GameEngineService,
         EffectsManagerService,
+        TextureManagerService,
       ],
     });
     service = TestBed.inject(GameEngineService);

@@ -12,16 +12,16 @@ import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
 
-import { IntroDialogComponent } from './components/dialogs/intro-dialog/intro-dialog.component';
+import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
+import { TextureManagerService } from './services/texture-manager.service';
 
 @NgModule({
-  declarations: [CanvasComponent, GameContainerComponent, IntroDialogComponent, LevelDialogComponent],
+  declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent],
   imports: [
     CommonModule,
     GameRoutingModule,
@@ -33,6 +33,7 @@ import { LevelDialogComponent } from './components/dialogs/level-dialog/level-di
   providers: [
     SceneManagerService,
     MaterialManagerService,
+    TextureManagerService,
     ObjectManagerService,
     InteractionManagerService,
     GameEngineService,

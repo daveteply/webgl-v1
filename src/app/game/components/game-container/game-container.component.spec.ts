@@ -8,6 +8,7 @@ import { MaterialManagerService } from '../../services/material-manager.service'
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
+import { TextureManagerService } from '../../services/texture-manager.service';
 
 import { GameContainerComponent } from './game-container.component';
 
@@ -27,6 +28,7 @@ describe('GameContainerComponent', () => {
         GameEngineService,
         ScoringManagerService,
         EffectsManagerService,
+        TextureManagerService,
       ],
     }).compileComponents();
   });
