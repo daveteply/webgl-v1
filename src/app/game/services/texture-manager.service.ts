@@ -87,7 +87,7 @@ export class TextureManagerService {
         break;
 
       default:
-        const dataURLs = this.initEmojiTextures();
+        const dataURLs = this.initEmojiData();
         dataURLs.forEach((d) => {
           this._textureLoader.load(d, (texture) => {
             texture.center = new Vector2(0.5, 0.5);
@@ -98,9 +98,9 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiTextures(): string[] {
+  private initEmojiData(): string[] {
     const canvas = this.document.createElement('canvas');
-    const scale = 100;
+    const scale = 80;
     canvas.width = canvas.height = scale;
 
     const dataUrls: string[] = [];
@@ -116,10 +116,10 @@ export class TextureManagerService {
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, scale, scale);
 
-        ctx.font = 89 + 'px Arial';
+        ctx.font = scale - 5 + 'px Arial';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.fillText(String.fromCodePoint(emojiCode), 50, 56);
+        ctx.fillText(String.fromCodePoint(emojiCode), scale / 2, scale / 2 + 5);
         dataUrls.push(canvas.toDataURL());
       }
     }
