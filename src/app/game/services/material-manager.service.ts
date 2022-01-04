@@ -54,7 +54,6 @@ export class MaterialManagerService {
             Color: color,
           });
         });
-
         break;
 
       // default to emojis

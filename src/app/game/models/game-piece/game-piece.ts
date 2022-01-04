@@ -4,6 +4,7 @@ import {
   MathUtils,
   Mesh,
   Object3D,
+  Texture,
 } from 'three';
 import { TWO_PI, QUARTER_CIRCLE } from '../../game-constants';
 import { Betweener } from '../keyframes/betweener';
@@ -155,7 +156,6 @@ export class GamePiece extends Object3D {
   }
 
   private initMaterials(materials: GamePieceMaterialData[]): void {
-    // initial index
     // 0 'back'
     // 1 'front'
     // 2 'top'
@@ -163,15 +163,54 @@ export class GamePiece extends Object3D {
     for (let i = 0; i < 6; i++) {
       const randMaterial =
         materials[Math.floor(Math.random() * materials.length)];
+
+      let texture;
+      if (randMaterial.Texture) {
+        texture = this.cloneRotateTexture(randMaterial.Texture, i);
+      }
+
       this._gamePieceMaterials.push(
         new GamePieceMaterial(
           randMaterial.MatchKey,
-          randMaterial.Texture,
+          texture,
           randMaterial.BumpTexture,
           randMaterial.Color
         )
       );
     }
+  }
+
+  private cloneRotateTexture(
+    texture: Texture,
+    edge: number
+  ): Texture | undefined {
+    // 0 'back'
+    // 1 'front'
+    // 2 'top'
+    // 3 'bottom'
+
+    if (texture) {
+      const cloned = texture.clone();
+      if (cloned) {
+        cloned.needsUpdate = true;
+
+        switch (edge) {
+          case 0:
+            cloned.rotation = QUARTER_CIRCLE * 2;
+            break;
+
+          case 2:
+            cloned.rotation = QUARTER_CIRCLE * 3;
+            break;
+
+          case 3:
+            cloned.rotation = QUARTER_CIRCLE;
+            break;
+        }
+        return cloned;
+      }
+    }
+    return undefined;
   }
 
   private mod(a: number, n: number): number {
