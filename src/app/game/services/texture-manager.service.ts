@@ -13,13 +13,24 @@ import { LevelMaterialType } from '../models/level-material-type';
 @Injectable()
 export class TextureManagerService {
   private _bumpMaps: string[] = [
+    'assets/maps-bump/Bark 0499.JPG.jpg',
+    'assets/maps-bump/Bark 0515.JPG.jpg',
     'assets/maps-bump/Brick 2371 bump map.jpg',
     'assets/maps-bump/Brick 2852b bump map.jpg',
     'assets/maps-bump/Concrete 3035 bump map.jpg',
+    'assets/maps-bump/Fabric 0071 bump map.jpg',
+    'assets/maps-bump/Fabric 0106.jpg',
+    'assets/maps-bump/Fabric 0136c.jpg',
+    'assets/maps-bump/Fabric 0140c.jpg',
     'assets/maps-bump/Gravel 2486 bump map.jpg',
+    'assets/maps-bump/Groundcover 0156.JPG.jpg',
+    'assets/maps-bump/Groundcover 0186.jpg',
     'assets/maps-bump/Metal 2350 bump map.jpg',
     'assets/maps-bump/Metal 2860 bump map.jpg',
+    'assets/maps-bump/Plastic 2923f.jpg',
+    'assets/maps-bump/Rubber 0472.jpg',
   ];
+  private _bumpMapsCache: Texture[] = [];
 
   private _emojiCodes: number[][] = [
     [0x1f600, 0x1f604, 0x1f609, 0x1f60a, 0x1f607, 0x1f923],
@@ -77,13 +88,23 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.ColorAndBumpMaps:
-        // TODO: cache
-        this._bumpMaps.forEach((b) =>
-          this._textureLoader.load(b, (texture) => {
-            texture.center = new Vector2(0.5, 0.5);
-            this._textures.push(texture);
-          })
+        // select a bump map
+        const randBumpMap =
+          this._bumpMaps[MathUtils.randInt(0, this._bumpMaps.length - 1)];
+        const cachedTexture = this._bumpMapsCache.find(
+          (b) => b.name === randBumpMap
         );
+        if (cachedTexture) {
+          this._textures.push(cachedTexture);
+          this.LevelTexturesLoaded.next();
+        } else {
+          this._textureLoader.load(randBumpMap, (texture) => {
+            texture.center = new Vector2(0.5, 0.5);
+            texture.name = randBumpMap;
+            this._textures.push(texture);
+            this._bumpMapsCache.push(texture);
+          });
+        }
         break;
 
       default:
