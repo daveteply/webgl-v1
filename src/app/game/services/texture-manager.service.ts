@@ -20,7 +20,6 @@ export class TextureManagerService {
     'assets/maps-bump/Concrete 3035 bump map.jpg',
     'assets/maps-bump/Fabric 0071 bump map.jpg',
     'assets/maps-bump/Fabric 0106.jpg',
-    'assets/maps-bump/Fabric 0136c.jpg',
     'assets/maps-bump/Fabric 0140c.jpg',
     'assets/maps-bump/Gravel 2486 bump map.jpg',
     'assets/maps-bump/Metal 2350 bump map.jpg',
