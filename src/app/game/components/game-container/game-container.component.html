@@ -1,6 +1,6 @@
 <div class="game-container">
   <div class="game-scoring">
-    <p>Score: {{ scoringManager.Score }}</p>
+    <p>Score: {{ scoringManager.Score | number }}</p>
     <p>Level: {{ scoringManager.Level }}</p>
   </div>
   <wgl-canvas class="game-canvas"></wgl-canvas>

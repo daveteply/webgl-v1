@@ -61,6 +61,7 @@ export class InteractionManagerService {
           this._panning = false;
           this._activeWheel?.SnapToGrid();
           this._activeWheel = undefined;
+          this.scoringManager.TickMoveCount();
         }
         this._x = panEvent.center.x;
       }
@@ -103,6 +104,7 @@ export class InteractionManagerService {
         if (gamePiece) {
           gamePiece.InitFlip(swipeEvent.direction === DIRECTION_UP);
           this.objectManager.FlipGamePiece(gamePiece);
+          this.scoringManager.TickMoveCount();
         }
       }
     });

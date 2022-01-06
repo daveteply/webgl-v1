@@ -28,7 +28,11 @@ export class GameContainerComponent implements OnInit {
     let welcomeDialog = this.dialog.open(LevelDialogComponent, {
       maxWidth: '25em',
       disableClose: true,
-      data: { score: this.scoringManager.Score, materialType: materialType },
+      data: {
+        score: this.scoringManager.Score,
+        stats: this.scoringManager.LevelStats,
+        materialType: materialType,
+      },
     });
 
     // level close event
@@ -43,7 +47,11 @@ export class GameContainerComponent implements OnInit {
       const levelDialog = this.dialog.open(LevelDialogComponent, {
         maxWidth: '25em',
         disableClose: true,
-        data: { score: this.scoringManager.Score, materialType: materialType },
+        data: {
+          score: this.scoringManager.Score,
+          stats: this.scoringManager.LevelStats,
+          materialType: materialType,
+        },
       });
       levelDialog.afterClosed().subscribe(() => {
         this.scoringManager.NextLevel();

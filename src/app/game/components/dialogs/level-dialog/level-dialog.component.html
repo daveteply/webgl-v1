@@ -15,8 +15,22 @@
     </p>
   </div>
   <ng-template #levelContent>
-    <p>Level complete</p>
+    <table>
+      <tr>
+        <td>Fastest match time:</td>
+        <td>{{ data.stats.fastestMatchMs }}ms</td>
+      </tr>
+      <tr>
+        <td>Move Count:</td>
+        <td>{{ data.stats.moveCount }}</td>
+      </tr>
+      <tr>
+        <td>Piece Count:</td>
+        <td>{{ data.stats.pieceCount }}</td>
+      </tr>
+    </table>
   </ng-template>
+  <br />
   <mat-progress-bar
     *ngIf="data.materialType !== levelMaterialType.ColorOnly"
     [value]="progress"

@@ -13,7 +13,16 @@ describe('LevelDialogComponent', () => {
       declarations: [LevelDialogComponent],
       providers: [
         TextureManagerService,
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
+            stats: {
+              fastestMatchMs: 1,
+              moveCount: 1,
+              pieceCount: 1,
+            },
+          },
+        },
         { provide: MatDialogRef, useValue: {} },
       ],
     }).compileComponents();
