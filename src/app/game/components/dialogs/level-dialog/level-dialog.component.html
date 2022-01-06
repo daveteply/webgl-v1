@@ -1,10 +1,10 @@
 <h2>
-  <span *ngIf="data.level === 1; else levelHeader">Welcome!</span>
+  <span *ngIf="data.score === 0; else levelHeader">Welcome!</span>
   <ng-template #levelHeader>Level Complete!</ng-template>
 </h2>
 
 <mat-dialog-content>
-  <div class="intro" *ngIf="data.level === 1; else levelContent">
+  <div class="intro" *ngIf="data.score === 0; else levelContent">
     <p>
       Game pieces can move <b>right</b> or <b>left</b>, or be flipped
       <b>up</b> or <b>down</b>. Press a game piece to make a match!
@@ -25,7 +25,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-raised-button color="primary" mat-dialog-close>
-    <span *ngIf="data.level === 1; else levelButtonContent">Play!</span>
+    <span *ngIf="data.score === 0; else levelButtonContent">Play!</span>
     <ng-template #levelButtonContent>Next Level!</ng-template>
   </button>
 </mat-dialog-actions>

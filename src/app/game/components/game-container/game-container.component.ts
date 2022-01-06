@@ -23,12 +23,12 @@ export class GameContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const materialType = this.startNextLevel();
+    const materialType = this.preloadTextures();
 
     let welcomeDialog = this.dialog.open(LevelDialogComponent, {
       maxWidth: '25em',
       disableClose: true,
-      data: { level: this.scoringManager.Level, materialType: materialType },
+      data: { score: this.scoringManager.Score, materialType: materialType },
     });
 
     // level close event
@@ -37,20 +37,22 @@ export class GameContainerComponent implements OnInit {
       this.animate();
     });
 
+    // level complete
     this.objectManager.LevelCompleted.subscribe(() => {
-      const materialType = this.startNextLevel();
+      const materialType = this.preloadTextures();
       const levelDialog = this.dialog.open(LevelDialogComponent, {
         maxWidth: '25em',
         disableClose: true,
-        data: { level: this.scoringManager.Level, materialType: materialType },
+        data: { score: this.scoringManager.Score, materialType: materialType },
       });
       levelDialog.afterClosed().subscribe(() => {
+        this.scoringManager.NextLevel();
         this.objectManager.InitShapes();
       });
     });
   }
 
-  private startNextLevel(): number {
+  private preloadTextures(): number {
     const textureType = MathUtils.randInt(1, 3);
     this.textureManager.InitLevelTextures(textureType);
     return textureType;

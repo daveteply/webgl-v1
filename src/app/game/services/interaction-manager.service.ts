@@ -79,10 +79,13 @@ export class InteractionManagerService {
             this.objectManager.Axle
           );
           if (matchingPieces.length) {
+            // prevent user interaction
             this.objectManager.LockBoard(true);
+            // initiate the removal animation
             this.objectManager.SetMatches(matchingPieces);
+            // update score
             this.scoringManager.UpdateScore(matchingPieces.length);
-            if (this.scoringManager.UpdateLevel(matchingPieces.length)) {
+            if (this.scoringManager.LevelProgress >= 100) {
               this.objectManager.SetLevelChange();
             }
           }
