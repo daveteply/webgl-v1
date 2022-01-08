@@ -134,10 +134,10 @@ export class TextureManagerService {
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, scale, scale);
 
-        ctx.font = scale - 5 + 'px Arial';
+        ctx.font = scale - 10 + 'px Arial';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.fillText(String.fromCodePoint(emojiCode), scale / 2, scale / 2 + 5);
+        ctx.fillText(String.fromCodePoint(emojiCode), scale / 2, scale / 2 + 8);
         dataUrls.push(canvas.toDataURL());
       }
     }
