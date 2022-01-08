@@ -28,7 +28,6 @@ export class GamePieceMaterial {
 
     if (bumpTexture && color) {
       this._bumpTexture = bumpTexture;
-      this._bumpTexture.center = new Vector2(0.5, 0.5);
       this._material = new MeshPhongMaterial({
         color: color,
         bumpMap: this._bumpTexture,
@@ -38,7 +37,6 @@ export class GamePieceMaterial {
 
     if (texture) {
       this._texture = texture;
-      this._texture.center = new Vector2(0.5, 0.5);
       this._material = new MeshBasicMaterial({
         map: this._texture,
       });
