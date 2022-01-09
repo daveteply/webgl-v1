@@ -45,6 +45,7 @@ export class ScoringManagerService {
   public NextLevel(): void {
     this._level++;
     this._levelPieceCount = 0;
+    this._moveCount = 0;
     this._timestamp = Date.now();
   }
 
