@@ -144,6 +144,10 @@ export class GamePiece extends Object3D {
   }
 
   public InitRemovalTween(): any {
+    // update removed state
+    this._isRemoved = true;
+
+    // set animation properties
     const delta = {
       x: this.rotation.x,
       y: this.rotation.y,
@@ -151,9 +155,9 @@ export class GamePiece extends Object3D {
       o: 1.0,
     };
     const target = {
-      x: delta.x + Math.PI,
-      y: delta.y + Math.PI,
-      z: delta.x + Math.PI,
+      x: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
+      y: delta.y + MathUtils.randFloat(-Math.PI, Math.PI),
+      z: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
       o: 0.0,
     };
 

@@ -121,12 +121,10 @@ export class EffectsManagerService {
       const removeTweens: any = [];
       selectedPieces.forEach((p) => removeTweens.push(p.InitRemovalTween()));
 
-      for (let i = 0; i < removeTweens.length - 1; i++) {
-        removeTweens[i].chain(removeTweens[i + 1]);
-      }
-
       // tween
-      removeTweens[0].start();
+      for (let i = 0; i < removeTweens.length; i++) {
+        removeTweens[i].start();
+      }
 
       // complete
       removeTweens[removeTweens.length - 1].onComplete(() => {
