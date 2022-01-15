@@ -25,11 +25,6 @@ export class GamePiece extends Object3D {
   private _thetaStart: number;
   private _thetaOffset: number;
 
-  // tween
-  private readonly _origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
-  private readonly _lockFinal = { x: 0.8, y: 0.8, z: 0.8, o: 0.4 };
-  private readonly _selectFinal = { x: 1.5, y: 1.25, z: 1.25, o: 1.0 };
-
   private _lockTween: any;
 
   // Each side material is arranged as follows:
@@ -108,13 +103,15 @@ export class GamePiece extends Object3D {
       if (this._lockTween) {
         this._lockTween.stop();
       }
-      // set direction and tween
-      const delta = lock
-        ? Object.assign({}, this._origin)
-        : Object.assign({}, this._lockFinal);
-      const target = lock
-        ? Object.assign({}, this._lockFinal)
-        : Object.assign({}, this._origin);
+
+      // set direction
+      const origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
+      const final = { x: 0.8, y: 0.8, z: 0.8, o: 0.4 };
+
+      const delta = lock ? origin : final;
+      const target = lock ? final : origin;
+
+      // init tween
       this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
         this.scale.set(delta.x, delta.y, delta.z);
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
@@ -131,13 +128,13 @@ export class GamePiece extends Object3D {
 
   public InitSelectionTween(select: boolean): any {
     // set direction
-    const delta = select
-      ? Object.assign({}, this._origin)
-      : Object.assign({}, this._selectFinal);
-    const target = select
-      ? Object.assign({}, this._selectFinal)
-      : Object.assign({}, this._origin);
+    const origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
+    const final = { x: 1.5, y: 1.25, z: 1.25, o: 1.0 };
 
+    const delta = select ? origin : final;
+    const target = select ? final : origin;
+
+    // init tween
     return new Tween(delta)
       .to(target, 100)
       .easing(Easing.Circular.Out)
