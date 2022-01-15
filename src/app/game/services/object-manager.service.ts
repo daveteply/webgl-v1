@@ -79,7 +79,9 @@ export class ObjectManagerService {
     );
   }
 
-  //  animation loop
+  //////////////////////
+  //  animation loop  //
+  //////////////////////
   public UpdateShapes(): void {
     TWEEN.update();
 
@@ -96,10 +98,6 @@ export class ObjectManagerService {
     if (wheel) {
       this._activeWheel = wheel;
     }
-  }
-
-  public FlipGamePiece(gamePiece: GamePiece): void {
-    this.effectsManager.Flip(gamePiece);
   }
 
   private assignIterationValues(): void {

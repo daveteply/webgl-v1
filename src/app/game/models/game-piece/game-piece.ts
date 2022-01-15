@@ -38,8 +38,6 @@ export class GamePiece extends Object3D {
   private _matchKeySequence: number[] = [1, 2, 0, 3];
   private _matchKey: number;
 
-  private _flipBetweener!: Betweener;
-
   // for iterating over pieces checking for matches
   public Next!: GamePiece;
   public Prev!: GamePiece;
@@ -170,28 +168,35 @@ export class GamePiece extends Object3D {
     });
   }
 
-  public InitFlip(directionUp: boolean): void {
-    // calculate rotation steps
-    const target = this.rotation.z + QUARTER_CIRCLE * (directionUp ? -1 : 1);
-    this._flipBetweener = new Betweener(this.rotation.z, target, 15);
+  public InitFlipTween(turns: number, directionUp: boolean): any {
+    // set direction
+    const delta = { theta: this.rotation.z };
+    const final = {
+      theta: this.rotation.z + QUARTER_CIRCLE * (directionUp ? -1 : 1) * turns,
+    };
 
-    // update match key
-    this._matchKeySequence = this._matchKeySequence.concat(
-      this._matchKeySequence.splice(
-        0,
-        directionUp ? this._matchKeySequence.length - 1 : 1
-      )
-    );
-    this._matchKey =
-      this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
-  }
-
-  public Flip(): boolean {
-    if (this._flipBetweener.HasNext) {
-      this.rotation.z = this._flipBetweener.Next;
+    // update match key by shifting array number of rotations
+    for (let i = 0; i < turns; i++) {
+      this._matchKeySequence = this._matchKeySequence.concat(
+        this._matchKeySequence.splice(
+          0,
+          directionUp ? this._matchKeySequence.length - 1 : 1
+        )
+      );
     }
 
-    return this._flipBetweener.HasNext;
+    // set match key
+    this._matchKey =
+      this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
+
+    // tween
+    return new Tween(delta)
+      .to(final, 500)
+      .easing(Easing.Sinusoidal.InOut)
+      .onUpdate(() => {
+        this.rotation.z = delta.theta;
+      })
+      .start();
   }
 
   public Dispose(): void {

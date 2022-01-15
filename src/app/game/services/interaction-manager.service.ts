@@ -95,9 +95,12 @@ export class InteractionManagerService {
         swipeEvent.center.x,
         swipeEvent.center.y - swipeEvent.deltaY
       );
-      if (gamePiece) {
-        gamePiece.InitFlip(swipeEvent.direction === DIRECTION_UP);
-        this.objectManager.FlipGamePiece(gamePiece);
+      if (gamePiece && !gamePiece?.IsRemoved) {
+        this.effectsManager.AnimateFlip(
+          gamePiece,
+          Math.abs(swipeEvent.velocity),
+          swipeEvent.direction === DIRECTION_UP
+        );
         this.scoringManager.TickMoveCount();
       }
     });

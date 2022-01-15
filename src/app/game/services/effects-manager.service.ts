@@ -6,17 +6,12 @@ import { Betweener } from '../models/keyframes/betweener';
 
 enum EffectTypes {
   Intro = 1,
-  Flip,
 }
 
 @Injectable()
 export class EffectsManagerService {
   private _activeEffects: EffectTypes[] = [];
-
   private _introBetweeners: Betweener[] = [];
-
-  private _flipTarget!: GamePiece;
-
   private _selectionTweens: any[] = [];
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
@@ -26,9 +21,6 @@ export class EffectsManagerService {
     if (this._activeEffects.length) {
       if (this._activeEffects.find((e) => e === EffectTypes.Intro)) {
         this.animateIntro(axle);
-      }
-      if (this._activeEffects.find((e) => e === EffectTypes.Flip)) {
-        this.animateFlip();
       }
     }
   }
@@ -133,15 +125,15 @@ export class EffectsManagerService {
     }
   }
 
-  public Flip(targetGamePiece: GamePiece): void {
-    this._flipTarget = targetGamePiece;
-    this._activeEffects.push(EffectTypes.Flip);
-  }
-
-  private animateFlip(): void {
-    if (!this._flipTarget.Flip()) {
-      this.removeActiveEffect(EffectTypes.Flip);
-    }
+  public AnimateFlip(
+    gamePiece: GamePiece,
+    velocity: number,
+    directionUp: boolean
+  ): void {
+    const flipTween = gamePiece.InitFlipTween(
+      Math.floor(velocity),
+      directionUp
+    );
   }
 
   private removeActiveEffect(effect: EffectTypes): void {
