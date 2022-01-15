@@ -1,13 +1,12 @@
+import { Easing, Tween } from '@tweenjs/tween.js';
 import { Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { GamePiece } from './game-piece/game-piece';
 import { GamePieceMaterialData } from './game-piece/game-piece-material-data';
-import { Betweener } from './keyframes/betweener';
 import { PiecePoints } from './piece-points';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
-  private _betweener!: Betweener;
 
   // 'above' and 'below' are in reference to the y axis
   private _wheelAbove: GameWheel | undefined;
@@ -65,14 +64,6 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  get EaseBetweener(): Betweener {
-    return this._betweener;
-  }
-
-  public Rotate(theta: number): void {
-    this.rotation.y = theta;
-  }
-
   public UpdateTheta(theta: number): void {
     this._theta += theta;
 
@@ -81,7 +72,7 @@ export class GameWheel extends Object3D {
       this._theta = 0;
     }
 
-    this.Rotate(this._theta);
+    this.rotation.y = this._theta;
   }
 
   public SnapToGrid(): void {
@@ -100,8 +91,14 @@ export class GameWheel extends Object3D {
       this._theta -= deltaPrev;
     }
 
-    // this will be used in main draw loop
-    this._betweener = new Betweener(currentTheta, this._theta, 10);
+    const delta = { r: this.rotation.y };
+    new Tween(delta)
+      .to({ r: this._theta }, 500)
+      .easing(Easing.Bounce.Out)
+      .onUpdate(() => {
+        this.rotation.y = delta.r;
+      })
+      .start();
 
     // recalculate game piece theta (for matching algorithm)
     for (const gamePiece of this.children as GamePiece[]) {

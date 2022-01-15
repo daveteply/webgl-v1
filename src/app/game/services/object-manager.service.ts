@@ -9,7 +9,6 @@ import {
   GRID_VERTICAL_OFFSET,
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
-import { GamePiece } from '../models/game-piece/game-piece';
 import { EffectsManagerService } from './effects-manager.service';
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -84,13 +83,7 @@ export class ObjectManagerService {
   //////////////////////
   public UpdateShapes(): void {
     TWEEN.update();
-
     this.effectsManager.UpdateEffects(this._axle);
-
-    // easing (after pan)
-    if (this._activeWheel?.EaseBetweener?.HasNext) {
-      this._activeWheel.Rotate(this._activeWheel?.EaseBetweener?.Next);
-    }
   }
 
   // for panning/horizontal scrubbing interaction
