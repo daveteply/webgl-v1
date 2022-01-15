@@ -7,7 +7,6 @@ import {
   Texture,
 } from 'three';
 import { TWO_PI, QUARTER_CIRCLE } from '../../game-constants';
-import { Betweener } from '../keyframes/betweener';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
@@ -134,14 +133,14 @@ export class GamePiece extends Object3D {
 
     // init tween
     return new Tween(delta)
-      .to(target, 100)
+      .to(target, 300)
       .easing(Easing.Circular.Out)
       .onUpdate(() => {
         this.scale.set(delta.x, delta.y, delta.z);
       });
   }
 
-  public InitRemovalTween(): any {
+  public InitRemovalTween(): void {
     // update removed state
     this._isRemoved = true;
 
@@ -159,13 +158,16 @@ export class GamePiece extends Object3D {
       o: 0.0,
     };
 
-    return new Tween(delta).to(target, 500).onUpdate(() => {
-      this.rotation.x = delta.x;
-      this.rotation.y = delta.y;
-      this.rotation.z = delta.x;
-      this.scale.setScalar(delta.o);
-      this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
-    });
+    new Tween(delta)
+      .to(target, 750)
+      .onUpdate(() => {
+        this.rotation.x = delta.x;
+        this.rotation.y = delta.y;
+        this.rotation.z = delta.x;
+        this.scale.setScalar(delta.o);
+        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+      })
+      .start();
   }
 
   public InitFlipTween(turns: number, directionUp: boolean): any {

@@ -15,7 +15,6 @@ export class EffectsManagerService {
   private _selectionTweens: any[] = [];
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
-  RemovalAnimationComplete: EventEmitter<void> = new EventEmitter();
 
   public UpdateEffects(axle: GameWheel[]): void {
     if (this._activeEffects.length) {
@@ -96,7 +95,7 @@ export class EffectsManagerService {
       for (let i = 0; i < this._selectionTweens.length - 1; i++) {
         this._selectionTweens[i].chain(this._selectionTweens[i + 1]);
       }
-      this._selectionTweens[0].delay(500);
+      this._selectionTweens[0].delay(250);
 
       // tween
       this._selectionTweens[0].start();
@@ -110,18 +109,7 @@ export class EffectsManagerService {
 
   public AnimateRemove(selectedPieces: GamePiece[]): void {
     if (selectedPieces.length) {
-      const removeTweens: any = [];
-      selectedPieces.forEach((p) => removeTweens.push(p.InitRemovalTween()));
-
-      // tween
-      for (let i = 0; i < removeTweens.length; i++) {
-        removeTweens[i].start();
-      }
-
-      // complete
-      removeTweens[removeTweens.length - 1].onComplete(() => {
-        this.RemovalAnimationComplete.next();
-      });
+      selectedPieces.forEach((p) => p.InitRemovalTween());
     }
   }
 

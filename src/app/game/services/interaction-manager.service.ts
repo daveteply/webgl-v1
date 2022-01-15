@@ -111,24 +111,20 @@ export class InteractionManagerService {
         if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
           // initiate the removal animation
           this.effectsManager.AnimateRemove(this._matchingPieces);
+          this.scoringManager.UpdateScore(this._matchingPieces.length);
+          if (this.scoringManager.LevelComplete) {
+            this.LockBoard(false);
+            this.objectManager.LevelCompleted.next();
+          } else {
+            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+            this.LockBoard(false);
+          }
         } else {
           // unselect
           this.effectsManager.AnimateLock(this.objectManager.Axle, false);
           this.effectsManager.AnimateSelected(this._matchingPieces, false);
         }
       } else {
-        this.LockBoard(false);
-      }
-    });
-
-    this.effectsManager.RemovalAnimationComplete.subscribe(() => {
-      // update score
-      this.scoringManager.UpdateScore(this._matchingPieces.length);
-      if (this.scoringManager.LevelComplete) {
-        this.LockBoard(false);
-        this.objectManager.LevelCompleted.next();
-      } else {
-        this.effectsManager.AnimateLock(this.objectManager.Axle, false);
         this.LockBoard(false);
       }
     });
