@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  DECIMAL_COMPARISON_TOLERANCE,
-  MINIMUM_MATCH_COUNT,
-} from '../game-constants';
+import { DECIMAL_COMPARISON_TOLERANCE } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -37,7 +34,7 @@ export class GameEngineService {
     this.directionalSearch(gamePiece);
 
     // all matches should be complete
-    return this._matches.length >= MINIMUM_MATCH_COUNT ? this._matches : [];
+    return this._matches;
   }
 
   private directionalSearch(gamePiece: GamePiece): void {

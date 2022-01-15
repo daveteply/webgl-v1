@@ -8,16 +8,15 @@ import {
 } from 'three';
 import { TWO_PI, QUARTER_CIRCLE } from '../../game-constants';
 import { Betweener } from '../keyframes/betweener';
-import { PieceRemove } from '../keyframes/piece-remove';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
+import { Tween, Easing } from '@tweenjs/tween.js';
 
 export class GamePiece extends Object3D {
   private _innerGeometry: BoxGeometry;
-  private _gamePieceMaterials: GamePieceMaterial[] = [];
-
-  // visual game piece
   private _mesh: Mesh;
+
+  private _gamePieceMaterials: GamePieceMaterial[] = [];
 
   // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
@@ -25,6 +24,13 @@ export class GamePiece extends Object3D {
   //   within the current view frustum.
   private _thetaStart: number;
   private _thetaOffset: number;
+
+  // tween
+  private readonly _origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
+  private readonly _lockFinal = { x: 0.8, y: 0.8, z: 0.8, o: 0.4 };
+  private readonly _selectFinal = { x: 1.5, y: 1.25, z: 1.25, o: 1.0 };
+
+  private _lockTween: any;
 
   // Each side material is arranged as follows:
   // 0 'back'
@@ -45,7 +51,6 @@ export class GamePiece extends Object3D {
 
   public IsMatch: boolean = false;
 
-  private _pieceRemoval!: PieceRemove;
   private _isRemoved: boolean = false;
   get IsRemoved(): boolean {
     return this._isRemoved;
@@ -65,7 +70,7 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // set up visual piece
-    this._innerGeometry = new BoxBufferGeometry(1, 1, 1, 4, 4, 4);
+    this._innerGeometry = new BoxBufferGeometry(1, 1, 1);
 
     // materials
     this.initMaterials(materialData);
@@ -97,33 +102,71 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
-  public LockPiece(lock: boolean): void {
-    // TODO keyframes
-    if (!this._isRemoved) {
-      this._gamePieceMaterials.forEach(
-        (m) => (m.Material.opacity = lock ? 0.4 : 1.0)
-      );
+  public AnimateLock(lock: boolean): void {
+    if (!this._isRemoved && !this.IsMatch) {
+      // stop if running
+      if (this._lockTween) {
+        this._lockTween.stop();
+      }
+      // set direction and tween
+      const delta = lock
+        ? Object.assign({}, this._origin)
+        : Object.assign({}, this._lockFinal);
+      const target = lock
+        ? Object.assign({}, this._lockFinal)
+        : Object.assign({}, this._origin);
+      this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
+        this.scale.set(delta.x, delta.y, delta.z);
+        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+      });
+
+      if (lock) {
+        this._lockTween.easing(Easing.Exponential.Out);
+        this._lockTween.delay(MathUtils.randInt(50, 500));
+      }
+
+      this._lockTween.start();
     }
   }
 
-  public InitRemove(): void {
-    this._pieceRemoval = new PieceRemove(MathUtils.randInt(30, 60));
+  public InitSelectionTween(select: boolean): any {
+    // set direction
+    const delta = select
+      ? Object.assign({}, this._origin)
+      : Object.assign({}, this._selectFinal);
+    const target = select
+      ? Object.assign({}, this._selectFinal)
+      : Object.assign({}, this._origin);
+
+    return new Tween(delta)
+      .to(target, 100)
+      .easing(Easing.Circular.Out)
+      .onUpdate(() => {
+        this.scale.set(delta.x, delta.y, delta.z);
+      });
   }
 
-  public Remove(): void {
-    if (this._pieceRemoval.HasNext) {
-      this._gamePieceMaterials.forEach(
-        (m) => (m.Material.opacity -= this._pieceRemoval.OpacityRate)
-      );
-      this._mesh.translateX(this._pieceRemoval.Velocity);
-      this._mesh.rotateX(this._pieceRemoval.Tumble.x);
-      this._mesh.rotateZ(this._pieceRemoval.Tumble.y);
+  public InitRemovalTween(): any {
+    const delta = {
+      x: this.rotation.x,
+      y: this.rotation.y,
+      z: this.rotation.y,
+      o: 1.0,
+    };
+    const target = {
+      x: delta.x + Math.PI,
+      y: delta.y + Math.PI,
+      z: delta.x + Math.PI,
+      o: 0.0,
+    };
 
-      this._pieceRemoval.Next();
-    } else {
-      this.IsMatch = false;
-      this._isRemoved = true;
-    }
+    return new Tween(delta).to(target, 500).onUpdate(() => {
+      this.rotation.x = delta.x;
+      this.rotation.y = delta.y;
+      this.rotation.z = delta.x;
+      this.scale.setScalar(delta.o);
+      this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+    });
   }
 
   public InitFlip(directionUp: boolean): void {

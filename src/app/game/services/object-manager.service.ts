@@ -11,6 +11,7 @@ import {
 import { MaterialManagerService } from './material-manager.service';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { EffectsManagerService } from './effects-manager.service';
+import * as TWEEN from '@tweenjs/tween.js';
 
 @Injectable()
 export class ObjectManagerService {
@@ -26,11 +27,7 @@ export class ObjectManagerService {
 
   private _scene!: Scene;
 
-  private _matchPieces!: GamePiece[];
-  private _boardLocking: boolean = false;
-  private _boardLocked: boolean = false;
-  private _pendingLevelChange: boolean = false;
-
+  // events
   public LevelCompleted: EventEmitter<void> = new EventEmitter();
 
   constructor(
@@ -43,10 +40,6 @@ export class ObjectManagerService {
 
   get Axle(): GameWheel[] {
     return this._axle;
-  }
-
-  get BoardLocked(): boolean {
-    return this._boardLocked;
   }
 
   public InitShapes(scene?: Scene): void {
@@ -79,41 +72,22 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.effectsManager.BuildIntoAnimation(
+    this.effectsManager.InitIntoAnimation(
       this._axle,
       this._verticalTargets,
       startY
     );
   }
 
-  // animation loop
+  //  animation loop
   public UpdateShapes(): void {
+    TWEEN.update();
+
     this.effectsManager.UpdateEffects(this._axle);
 
     // easing (after pan)
     if (this._activeWheel?.EaseBetweener?.HasNext) {
       this._activeWheel.Rotate(this._activeWheel?.EaseBetweener?.Next);
-    }
-
-    if (this._boardLocking) {
-      this.animateLock(this._boardLocking);
-      // TODO: frames
-      this._boardLocked = true;
-    }
-
-    // check game piece states
-    if (this._boardLocked) {
-      if (this.animateRemoval()) {
-        // removal animations complete, unlock board
-        this.animateLock(false);
-        this._boardLocked = false;
-
-        // check for level change
-        if (this._pendingLevelChange) {
-          this._pendingLevelChange = false;
-          this.LevelCompleted.next();
-        }
-      }
     }
   }
 
@@ -124,39 +98,8 @@ export class ObjectManagerService {
     }
   }
 
-  public SetMatches(matchingGamePieces: GamePiece[]): void {
-    this._matchPieces = matchingGamePieces;
-    this._matchPieces.forEach((piece) => piece.InitRemove());
-  }
-
-  public LockBoard(locked: boolean): void {
-    this._boardLocking = locked;
-  }
-
-  public SetLevelChange(): void {
-    this._pendingLevelChange = true;
-  }
-
   public FlipGamePiece(gamePiece: GamePiece): void {
     this.effectsManager.Flip(gamePiece);
-  }
-
-  private animateLock(lock: boolean): void {
-    this._axle.forEach((axle) => {
-      for (const gamePiece of axle.children as GamePiece[]) {
-        if (!gamePiece.IsMatch) {
-          gamePiece.LockPiece(lock);
-        }
-      }
-    });
-  }
-
-  private animateRemoval(): boolean {
-    const complete = !this._matchPieces.some((p) => p.IsMatch);
-    if (!complete) {
-      this._matchPieces.forEach((p) => p.Remove());
-    }
-    return complete;
   }
 
   private assignIterationValues(): void {

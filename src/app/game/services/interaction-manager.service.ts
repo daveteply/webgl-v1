@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ObjectManagerService } from './object-manager.service';
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
-import { ROTATIONAL_CONSTANT } from '../game-constants';
+import { MINIMUM_MATCH_COUNT, ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { ScoringManagerService } from './scoring-manager.service';
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';
+import { EffectsManagerService } from './effects-manager.service';
 
 @Injectable()
 export class InteractionManagerService {
@@ -23,8 +24,11 @@ export class InteractionManagerService {
   private _rayCaster!: Raycaster;
   private _camera!: PerspectiveCamera;
 
+  private _matchingPieces: GamePiece[] = [];
+
   constructor(
     private objectManager: ObjectManagerService,
+    private effectsManager: EffectsManagerService,
     private gameEngine: GameEngineService,
     private scoringManager: ScoringManagerService
   ) {
@@ -37,75 +41,92 @@ export class InteractionManagerService {
     this._hammer.get('swipe').set({ direction: Hammer.DIRECTION_VERTICAL });
 
     this._hammer.on('panstart', (panStartEvent: HammerInput) => {
-      if (!this.objectManager.BoardLocked) {
-        const gamePiece = this.getPickedGamePiece(
-          panStartEvent.center.x,
-          panStartEvent.center.y
-        );
-        if (gamePiece && !gamePiece?.IsRemoved) {
-          this._activeWheel = gamePiece.parent as GameWheel;
-          this.objectManager.SetActiveWheel(this._activeWheel);
-        }
+      const gamePiece = this.getPickedGamePiece(
+        panStartEvent.center.x,
+        panStartEvent.center.y
+      );
+      if (gamePiece && !gamePiece?.IsRemoved) {
+        this._activeWheel = gamePiece.parent as GameWheel;
+        this.objectManager.SetActiveWheel(this._activeWheel);
       }
     });
 
     this._hammer.on('pan', (panEvent) => {
-      if (!this.objectManager.BoardLocked) {
-        if (!this._panning) {
-          this._panning = true;
-        } else {
-          this.deviceCordRotation(panEvent.center.x);
-        }
-
-        if (panEvent.isFinal) {
-          this._panning = false;
-          this._activeWheel?.SnapToGrid();
-          this._activeWheel = undefined;
-          this.scoringManager.TickMoveCount();
-        }
-        this._x = panEvent.center.x;
+      if (!this._panning) {
+        this._panning = true;
+      } else {
+        this.deviceCordRotation(panEvent.center.x);
       }
+
+      if (panEvent.isFinal) {
+        this._panning = false;
+        this._activeWheel?.SnapToGrid();
+        this._activeWheel = undefined;
+        this.scoringManager.TickMoveCount();
+      }
+      this._x = panEvent.center.x;
     });
 
     this._hammer.on('press', (pressEvent) => {
-      if (!this.objectManager.BoardLocked) {
-        const gamePiece = this.getPickedGamePiece(
-          pressEvent.center.x,
-          pressEvent.center.y
+      // prevent further input
+      this.LockBoard(true);
+
+      // find selected game piece
+      const gamePiece = this.getPickedGamePiece(
+        pressEvent.center.x,
+        pressEvent.center.y
+      );
+      if (gamePiece && !gamePiece?.IsRemoved) {
+        // lock the game board if minimum matches found
+        this._matchingPieces = this.gameEngine.FindMatches(
+          gamePiece,
+          this.objectManager.Axle
         );
-        if (gamePiece && !gamePiece?.IsRemoved) {
-          // lock the game board if minimum matches found
-          const matchingPieces = this.gameEngine.FindMatches(
-            gamePiece,
-            this.objectManager.Axle
-          );
-          if (matchingPieces.length) {
-            // prevent user interaction
-            this.objectManager.LockBoard(true);
-            // initiate the removal animation
-            this.objectManager.SetMatches(matchingPieces);
-            // update score
-            this.scoringManager.UpdateScore(matchingPieces.length);
-            if (this.scoringManager.LevelProgress >= 100) {
-              this.objectManager.SetLevelChange();
-            }
-          }
-        }
+
+        // launch animation sequence
+        this.effectsManager.AnimateLock(this.objectManager.Axle, true);
+        this.effectsManager.AnimateSelected(this._matchingPieces, true);
       }
     });
 
     // swipe recognizer is only configured for vertical
     this._hammer.on('swipe', (swipeEvent) => {
-      if (!this.objectManager.BoardLocked) {
-        const gamePiece = this.getPickedGamePiece(
-          swipeEvent.center.x,
-          swipeEvent.center.y - swipeEvent.deltaY
-        );
-        if (gamePiece) {
-          gamePiece.InitFlip(swipeEvent.direction === DIRECTION_UP);
-          this.objectManager.FlipGamePiece(gamePiece);
-          this.scoringManager.TickMoveCount();
+      const gamePiece = this.getPickedGamePiece(
+        swipeEvent.center.x,
+        swipeEvent.center.y - swipeEvent.deltaY
+      );
+      if (gamePiece) {
+        gamePiece.InitFlip(swipeEvent.direction === DIRECTION_UP);
+        this.objectManager.FlipGamePiece(gamePiece);
+        this.scoringManager.TickMoveCount();
+      }
+    });
+
+    this.effectsManager.SelectionAnimationComplete.subscribe((select) => {
+      // selection animation complete
+      if (select) {
+        if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
+          // initiate the removal animation
+          this.effectsManager.AnimateRemove(this._matchingPieces);
+        } else {
+          // unselect
+          this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+          this.effectsManager.AnimateSelected(this._matchingPieces, false);
         }
+      } else {
+        this.LockBoard(false);
+      }
+    });
+
+    this.effectsManager.RemovalAnimationComplete.subscribe(() => {
+      // update score
+      this.scoringManager.UpdateScore(this._matchingPieces.length);
+      if (this.scoringManager.LevelComplete) {
+        this.LockBoard(false);
+        this.objectManager.LevelCompleted.next();
+      } else {
+        this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+        this.LockBoard(false);
       }
     });
   }
@@ -113,6 +134,12 @@ export class InteractionManagerService {
   public UpdateSize(rect: DOMRect, camera: PerspectiveCamera): void {
     this._canvasRect = rect;
     this._camera = camera;
+  }
+
+  public LockBoard(locked: boolean): void {
+    this._hammer.get('swipe').set({ enable: !locked });
+    this._hammer.get('pan').set({ enable: !locked });
+    this._hammer.get('press').set({ enable: !locked });
   }
 
   private deviceCordRotation(x: number): void {

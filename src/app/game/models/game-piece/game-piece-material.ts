@@ -1,10 +1,4 @@
-import {
-  Material,
-  MeshBasicMaterial,
-  MeshPhongMaterial,
-  Texture,
-  Vector2,
-} from 'three';
+import { Material, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
 
 export class GamePieceMaterial {
   private _matchKey!: number;

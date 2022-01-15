@@ -34,6 +34,10 @@ export class ScoringManagerService {
     return foo;
   }
 
+  get LevelComplete(): boolean {
+    return this.LevelProgress >= 100;
+  }
+
   get LevelStats(): LevelStats {
     return {
       fastestMatchMs: this._fastestMatchMs,
