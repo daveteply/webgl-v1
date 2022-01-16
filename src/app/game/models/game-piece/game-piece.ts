@@ -159,7 +159,7 @@ export class GamePiece extends Object3D {
     };
 
     new Tween(delta)
-      .to(target, 750)
+      .to(target, MathUtils.randInt(250, 750))
       .onUpdate(() => {
         this.rotation.x = delta.x;
         this.rotation.y = delta.y;
