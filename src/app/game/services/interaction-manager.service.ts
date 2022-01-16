@@ -47,7 +47,6 @@ export class InteractionManagerService {
       );
       if (gamePiece && !gamePiece?.IsRemoved) {
         this._activeWheel = gamePiece.parent as GameWheel;
-        this.objectManager.SetActiveWheel(this._activeWheel);
       }
     });
 

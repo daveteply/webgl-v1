@@ -6,6 +6,7 @@ import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture-manager.service';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
+import * as TWEEN from '@tweenjs/tween.js';
 
 @Component({
   selector: 'wgl-game-container',
@@ -67,7 +68,7 @@ export class GameContainerComponent implements OnInit {
   }
 
   private animate(): void {
-    this.objectManager.UpdateShapes();
+    TWEEN.update();
     this.ngZone.runOutsideAngular(() => {
       this.sceneManager.RenderScene();
     });

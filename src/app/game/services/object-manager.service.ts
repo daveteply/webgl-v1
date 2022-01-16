@@ -10,7 +10,6 @@ import {
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import * as TWEEN from '@tweenjs/tween.js';
 
 @Injectable()
 export class ObjectManagerService {
@@ -22,7 +21,6 @@ export class ObjectManagerService {
 
   private _axle: GameWheel[] = [];
   private _stack: Group;
-  private _activeWheel: GameWheel | undefined;
 
   private _scene!: Scene;
 
@@ -70,20 +68,6 @@ export class ObjectManagerService {
     this.assignIterationValues();
 
     this.effectsManager.InitIntoAnimation(this._axle, this._verticalTargets);
-  }
-
-  //////////////////////
-  //  animation loop  //
-  //////////////////////
-  public UpdateShapes(): void {
-    TWEEN.update();
-  }
-
-  // for panning/horizontal scrubbing interaction
-  public SetActiveWheel(wheel: GameWheel): void {
-    if (wheel) {
-      this._activeWheel = wheel;
-    }
   }
 
   private assignIterationValues(): void {
