@@ -8,6 +8,7 @@ import {
 } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 @Injectable()
 export class SceneManagerService {
@@ -86,6 +87,7 @@ export class SceneManagerService {
     // this._controls.update();
   }
 
+  // called during main animation loop
   public RenderScene(): void {
     this._renderer?.render(this._scene, this._camera);
   }
