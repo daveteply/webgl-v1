@@ -1,68 +1,25 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { INTRO_VERTICAL_CASCADE } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
-import { Betweener } from '../models/keyframes/betweener';
-
-enum EffectTypes {
-  Intro = 1,
-}
 
 @Injectable()
 export class EffectsManagerService {
-  private _activeEffects: EffectTypes[] = [];
-  private _introBetweeners: Betweener[] = [];
   private _selectionTweens: any[] = [];
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
 
-  public UpdateEffects(axle: GameWheel[]): void {
-    if (this._activeEffects.length) {
-      if (this._activeEffects.find((e) => e === EffectTypes.Intro)) {
-        this.animateIntro(axle);
-      }
-    }
-  }
-
   public InitIntoAnimation(
     gameWheels: GameWheel[],
-    verticalTargets: number[],
-    startY: number
+    verticalTargets: number[]
   ): void {
-    this._introBetweeners = [];
-    if (startY < 0) {
-      for (let i = gameWheels.length - 1; i > -1; i--) {
-        const tweener = new Betweener(
-          gameWheels[i].position.y,
-          verticalTargets[i],
-          INTRO_VERTICAL_CASCADE * (gameWheels.length - i)
-        );
-        this._introBetweeners.push(tweener);
-      }
-    } else {
-      for (let i = 0; i < gameWheels.length; i++) {
-        const tweener = new Betweener(
-          gameWheels[i].position.y,
-          verticalTargets[i],
-          INTRO_VERTICAL_CASCADE * (i + 1)
-        );
-        this._introBetweeners.push(tweener);
-      }
-    }
+    const introTweens: any[] = [];
 
-    this._activeEffects.push(EffectTypes.Intro);
-  }
-
-  private animateIntro(axle: GameWheel[]): void {
-    if (this._introBetweeners.some((i) => i.HasNext)) {
-      this._introBetweeners.forEach((wheel, inx) => {
-        if (wheel.HasNext) {
-          axle[inx].position.y = wheel.Next;
-        }
-      });
-    } else {
-      this.removeActiveEffect(EffectTypes.Intro);
-    }
+    // init tweens
+    let delay = 0;
+    gameWheels.forEach((wheel, inx) => {
+      delay += 100;
+      introTweens.push(wheel.AnimateIntroTween(verticalTargets[inx], delay));
+    });
   }
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {
@@ -121,13 +78,6 @@ export class EffectsManagerService {
     const flipTween = gamePiece.InitFlipTween(
       Math.floor(velocity),
       directionUp
-    );
-  }
-
-  private removeActiveEffect(effect: EffectTypes): void {
-    this._activeEffects.splice(
-      this._activeEffects.findIndex((a) => a === effect),
-      1
     );
   }
 }

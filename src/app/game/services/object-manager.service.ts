@@ -53,12 +53,10 @@ export class ObjectManagerService {
     // select colors for the current level
     this.materialManager.InitMaterials();
 
-    // start off-screen below or above (part of intro animation)
-    const startY = MathUtils.randInt(1, 3) === 1 ? 10 : -10;
     // create all the objects
     this._verticalTargets.forEach(() => {
       const gameWheel = new GameWheel(
-        startY,
+        10,
         this._piecePoints,
         this.materialManager.MaterialData
       );
@@ -71,11 +69,7 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.effectsManager.InitIntoAnimation(
-      this._axle,
-      this._verticalTargets,
-      startY
-    );
+    this.effectsManager.InitIntoAnimation(this._axle, this._verticalTargets);
   }
 
   //////////////////////
@@ -83,7 +77,6 @@ export class ObjectManagerService {
   //////////////////////
   public UpdateShapes(): void {
     TWEEN.update();
-    this.effectsManager.UpdateEffects(this._axle);
   }
 
   // for panning/horizontal scrubbing interaction

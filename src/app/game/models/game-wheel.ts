@@ -64,6 +64,19 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
+  public AnimateIntroTween(targetY: number, delay: number): any {
+    const delta = { y: this.position.y };
+    const target = { y: targetY };
+    return new Tween(delta)
+      .to(target, 250)
+      .delay(delay)
+      .easing(Easing.Sinusoidal.Out)
+      .onUpdate(() => {
+        this.position.y = delta.y;
+      })
+      .start();
+  }
+
   public UpdateTheta(theta: number): void {
     this._theta += theta;
 
