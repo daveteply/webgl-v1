@@ -68,7 +68,7 @@ export class GameWheel extends Object3D {
     const delta = { y: this.position.y };
     const target = { y: targetY };
     return new Tween(delta)
-      .to(target, 250)
+      .to(target, 2000)
       .delay(delay)
       .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {

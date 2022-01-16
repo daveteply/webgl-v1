@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Group, MathUtils, Scene, Vector3 } from 'three';
+import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
 import {
@@ -23,6 +23,7 @@ export class ObjectManagerService {
   private _stack: Group;
 
   private _scene!: Scene;
+  private _perspectiveCamera!: PerspectiveCamera;
 
   // events
   public LevelCompleted: EventEmitter<void> = new EventEmitter();
@@ -37,6 +38,10 @@ export class ObjectManagerService {
 
   get Axle(): GameWheel[] {
     return this._axle;
+  }
+
+  public SetCamera(camera: PerspectiveCamera): void {
+    this._perspectiveCamera = camera;
   }
 
   public InitShapes(scene?: Scene): void {
@@ -54,7 +59,7 @@ export class ObjectManagerService {
     // create all the objects
     this._verticalTargets.forEach(() => {
       const gameWheel = new GameWheel(
-        10,
+        50,
         this._piecePoints,
         this.materialManager.MaterialData
       );
@@ -67,7 +72,18 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.effectsManager.InitIntoAnimation(this._axle, this._verticalTargets);
+    // reset camera
+    if (this._perspectiveCamera) {
+      this._perspectiveCamera.position.z = 0;
+      this._perspectiveCamera.rotation.x = Math.PI / 2;
+    }
+
+    // trigger intro animation
+    this.effectsManager.InitIntoAnimation(
+      this._axle,
+      this._verticalTargets,
+      this._perspectiveCamera
+    );
   }
 
   private assignIterationValues(): void {

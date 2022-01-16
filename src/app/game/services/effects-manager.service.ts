@@ -1,4 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Tween } from '@tweenjs/tween.js';
+import { PerspectiveCamera } from 'three';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 
@@ -10,7 +12,8 @@ export class EffectsManagerService {
 
   public InitIntoAnimation(
     gameWheels: GameWheel[],
-    verticalTargets: number[]
+    verticalTargets: number[],
+    camera: PerspectiveCamera
   ): void {
     const introTweens: any[] = [];
 
@@ -20,6 +23,18 @@ export class EffectsManagerService {
       delay += 100;
       introTweens.push(wheel.AnimateIntroTween(verticalTargets[inx], delay));
     });
+
+    // animate camera
+    const delta = { z: 0.0, rotX: Math.PI / 2 };
+    const target = { z: 5.0, rotX: 0.0 };
+    new Tween(delta)
+      .to(target, 1000)
+      .delay(1200)
+      .onUpdate(() => {
+        camera.rotation.x = delta.rotX;
+        camera.position.z = delta.z;
+      })
+      .start();
   }
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {

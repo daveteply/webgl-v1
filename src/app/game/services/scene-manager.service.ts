@@ -54,9 +54,13 @@ export class SceneManagerService {
     const aspectRatio = this._width / this._height;
 
     if (!this._camera) {
-      this._camera = new PerspectiveCamera(45, aspectRatio, 1, 25);
-      this._camera.position.set(0, 0, 5);
+      this._camera = new PerspectiveCamera(45, aspectRatio, 1, 75);
+      this.objectManager.SetCamera(this._camera);
+
       this._pointLight?.position.copy(this._camera.position);
+
+      // face camera "up"
+      this._camera.rotation.x = Math.PI / 2;
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
