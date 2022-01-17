@@ -1,5 +1,5 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
-import { Object3D } from 'three';
+import { MathUtils, Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { GamePiece } from './game-piece/game-piece';
 import { GamePieceMaterialData } from './game-piece/game-piece-material-data';
@@ -64,15 +64,20 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public AnimateIntroTween(targetY: number, delay: number): any {
-    const delta = { y: this.position.y };
-    const target = { y: targetY };
-    return new Tween(delta)
+  public AnimateLevelStartTween(targetY: number, delay: number): void {
+    const delta = {
+      y: this.position.y,
+      theta: MathUtils.randInt(-20, 20) * GRID_INC,
+    };
+    const target = { y: targetY, theta: 0 };
+    new Tween(delta)
       .to(target, 3000)
       .delay(delay)
       .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {
         this.position.y = delta.y;
+        this.rotation.y = delta.theta;
+        this._theta = delta.theta;
       })
       .start();
   }

@@ -22,10 +22,12 @@ export class EffectsManagerService {
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
-      introTweens.push(wheel.AnimateIntroTween(verticalTargets[inx], delay));
+      introTweens.push(
+        wheel.AnimateLevelStartTween(verticalTargets[inx], delay)
+      );
     });
 
-    // opacity game piece
+    // opacity of each game piece
     gameWheels.forEach((wheel) => {
       for (const gamePiece of wheel.children as GamePiece[]) {
         if (!gamePiece.IsMatch) {
