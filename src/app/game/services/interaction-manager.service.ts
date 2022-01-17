@@ -112,6 +112,7 @@ export class InteractionManagerService {
           this.effectsManager.AnimateRemove(this._matchingPieces);
           this.scoringManager.UpdateScore(this._matchingPieces.length);
           if (this.scoringManager.LevelComplete) {
+            this.objectManager.AnimateLevelComplete();
             this.LockBoard(false);
             this.objectManager.LevelCompleted.next();
           } else {

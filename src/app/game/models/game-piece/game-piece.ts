@@ -94,9 +94,9 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
-  public AnimateLevelStartTween(): void {
-    const delta = { o: 0.0 };
-    const target = { o: 1.1 };
+  public AnimateLevelChangeTween(start: boolean): void {
+    const delta = start ? { o: 0.0 } : { o: 1.0 };
+    const target = start ? { o: 1.0 } : { o: 0.0 };
     new Tween(delta)
       .to(target, 2000)
       .delay(MathUtils.randInt(250, 1000))

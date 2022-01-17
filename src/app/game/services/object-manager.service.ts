@@ -79,10 +79,20 @@ export class ObjectManagerService {
     }
 
     // trigger intro animations
-    this.effectsManager.AnimateLevelStartAnimation(
+    this.effectsManager.AnimateLevelChangeAnimation(
       this._axle,
       this._verticalTargets,
-      this._perspectiveCamera
+      this._perspectiveCamera,
+      true
+    );
+  }
+
+  public AnimateLevelComplete(): void {
+    this.effectsManager.AnimateLevelChangeAnimation(
+      this._axle,
+      this._verticalTargets,
+      this._perspectiveCamera,
+      false
     );
   }
 

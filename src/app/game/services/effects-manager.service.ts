@@ -11,34 +11,40 @@ export class EffectsManagerService {
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   IntroAnimationComplete: EventEmitter<void> = new EventEmitter();
 
-  public AnimateLevelStartAnimation(
+  public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
     verticalTargets: number[],
-    camera: PerspectiveCamera
+    camera: PerspectiveCamera,
+    start: boolean
   ): void {
     const introTweens: any[] = [];
+
+    let vTargets = [...verticalTargets];
+    if (!start) {
+      vTargets = verticalTargets.map((t) => {
+        return -10;
+      });
+    }
 
     // vertical movement tweens
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
-      introTweens.push(
-        wheel.AnimateLevelStartTween(verticalTargets[inx], delay)
-      );
+      introTweens.push(wheel.AnimateLevelStartTween(vTargets[inx], delay));
     });
 
     // opacity of each game piece
     gameWheels.forEach((wheel) => {
       for (const gamePiece of wheel.children as GamePiece[]) {
         if (!gamePiece.IsMatch) {
-          gamePiece.AnimateLevelStartTween();
+          gamePiece.AnimateLevelChangeTween(start);
         }
       }
     });
 
     // animate camera
-    const delta = { z: 0.0, rotX: Math.PI / 2 };
-    const target = { z: 5.0, rotX: 0.0 };
+    const delta = { z: start ? 0.0 : 5.0, rotX: start ? Math.PI / 2 : 0 };
+    const target = { z: start ? 5.0 : 0.0, rotX: start ? 0.0 : Math.PI / 2 };
     new Tween(delta)
       .to(target, 1000)
       .delay(2000)
