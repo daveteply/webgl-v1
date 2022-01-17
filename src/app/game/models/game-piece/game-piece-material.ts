@@ -37,6 +37,7 @@ export class GamePieceMaterial {
     }
 
     if (this._material) {
+      this._material.opacity = 0; // level change animation will tween this to 1.0
       this._material.transparent = true;
     }
   }

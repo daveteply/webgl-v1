@@ -94,6 +94,18 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
+  public AnimateLevelStartTween(): void {
+    const delta = { o: 0.0 };
+    const target = { o: 1.1 };
+    new Tween(delta)
+      .to(target, 2000)
+      .delay(MathUtils.randInt(250, 1000))
+      .onUpdate(() => {
+        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+      })
+      .start();
+  }
+
   public AnimateLock(lock: boolean): void {
     if (!this._isRemoved && !this.IsMatch) {
       // stop if running

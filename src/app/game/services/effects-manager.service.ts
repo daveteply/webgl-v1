@@ -9,19 +9,29 @@ export class EffectsManagerService {
   private _selectionTweens: any[] = [];
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
+  IntroAnimationComplete: EventEmitter<void> = new EventEmitter();
 
-  public InitIntoAnimation(
+  public AnimateLevelStartAnimation(
     gameWheels: GameWheel[],
     verticalTargets: number[],
     camera: PerspectiveCamera
   ): void {
     const introTweens: any[] = [];
 
-    // init tweens
+    // vertical movement tweens
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
       introTweens.push(wheel.AnimateIntroTween(verticalTargets[inx], delay));
+    });
+
+    // opacity game piece
+    gameWheels.forEach((wheel) => {
+      for (const gamePiece of wheel.children as GamePiece[]) {
+        if (!gamePiece.IsMatch) {
+          gamePiece.AnimateLevelStartTween();
+        }
+      }
     });
 
     // animate camera
@@ -29,10 +39,13 @@ export class EffectsManagerService {
     const target = { z: 5.0, rotX: 0.0 };
     new Tween(delta)
       .to(target, 1000)
-      .delay(1200)
+      .delay(2000)
       .onUpdate(() => {
         camera.rotation.x = delta.rotX;
         camera.position.z = delta.z;
+      })
+      .onComplete(() => {
+        this.IntroAnimationComplete.next();
       })
       .start();
   }

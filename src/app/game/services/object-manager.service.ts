@@ -78,8 +78,8 @@ export class ObjectManagerService {
       this._perspectiveCamera.rotation.x = Math.PI / 2;
     }
 
-    // trigger intro animation
-    this.effectsManager.InitIntoAnimation(
+    // trigger intro animations
+    this.effectsManager.AnimateLevelStartAnimation(
       this._axle,
       this._verticalTargets,
       this._perspectiveCamera
