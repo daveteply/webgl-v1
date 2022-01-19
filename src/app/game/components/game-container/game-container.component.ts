@@ -7,6 +7,7 @@ import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture-manager.service';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import * as TWEEN from '@tweenjs/tween.js';
+import { AudioManagerService } from '../../services/audio-manager.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -20,6 +21,7 @@ export class GameContainerComponent implements OnInit {
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
+    private audioManager: AudioManagerService,
     public scoringManager: ScoringManagerService
   ) {}
 
@@ -36,8 +38,11 @@ export class GameContainerComponent implements OnInit {
       },
     });
 
-    // level close event
+    // level start event
     welcomeDialog.afterClosed().subscribe(() => {
+      // init audio
+      this.audioManager.InitWebAudioApi();
+      // set up scene and animate
       this.sceneManager.InitScene();
       this.animate();
     });

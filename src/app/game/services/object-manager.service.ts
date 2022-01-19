@@ -10,6 +10,8 @@ import {
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
+import { AudioManagerService } from './audio-manager.service';
+import { AudioType } from '../models/audio-info';
 
 @Injectable()
 export class ObjectManagerService {
@@ -30,7 +32,8 @@ export class ObjectManagerService {
 
   constructor(
     private materialManager: MaterialManagerService,
-    private effectsManager: EffectsManagerService
+    private effectsManager: EffectsManagerService,
+    private audioManager: AudioManagerService
   ) {
     this._stack = new Group();
     this.initCoords();
@@ -85,6 +88,8 @@ export class ObjectManagerService {
       this._perspectiveCamera,
       true
     );
+
+    this.audioManager.PlayAudio(AudioType.LEVEL_START);
   }
 
   public AnimateLevelComplete(): void {

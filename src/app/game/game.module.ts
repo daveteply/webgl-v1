@@ -11,6 +11,8 @@ import { MaterialManagerService } from './services/material-manager.service';
 import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
+import { TextureManagerService } from './services/texture-manager.service';
+import { AudioManagerService } from './services/audio-manager.service';
 
 import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 
@@ -18,7 +20,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TextureManagerService } from './services/texture-manager.service';
 
 @NgModule({
   declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent],
@@ -39,6 +40,7 @@ import { TextureManagerService } from './services/texture-manager.service';
     GameEngineService,
     ScoringManagerService,
     EffectsManagerService,
+    AudioManagerService,
   ],
 })
 export class GameModule {}

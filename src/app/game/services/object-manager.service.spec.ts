@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { AudioManagerService } from './audio-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 
@@ -15,6 +16,7 @@ describe('ObjectManagerService', () => {
         MaterialManagerService,
         EffectsManagerService,
         TextureManagerService,
+        AudioManagerService,
       ],
     });
     service = TestBed.inject(ObjectManagerService);

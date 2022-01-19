@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AudioManagerService } from '../../services/audio-manager.service';
 import { EffectsManagerService } from '../../services/effects-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { InteractionManagerService } from '../../services/interaction-manager.service';
@@ -26,6 +27,7 @@ describe('CanvasComponent', () => {
         ScoringManagerService,
         EffectsManagerService,
         TextureManagerService,
+        AudioManagerService,
       ],
     }).compileComponents();
   });
