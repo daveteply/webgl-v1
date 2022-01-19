@@ -7,6 +7,7 @@ import { GameWheel } from '../models/game-wheel';
 @Injectable()
 export class EffectsManagerService {
   private _selectionTweens: any[] = [];
+  private _levelChangeCameraTween: any;
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   IntroAnimationComplete: EventEmitter<void> = new EventEmitter();
@@ -42,10 +43,15 @@ export class EffectsManagerService {
       }
     });
 
+    // stop currently running tween
+    if (this._levelChangeCameraTween) {
+      this._levelChangeCameraTween.stop();
+    }
+
     // animate camera
     const delta = { z: start ? 0.0 : 5.0, rotX: start ? Math.PI / 2 : 0 };
     const target = { z: start ? 5.0 : 0.0, rotX: start ? 0.0 : Math.PI / 2 };
-    new Tween(delta)
+    this._levelChangeCameraTween = new Tween(delta)
       .to(target, 1000)
       .delay(2000)
       .onUpdate(() => {

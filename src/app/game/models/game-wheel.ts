@@ -12,6 +12,8 @@ export class GameWheel extends Object3D {
   private _wheelAbove: GameWheel | undefined;
   private _wheelBelow: GameWheel | undefined;
 
+  private _levelChangeTween: any;
+
   constructor(
     y: number,
     meshPoints: PiecePoints[],
@@ -65,12 +67,16 @@ export class GameWheel extends Object3D {
   }
 
   public AnimateLevelStartTween(targetY: number, delay: number): void {
+    if (this._levelChangeTween) {
+      this._levelChangeTween.stop();
+    }
+
     const delta = {
       y: this.position.y,
       theta: MathUtils.randInt(-20, 20) * GRID_INC,
     };
     const target = { y: targetY, theta: 0 };
-    new Tween(delta)
+    this._levelChangeTween = new Tween(delta)
       .to(target, 3000)
       .delay(delay)
       .easing(Easing.Sinusoidal.Out)
