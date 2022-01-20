@@ -9,6 +9,8 @@ import { ScoringManagerService } from './scoring-manager.service';
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';
 import { EffectsManagerService } from './effects-manager.service';
+import { AudioManagerService } from './audio-manager.service';
+import { AudioType } from '../models/audio-info';
 
 @Injectable()
 export class InteractionManagerService {
@@ -30,7 +32,8 @@ export class InteractionManagerService {
     private objectManager: ObjectManagerService,
     private effectsManager: EffectsManagerService,
     private gameEngine: GameEngineService,
-    private scoringManager: ScoringManagerService
+    private scoringManager: ScoringManagerService,
+    private audioManager: AudioManagerService
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
@@ -62,6 +65,7 @@ export class InteractionManagerService {
         this._activeWheel?.SnapToGrid();
         this._activeWheel = undefined;
         this.scoringManager.TickMoveCount();
+        this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
       }
       this._x = panEvent.center.x;
     });
@@ -112,6 +116,7 @@ export class InteractionManagerService {
           this.effectsManager.AnimateRemove(this._matchingPieces);
           this.scoringManager.UpdateScore(this._matchingPieces.length);
           if (this.scoringManager.LevelComplete) {
+            this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
             this.LockBoard(false);
             this.objectManager.LevelCompleted.next();

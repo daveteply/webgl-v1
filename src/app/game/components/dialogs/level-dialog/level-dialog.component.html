@@ -29,6 +29,10 @@
         <td>{{ data.stats.pieceCount }}</td>
       </tr>
     </table>
+    <p>
+      Music by
+      <a target="_blank" href="https://audionautix.com/">audionautix.com</a>
+    </p>
   </ng-template>
   <br />
   <mat-progress-bar
@@ -38,7 +42,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" mat-dialog-close>
+  <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>
     <span *ngIf="data.score === 0; else levelButtonContent">Play!</span>
     <ng-template #levelButtonContent>Next Level!</ng-template>
   </button>

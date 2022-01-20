@@ -1,22 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { AudioInfo, AudioType } from '../models/audio-info';
+import { MathUtils } from 'three';
+import { AudioType, AUDIO_LIST } from '../models/audio-info';
 
 @Injectable()
 export class AudioManagerService {
   private _audioContext!: AudioContext;
   private _isCompatible: boolean = true;
-
-  private _audioList: AudioInfo[] = [
-    {
-      element: new Audio('assets/audio/Movement-06.mp3'),
-      audioType: AudioType.LEVEL_START,
-    },
-    {
-      element: new Audio('assets/audio/button-30.mp3'),
-      audioType: AudioType.GAME_PIECE_MOVE,
-    },
-  ];
 
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
@@ -33,20 +23,53 @@ export class AudioManagerService {
     }
   }
 
+  public PlayLevelComplete(): void {
+    switch (MathUtils.randInt(1, 3)) {
+      case 1:
+        this.PlayAudio(AudioType.LEVEL_END_1);
+        break;
+
+      case 2:
+        this.PlayAudio(AudioType.LEVEL_END_2);
+        break;
+
+      default:
+        this.PlayAudio(AudioType.LEVEL_END_3);
+    }
+  }
+
+  public StopLevelComplete(): void {
+    this.StopAudio(AudioType.LEVEL_END_1);
+    this.StopAudio(AudioType.LEVEL_END_2);
+    this.StopAudio(AudioType.LEVEL_END_3);
+  }
+
   public async PlayAudio(audioType: AudioType): Promise<void> {
+    if (!this._isCompatible) {
+      return;
+    }
+
     if (this._audioContext && this._audioContext.state === 'suspended') {
       await this._audioContext.resume();
     }
 
-    const target = this._audioList.find((a) => a.audioType === audioType);
+    const target = AUDIO_LIST.find((a) => a.audioType === audioType);
     if (target) {
       target.element.currentTime = 0;
       target.element.play();
     }
   }
 
+  public StopAudio(audioType: AudioType): void {
+    const target = AUDIO_LIST.find((a) => a.audioType === audioType);
+    if (target) {
+      target.element.pause();
+      target.element.currentTime = 0;
+    }
+  }
+
   private loadAudioFiles(): void {
-    this._audioList.forEach((audio) => {
+    AUDIO_LIST.forEach((audio) => {
       audio.track = this._audioContext.createMediaElementSource(audio.element);
       audio.track.connect(this._audioContext.destination);
     });

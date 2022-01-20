@@ -1,8 +1,10 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { PerspectiveCamera } from 'three';
+import { AudioType } from '../models/audio-info';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
+import { AudioManagerService } from './audio-manager.service';
 
 @Injectable()
 export class EffectsManagerService {
@@ -11,6 +13,8 @@ export class EffectsManagerService {
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   IntroAnimationComplete: EventEmitter<void> = new EventEmitter();
+
+  constructor(private audioService: AudioManagerService) {}
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -96,6 +100,15 @@ export class EffectsManagerService {
       }
       this._selectionTweens[0].delay(250);
 
+      // audio
+      this._selectionTweens.forEach((tween) => {
+        tween.onStart(() => {
+          this.audioService.PlayAudio(
+            select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL
+          );
+        });
+      });
+
       // tween
       this._selectionTweens[0].start();
 
@@ -108,7 +121,10 @@ export class EffectsManagerService {
 
   public AnimateRemove(selectedPieces: GamePiece[]): void {
     if (selectedPieces.length) {
-      selectedPieces.forEach((p) => p.InitRemovalTween());
+      selectedPieces.forEach((p) => {
+        p.InitRemovalTween();
+        this.audioService.PlayAudio(AudioType.PIECE_REMOVE);
+      });
     }
   }
 

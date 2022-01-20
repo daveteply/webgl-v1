@@ -89,7 +89,12 @@ export class ObjectManagerService {
       true
     );
 
-    this.audioManager.PlayAudio(AudioType.LEVEL_START);
+    this.audioManager.StopLevelComplete();
+    this.audioManager.PlayAudio(
+      MathUtils.randInt(1, 2) === 1
+        ? AudioType.LEVEL_START_1
+        : AudioType.LEVEL_START_2
+    );
   }
 
   public AnimateLevelComplete(): void {
