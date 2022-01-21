@@ -16,7 +16,11 @@ export interface AudioInfo {
   track?: MediaElementAudioSourceNode;
 }
 
-export const AUDIO_LIST: AudioInfo[] = [
+export interface MusicInfo extends AudioInfo {
+  src: string;
+}
+
+export const SOUND_FX_LIST: AudioInfo[] = [
   {
     element: new Audio('assets/audio/intro-01.mp3'),
     audioType: AudioType.LEVEL_START_1,
@@ -41,16 +45,22 @@ export const AUDIO_LIST: AudioInfo[] = [
     element: new Audio('assets/audio/match-fail.mp3'),
     audioType: AudioType.MATCH_FAIL,
   },
+];
+
+export const END_LEVEL_MUSIC: MusicInfo[] = [
   {
-    element: new Audio('assets/audio/level-complete/Assasins.mp3'),
+    element: new Audio(),
+    src: 'assets/audio/level-complete/Assasins.mp3',
     audioType: AudioType.LEVEL_END_1,
   },
   {
-    element: new Audio('assets/audio/level-complete/Essence.mp3'),
+    element: new Audio(),
+    src: 'assets/audio/level-complete/Essence.mp3',
     audioType: AudioType.LEVEL_END_2,
   },
   {
-    element: new Audio('assets/audio/level-complete/Sk8board.mp3'),
+    element: new Audio(),
+    src: 'assets/audio/level-complete/Sk8board.mp3',
     audioType: AudioType.LEVEL_END_3,
   },
 ];
