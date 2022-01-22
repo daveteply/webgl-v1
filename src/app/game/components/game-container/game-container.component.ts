@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MathUtils } from 'three';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
@@ -7,7 +7,6 @@ import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture-manager.service';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import * as TWEEN from '@tweenjs/tween.js';
-import { AudioManagerService } from '../../services/audio-manager.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -15,53 +14,60 @@ import { AudioManagerService } from '../../services/audio-manager.service';
   styleUrls: ['./game-container.component.scss'],
 })
 export class GameContainerComponent implements OnInit {
+  private _dialogRef!: MatDialogRef<LevelDialogComponent>;
+  private _showWelcome: boolean = true;
+
   constructor(
     private ngZone: NgZone,
     private dialog: MatDialog,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
-    private audioManager: AudioManagerService,
     public scoringManager: ScoringManagerService
   ) {}
 
   ngOnInit(): void {
-    const materialType = this.preloadTextures();
+    this._dialogRef = this.dialog.open(LevelDialogComponent, this.diagConfig());
 
-    let welcomeDialog = this.dialog.open(LevelDialogComponent, {
-      maxWidth: '25em',
-      disableClose: true,
-      data: {
-        score: this.scoringManager.Score,
-        stats: this.scoringManager.LevelStats,
-        materialType: materialType,
-      },
-    });
-
-    // level start event
-    welcomeDialog.afterClosed().subscribe(() => {
-      // set up scene and animate
-      this.sceneManager.InitScene();
-      this.animate();
+    this._dialogRef.afterClosed().subscribe(() => {
+      this.handleDialogCLosed();
     });
 
     // level complete
     this.objectManager.LevelCompleted.subscribe(() => {
       const materialType = this.preloadTextures();
-      const levelDialog = this.dialog.open(LevelDialogComponent, {
-        maxWidth: '25em',
-        disableClose: true,
-        data: {
-          score: this.scoringManager.Score,
-          stats: this.scoringManager.LevelStats,
-          materialType: materialType,
-        },
-      });
-      levelDialog.afterClosed().subscribe(() => {
-        this.scoringManager.NextLevel();
-        this.objectManager.InitShapes();
+      this._dialogRef = this.dialog.open(
+        LevelDialogComponent,
+        this.diagConfig()
+      );
+      this._dialogRef.afterClosed().subscribe(() => {
+        this.handleDialogCLosed();
       });
     });
+  }
+
+  private diagConfig(): any {
+    return {
+      maxWidth: '25em',
+      disableClose: true,
+      data: {
+        isWelcome: this._showWelcome,
+        stats: this.scoringManager.LevelStats,
+        materialType: this.preloadTextures(),
+      },
+    };
+  }
+
+  private handleDialogCLosed(): void {
+    if (this._showWelcome) {
+      // set up scene and animate
+      this.sceneManager.InitScene();
+      this.animate();
+      this._showWelcome = false;
+    } else {
+      this.scoringManager.NextLevel();
+      this.objectManager.InitShapes();
+    }
   }
 
   private preloadTextures(): number {

@@ -14,12 +14,6 @@ export class GamePieceMaterial {
   ) {
     this._matchKey = matchKey;
 
-    if (!bumpTexture && color) {
-      this._material = new MeshPhongMaterial({
-        color: color,
-      });
-    }
-
     if (bumpTexture && color) {
       this._bumpTexture = bumpTexture;
       this._material = new MeshPhongMaterial({

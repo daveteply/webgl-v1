@@ -4,6 +4,7 @@ import { PLAYABLE_PIECE_COUNT } from '../game-constants';
 import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-data';
 import { TextureManagerService } from './texture-manager.service';
 import 'node_modules/color-scheme/lib/color-scheme.js';
+import { LevelMaterialType } from '../models/level-material-type';
 
 declare var ColorScheme: any;
 
@@ -27,19 +28,20 @@ export class MaterialManagerService {
     // select style for current level
     let selectedColors: string[] = [];
     switch (this.textureManager.LevelType) {
-      // colors
-      case 1:
+      // colors and symbol maps
+      case LevelMaterialType.ColorBumpShape:
         selectedColors = this.initColorScheme();
-        selectedColors.forEach((color) => {
+        selectedColors.forEach((color, inx) => {
           this._currentMaterials.push(<GamePieceMaterialData>{
             MatchKey: matchKey++,
+            BumpTexture: this.textureManager.Textures[inx],
             Color: color,
           });
         });
         break;
 
-      // include bump maps
-      case 2:
+      // colors and bump maps
+      case LevelMaterialType.ColorBumpMaterial:
         selectedColors = this.initColorScheme();
         // pick a random texture
         const bumpTexture =
@@ -54,6 +56,7 @@ export class MaterialManagerService {
             Color: color,
           });
         });
+
         break;
 
       // default to emojis

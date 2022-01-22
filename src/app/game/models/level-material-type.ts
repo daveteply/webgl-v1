@@ -1,5 +1,5 @@
 export enum LevelMaterialType {
-  ColorOnly = 1,
-  ColorAndBumpMaps,
+  ColorBumpShape = 1,
+  ColorBumpMaterial,
   Emoji,
 }

@@ -10,24 +10,37 @@ import {
 import { PLAYABLE_PIECE_COUNT } from '../game-constants';
 import { LevelMaterialType } from '../models/level-material-type';
 
+export interface BumpData {
+  src: string;
+  texture?: Texture;
+}
+
 @Injectable()
 export class TextureManagerService {
-  private _bumpMaps: string[] = [
-    'assets/maps-bump/Bark 0499.JPG.jpg',
-    'assets/maps-bump/Bark 0515.JPG.jpg',
-    'assets/maps-bump/Brick 2371 bump map.jpg',
-    'assets/maps-bump/Brick 2852b bump map.jpg',
-    'assets/maps-bump/Concrete 3035 bump map.jpg',
-    'assets/maps-bump/Fabric 0071 bump map.jpg',
-    'assets/maps-bump/Fabric 0106.jpg',
-    'assets/maps-bump/Fabric 0140c.jpg',
-    'assets/maps-bump/Gravel 2486 bump map.jpg',
-    'assets/maps-bump/Metal 2350 bump map.jpg',
-    'assets/maps-bump/Metal 2860 bump map.jpg',
-    'assets/maps-bump/Plastic 2923f.jpg',
-    'assets/maps-bump/Rubber 0472.jpg',
+  private _bumpMaterials: BumpData[] = [
+    { src: 'assets/maps/bump/material/bark-1.jpg' },
+    { src: 'assets/maps/bump/material/bark-2.jpg' },
+    { src: 'assets/maps/bump/material/brick-1.jpg' },
+    { src: 'assets/maps/bump/material/brick-2.jpg' },
+    { src: 'assets/maps/bump/material/concrete-1.jpg' },
+    { src: 'assets/maps/bump/material/fabric-1.jpg' },
+    { src: 'assets/maps/bump/material/fabric-2.jpg' },
+    { src: 'assets/maps/bump/material/fabric-3.jpg' },
+    { src: 'assets/maps/bump/material/gravel-1.jpg' },
+    { src: 'assets/maps/bump/material/metal-1.jpg' },
+    { src: 'assets/maps/bump/material/metal-2.jpg' },
+    { src: 'assets/maps/bump/material/plastic-1.jpg' },
+    { src: 'assets/maps/bump/material/rubber-1.jpg' },
   ];
-  private _bumpMapsCache: Texture[] = [];
+
+  private _bumpSymbols: BumpData[] = [
+    { src: 'assets/maps/bump/symbol/box.jpg' },
+    { src: 'assets/maps/bump/symbol/diamond.jpg' },
+    { src: 'assets/maps/bump/symbol/dits.jpg' },
+    { src: 'assets/maps/bump/symbol/flake.jpg' },
+    { src: 'assets/maps/bump/symbol/plus.jpg' },
+    { src: 'assets/maps/bump/symbol/sun.jpg' },
+  ];
 
   private _emojiCodes: number[][] = [
     [0x1f600, 0x1f604, 0x1f609, 0x1f60a, 0x1f607, 0x1f923],
@@ -80,28 +93,12 @@ export class TextureManagerService {
     this._textures = [];
 
     switch (this._levelType) {
-      case LevelMaterialType.ColorOnly:
-        this.LevelTexturesLoaded.next();
+      case LevelMaterialType.ColorBumpShape:
+        this.loadBumpSymbols();
         break;
 
-      case LevelMaterialType.ColorAndBumpMaps:
-        // select a bump map
-        const randBumpMap =
-          this._bumpMaps[MathUtils.randInt(0, this._bumpMaps.length - 1)];
-        const cachedTexture = this._bumpMapsCache.find(
-          (b) => b.name === randBumpMap
-        );
-        if (cachedTexture) {
-          this._textures.push(cachedTexture);
-          this.LevelTexturesLoaded.next();
-        } else {
-          this._textureLoader.load(randBumpMap, (texture) => {
-            texture.center = new Vector2(0.5, 0.5);
-            texture.name = randBumpMap;
-            this._textures.push(texture);
-            this._bumpMapsCache.push(texture);
-          });
-        }
+      case LevelMaterialType.ColorBumpMaterial:
+        this.loadBumpMaterials();
         break;
 
       default:
@@ -113,6 +110,45 @@ export class TextureManagerService {
           });
         });
         break;
+    }
+  }
+
+  private loadBumpSymbols(): void {
+    const bumpSymbolsLoaded = this._bumpSymbols.every((b) => b.texture);
+    if (bumpSymbolsLoaded) {
+      this._bumpSymbols.forEach((s) => {
+        if (s.texture) {
+          this._textures.push(s.texture);
+        }
+      });
+      this.LevelTexturesLoaded.next();
+    } else {
+      // load and cache
+      this._bumpSymbols.forEach((map) => {
+        this._textureLoader.load(map.src, (data) => {
+          data.name = map.src;
+          map.texture = data;
+          this._textures.push(map.texture);
+        });
+      });
+    }
+  }
+
+  private loadBumpMaterials(): void {
+    // select a bump map
+    const randMaterialMap =
+      this._bumpMaterials[MathUtils.randInt(0, this._bumpMaterials.length - 1)];
+    // check if loaded
+    if (randMaterialMap.texture) {
+      this._textures.push(randMaterialMap.texture);
+      this.LevelTexturesLoaded.next();
+    } else {
+      this._textureLoader.load(randMaterialMap.src, (data) => {
+        data.center = new Vector2(0.5, 0.5);
+        data.name = randMaterialMap.src;
+        randMaterialMap.texture = data;
+        this._textures.push(randMaterialMap.texture);
+      });
     }
   }
 
