@@ -104,7 +104,8 @@ export class EffectsManagerService {
       this._selectionTweens.forEach((tween) => {
         tween.onStart(() => {
           this.audioService.PlayAudio(
-            select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL
+            select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL,
+            select ? true : false
           );
         });
       });

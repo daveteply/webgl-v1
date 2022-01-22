@@ -40,8 +40,6 @@ export class GameContainerComponent implements OnInit {
 
     // level start event
     welcomeDialog.afterClosed().subscribe(() => {
-      // init audio
-      this.audioManager.InitWebAudioApi();
       // set up scene and animate
       this.sceneManager.InitScene();
       this.animate();
