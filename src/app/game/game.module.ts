@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { GameRoutingModule } from './game-routing.module';
+
 import { CanvasComponent } from './components/canvas/canvas.component';
 import { GameContainerComponent } from './components/game-container/game-container.component';
-import { GameRoutingModule } from './game-routing.module';
+import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -13,8 +16,6 @@ import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
 import { TextureManagerService } from './services/texture-manager.service';
 import { AudioManagerService } from './services/audio-manager.service';
-
-import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
