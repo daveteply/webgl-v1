@@ -3,8 +3,8 @@ import { MathUtils, Texture } from 'three';
 import { PLAYABLE_PIECE_COUNT } from '../game-constants';
 import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-data';
 import { TextureManagerService } from './texture/texture-manager.service';
-import 'node_modules/color-scheme/lib/color-scheme.js';
 import { LevelMaterialType } from '../models/level-material-type';
+import 'node_modules/color-scheme/lib/color-scheme.js';
 
 declare var ColorScheme: any;
 
@@ -59,14 +59,15 @@ export class MaterialManagerService {
 
         break;
 
-      // default to emojis
-      default:
+      // emojis
+      case LevelMaterialType.Emoji:
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
           this._currentMaterials.push(<GamePieceMaterialData>{
             MatchKey: matchKey++,
             Texture: this.textureManager.Textures[i],
           });
         }
+        break;
     }
   }
 
