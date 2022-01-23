@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
-import { TextureManagerService } from 'src/app/game/services/texture-manager.service';
+import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 
 @Component({
   selector: 'wgl-level-dialog',

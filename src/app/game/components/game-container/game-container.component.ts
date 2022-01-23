@@ -4,7 +4,7 @@ import { MathUtils } from 'three';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
-import { TextureManagerService } from '../../services/texture-manager.service';
+import { TextureManagerService } from '../../services/texture/texture-manager.service';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import * as TWEEN from '@tweenjs/tween.js';
 

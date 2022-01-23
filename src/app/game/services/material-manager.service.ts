@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MathUtils, Texture } from 'three';
 import { PLAYABLE_PIECE_COUNT } from '../game-constants';
 import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-data';
-import { TextureManagerService } from './texture-manager.service';
+import { TextureManagerService } from './texture/texture-manager.service';
 import 'node_modules/color-scheme/lib/color-scheme.js';
 import { LevelMaterialType } from '../models/level-material-type';
 

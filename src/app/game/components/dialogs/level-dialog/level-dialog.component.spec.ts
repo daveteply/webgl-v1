@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TextureManagerService } from 'src/app/game/services/texture-manager.service';
+import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 
 import { LevelDialogComponent } from './level-dialog.component';
 

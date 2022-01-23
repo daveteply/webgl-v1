@@ -7,8 +7,9 @@ import {
   TextureLoader,
   Vector2,
 } from 'three';
-import { PLAYABLE_PIECE_COUNT } from '../game-constants';
-import { LevelMaterialType } from '../models/level-material-type';
+import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
+import { LevelMaterialType } from '../../models/level-material-type';
+import { BumpMaterials, BumpSymbols, EmojiCodes } from './texture-info';
 
 export interface BumpData {
   src: string;
@@ -17,38 +18,6 @@ export interface BumpData {
 
 @Injectable()
 export class TextureManagerService {
-  private _bumpMaterials: BumpData[] = [
-    { src: 'assets/maps/bump/material/bark-1.jpg' },
-    { src: 'assets/maps/bump/material/bark-2.jpg' },
-    { src: 'assets/maps/bump/material/brick-1.jpg' },
-    { src: 'assets/maps/bump/material/brick-2.jpg' },
-    { src: 'assets/maps/bump/material/concrete-1.jpg' },
-    { src: 'assets/maps/bump/material/fabric-1.jpg' },
-    { src: 'assets/maps/bump/material/fabric-2.jpg' },
-    { src: 'assets/maps/bump/material/fabric-3.jpg' },
-    { src: 'assets/maps/bump/material/gravel-1.jpg' },
-    { src: 'assets/maps/bump/material/metal-1.jpg' },
-    { src: 'assets/maps/bump/material/metal-2.jpg' },
-    { src: 'assets/maps/bump/material/plastic-1.jpg' },
-    { src: 'assets/maps/bump/material/rubber-1.jpg' },
-  ];
-
-  private _bumpSymbols: BumpData[] = [
-    { src: 'assets/maps/bump/symbol/box.jpg' },
-    { src: 'assets/maps/bump/symbol/diamond.jpg' },
-    { src: 'assets/maps/bump/symbol/dits.jpg' },
-    { src: 'assets/maps/bump/symbol/flake.jpg' },
-    { src: 'assets/maps/bump/symbol/plus.jpg' },
-    { src: 'assets/maps/bump/symbol/sun.jpg' },
-  ];
-
-  private _emojiCodes: number[][] = [
-    [0x1f600, 0x1f604, 0x1f609, 0x1f60a, 0x1f607, 0x1f923],
-    [0x1f637, 0x1f634, 0x1f925, 0x1f970, 0x1f928, 0x1f92b],
-    [0x1f917, 0x1f911, 0x1f61d, 0x1f92a, 0x1f60b, 0x1f60f],
-    [0x1f975, 0x1f976, 0x1f974, 0x1f92f, 0x1f920, 0x1f978],
-  ];
-
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
 
@@ -114,9 +83,9 @@ export class TextureManagerService {
   }
 
   private loadBumpSymbols(): void {
-    const bumpSymbolsLoaded = this._bumpSymbols.every((b) => b.texture);
+    const bumpSymbolsLoaded = BumpSymbols.every((b) => b.texture);
     if (bumpSymbolsLoaded) {
-      this._bumpSymbols.forEach((s) => {
+      BumpSymbols.forEach((s) => {
         if (s.texture) {
           this._textures.push(s.texture);
         }
@@ -124,7 +93,7 @@ export class TextureManagerService {
       this.LevelTexturesLoaded.next();
     } else {
       // load and cache
-      this._bumpSymbols.forEach((map) => {
+      BumpSymbols.forEach((map) => {
         this._textureLoader.load(map.src, (data) => {
           data.name = map.src;
           map.texture = data;
@@ -137,7 +106,7 @@ export class TextureManagerService {
   private loadBumpMaterials(): void {
     // select a bump map
     const randMaterialMap =
-      this._bumpMaterials[MathUtils.randInt(0, this._bumpMaterials.length - 1)];
+      BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
     // check if loaded
     if (randMaterialMap.texture) {
       this._textures.push(randMaterialMap.texture);
@@ -161,8 +130,7 @@ export class TextureManagerService {
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      const emojiSet =
-        this._emojiCodes[MathUtils.randInt(0, this._emojiCodes.length - 1)];
+      const emojiSet = EmojiCodes[MathUtils.randInt(0, EmojiCodes.length - 1)];
       for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
         const emojiCode = emojiSet[i];
 

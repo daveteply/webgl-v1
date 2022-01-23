@@ -8,7 +8,7 @@ import { ObjectManagerService } from './object-manager.service';
 
 import { SceneManagerService } from './scene-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
-import { TextureManagerService } from './texture-manager.service';
+import { TextureManagerService } from './texture/texture-manager.service';
 
 describe('SceneManagerService', () => {
   let service: SceneManagerService;

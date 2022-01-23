@@ -7,7 +7,7 @@ import { InteractionManagerService } from './interaction-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
-import { TextureManagerService } from './texture-manager.service';
+import { TextureManagerService } from './texture/texture-manager.service';
 
 describe('InteractionManagerService', () => {
   let service: InteractionManagerService;

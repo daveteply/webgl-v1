@@ -7,7 +7,7 @@ import { GameEngineService } from './game-engine.service';
 import { ObjectManagerService } from './object-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import { TextureManagerService } from './texture-manager.service';
+import { TextureManagerService } from './texture/texture-manager.service';
 import { AudioManagerService } from './audio/audio-manager.service';
 
 function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
