@@ -23,7 +23,7 @@ export class GamePieceMaterial {
       });
     }
 
-    if (texture) {
+    if (texture && !color) {
       this._texture = texture;
       this._material = new MeshBasicMaterial({
         map: this._texture,
