@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MathUtils } from 'three';
-import { AudioType, AUDIO_LIST } from '../models/audio-info';
+import { AudioType, AUDIO_LIST } from './audio-info';
 import { Howl } from 'howler';
 
 @Injectable()

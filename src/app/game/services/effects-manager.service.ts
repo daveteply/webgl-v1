@@ -1,10 +1,10 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { PerspectiveCamera } from 'three';
-import { AudioType } from '../models/audio-info';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
-import { AudioManagerService } from './audio-manager.service';
+import { AudioType } from './audio/audio-info';
+import { AudioManagerService } from './audio/audio-manager.service';
 
 @Injectable()
 export class EffectsManagerService {

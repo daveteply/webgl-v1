@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AudioManagerService } from '../../services/audio-manager.service';
+import { AudioManagerService } from '../../services/audio/audio-manager.service';
 import { EffectsManagerService } from '../../services/effects-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { InteractionManagerService } from '../../services/interaction-manager.service';

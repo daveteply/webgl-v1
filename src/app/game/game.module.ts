@@ -15,7 +15,7 @@ import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
 import { TextureManagerService } from './services/texture-manager.service';
-import { AudioManagerService } from './services/audio-manager.service';
+import { AudioManagerService } from './services/audio/audio-manager.service';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

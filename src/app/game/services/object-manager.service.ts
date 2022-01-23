@@ -10,8 +10,8 @@ import {
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import { AudioManagerService } from './audio-manager.service';
-import { AudioType } from '../models/audio-info';
+import { AudioManagerService } from './audio/audio-manager.service';
+import { AudioType } from './audio/audio-info';
 
 @Injectable()
 export class ObjectManagerService {
