@@ -91,7 +91,7 @@ export class ObjectManagerService {
 
     this.audioManager.StopLevelComplete();
     // intro audio
-    switch (MathUtils.randInt(1, 4)) {
+    switch (MathUtils.randInt(1, 5)) {
       case 1:
         this.audioManager.PlayAudio(AudioType.LEVEL_START_1);
         break;
@@ -101,8 +101,11 @@ export class ObjectManagerService {
       case 3:
         this.audioManager.PlayAudio(AudioType.LEVEL_START_3);
         break;
-      default:
+      case 4:
         this.audioManager.PlayAudio(AudioType.LEVEL_START_4);
+        break;
+      default:
+        this.audioManager.PlayAudio(AudioType.LEVEL_START_5);
     }
   }
 
