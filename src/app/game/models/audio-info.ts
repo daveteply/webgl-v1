@@ -18,6 +18,11 @@ export interface AudioInfo {
   howl?: Howl;
 }
 
+const pieceMoveSrc = 'assets/audio/piece-move.mp3';
+const pieceSelectSrc = 'assets/audio/piece-select.mp3';
+const matchFailSrc = 'assets/audio/match-fail.mp3';
+
+// some of these are pre-loaded
 export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/intro-01.mp3',
@@ -28,7 +33,8 @@ export const AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.LEVEL_START_2,
   },
   {
-    url: 'assets/audio/piece-move.mp3',
+    url: pieceMoveSrc,
+    howl: new Howl({ src: pieceMoveSrc }),
     audioType: AudioType.PIECE_MOVE,
   },
   {
@@ -36,15 +42,17 @@ export const AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.PIECE_REMOVE,
   },
   {
-    url: 'assets/audio/piece-select.mp3',
+    url: pieceSelectSrc,
+    howl: new Howl({ src: pieceSelectSrc }),
     audioType: AudioType.PIECE_SELECT,
   },
   {
-    url: 'assets/audio/match-fail.mp3',
+    url: matchFailSrc,
+    howl: new Howl({ src: matchFailSrc }),
     audioType: AudioType.MATCH_FAIL,
   },
   {
-    url: 'assets/audio/level-complete/Assasins.mp3',
+    url: 'assets/audio/level-complete/Assassins.mp3',
     audioType: AudioType.LEVEL_END_1,
   },
   {

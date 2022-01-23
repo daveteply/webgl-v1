@@ -7,7 +7,7 @@ import { Howl } from 'howler';
 export class AudioManagerService {
   private readonly ProgressionMin = 48;
   private readonly ProgressionMax = 71;
-  private _progressionNext: number = 1;
+  private _progressionNext: number = this.ProgressionMin;
 
   public PlayLevelComplete(): void {
     switch (MathUtils.randInt(1, 3)) {
@@ -40,6 +40,7 @@ export class AudioManagerService {
         target.howl.play();
       } else {
         target.howl = new Howl({ src: target.url });
+        target.howl.rate(useNote ? this.nextProgression : 1);
         target.howl.play();
       }
     }
@@ -53,10 +54,7 @@ export class AudioManagerService {
   }
 
   public StartProgression(): void {
-    this._progressionNext = MathUtils.randInt(
-      this.ProgressionMin,
-      this.ProgressionMax
-    );
+    this._progressionNext = this.ProgressionMin;
   }
 
   private get nextProgression(): number {
