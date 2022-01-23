@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MathUtils } from 'three';
 import { AudioType, AUDIO_LIST } from '../models/audio-info';
-
 import { Howl } from 'howler';
 
 @Injectable()
 export class AudioManagerService {
+  private readonly ProgressionMin = 48;
+  private readonly ProgressionMax = 71;
+  private _progressionNext: number = 1;
+
   public PlayLevelComplete(): void {
     switch (MathUtils.randInt(1, 3)) {
       case 1:
@@ -27,18 +30,13 @@ export class AudioManagerService {
     this.StopMusic(AudioType.LEVEL_END_3);
   }
 
-  public async PlayAudio(
-    audioType: AudioType,
-    useNote: boolean = false
-  ): Promise<void> {
+  public PlayAudio(audioType: AudioType, useNote: boolean = false): void {
     const target = AUDIO_LIST.find(
       (audioTrack) => audioTrack.audioType === audioType
     );
     if (target) {
       if (target.howl) {
-        target.howl.rate(
-          useNote ? Math.pow(2, (MathUtils.randInt(48, 71) - 60) / 12) : 1
-        );
+        target.howl.rate(useNote ? this.nextProgression : 1);
         target.howl.play();
       } else {
         target.howl = new Howl({ src: target.url });
@@ -52,5 +50,20 @@ export class AudioManagerService {
     if (target) {
       target.howl?.stop();
     }
+  }
+
+  public StartProgression(): void {
+    this._progressionNext = MathUtils.randInt(
+      this.ProgressionMin,
+      this.ProgressionMax
+    );
+  }
+
+  private get nextProgression(): number {
+    this._progressionNext++;
+    if (this._progressionNext > this.ProgressionMax) {
+      this._progressionNext = this.ProgressionMin;
+    }
+    return Math.pow(2, (this._progressionNext - 60) / 12);
   }
 }

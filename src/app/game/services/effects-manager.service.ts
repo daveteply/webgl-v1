@@ -101,6 +101,7 @@ export class EffectsManagerService {
       this._selectionTweens[0].delay(250);
 
       // audio
+      this.audioService.StartProgression();
       this._selectionTweens.forEach((tween) => {
         tween.onStart(() => {
           this.audioService.PlayAudio(
