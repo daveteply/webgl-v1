@@ -90,11 +90,20 @@ export class ObjectManagerService {
     );
 
     this.audioManager.StopLevelComplete();
-    this.audioManager.PlayAudio(
-      MathUtils.randInt(1, 2) === 1
-        ? AudioType.LEVEL_START_1
-        : AudioType.LEVEL_START_2
-    );
+    // intro audio
+    switch (MathUtils.randInt(1, 4)) {
+      case 1:
+        this.audioManager.PlayAudio(AudioType.LEVEL_START_1);
+        break;
+      case 2:
+        this.audioManager.PlayAudio(AudioType.LEVEL_START_2);
+        break;
+      case 3:
+        this.audioManager.PlayAudio(AudioType.LEVEL_START_3);
+        break;
+      default:
+        this.audioManager.PlayAudio(AudioType.LEVEL_START_4);
+    }
   }
 
   public AnimateLevelComplete(): void {

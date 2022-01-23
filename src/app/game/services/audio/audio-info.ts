@@ -3,6 +3,8 @@ import { Howl } from 'howler';
 export enum AudioType {
   LEVEL_START_1 = 1,
   LEVEL_START_2,
+  LEVEL_START_3,
+  LEVEL_START_4,
   PIECE_MOVE,
   PIECE_REMOVE,
   PIECE_SELECT,
@@ -31,6 +33,14 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/intro-02.mp3',
     audioType: AudioType.LEVEL_START_2,
+  },
+  {
+    url: 'assets/audio/intro-03.mp3',
+    audioType: AudioType.LEVEL_START_3,
+  },
+  {
+    url: 'assets/audio/intro-04.mp3',
+    audioType: AudioType.LEVEL_START_4,
   },
   {
     url: pieceMoveSrc,
