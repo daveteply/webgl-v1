@@ -21,11 +21,6 @@ export interface AudioInfo {
   howl?: Howl;
 }
 
-const pieceMoveSrc = 'assets/audio/piece-move.mp3';
-const pieceSelectSrc = 'assets/audio/piece-select.mp3';
-const matchFailSrc = 'assets/audio/match-fail.mp3';
-
-// some of these are pre-loaded
 export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-start/mixkit-slow-tape-rewind-cinematic-transition-1089.mp3',
@@ -49,8 +44,7 @@ export const AUDIO_LIST: AudioInfo[] = [
   },
 
   {
-    url: pieceMoveSrc,
-    howl: new Howl({ src: pieceMoveSrc }),
+    url: 'assets/audio/piece-move.mp3',
     audioType: AudioType.PIECE_MOVE,
   },
   {
@@ -58,13 +52,11 @@ export const AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.PIECE_REMOVE,
   },
   {
-    url: pieceSelectSrc,
-    howl: new Howl({ src: pieceSelectSrc }),
+    url: 'assets/audio/piece-select.mp3',
     audioType: AudioType.PIECE_SELECT,
   },
   {
-    url: matchFailSrc,
-    howl: new Howl({ src: matchFailSrc }),
+    url: 'assets/audio/match-fail.mp3',
     audioType: AudioType.MATCH_FAIL,
   },
   {

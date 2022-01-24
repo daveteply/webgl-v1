@@ -36,14 +36,21 @@ export class AudioManagerService {
     );
     if (target) {
       if (target.howl) {
-        target.howl.rate(useNote ? this.nextProgression : 1);
-        target.howl.play();
+        this.playLoadedAudio(target.howl, useNote);
       } else {
         target.howl = new Howl({ src: target.url });
-        target.howl.rate(useNote ? this.nextProgression : 1);
-        target.howl.play();
+        target.howl.on('load', () => {
+          if (target.howl) {
+            this.playLoadedAudio(target.howl, useNote);
+          }
+        });
       }
     }
+  }
+
+  private playLoadedAudio(target: Howl, useNote: boolean): void {
+    target.rate(useNote ? this.nextProgression : 1);
+    target.play();
   }
 
   public StopMusic(audioType: AudioType): void {
