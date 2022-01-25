@@ -57,15 +57,11 @@ export class ObjectManagerService {
     this.dispose();
 
     // select colors for the current level
-    this.materialManager.InitMaterials();
+    const materials = this.materialManager.InitMaterials();
 
     // create all the objects
     this._verticalTargets.forEach(() => {
-      const gameWheel = new GameWheel(
-        50,
-        this._piecePoints,
-        this.materialManager.MaterialData
-      );
+      const gameWheel = new GameWheel(50, this._piecePoints, materials);
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
     });

@@ -10,29 +10,25 @@ declare var ColorScheme: any;
 
 @Injectable()
 export class MaterialManagerService {
-  private _currentMaterials: GamePieceMaterialData[] = [];
-
   constructor(private textureManager: TextureManagerService) {}
 
-  get MaterialData(): GamePieceMaterialData[] {
-    return this._currentMaterials;
-  }
-
-  public InitMaterials(): void {
+  public InitMaterials(): GamePieceMaterialData[] {
     // reset array
-    this._currentMaterials = [];
+    const materials: GamePieceMaterialData[] = [];
 
-    // match keys are simply iterated to ensure unique key per piece
+    // match keys are numbered to ensure unique key per piece
     let matchKey = 1;
 
-    // select style for current level
     let selectedColors: string[] = [];
+
+    // select style for current level
     switch (this.textureManager.LevelType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:
         selectedColors = this.initColorScheme();
+
         selectedColors.forEach((color, inx) => {
-          this._currentMaterials.push(<GamePieceMaterialData>{
+          materials.push({
             MatchKey: matchKey++,
             BumpTexture: this.textureManager.Textures[inx],
             Color: color,
@@ -43,32 +39,33 @@ export class MaterialManagerService {
       // colors and bump maps
       case LevelMaterialType.ColorBumpMaterial:
         selectedColors = this.initColorScheme();
-        // pick a random texture
+
         const bumpTexture =
           this.textureManager.Textures[
             MathUtils.randInt(0, this.textureManager.Textures.length - 1)
           ];
 
         selectedColors.forEach((color) => {
-          this._currentMaterials.push(<GamePieceMaterialData>{
+          materials.push({
             MatchKey: matchKey++,
             BumpTexture: bumpTexture as Texture,
             Color: color,
           });
         });
-
         break;
 
       // emojis
       case LevelMaterialType.Emoji:
         for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-          this._currentMaterials.push(<GamePieceMaterialData>{
+          materials.push({
             MatchKey: matchKey++,
             Texture: this.textureManager.Textures[i],
           });
         }
         break;
     }
+
+    return materials;
   }
 
   private initColorScheme(): string[] {
