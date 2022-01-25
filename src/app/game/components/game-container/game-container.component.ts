@@ -16,6 +16,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 export class GameContainerComponent implements OnInit {
   private _dialogRef!: MatDialogRef<LevelDialogComponent>;
   private _showWelcome: boolean = true;
+  private _nextLevelTextureType: number = 1;
 
   constructor(
     private ngZone: NgZone,
@@ -27,6 +28,7 @@ export class GameContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initNextLevelTextures();
     this._dialogRef = this.dialog.open(LevelDialogComponent, this.diagConfig());
 
     this._dialogRef.afterClosed().subscribe(() => {
@@ -35,7 +37,9 @@ export class GameContainerComponent implements OnInit {
 
     // level complete
     this.objectManager.LevelCompleted.subscribe(() => {
-      const materialType = this.preloadTextures();
+      this.initNextLevelTextures();
+
+      // dialog will show loading progress of texture(s)
       this._dialogRef = this.dialog.open(
         LevelDialogComponent,
         this.diagConfig()
@@ -46,6 +50,14 @@ export class GameContainerComponent implements OnInit {
     });
   }
 
+  private initNextLevelTextures(): void {
+    // decide next level texture(s)
+    this._nextLevelTextureType = MathUtils.randInt(1, 3);
+
+    // start loading next level texture(s)
+    this.textureManager.InitLevelTextures(this._nextLevelTextureType);
+  }
+
   private diagConfig(): any {
     return {
       maxWidth: '25em',
@@ -53,7 +65,7 @@ export class GameContainerComponent implements OnInit {
       data: {
         isWelcome: this._showWelcome,
         stats: this.scoringManager.LevelStats,
-        materialType: this.preloadTextures(),
+        materialType: this._nextLevelTextureType,
       },
     };
   }
@@ -68,12 +80,6 @@ export class GameContainerComponent implements OnInit {
       this.scoringManager.NextLevel();
       this.objectManager.InitShapes();
     }
-  }
-
-  private preloadTextures(): number {
-    const textureType = MathUtils.randInt(1, 3);
-    this.textureManager.InitLevelTextures(textureType);
-    return textureType;
   }
 
   private animate(): void {
