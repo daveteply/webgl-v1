@@ -1,4 +1,9 @@
-import { BumpData } from './texture-manager.service';
+import { Texture } from 'three';
+
+interface BumpData {
+  src: string;
+  texture?: Texture;
+}
 
 export const BumpMaterials: BumpData[] = [
   { src: 'assets/maps/bump/material/bark-1.jpg' },

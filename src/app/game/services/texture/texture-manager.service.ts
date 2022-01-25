@@ -11,9 +11,9 @@ import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { BumpMaterials, BumpSymbols, EmojiCodes } from './texture-info';
 
-export interface BumpData {
-  src: string;
-  texture?: Texture;
+interface EmojiData {
+  dataUrl: string;
+  emojiCode: string;
 }
 
 @Injectable()
@@ -70,10 +70,11 @@ export class TextureManagerService {
         this.loadBumpMaterials();
         break;
 
-      default:
-        const dataURLs = this.initEmojiData();
-        dataURLs.forEach((d) => {
-          this._textureLoader.load(d, (texture) => {
+      case LevelMaterialType.Emoji:
+        const emojiData = this.initEmojiData();
+        emojiData.forEach((data) => {
+          this._textureLoader.load(data.dataUrl, (texture) => {
+            texture.name = data.emojiCode;
             texture.center = new Vector2(0.5, 0.5);
             this._textures.push(texture);
           });
@@ -121,12 +122,12 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiData(): string[] {
+  private initEmojiData(): EmojiData[] {
     const canvas = this.document.createElement('canvas');
     const scale = 80;
     canvas.width = canvas.height = scale;
 
-    const dataUrls: string[] = [];
+    const data: EmojiData[] = [];
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
@@ -142,9 +143,9 @@ export class TextureManagerService {
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
         ctx.fillText(String.fromCodePoint(emojiCode), scale / 2, scale / 2 + 8);
-        dataUrls.push(canvas.toDataURL());
+        data.push({ dataUrl: canvas.toDataURL(), emojiCode: emojiCode + '' });
       }
     }
-    return dataUrls;
+    return data;
   }
 }
