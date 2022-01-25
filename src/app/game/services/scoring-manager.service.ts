@@ -5,18 +5,14 @@ import { LevelStats } from '../models/level-stats';
 @Injectable()
 export class ScoringManagerService {
   private _level: number = 1;
-  private _levelPieceCount: number = 0;
-
   private _score: number = 0;
 
+  private _levelStats!: LevelStats;
   private _timestamp: number;
-
-  // level stats
-  private _fastestMatchMs: number = Number.MAX_SAFE_INTEGER;
-  private _moveCount: number = 0;
 
   constructor() {
     this._timestamp = Date.now();
+    this.resetStats();
   }
 
   get Level(): number {
@@ -29,7 +25,8 @@ export class ScoringManagerService {
 
   get LevelProgress(): number {
     const foo =
-      (this._levelPieceCount / (this._level * LEVEL_COMPLETION_MULTIPLIER)) *
+      (this.LevelStats.pieceCount /
+        (this._level * LEVEL_COMPLETION_MULTIPLIER)) *
       100;
     return foo;
   }
@@ -39,28 +36,23 @@ export class ScoringManagerService {
   }
 
   get LevelStats(): LevelStats {
-    return {
-      fastestMatchMs: this._fastestMatchMs,
-      moveCount: this._moveCount,
-      pieceCount: this._levelPieceCount,
-    };
+    return this._levelStats;
   }
 
   public NextLevel(): void {
     this._level++;
-    this._levelPieceCount = 0;
-    this._moveCount = 0;
+    this.resetStats();
     this._timestamp = Date.now();
   }
 
   public UpdateScore(pieceCount: number): void {
     // update piece count
-    this._levelPieceCount += pieceCount;
+    this._levelStats.pieceCount += pieceCount;
 
     // update since previous match
     const timeDiff = Date.now() - this._timestamp;
-    if (timeDiff < this._fastestMatchMs) {
-      this._fastestMatchMs = timeDiff;
+    if (timeDiff < this._levelStats.fastestMatchMs) {
+      this._levelStats.fastestMatchMs = timeDiff;
     }
 
     let scoreDelta = 0;
@@ -80,6 +72,14 @@ export class ScoringManagerService {
   }
 
   public TickMoveCount(): void {
-    this._moveCount += 1;
+    this._levelStats.moveCount += 1;
+  }
+
+  private resetStats(): void {
+    this._levelStats = {
+      fastestMatchMs: 0,
+      moveCount: 0,
+      pieceCount: 0,
+    };
   }
 }
