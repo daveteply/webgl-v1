@@ -228,18 +228,20 @@ export class GamePiece extends Object3D {
         materials[Math.floor(Math.random() * materials.length)];
 
       let texture;
-      if (randMaterial.Texture) {
-        texture = this.cloneRotateTexture(randMaterial.Texture, i);
-      }
+      if (randMaterial) {
+        if (randMaterial.Texture) {
+          texture = this.cloneRotateTexture(randMaterial.Texture, i);
+        }
 
-      this._gamePieceMaterials.push(
-        new GamePieceMaterial(
-          randMaterial.MatchKey,
-          texture,
-          randMaterial.BumpTexture,
-          randMaterial.Color
-        )
-      );
+        this._gamePieceMaterials.push(
+          new GamePieceMaterial(
+            randMaterial.MatchKey,
+            texture,
+            randMaterial.BumpTexture,
+            randMaterial.Color
+          )
+        );
+      }
     }
   }
 
