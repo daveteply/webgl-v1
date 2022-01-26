@@ -66,20 +66,28 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public AnimateLevelStartTween(targetY: number, delay: number): void {
+  public AnimateLevelStartTween(
+    targetY: number,
+    delay: number,
+    start: boolean
+  ): void {
     if (this._levelChangeTween) {
       this._levelChangeTween.stop();
     }
 
     const delta = {
       y: this.position.y,
-      theta: MathUtils.randInt(-20, 20) * GRID_INC,
+      theta: start ? MathUtils.randInt(-20, 20) * GRID_INC : this._theta,
     };
-    const target = { y: targetY, theta: 0 };
+    const target = {
+      y: targetY,
+      theta: start ? 0 : MathUtils.randInt(-5, 5),
+    };
+
     this._levelChangeTween = new Tween(delta)
       .to(target, 3000)
       .delay(delay)
-      .easing(Easing.Sinusoidal.Out)
+      .easing(start ? Easing.Sinusoidal.Out : Easing.Sinusoidal.In)
       .onUpdate(() => {
         this.position.y = delta.y;
         this.rotation.y = delta.theta;

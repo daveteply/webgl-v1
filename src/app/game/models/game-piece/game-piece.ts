@@ -25,6 +25,7 @@ export class GamePiece extends Object3D {
   private _thetaOffset: number;
 
   private _lockTween: any;
+  private _levelChangeTween: any;
 
   // Each side material is arranged as follows:
   // 0 'back'
@@ -95,10 +96,14 @@ export class GamePiece extends Object3D {
   }
 
   public AnimateLevelChangeTween(start: boolean): void {
+    if (this._levelChangeTween) {
+      this._levelChangeTween.stop();
+    }
+
     const delta = start ? { o: 0.0 } : { o: 1.0 };
     const target = start ? { o: 1.0 } : { o: 0.0 };
-    new Tween(delta)
-      .to(target, 2000)
+    this._levelChangeTween = new Tween(delta)
+      .to(target, start ? 2000 : 3000)
       .delay(MathUtils.randInt(250, 1000))
       .onUpdate(() => {
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));

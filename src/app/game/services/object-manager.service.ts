@@ -7,6 +7,7 @@ import {
   GRID_MAX_DEGREES,
   GRID_RADIUS,
   GRID_VERTICAL_OFFSET,
+  WHEEL_START_POSITION,
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
@@ -61,7 +62,11 @@ export class ObjectManagerService {
 
     // create all the objects
     this._verticalTargets.forEach(() => {
-      const gameWheel = new GameWheel(50, this._piecePoints, materials);
+      const gameWheel = new GameWheel(
+        WHEEL_START_POSITION,
+        this._piecePoints,
+        materials
+      );
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
     });

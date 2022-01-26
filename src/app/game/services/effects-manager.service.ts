@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { PerspectiveCamera } from 'three';
+import { WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from './audio/audio-info';
@@ -12,7 +13,6 @@ export class EffectsManagerService {
   private _levelChangeCameraTween: any;
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
-  IntroAnimationComplete: EventEmitter<void> = new EventEmitter();
 
   constructor(private audioService: AudioManagerService) {}
 
@@ -27,7 +27,7 @@ export class EffectsManagerService {
     let vTargets = [...verticalTargets];
     if (!start) {
       vTargets = verticalTargets.map((t) => {
-        return -10;
+        return -WHEEL_START_POSITION;
       });
     }
 
@@ -35,7 +35,9 @@ export class EffectsManagerService {
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
-      introTweens.push(wheel.AnimateLevelStartTween(vTargets[inx], delay));
+      introTweens.push(
+        wheel.AnimateLevelStartTween(vTargets[inx], delay, start)
+      );
     });
 
     // opacity of each game piece
@@ -54,16 +56,13 @@ export class EffectsManagerService {
 
     // animate camera
     const delta = { z: start ? 0.0 : 5.0, rotX: start ? Math.PI / 2 : 0 };
-    const target = { z: start ? 5.0 : 0.0, rotX: start ? 0.0 : Math.PI / 2 };
+    const target = { z: start ? 5.0 : 0.0, rotX: start ? 0.0 : -Math.PI / 2 };
     this._levelChangeCameraTween = new Tween(delta)
-      .to(target, 1000)
-      .delay(2000)
+      .to(target, start ? 1000 : 2000)
+      .delay(start ? 2000 : 500)
       .onUpdate(() => {
         camera.rotation.x = delta.rotX;
         camera.position.z = delta.z;
-      })
-      .onComplete(() => {
-        this.IntroAnimationComplete.next();
       })
       .start();
   }
