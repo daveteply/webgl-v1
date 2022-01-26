@@ -116,7 +116,6 @@ export class GameWheel extends Object3D {
     const deltaPrev = Math.abs(this._theta - (tier - 1) * GRID_INC);
 
     // snap to grid
-    const currentTheta = this._theta;
     if (deltaNext < deltaPrev) {
       this._theta += deltaNext;
     } else {
