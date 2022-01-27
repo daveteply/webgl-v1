@@ -2,13 +2,18 @@ import { TestBed } from '@angular/core/testing';
 import { AudioManagerService } from './audio/audio-manager.service';
 
 import { EffectsManagerService } from './effects-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
 
 describe('EffectsManagerService', () => {
   let service: EffectsManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EffectsManagerService, AudioManagerService],
+      providers: [
+        EffectsManagerService,
+        AudioManagerService,
+        ScoringManagerService,
+      ],
     });
     service = TestBed.inject(EffectsManagerService);
   });

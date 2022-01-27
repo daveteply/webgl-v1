@@ -9,6 +9,7 @@ import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { TextureManagerService } from './texture/texture-manager.service';
 import { AudioManagerService } from './audio/audio-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
 
 function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
   const scene = new Scene();
@@ -42,6 +43,7 @@ describe('GameEngineService', () => {
         EffectsManagerService,
         TextureManagerService,
         AudioManagerService,
+        ScoringManagerService,
       ],
     });
 

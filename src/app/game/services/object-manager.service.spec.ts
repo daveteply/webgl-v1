@@ -4,6 +4,7 @@ import { EffectsManagerService } from './effects-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 
 import { ObjectManagerService } from './object-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
 import { TextureManagerService } from './texture/texture-manager.service';
 
 describe('ObjectManagerService', () => {
@@ -17,6 +18,7 @@ describe('ObjectManagerService', () => {
         EffectsManagerService,
         TextureManagerService,
         AudioManagerService,
+        ScoringManagerService,
       ],
     });
     service = TestBed.inject(ObjectManagerService);

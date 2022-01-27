@@ -1,11 +1,12 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { PerspectiveCamera } from 'three';
-import { WHEEL_START_POSITION } from '../game-constants';
+import { MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from './audio/audio-info';
 import { AudioManagerService } from './audio/audio-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
 
 @Injectable()
 export class EffectsManagerService {
@@ -14,7 +15,10 @@ export class EffectsManagerService {
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private audioService: AudioManagerService) {}
+  constructor(
+    private audioService: AudioManagerService,
+    private scoringService: ScoringManagerService
+  ) {}
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -88,6 +92,7 @@ export class EffectsManagerService {
       if (!select) {
         pieces.reverse();
       }
+      const updateScore = pieces.length >= MINIMUM_MATCH_COUNT;
 
       // init tweens
       pieces.forEach((p) =>
@@ -103,6 +108,9 @@ export class EffectsManagerService {
       this.audioService.StartProgression();
       this._selectionTweens.forEach((tween) => {
         tween.onStart(() => {
+          if (updateScore) {
+            this.scoringService.UpdateScore(1);
+          }
           this.audioService.PlayAudio(
             select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL,
             select ? true : false

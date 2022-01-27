@@ -123,7 +123,6 @@ export class InteractionManagerService {
         if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
           // initiate the removal animation
           this.effectsManager.AnimateRemove(this._matchingPieces);
-          this.scoringManager.UpdateScore(this._matchingPieces.length);
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
