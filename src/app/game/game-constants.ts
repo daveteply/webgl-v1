@@ -11,7 +11,10 @@ export const WHEEL_START_POSITION = 50;
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 // rotation
-export const QUARTER_CIRCLE = MathUtils.degToRad(90);
+const QUARTER_CIRCLE_DEGREES = 90;
+export const QUARTER_CIRCLE_RADIANS = MathUtils.degToRad(
+  QUARTER_CIRCLE_DEGREES
+);
 
 // math related constants
 export const TWO_PI = 2 * Math.PI;

@@ -6,7 +6,7 @@ import {
   Object3D,
   Texture,
 } from 'three';
-import { TWO_PI, QUARTER_CIRCLE } from '../../game-constants';
+import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
@@ -191,7 +191,9 @@ export class GamePiece extends Object3D {
     // set direction
     const delta = { theta: this.rotation.z };
     const final = {
-      theta: this.rotation.z + QUARTER_CIRCLE * (directionUp ? -1 : 1) * turns,
+      theta:
+        this.rotation.z +
+        QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
     };
 
     // update match key by shifting array number of rotations
@@ -266,15 +268,15 @@ export class GamePiece extends Object3D {
 
         switch (edge) {
           case 0:
-            cloned.rotation = QUARTER_CIRCLE * 2;
+            cloned.rotation = QUARTER_CIRCLE_RADIANS * 2;
             break;
 
           case 2:
-            cloned.rotation = QUARTER_CIRCLE * 3;
+            cloned.rotation = QUARTER_CIRCLE_RADIANS * 3;
             break;
 
           case 3:
-            cloned.rotation = QUARTER_CIRCLE;
+            cloned.rotation = QUARTER_CIRCLE_RADIANS;
             break;
         }
         return cloned;
