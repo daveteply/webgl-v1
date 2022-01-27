@@ -7,6 +7,7 @@ import { PiecePoints } from './piece-points';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
+  private _moveStartTheta: number = 0;
 
   // 'above' and 'below' are in reference to the y axis
   private _wheelAbove: GameWheel | undefined;
@@ -96,6 +97,10 @@ export class GameWheel extends Object3D {
       .start();
   }
 
+  public UpdateMoveStartTheta(): void {
+    this._moveStartTheta = this._theta;
+  }
+
   public UpdateTheta(theta: number): void {
     this._theta += theta;
 
@@ -107,7 +112,7 @@ export class GameWheel extends Object3D {
     this.rotation.y = this._theta;
   }
 
-  public SnapToGrid(): void {
+  public SnapToGrid(): boolean {
     // find where the circle has "landed"
     const tier = Math.ceil(this._theta / GRID_INC);
 
@@ -122,10 +127,12 @@ export class GameWheel extends Object3D {
       this._theta -= deltaPrev;
     }
 
+    const actualMove = Math.abs(this._theta - this._moveStartTheta) >= GRID_INC;
+
     const delta = { r: this.rotation.y };
     new Tween(delta)
       .to({ r: this._theta }, 500)
-      .easing(Easing.Bounce.Out)
+      .easing(actualMove ? Easing.Bounce.Out : Easing.Cubic.InOut)
       .onUpdate(() => {
         this.rotation.y = delta.r;
       })
@@ -135,6 +142,8 @@ export class GameWheel extends Object3D {
     for (const gamePiece of this.children as GamePiece[]) {
       gamePiece.ThetaOffset = this._theta;
     }
+
+    return actualMove;
   }
 
   public ResetIsMatch(): void {

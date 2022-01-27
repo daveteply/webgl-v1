@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { ObjectManagerService } from './object-manager.service';
+
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
+
 import { MINIMUM_MATCH_COUNT, ROTATIONAL_CONSTANT } from '../game-constants';
+
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece/game-piece';
+
+import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
-import { DIRECTION_UP } from 'hammerjs';
-import 'hammerjs';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from './audio/audio-manager.service';
 import { AudioType } from './audio/audio-info';
+
+import { DIRECTION_UP } from 'hammerjs';
+import 'hammerjs';
 
 @Injectable()
 export class InteractionManagerService {
@@ -50,6 +55,7 @@ export class InteractionManagerService {
       );
       if (gamePiece && !gamePiece?.IsRemoved) {
         this._activeWheel = gamePiece.parent as GameWheel;
+        this._activeWheel.UpdateMoveStartTheta();
       }
     });
 
@@ -62,10 +68,13 @@ export class InteractionManagerService {
 
       if (panEvent.isFinal) {
         this._panning = false;
-        this._activeWheel?.SnapToGrid();
+        if (this._activeWheel?.SnapToGrid()) {
+          this.scoringManager.TickMoveCount();
+          this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
+        } else {
+          this.audioManager.PlayAudio(AudioType.PIECE_NON_MOVE);
+        }
         this._activeWheel = undefined;
-        this.scoringManager.TickMoveCount();
-        this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
       }
       this._x = panEvent.center.x;
     });
