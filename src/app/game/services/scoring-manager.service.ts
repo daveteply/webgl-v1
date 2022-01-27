@@ -5,10 +5,13 @@ import { LevelStats } from '../models/level-stats';
 @Injectable()
 export class ScoringManagerService {
   private _level: number = 1;
+  private _levelProgress: number = 0;
   private _score: number = 0;
 
   private _levelStats!: LevelStats;
   private _timestamp: number;
+
+  private _playerMoves: number = 0;
 
   constructor() {
     this._timestamp = Date.now();
@@ -24,11 +27,7 @@ export class ScoringManagerService {
   }
 
   get LevelProgress(): number {
-    const foo =
-      (this.LevelStats.pieceCount /
-        (this._level * LEVEL_COMPLETION_MULTIPLIER)) *
-      100;
-    return foo;
+    return this._levelProgress;
   }
 
   get LevelComplete(): boolean {
@@ -48,6 +47,10 @@ export class ScoringManagerService {
   public UpdateScore(pieceCount: number): void {
     // update piece count
     this._levelStats.pieceCount += pieceCount;
+    this._levelProgress =
+      (this.LevelStats.pieceCount /
+        (this._level * LEVEL_COMPLETION_MULTIPLIER)) *
+      100;
 
     // update since previous match
     const timeDiff = Date.now() - this._timestamp;
@@ -71,11 +74,13 @@ export class ScoringManagerService {
     this._timestamp = Date.now();
   }
 
-  public TickMoveCount(): void {
-    this._levelStats.moveCount += 1;
+  public UpdateMoveCount(): void {
+    this._levelStats.moveCount++;
+    this._playerMoves--;
   }
 
   private resetStats(): void {
+    this._levelProgress = 0;
     this._levelStats = {
       fastestMatchMs: 0,
       moveCount: 0,
