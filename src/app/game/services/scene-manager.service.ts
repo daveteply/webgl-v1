@@ -67,7 +67,7 @@ export class SceneManagerService {
     } else {
       this._camera.aspect = aspectRatio;
       this._camera.updateProjectionMatrix();
-      this._pointLight.position.copy(this._camera.position);
+      this._pointLight?.position.copy(this._camera.position);
     }
 
     if (this._renderer) {
