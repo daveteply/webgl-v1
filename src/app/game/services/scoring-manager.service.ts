@@ -1,33 +1,38 @@
 import { Injectable } from '@angular/core';
-import { LEVEL_COMPLETION_MULTIPLIER } from '../game-constants';
+import {
+  LEVEL_COMPLETION_MULTIPLIER,
+  LEVEL_START_MOVE_MULTIPLIER,
+} from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
 export class ScoringManagerService {
-  private _level: number = 1;
-  private _levelProgress: number = 0;
-  private _score: number = 0;
-
   private _levelStats!: LevelStats;
   private _timestamp: number;
 
-  private _playerMoves: number = 0;
-
   constructor() {
     this._timestamp = Date.now();
-    this.resetStats();
+    this.ResetStats();
   }
 
+  private _level: number = 1;
   get Level(): number {
     return this._level;
   }
 
+  private _score: number = 0;
   get Score(): number {
     return this._score;
   }
 
+  private _levelProgress: number = 0;
   get LevelProgress(): number {
     return this._levelProgress;
+  }
+
+  private _playerMoves: number = 0;
+  get PlayerMoves(): number {
+    return this._playerMoves;
   }
 
   get LevelComplete(): boolean {
@@ -40,7 +45,7 @@ export class ScoringManagerService {
 
   public NextLevel(): void {
     this._level++;
-    this.resetStats();
+    this.ResetStats();
     this._timestamp = Date.now();
   }
 
@@ -74,12 +79,21 @@ export class ScoringManagerService {
     this._timestamp = Date.now();
   }
 
-  public UpdateMoveCount(): void {
+  // controls end of game
+  public UpdateMoveCount(): boolean {
     this._levelStats.moveCount++;
     this._playerMoves--;
+    return this._playerMoves === 0;
   }
 
-  private resetStats(): void {
+  public ResetStats(): void {
+    // moves should start at zero:
+    //  - at the start of the game
+    //  - re-start of level if failed to complete
+    if (this._playerMoves === 0) {
+      this._playerMoves = this._level * LEVEL_START_MOVE_MULTIPLIER;
+    }
+
     this._levelProgress = 0;
     this._levelStats = {
       fastestMatchMs: 0,

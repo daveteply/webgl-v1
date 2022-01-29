@@ -29,6 +29,7 @@
         <td>{{ data.stats.pieceCount }}</td>
       </tr>
     </table>
+    <hr />
     <p>
       Music by
       <a target="_blank" href="https://audionautix.com/">audionautix.com</a>
@@ -38,9 +39,17 @@
   <mat-progress-bar [value]="progress"></mat-progress-bar>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>
+<mat-dialog-actions align="center">
+  <button
+    mat-raised-button
+    color="primary"
+    mat-dialog-close
+    [disabled]="ctaDisabled"
+    cdkFocusInitial
+  >
     <span *ngIf="data.isWelcome; else levelButtonContent">Play!</span>
-    <ng-template #levelButtonContent>Next Level!</ng-template>
+    <ng-template #levelButtonContent>
+      <span>Next Level, let's go!</span>
+    </ng-template>
   </button>
 </mat-dialog-actions>

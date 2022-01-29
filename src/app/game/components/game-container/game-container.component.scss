@@ -15,8 +15,14 @@
   .level-progress {
     padding: 1em;
     flex: unset;
-    .progress-spinner {
+    .vertical-controls {
       display: none;
+    }
+    .horizontal-controls {
+      .progress {
+        display: flex;
+        align-items: center;
+      }
     }
   }
 }
@@ -33,19 +39,16 @@
     .game-canvas {
       width: 45em;
       flex: unset;
-      @media only screen and (min-aspect-ratio: 4/5) {
-        width: 35em;
-      }
       @media only screen and (min-aspect-ratio: 5/3) {
-        width: 30%;
+        width: 40%;
       }
     }
     .level-progress {
       flex: 1 1 auto;
-      .progress-spinner {
+      .vertical-controls {
         display: block;
       }
-      .progress-horizontal {
+      .horizontal-controls {
         display: none;
       }
     }

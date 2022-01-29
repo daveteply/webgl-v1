@@ -29,7 +29,7 @@ export class ObjectManagerService {
   private _perspectiveCamera!: PerspectiveCamera;
 
   // events
-  public LevelCompleted: EventEmitter<void> = new EventEmitter();
+  public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,

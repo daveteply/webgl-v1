@@ -5,16 +5,23 @@
   </div>
   <wgl-canvas class="game-canvas"></wgl-canvas>
   <div class="level-progress">
-    <mat-progress-bar
-      class="progress-horizontal"
-      value="{{ scoringManager.LevelProgress }}"
-    ></mat-progress-bar>
-    <div class="progress-spinner">
+    <div class="horizontal-controls">
+      <div class="progress">
+        <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
+        <mat-progress-bar
+          value="{{ scoringManager.LevelProgress }}"
+        ></mat-progress-bar>
+      </div>
+      <div class="moves">Moves left: {{ scoringManager.PlayerMoves }}</div>
+    </div>
+    <div class="vertical-controls">
       <mat-spinner
         mode="determinate"
         value="{{ scoringManager.LevelProgress }}"
       ></mat-spinner>
       <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}% Complete</div>
+      <hr />
+      <div>Moves left: {{ scoringManager.PlayerMoves }}</div>
     </div>
   </div>
 </div>

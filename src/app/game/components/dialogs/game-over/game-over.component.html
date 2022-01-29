@@ -1,0 +1,25 @@
+<h2>No More Moves</h2>
+<mat-dialog-content>
+  <p>You have exhausted your supply of moves!</p>
+  <mat-progress-bar [value]="progress"></mat-progress-bar>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button
+    mat-raised-button
+    color="primary"
+    [mat-dialog-close]="true"
+    [disabled]="ctaDisabled"
+    cdkFocusInitial
+  >
+    Start Again at Level {{ data.level }}
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="ctaDisabled"
+    [mat-dialog-close]="false"
+  >
+    Start Over
+  </button>
+</mat-dialog-actions>

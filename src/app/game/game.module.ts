@@ -21,9 +21,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { GameOverComponent } from './components/dialogs/game-over/game-over.component';
 
 @NgModule({
-  declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent],
+  declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent, GameOverComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

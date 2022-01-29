@@ -1,22 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
-import { LevelDialogData } from './level-dialog-data';
+import { GameOverData } from './game-over-data';
 
 @Component({
-  selector: 'wgl-level-dialog',
-  templateUrl: './level-dialog.component.html',
-  styleUrls: ['./level-dialog.component.scss'],
+  selector: 'wgl-game-over',
+  templateUrl: './game-over.component.html',
+  styleUrls: ['./game-over.component.scss'],
 })
-export class LevelDialogComponent implements OnInit {
-  matchTarget = MINIMUM_MATCH_COUNT;
+export class GameOverComponent implements OnInit {
   ctaDisabled: boolean = true;
   progress: number = 100;
 
   constructor(
     private textureManager: TextureManagerService,
-    @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
+    @Inject(MAT_DIALOG_DATA) public data: GameOverData
   ) {}
 
   ngOnInit(): void {
