@@ -26,8 +26,6 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     start: boolean
   ): void {
-    const introTweens: any[] = [];
-
     let vTargets = [...verticalTargets];
     if (!start) {
       vTargets = verticalTargets.map((t) => {
@@ -39,9 +37,7 @@ export class EffectsManagerService {
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
-      introTweens.push(
-        wheel.AnimateLevelStartTween(vTargets[inx], delay, start)
-      );
+      wheel.AnimateLevelStartTween(vTargets[inx], delay, start);
     });
 
     // opacity of each game piece
