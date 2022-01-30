@@ -32,6 +32,7 @@ export class TextureManagerService {
   }
 
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
+  public LevelTextureLoadingStarted: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
   public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
 
@@ -54,6 +55,8 @@ export class TextureManagerService {
   }
 
   public InitLevelTextures(levelType: LevelMaterialType): void {
+    this.LevelTextureLoadingStarted.next();
+
     // set level type
     this._levelType = levelType;
 

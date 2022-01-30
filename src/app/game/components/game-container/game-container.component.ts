@@ -23,6 +23,8 @@ export class GameContainerComponent implements OnInit {
   private _dialogGameOverRef!: MatDialogRef<GameOverComponent>;
   private _showWelcome: boolean = true;
 
+  private _isGameOver: boolean = false;
+
   constructor(
     private ngZone: NgZone,
     private dialog: MatDialog,
@@ -33,21 +35,13 @@ export class GameContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // start loading next level texture(s)
-    this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
-
-    this._dialogRef = this.dialog.open(LevelDialogComponent, this.diagConfig());
-    this._dialogRef.afterClosed().subscribe(() => {
-      this.handleLevelDialogCLosed();
+    this.objectManager.LevelCompleted.subscribe((gameOver) => {
+      this._isGameOver = gameOver;
+      this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
     });
 
-    this.objectManager.LevelCompleted.subscribe((gameOver) => {
-      // player will select restart level or restart game; going to need
-      //   to load next textures regardless
-      this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
-
-      if (gameOver) {
-        // game over
+    this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
+      if (this._isGameOver) {
         this._dialogGameOverRef = this.dialog.open(GameOverComponent, {
           maxWidth: '25em',
           disableClose: true,
@@ -67,7 +61,6 @@ export class GameContainerComponent implements OnInit {
             this.objectManager.InitShapes();
           });
       } else {
-        // dialog will show loading progress of texture(s)
         this._dialogRef = this.dialog.open(
           LevelDialogComponent,
           this.diagConfig()
@@ -77,6 +70,9 @@ export class GameContainerComponent implements OnInit {
         });
       }
     });
+
+    // start loading next level texture(s)
+    this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
   }
 
   private diagConfig(restartLevel: boolean = false): any {

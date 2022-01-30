@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
@@ -9,7 +9,7 @@ import { LevelDialogData } from './level-dialog-data';
   templateUrl: './level-dialog.component.html',
   styleUrls: ['./level-dialog.component.scss'],
 })
-export class LevelDialogComponent implements OnInit {
+export class LevelDialogComponent {
   matchTarget = MINIMUM_MATCH_COUNT;
   ctaDisabled: boolean = true;
   progress: number = 100;
@@ -17,9 +17,7 @@ export class LevelDialogComponent implements OnInit {
   constructor(
     private textureManager: TextureManagerService,
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
       this.ctaDisabled = false;
     });
