@@ -11,7 +11,7 @@ import { LevelDialogData } from './level-dialog-data';
 })
 export class LevelDialogComponent {
   matchTarget = MINIMUM_MATCH_COUNT;
-  ctaDisabled: boolean = true;
+  texturesStillLoading: boolean = true;
   progress: number = 100;
 
   constructor(
@@ -19,7 +19,7 @@ export class LevelDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
   ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
-      this.ctaDisabled = false;
+      this.texturesStillLoading = false;
     });
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;

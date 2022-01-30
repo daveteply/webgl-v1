@@ -9,7 +9,7 @@ import { GameOverData } from './game-over-data';
   styleUrls: ['./game-over.component.scss'],
 })
 export class GameOverComponent {
-  ctaDisabled: boolean = true;
+  texturesStillLoading: boolean = true;
   progress: number = 100;
 
   constructor(
@@ -18,7 +18,7 @@ export class GameOverComponent {
     @Inject(MAT_DIALOG_DATA) public data: GameOverData
   ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
-      this.ctaDisabled = false;
+      this.texturesStillLoading = false;
     });
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;

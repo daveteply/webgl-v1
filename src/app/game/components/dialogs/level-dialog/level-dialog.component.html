@@ -30,16 +30,19 @@
       </tr>
     </table>
   </ng-template>
-  <br />
-  <mat-progress-bar [value]="progress"></mat-progress-bar>
+  <mat-progress-bar
+    class="progress"
+    [class.fade-out]="!texturesStillLoading"
+    [value]="progress"
+  ></mat-progress-bar>
 </mat-dialog-content>
-
+<hr />
 <mat-dialog-actions align="center">
   <button
     mat-raised-button
     color="primary"
     mat-dialog-close
-    [disabled]="ctaDisabled"
+    [disabled]="texturesStillLoading"
   >
     <span *ngIf="data.isWelcome; else levelButtonContent">Play!</span>
     <ng-template #levelButtonContent>

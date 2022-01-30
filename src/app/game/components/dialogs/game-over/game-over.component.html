@@ -1,14 +1,18 @@
 <h2>No More Moves</h2>
 <mat-dialog-content>
   <p>You have exhausted your supply of moves!</p>
-  <mat-progress-bar [value]="progress"></mat-progress-bar>
+  <mat-progress-bar
+    class="progress"
+    [class.fade-out]="!texturesStillLoading"
+    [value]="progress"
+  ></mat-progress-bar>
 </mat-dialog-content>
-
+<hr />
 <mat-dialog-actions align="center">
   <button
     mat-raised-button
     color="primary"
-    [disabled]="ctaDisabled"
+    [disabled]="texturesStillLoading"
     (click)="onCloseRestartLevel()"
   >
     Start Again at Level {{ data.level }}
@@ -16,7 +20,7 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="ctaDisabled"
+    [disabled]="texturesStillLoading"
     (click)="onCloseGameOver()"
   >
     Start Over
