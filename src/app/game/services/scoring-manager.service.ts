@@ -108,7 +108,7 @@ export class ScoringManagerService {
 
     this._levelProgress = 0;
     this._levelStats = {
-      fastestMatchMs: 0,
+      fastestMatchMs: Number.MAX_SAFE_INTEGER,
       moveCount: 0,
       pieceCount: 0,
     };
