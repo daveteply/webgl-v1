@@ -69,10 +69,11 @@ export class InteractionManagerService {
       if (panEvent.isFinal) {
         this._panning = false;
         if (this._activeWheel?.SnapToGrid()) {
-          if (this.scoringManager.UpdateMoveCount()) {
+          this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
+          this.scoringManager.UpdateMoveCount();
+          if (this.scoringManager.GameOver) {
             this.objectManager.LevelCompleted.next(true);
           }
-          this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
         } else {
           this.audioManager.PlayAudio(AudioType.PIECE_NON_MOVE);
         }
@@ -115,7 +116,8 @@ export class InteractionManagerService {
           Math.abs(swipeEvent.velocity),
           swipeEvent.direction === DIRECTION_UP
         );
-        if (this.scoringManager.UpdateMoveCount()) {
+        this.scoringManager.UpdateMoveCount();
+        if (this.scoringManager.GameOver) {
           this.objectManager.LevelCompleted.next(true);
         }
       }

@@ -8,8 +8,8 @@
   <button
     mat-raised-button
     color="primary"
-    [mat-dialog-close]="true"
     [disabled]="ctaDisabled"
+    (click)="onCloseRestartLevel()"
     cdkFocusInitial
   >
     Start Again at Level {{ data.level }}
@@ -18,7 +18,7 @@
     mat-raised-button
     color="primary"
     [disabled]="ctaDisabled"
-    [mat-dialog-close]="false"
+    (click)="onCloseGameOver()"
   >
     Start Over
   </button>

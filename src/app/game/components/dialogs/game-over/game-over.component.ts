@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { GameOverData } from './game-over-data';
 
@@ -14,6 +14,7 @@ export class GameOverComponent implements OnInit {
 
   constructor(
     private textureManager: TextureManagerService,
+    private dialogRef: MatDialogRef<GameOverComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GameOverData
   ) {}
 
@@ -24,5 +25,17 @@ export class GameOverComponent implements OnInit {
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;
     });
+  }
+
+  onCloseGameOver(): void {
+    this.data.restartLevel = false;
+    this.data.startOver = true;
+    this.dialogRef.close(this.data);
+  }
+
+  onCloseRestartLevel(): void {
+    this.data.restartLevel = true;
+    this.data.startOver = false;
+    this.dialogRef.close(this.data);
   }
 }

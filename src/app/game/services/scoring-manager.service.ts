@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
-import {
-  LEVEL_COMPLETION_MULTIPLIER,
-  LEVEL_START_MOVE_MULTIPLIER,
-} from '../game-constants';
+import { LEVEL_ADDITIVE } from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
 export class ScoringManagerService {
   private _levelStats!: LevelStats;
-  private _timestamp: number;
+  private _timestamp!: number;
 
   constructor() {
-    this._timestamp = Date.now();
     this.ResetStats();
+    this.initLevelPieceTarget();
   }
 
   private _level: number = 1;
@@ -25,6 +22,11 @@ export class ScoringManagerService {
     return this._score;
   }
 
+  private _levelPieceTarget: number = 0;
+  get LevelPieceTarget(): number {
+    return this._levelPieceTarget;
+  }
+
   private _levelProgress: number = 0;
   get LevelProgress(): number {
     return this._levelProgress;
@@ -33,6 +35,9 @@ export class ScoringManagerService {
   private _playerMoves: number = 0;
   get PlayerMoves(): number {
     return this._playerMoves;
+  }
+  get GameOver(): boolean {
+    return this._playerMoves === 0;
   }
 
   get LevelComplete(): boolean {
@@ -45,17 +50,15 @@ export class ScoringManagerService {
 
   public NextLevel(): void {
     this._level++;
+    this.initLevelPieceTarget();
     this.ResetStats();
-    this._timestamp = Date.now();
   }
 
   public UpdateScore(pieceCount: number): void {
     // update piece count
     this._levelStats.pieceCount += pieceCount;
     this._levelProgress =
-      (this.LevelStats.pieceCount /
-        (this._level * LEVEL_COMPLETION_MULTIPLIER)) *
-      100;
+      (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
 
     // update since previous match
     const timeDiff = Date.now() - this._timestamp;
@@ -79,19 +82,28 @@ export class ScoringManagerService {
     this._timestamp = Date.now();
   }
 
-  // controls end of game
-  public UpdateMoveCount(): boolean {
+  public UpdateMoveCount(): void {
     this._levelStats.moveCount++;
     this._playerMoves--;
-    return this._playerMoves === 0;
   }
 
-  public ResetStats(): void {
-    // moves should start at zero:
-    //  - at the start of the game
-    //  - re-start of level if failed to complete
-    if (this._playerMoves === 0) {
-      this._playerMoves = this._level * LEVEL_START_MOVE_MULTIPLIER;
+  public RestartGame(): void {
+    this._level = 1;
+    this._score = 0;
+    this._playerMoves = 0;
+    this.ResetStats();
+  }
+
+  public ResetStats(restartLevel: boolean = false): void {
+    if (this.PlayerMoves === 0) {
+      // setting move count here has the added side-effect
+      //  of allowing the level to be restarted with a
+      //  reasonable number moves
+      this._playerMoves = Math.ceil(Math.log2(this._level)) + LEVEL_ADDITIVE;
+    }
+
+    if (restartLevel) {
+      this._score = 0;
     }
 
     this._levelProgress = 0;
@@ -100,5 +112,12 @@ export class ScoringManagerService {
       moveCount: 0,
       pieceCount: 0,
     };
+
+    this._timestamp = Date.now();
+  }
+
+  private initLevelPieceTarget(): void {
+    this._levelPieceTarget =
+      Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
   }
 }

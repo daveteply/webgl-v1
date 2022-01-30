@@ -8,6 +8,7 @@ import { TextureManagerService } from '../../services/texture/texture-manager.se
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
+import { GameOverData } from '../dialogs/game-over/game-over-data';
 
 import { MathUtils } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
@@ -54,11 +55,17 @@ export class GameContainerComponent implements OnInit {
             level: this.scoringManager.Level,
           },
         });
-        this._dialogGameOverRef.afterClosed().subscribe((restartLevel) => {
-          // reset stats will take care of move count based on level
-          this.scoringManager.ResetStats();
-          this.handleLevelDialogCLosed(restartLevel);
-        });
+        this._dialogGameOverRef
+          .afterClosed()
+          .subscribe((data: GameOverData) => {
+            if (data.startOver) {
+              this.scoringManager.RestartGame();
+            } else {
+              // reset stats will take care of move count based on level
+              this.scoringManager.ResetStats(data.restartLevel);
+            }
+            this.objectManager.InitShapes();
+          });
       } else {
         // dialog will show loading progress of texture(s)
         this._dialogRef = this.dialog.open(
@@ -84,16 +91,14 @@ export class GameContainerComponent implements OnInit {
     };
   }
 
-  private handleLevelDialogCLosed(restartLevel: boolean = false): void {
+  private handleLevelDialogCLosed(): void {
     if (this._showWelcome) {
-      // set up scene and animate
+      // set up scene (if needed) and animate
       this.sceneManager.InitScene();
       this.animate();
       this._showWelcome = false;
     } else {
-      if (!restartLevel) {
-        this.scoringManager.NextLevel();
-      }
+      this.scoringManager.NextLevel();
       this.objectManager.InitShapes();
     }
   }
