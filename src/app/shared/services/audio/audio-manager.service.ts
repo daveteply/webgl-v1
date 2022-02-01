@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MathUtils } from 'three';
 import { AudioType, AUDIO_LIST } from './audio-info';
 import { Howl, Howler } from 'howler';
 
@@ -21,7 +20,7 @@ export class AudioManagerService {
   }
 
   public PlayLevelComplete(): void {
-    switch (MathUtils.randInt(1, 3)) {
+    switch (Math.floor(Math.random() * 3) + 1) {
       case 1:
         this.PlayAudio(AudioType.LEVEL_END_1);
         break;
