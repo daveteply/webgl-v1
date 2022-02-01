@@ -11,8 +11,8 @@ import {
 } from '../game-constants';
 import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import { AudioManagerService } from './audio/audio-manager.service';
-import { AudioType } from './audio/audio-info';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
 
 @Injectable()
 export class ObjectManagerService {

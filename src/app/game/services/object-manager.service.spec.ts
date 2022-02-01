@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AudioManagerService } from './audio/audio-manager.service';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { MaterialManagerService } from './material-manager.service';
 

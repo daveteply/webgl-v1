@@ -11,8 +11,8 @@ import { GamePiece } from '../models/game-piece/game-piece';
 import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import { AudioManagerService } from './audio/audio-manager.service';
-import { AudioType } from './audio/audio-info';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';

@@ -3,7 +3,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AudioManagerService } from '../../services/audio/audio-manager.service';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { EffectsManagerService } from '../../services/effects-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { InteractionManagerService } from '../../services/interaction-manager.service';

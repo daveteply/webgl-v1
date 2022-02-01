@@ -4,8 +4,8 @@ import { PerspectiveCamera } from 'three';
 import { MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
-import { AudioType } from './audio/audio-info';
-import { AudioManagerService } from './audio/audio-manager.service';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
 
 @Injectable()

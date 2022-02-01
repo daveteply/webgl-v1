@@ -1,13 +1,24 @@
 import { Injectable } from '@angular/core';
 import { MathUtils } from 'three';
 import { AudioType, AUDIO_LIST } from './audio-info';
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AudioManagerService {
   private readonly ProgressionMin = 48;
   private readonly ProgressionMax = 71;
   private _progressionNext: number = this.ProgressionMin;
+
+  private _trackVolume: number = 0.5;
+  get Volume(): number {
+    return this._trackVolume;
+  }
+  set Volume(gainLevel: number) {
+    this._trackVolume = gainLevel;
+    Howler.volume(this._trackVolume);
+  }
 
   public PlayLevelComplete(): void {
     switch (MathUtils.randInt(1, 3)) {
@@ -48,11 +59,6 @@ export class AudioManagerService {
     }
   }
 
-  private playLoadedAudio(target: Howl, useNote: boolean): void {
-    target.rate(useNote ? this.nextProgression : 1);
-    target.play();
-  }
-
   public StopMusic(audioType: AudioType): void {
     const target = AUDIO_LIST.find((a) => a.audioType === audioType);
     if (target) {
@@ -62,6 +68,11 @@ export class AudioManagerService {
 
   public StartProgression(): void {
     this._progressionNext = this.ProgressionMin;
+  }
+
+  private playLoadedAudio(target: Howl, useNote: boolean): void {
+    target.rate(useNote ? this.nextProgression : 1);
+    target.play();
   }
 
   private get nextProgression(): number {
