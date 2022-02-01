@@ -13,3 +13,7 @@ body {
   top: 64px;
   height: calc(100% - 64px);
 }
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.75);
+}
