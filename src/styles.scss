@@ -6,3 +6,10 @@ body {
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+// allow the header to be remain intractable while Angular
+// Material's dialog is displayed
+.cdk-overlay-container {
+  top: 64px;
+  height: calc(100% - 64px);
+}
