@@ -17,3 +17,22 @@ body {
 .cdk-overlay-dark-backdrop {
   background: rgba(0, 0, 0, 0.75);
 }
+
+@keyframes dialog-slide-up {
+  0% {
+  }
+  30% {
+    transform: translateY(-25%);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-20%);
+  }
+}
+
+.cdk-overlay-pane {
+  transform: translateY(250%);
+  animation: dialog-slide-up 0.5s forwards 0s ease-in-out;
+}
