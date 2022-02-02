@@ -17,6 +17,13 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';
 
+enum HammerEvents {
+  PAN = 'pan',
+  PAN_START = 'panstart',
+  PRESS = 'press',
+  SWIPE = 'swipe',
+}
+
 @Injectable()
 export class InteractionManagerService {
   private _hammer!: HammerManager;
@@ -46,9 +53,11 @@ export class InteractionManagerService {
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
-    this._hammer.get('swipe').set({ direction: Hammer.DIRECTION_VERTICAL });
+    this._hammer
+      .get(HammerEvents.SWIPE)
+      .set({ direction: Hammer.DIRECTION_VERTICAL });
 
-    this._hammer.on('panstart', (panStartEvent: HammerInput) => {
+    this._hammer.on(HammerEvents.PAN_START, (panStartEvent: HammerInput) => {
       const gamePiece = this.getPickedGamePiece(
         panStartEvent.center.x,
         panStartEvent.center.y
@@ -59,7 +68,7 @@ export class InteractionManagerService {
       }
     });
 
-    this._hammer.on('pan', (panEvent) => {
+    this._hammer.on(HammerEvents.PAN, (panEvent) => {
       if (!this._panning) {
         this._panning = true;
       } else {
@@ -82,7 +91,7 @@ export class InteractionManagerService {
       this._x = panEvent.center.x;
     });
 
-    this._hammer.on('press', (pressEvent) => {
+    this._hammer.on(HammerEvents.PRESS, (pressEvent) => {
       // prevent further input
       this.LockBoard(true);
 
@@ -105,7 +114,7 @@ export class InteractionManagerService {
     });
 
     // swipe recognizer is only configured for vertical
-    this._hammer.on('swipe', (swipeEvent) => {
+    this._hammer.on(HammerEvents.SWIPE, (swipeEvent) => {
       const gamePiece = this.getPickedGamePiece(
         swipeEvent.center.x,
         swipeEvent.center.y - swipeEvent.deltaY
