@@ -22,6 +22,7 @@ enum HammerEvents {
   PAN_START = 'panstart',
   SWIPE = 'swipe',
   TAP = 'tap',
+  PRESS = 'press',
 }
 
 @Injectable()
@@ -59,7 +60,7 @@ export class InteractionManagerService {
 
     this.initPanStartEvent();
     this.initPanEvent();
-    this.initTapEvent();
+    this.initTapAndPressEvents();
     this.initSwipeEvent();
 
     this.effectsManager.SelectionAnimationComplete.subscribe(
@@ -99,6 +100,7 @@ export class InteractionManagerService {
     this._hammer.get(HammerEvents.SWIPE).set({ enable: !locked });
     this._hammer.get(HammerEvents.PAN).set({ enable: !locked });
     this._hammer.get(HammerEvents.TAP).set({ enable: !locked });
+    this._hammer.get(HammerEvents.PRESS).set({ enable: !locked });
   }
 
   private initPanStartEvent(): void {
@@ -160,28 +162,32 @@ export class InteractionManagerService {
     });
   }
 
-  private initTapEvent(): void {
-    this._hammer.on(HammerEvents.TAP, (pressEvent) => {
-      // prevent further input
-      this.LockBoard(true);
-
-      // find selected game piece
-      const gamePiece = this.getPickedGamePiece(
-        pressEvent.center.x,
-        pressEvent.center.y
-      );
-      if (gamePiece && !gamePiece?.IsRemoved) {
-        // lock the game board if minimum matches found
-        this._matchingPieces = this.gameEngine.FindMatches(
-          gamePiece,
-          this.objectManager.Axle
-        );
-
-        // launch animation sequence
-        this.effectsManager.AnimateLock(this.objectManager.Axle, true);
-        this.effectsManager.AnimateSelected(this._matchingPieces, true);
-      }
+  private initTapAndPressEvents(): void {
+    this._hammer.on(HammerEvents.TAP, (tapEvent) =>
+      this.handleTapOrPress(tapEvent)
+    );
+    this._hammer.on(HammerEvents.PRESS, (pressEvent) => {
+      this.handleTapOrPress(pressEvent);
     });
+  }
+
+  private handleTapOrPress(event: HammerInput): void {
+    // prevent further input
+    this.LockBoard(true);
+
+    // find selected game piece
+    const gamePiece = this.getPickedGamePiece(event.center.x, event.center.y);
+    if (gamePiece && !gamePiece?.IsRemoved) {
+      // lock the game board if minimum matches found
+      this._matchingPieces = this.gameEngine.FindMatches(
+        gamePiece,
+        this.objectManager.Axle
+      );
+
+      // launch animation sequence
+      this.effectsManager.AnimateLock(this.objectManager.Axle, true);
+      this.effectsManager.AnimateSelected(this._matchingPieces, true);
+    }
   }
 
   private deviceCordRotation(x: number): void {
