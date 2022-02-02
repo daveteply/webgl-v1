@@ -20,7 +20,6 @@ import 'hammerjs';
 enum HammerEvents {
   PAN = 'pan',
   PAN_START = 'panstart',
-  PRESS = 'press',
   SWIPE = 'swipe',
   TAP = 'tap',
 }
@@ -60,7 +59,7 @@ export class InteractionManagerService {
 
     this.initPanStartEvent();
     this.initPanEvent();
-    this.initPressEvent();
+    this.initTapEvent();
     this.initSwipeEvent();
 
     this.effectsManager.SelectionAnimationComplete.subscribe(
@@ -97,9 +96,9 @@ export class InteractionManagerService {
   }
 
   public LockBoard(locked: boolean): void {
-    this._hammer.get('swipe').set({ enable: !locked });
-    this._hammer.get('pan').set({ enable: !locked });
-    this._hammer.get('press').set({ enable: !locked });
+    this._hammer.get(HammerEvents.SWIPE).set({ enable: !locked });
+    this._hammer.get(HammerEvents.PAN).set({ enable: !locked });
+    this._hammer.get(HammerEvents.TAP).set({ enable: !locked });
   }
 
   private initPanStartEvent(): void {
@@ -161,8 +160,8 @@ export class InteractionManagerService {
     });
   }
 
-  private initPressEvent(): void {
-    this._hammer.on(HammerEvents.PRESS, (pressEvent) => {
+  private initTapEvent(): void {
+    this._hammer.on(HammerEvents.TAP, (pressEvent) => {
       // prevent further input
       this.LockBoard(true);
 
