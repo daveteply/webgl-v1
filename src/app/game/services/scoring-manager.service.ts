@@ -97,10 +97,8 @@ export class ScoringManagerService {
 
   public ResetStats(restartLevel: boolean = false): void {
     if (this.PlayerMoves === 0) {
-      // setting move count here has the added side-effect
-      //  of allowing the level to be restarted with a
-      //  reasonable number moves
-      this._playerMoves = Math.ceil(Math.log2(this._level)) + LEVEL_ADDITIVE;
+      // reset moves for level restart
+      this._playerMoves = LEVEL_ADDITIVE;
     }
 
     if (restartLevel) {
