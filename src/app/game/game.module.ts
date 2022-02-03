@@ -6,6 +6,7 @@ import { GameRoutingModule } from './game-routing.module';
 import { CanvasComponent } from './components/canvas/canvas.component';
 import { GameContainerComponent } from './components/game-container/game-container.component';
 import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
+import { GameOverComponent } from './components/dialogs/game-over/game-over.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -20,7 +21,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { GameOverComponent } from './components/dialogs/game-over/game-over.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { GameOverComponent } from './components/dialogs/game-over/game-over.comp
     MatProgressSpinnerModule,
     MatDialogModule,
     MatButtonModule,
+    MatExpansionModule,
   ],
   providers: [
     SceneManagerService,

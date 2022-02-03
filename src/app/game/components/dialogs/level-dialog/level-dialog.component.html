@@ -5,18 +5,27 @@
 
 <mat-dialog-content>
   <div class="intro" *ngIf="data.isWelcome; else levelContent">
-    <p>
-      Game pieces can move <b>right</b> or <b>left</b>, or be flipped
-      <b>up</b> or <b>down</b>. Tap or press a game piece to make a match!
-    </p>
-    <p>
-      Must match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
-      side-to-side.
-    </p>
-    <p>
-      Watch your <b>moves</b>! You may only have a few moves left. Once your
-      moves are all used up, the game is over.
-    </p>
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <span>How to play?</span>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+          <p>
+            Game pieces can move <b>right</b> or <b>left</b>, or be flipped
+            <b>up</b> or <b>down</b>. Tap or press a game piece to make a match!
+          </p>
+          <p>
+            Must match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
+            side-to-side.
+          </p>
+          <p>
+            Watch your <b>moves</b>! You may only have a few moves left. Once
+            your moves are all used up, the game is over.
+          </p>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
   <ng-template #levelContent>
     <table>
@@ -40,7 +49,7 @@
     [value]="progress"
   ></mat-progress-bar>
 </mat-dialog-content>
-<hr />
+
 <mat-dialog-actions align="center">
   <button
     mat-raised-button
