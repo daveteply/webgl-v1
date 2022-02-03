@@ -14,6 +14,7 @@ export class EffectsManagerService {
   private _levelChangeCameraTween: any;
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
+  LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private audioService: AudioManagerService,
@@ -26,6 +27,8 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     start: boolean
   ): void {
+    this.LevelChangeAnimation.next(true);
+
     let vTargets = [...verticalTargets];
     if (!start) {
       vTargets = verticalTargets.map((t) => {
@@ -63,6 +66,9 @@ export class EffectsManagerService {
       .onUpdate(() => {
         camera.rotation.x = delta.rotX;
         camera.position.z = delta.z;
+      })
+      .onComplete(() => {
+        this.LevelChangeAnimation.next(false);
       })
       .start();
   }

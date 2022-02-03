@@ -63,6 +63,10 @@ export class InteractionManagerService {
     this.initTapAndPressEvents();
     this.initSwipeEvent();
 
+    this.effectsManager.LevelChangeAnimation.subscribe((start) => {
+      this.LockBoard(start);
+    });
+
     this.effectsManager.SelectionAnimationComplete.subscribe(
       (selectionMode) => {
         // selection animation complete
