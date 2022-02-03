@@ -10,8 +10,12 @@ body {
 // allow the header to be remain intractable while Angular
 // Material's dialog is displayed
 .cdk-overlay-container {
-  top: 64px;
-  height: calc(100% - 64px);
+  top: 56px;
+  height: calc(100% - 56px);
+  @media screen and (min-aspect-ratio: 3/5) {
+    top: 64px;
+    height: calc(100% - 64px);
+  }
 }
 
 .cdk-overlay-dark-backdrop {
