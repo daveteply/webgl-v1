@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { LEVEL_ADDITIVE } from '../game-constants';
+import { LEVEL_ADDITIVE, MINIMUM_SPEED_BONUS } from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
 export class ScoringManagerService {
   private _levelStats!: LevelStats;
-  private _timestamp!: number;
+  private _timeStart!: number;
+  private _timeStop!: number;
 
   constructor() {
     this.ResetStats();
@@ -48,20 +49,28 @@ export class ScoringManagerService {
     return this._levelStats;
   }
 
+  public ResetTimer(): void {
+    this._timeStart = performance.now();
+  }
+  public StopTimer(): void {
+    this._timeStop = performance.now();
+  }
+
   public NextLevel(): void {
     this._level++;
     this.initLevelPieceTarget();
     this.ResetStats();
   }
 
-  public UpdateScore(pieceCount: number): void {
-    // update piece count
-    this._levelStats.pieceCount += pieceCount;
+  public UpdateLevelProgress(): void {
+    this._levelStats.pieceCount++;
     this._levelProgress =
       (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
+  }
 
+  public UpdateScore(pieceCount: number): void {
     // update since previous match
-    const timeDiff = Date.now() - this._timestamp;
+    const timeDiff = this._timeStop - this._timeStart;
     if (timeDiff < this._levelStats.fastestMatchMs) {
       this._levelStats.fastestMatchMs = timeDiff;
     }
@@ -73,13 +82,15 @@ export class ScoringManagerService {
 
     // match speed multiplier
     const speedBonus = Math.ceil((1000 / timeDiff) * 1000);
-    scoreDelta += speedBonus;
+    if (speedBonus >= MINIMUM_SPEED_BONUS) {
+      this._levelStats.fastMatchBonusTotal += speedBonus;
+      scoreDelta += speedBonus;
+    }
 
     // update score
     this._score += scoreDelta;
 
-    // reset the clock
-    this._timestamp = Date.now();
+    this.ResetTimer();
   }
 
   public UpdateMoveCount(): void {
@@ -108,11 +119,12 @@ export class ScoringManagerService {
     this._levelProgress = 0;
     this._levelStats = {
       fastestMatchMs: Number.MAX_SAFE_INTEGER,
+      fastMatchBonusTotal: 0,
       moveCount: 0,
       pieceCount: 0,
     };
 
-    this._timestamp = Date.now();
+    this._timeStart = Date.now();
   }
 
   private initLevelPieceTarget(): void {

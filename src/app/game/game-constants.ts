@@ -23,7 +23,8 @@ export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 // game rules
 export const PLAYABLE_PIECE_COUNT = 6;
 export const MINIMUM_MATCH_COUNT = 3;
-// this is used with the target piece count and player start
-//  moves along with a logarithmic function to slowly
-//  increase both as the player progresses through each level
+// this is used with the target piece count along with a
+// logarithmic function to slowly increase as the player
+//  progresses through each level
 export const LEVEL_ADDITIVE = 3;
+export const MINIMUM_SPEED_BONUS = 800;

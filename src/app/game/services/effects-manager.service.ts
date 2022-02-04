@@ -69,6 +69,7 @@ export class EffectsManagerService {
       })
       .onComplete(() => {
         this.LevelChangeAnimation.next(false);
+        this.scoringService.ResetTimer();
       })
       .start();
   }
@@ -94,7 +95,11 @@ export class EffectsManagerService {
       if (!select) {
         pieces.reverse();
       }
-      const updateScore = pieces.length >= MINIMUM_MATCH_COUNT;
+
+      const isMinMatch = pieces.length >= MINIMUM_MATCH_COUNT;
+      if (isMinMatch) {
+        this.scoringService.StopTimer();
+      }
 
       // init tweens
       pieces.forEach((p) =>
@@ -110,8 +115,8 @@ export class EffectsManagerService {
       this.audioService.StartProgression();
       this._selectionTweens.forEach((tween) => {
         tween.onStart(() => {
-          if (updateScore) {
-            this.scoringService.UpdateScore(1);
+          if (isMinMatch) {
+            this.scoringService.UpdateLevelProgress();
           }
           this.audioService.PlayAudio(
             select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL,
@@ -126,6 +131,9 @@ export class EffectsManagerService {
       // complete
       this._selectionTweens[this._selectionTweens.length - 1].onComplete(() => {
         this.SelectionAnimationComplete.next(select);
+        if (isMinMatch) {
+          this.scoringService.UpdateScore(pieces.length);
+        }
       });
     }
   }

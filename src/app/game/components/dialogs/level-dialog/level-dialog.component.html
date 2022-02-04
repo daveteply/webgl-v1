@@ -1,4 +1,4 @@
-<h2>
+<h2 class="dialog-header">
   <span *ngIf="data.isWelcome; else levelHeader">Welcome!</span>
   <ng-template #levelHeader>Level Complete!</ng-template>
 </h2>
@@ -29,9 +29,13 @@
   </div>
   <ng-template #levelContent>
     <table>
-      <tr>
+      <tr *ngIf="data.stats.fastMatchBonusTotal">
+        <td>Speed bonus:</td>
+        <td>{{ data.stats.fastMatchBonusTotal | number }}</td>
+      </tr>
+      <tr *ngIf="data.stats.fastMatchBonusTotal">
         <td>Fastest match time:</td>
-        <td>{{ data.stats.fastestMatchMs }}ms</td>
+        <td>{{ data.stats.fastestMatchMs / 1000 | number: "1.1-1" }}s</td>
       </tr>
       <tr>
         <td>Move Count:</td>
