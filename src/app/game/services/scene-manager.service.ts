@@ -47,9 +47,9 @@ export class SceneManagerService {
     }
   }
 
-  public UpdateSize(rect: DOMRect): void {
-    this._width = rect.width;
-    this._height = rect.height;
+  public UpdateSize(width: number, height: number): void {
+    this._width = width;
+    this._height = height;
 
     const aspectRatio = this._width / this._height;
 
@@ -64,6 +64,9 @@ export class SceneManagerService {
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
+
+      // update interaction manager
+      this.interactionManager.Camera = this._camera;
     } else {
       this._camera.aspect = aspectRatio;
       this._camera.updateProjectionMatrix();
@@ -73,8 +76,6 @@ export class SceneManagerService {
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
     }
-
-    this.interactionManager.UpdateSize(rect, this._camera);
   }
 
   public InitRenderer(canvas: HTMLCanvasElement): void {

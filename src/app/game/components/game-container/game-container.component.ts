@@ -4,6 +4,7 @@ import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
+import { LayoutManagerService } from 'src/app/shared/services/layout-manager.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
@@ -25,21 +26,27 @@ export class GameContainerComponent implements OnInit {
 
   private _isGameOver: boolean = false;
 
+  public GridTemplateColumns: string = '';
+  public GridTemplateRows: string = '';
+
   constructor(
     private ngZone: NgZone,
     private dialog: MatDialog,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
+    private layoutManager: LayoutManagerService,
     public scoringManager: ScoringManagerService
   ) {}
 
   ngOnInit(): void {
+    // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
       this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
     });
 
+    // texture load complete
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
         this._dialogGameOverRef = this.dialog.open(GameOverComponent, {
@@ -70,6 +77,16 @@ export class GameContainerComponent implements OnInit {
         });
       }
     });
+
+    // resize event
+    this.layoutManager.OnResize.subscribe(() => {
+      this.GridTemplateColumns = this.layoutManager.GridTemplateColumns;
+      this.GridTemplateRows = this.layoutManager.GridTemplateRows;
+    });
+
+    // initial size
+    this.GridTemplateColumns = this.layoutManager.GridTemplateColumns;
+    this.GridTemplateRows = this.layoutManager.GridTemplateRows;
 
     // start loading next level texture(s)
     this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));

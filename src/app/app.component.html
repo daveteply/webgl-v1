@@ -1,33 +1,10 @@
 <div class="main-container">
   <mat-toolbar color="primary" class="mat-elevation-z4">
     <span>WebGL Demo</span>
-    <span class="spacer"></span>
-    <!-- <button
-      class="nav-button"
-      mat-button
-      routerLink="intro"
-      routerLinkActive="active"
-    >
-      Intro
-    </button> -->
+    <span class="toolbar-item-spacer"></span>
     <wgl-gain-control></wgl-gain-control>
   </mat-toolbar>
-  <main class="spacer">
+  <main>
     <router-outlet></router-outlet>
   </main>
-  <footer class="main-footer">
-    <p>
-      <span>
-        Level End Music by
-        <a target="_blank" href="https://audionautix.com/"
-          >audionautix.com</a
-        ></span
-      >
-      |
-      <span>
-        Sound effect by
-        <a target="_blank" href="https://mixkit.co/">mixkit</a></span
-      >
-    </p>
-  </footer>
 </div>

@@ -30,6 +30,10 @@ export class InteractionManagerService {
   private _hammer!: HammerManager;
 
   private _canvasRect!: DOMRect;
+  set CanvasRect(rect: DOMRect) {
+    this._canvasRect = rect;
+  }
+
   private _pointerPos: Vector2;
 
   private _x: number = 0;
@@ -37,7 +41,11 @@ export class InteractionManagerService {
   private _activeWheel: GameWheel | undefined;
 
   private _rayCaster!: Raycaster;
+
   private _camera!: PerspectiveCamera;
+  set Camera(camera: PerspectiveCamera) {
+    this._camera = camera;
+  }
 
   private _matchingPieces: GamePiece[] = [];
 
@@ -93,11 +101,6 @@ export class InteractionManagerService {
         }
       }
     );
-  }
-
-  public UpdateSize(rect: DOMRect, camera: PerspectiveCamera): void {
-    this._canvasRect = rect;
-    this._camera = camera;
   }
 
   public LockBoard(locked: boolean): void {

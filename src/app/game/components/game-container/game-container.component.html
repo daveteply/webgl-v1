@@ -1,27 +1,18 @@
-<div class="game-container">
+<div
+  class="game-container"
+  [style.grid-template-rows]="GridTemplateRows"
+  [style.grid-template-columns]="GridTemplateColumns"
+>
   <div class="game-scoring">
-    <p>Score: {{ scoringManager.Score | number }}</p>
-    <p>Level: {{ scoringManager.Level }}</p>
+    <span>Score: {{ scoringManager.Score | number }}</span>
+    <span>Moves left: {{ scoringManager.PlayerMoves }}</span>
+    <span>Level: {{ scoringManager.Level }}</span>
   </div>
   <wgl-canvas class="game-canvas"></wgl-canvas>
   <div class="level-progress">
-    <div class="horizontal-controls">
-      <div class="progress">
-        <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
-        <mat-progress-bar
-          value="{{ scoringManager.LevelProgress }}"
-        ></mat-progress-bar>
-      </div>
-      <div>Moves left: {{ scoringManager.PlayerMoves }}</div>
-    </div>
-    <div class="vertical-controls">
-      <mat-spinner
-        mode="determinate"
-        value="{{ scoringManager.LevelProgress }}"
-      ></mat-spinner>
-      <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}% Complete</div>
-      <hr />
-      <div>Moves left: {{ scoringManager.PlayerMoves }}</div>
-    </div>
+    <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
+    <mat-progress-bar
+      value="{{ scoringManager.LevelProgress }}"
+    ></mat-progress-bar>
   </div>
 </div>

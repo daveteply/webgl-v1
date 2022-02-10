@@ -1,19 +1,12 @@
+@import "../style_values.scss";
+
 .main-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  display: grid;
+  grid-template-rows: $toolbar-height 1fr;
+  overflow: hidden;
 
-  // .nav-button {
-  //   &.active {
-  //     display: none;
-  //   }
-  // }
-
-  .spacer {
+  .toolbar-item-spacer {
     flex: 1 1 auto;
-  }
-  .main-footer {
-    padding: 1em;
-    background-color: lightgray;
   }
 }
