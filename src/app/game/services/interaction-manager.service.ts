@@ -185,15 +185,15 @@ export class InteractionManagerService {
     // find selected game piece
     const gamePiece = this.getPickedGamePiece(event.center.x, event.center.y);
     if (gamePiece && !gamePiece?.IsRemoved) {
-      // lock the game board if minimum matches found
+      // run matches algorithm
       this._matchingPieces = this.gameEngine.FindMatches(
         gamePiece,
         this.objectManager.Axle
       );
 
       // launch animation sequence
-      this.effectsManager.AnimateLock(this.objectManager.Axle, true);
       this.effectsManager.AnimateSelected(this._matchingPieces, true);
+      this.effectsManager.AnimateLock(this.objectManager.Axle, true);
     } else {
       // unlock board if no pieces selected
       this.LockBoard(false);

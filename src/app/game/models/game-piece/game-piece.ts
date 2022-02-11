@@ -151,7 +151,7 @@ export class GamePiece extends Object3D {
     // init tween
     return new Tween(delta)
       .to(target, 300)
-      .easing(Easing.Circular.Out)
+      .easing(Easing.Quintic.Out)
       .onUpdate(() => {
         this.scale.set(delta.x, delta.y, delta.z);
       });
