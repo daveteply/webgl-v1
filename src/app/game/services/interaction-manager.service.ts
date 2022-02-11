@@ -194,6 +194,9 @@ export class InteractionManagerService {
       // launch animation sequence
       this.effectsManager.AnimateLock(this.objectManager.Axle, true);
       this.effectsManager.AnimateSelected(this._matchingPieces, true);
+    } else {
+      // unlock board if no pieces selected
+      this.LockBoard(false);
     }
   }
 
