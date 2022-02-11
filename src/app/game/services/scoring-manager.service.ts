@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { LEVEL_ADDITIVE, MINIMUM_SPEED_BONUS } from '../game-constants';
+import {
+  LEVEL_ADDITIVE,
+  MINIMUM_MATCH_COUNT,
+  MINIMUM_SPEED_BONUS,
+} from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
@@ -85,10 +89,21 @@ export class ScoringManagerService {
     if (speedBonus >= MINIMUM_SPEED_BONUS) {
       this._levelStats.fastMatchBonusTotal += speedBonus;
       scoreDelta += speedBonus;
+
+      // also earn move
+      this._levelStats.moveCountEarned++;
+      this._playerMoves++;
     }
 
     // update score
     this._score += scoreDelta;
+
+    // update move count
+    const moveBonus = Math.floor(pieceCount / (MINIMUM_MATCH_COUNT + 1));
+    if (moveBonus) {
+      this._playerMoves += moveBonus;
+      this._levelStats.moveCountEarned += moveBonus;
+    }
 
     this.ResetTimer();
   }
@@ -121,6 +136,7 @@ export class ScoringManagerService {
       fastestMatchMs: Number.MAX_SAFE_INTEGER,
       fastMatchBonusTotal: 0,
       moveCount: 0,
+      moveCountEarned: 0,
       pieceCount: 0,
     };
 

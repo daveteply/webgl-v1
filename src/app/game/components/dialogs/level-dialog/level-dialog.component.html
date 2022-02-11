@@ -37,12 +37,16 @@
         <td>Fastest match time:</td>
         <td>{{ data.stats.fastestMatchMs / 1000 | number: "1.1-1" }}s</td>
       </tr>
-      <tr>
-        <td>Move Count:</td>
+      <tr *ngIf="data.stats.moveCount">
+        <td>Moves used:</td>
         <td>{{ data.stats.moveCount }}</td>
       </tr>
+      <tr *ngIf="data.stats.moveCountEarned">
+        <td>Moves earned:</td>
+        <td>{{ data.stats.moveCountEarned }}</td>
+      </tr>
       <tr>
-        <td>Piece Count:</td>
+        <td>Piece count:</td>
         <td>{{ data.stats.pieceCount }}</td>
       </tr>
     </table>
