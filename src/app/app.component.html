@@ -3,6 +3,9 @@
     <span>WebGL Demo</span>
     <span class="toolbar-item-spacer"></span>
     <wgl-gain-control></wgl-gain-control>
+    <button (click)="about()" mat-icon-button>
+      <mat-icon>info</mat-icon>
+    </button>
   </mat-toolbar>
   <main>
     <router-outlet></router-outlet>
