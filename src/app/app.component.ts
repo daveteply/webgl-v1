@@ -13,8 +13,11 @@ export class AppComponent {
   constructor(private dialog: MatDialog) {}
 
   about(): void {
-    if (!this.dialog.getDialogById(this.ABOUT_DIALOG_ID)) {
+    const aboutDialog = this.dialog.getDialogById(this.ABOUT_DIALOG_ID);
+    if (!aboutDialog) {
       this.dialog.open(AboutComponent, { id: this.ABOUT_DIALOG_ID });
+    } else {
+      aboutDialog.close();
     }
   }
 }
