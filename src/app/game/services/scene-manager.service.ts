@@ -57,8 +57,6 @@ export class SceneManagerService {
       this._camera = new PerspectiveCamera(45, aspectRatio, 1, 75);
       this.objectManager.SetCamera(this._camera);
 
-      this._pointLight?.position.copy(this._camera.position);
-
       // face camera "up"
       this._camera.rotation.x = Math.PI / 2;
 
