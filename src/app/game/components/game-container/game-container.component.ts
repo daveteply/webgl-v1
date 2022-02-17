@@ -5,6 +5,7 @@ import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
 import { LayoutManagerService } from 'src/app/shared/services/layout-manager.service';
+import { TextManagerService } from '../../services/text/text-manager.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
@@ -36,6 +37,7 @@ export class GameContainerComponent implements OnInit {
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
     private layoutManager: LayoutManagerService,
+    private textManager: TextManagerService,
     public scoringManager: ScoringManagerService
   ) {}
 
@@ -90,6 +92,9 @@ export class GameContainerComponent implements OnInit {
 
     // start loading next level texture(s)
     this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
+
+    // start loading fonts
+    this.textManager.InitFonts();
   }
 
   private diagConfig(restartLevel: boolean = false): any {

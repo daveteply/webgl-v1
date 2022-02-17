@@ -45,6 +45,11 @@ export class ScoringManagerService {
     return this._playerMoves === 0;
   }
 
+  private _splashText: string[] = [];
+  get SplashText(): string[] {
+    return this._splashText;
+  }
+
   get LevelComplete(): boolean {
     return this.LevelProgress >= 100;
   }
@@ -79,6 +84,9 @@ export class ScoringManagerService {
       this._levelStats.fastestMatchMs = timeDiff;
     }
 
+    // splash text
+    this._splashText = [];
+
     let scoreDelta = 0;
 
     // level multiplier
@@ -89,20 +97,29 @@ export class ScoringManagerService {
     if (speedBonus >= MINIMUM_SPEED_BONUS) {
       this._levelStats.fastMatchBonusTotal += speedBonus;
       scoreDelta += speedBonus;
+      this._splashText.push('Speed Bonus', `+${speedBonus}`);
 
       // also earn move
       this._levelStats.moveCountEarned++;
       this._playerMoves++;
+      this._splashText.push('Moves +1');
     }
 
     // update score
     this._score += scoreDelta;
 
-    // update move count
-    const moveBonus = Math.floor(pieceCount / (MINIMUM_MATCH_COUNT + 1));
-    if (moveBonus) {
-      this._playerMoves += moveBonus;
-      this._levelStats.moveCountEarned += moveBonus;
+    // long match multiplier
+    const longMatchMovesEarned = Math.floor(
+      pieceCount / (MINIMUM_MATCH_COUNT + 1)
+    );
+    if (longMatchMovesEarned) {
+      this._playerMoves += longMatchMovesEarned;
+      this._levelStats.moveCountEarned += longMatchMovesEarned;
+      const longMatchBonus =
+        longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
+      this._score += longMatchBonus;
+      this._splashText.push('Long Match', `+${longMatchBonus}`);
+      this._splashText.push(`Moves +${longMatchMovesEarned}`);
     }
 
     this.ResetTimer();

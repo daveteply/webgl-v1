@@ -10,6 +10,7 @@ import { EffectsManagerService } from './effects-manager.service';
 import { TextureManagerService } from './texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
+import { TextManagerService } from './text/text-manager.service';
 
 function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
   const scene = new Scene();
@@ -31,6 +32,7 @@ describe('GameEngineService', () => {
   let effectManagerService: EffectsManagerService;
   let objectManagerService: ObjectManagerService;
   let audioManagerService: AudioManagerService;
+  let textManagerService: TextManagerService;
 
   let mockAxle: GameWheel[];
 
@@ -53,10 +55,12 @@ describe('GameEngineService', () => {
     effectManagerService = TestBed.inject(EffectsManagerService);
     audioManagerService = TestBed.inject(AudioManagerService);
     spyOn(audioManagerService, 'PlayAudio');
+    textManagerService = TestBed.inject(TextManagerService);
 
     objectManagerService = new ObjectManagerService(
       mockMaterialService,
       effectManagerService,
+      textManagerService,
       audioManagerService
     );
     mockAxle = createMockAxle(objectManagerService);

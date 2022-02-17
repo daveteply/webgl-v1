@@ -15,6 +15,9 @@ export class SceneManagerService {
   private _width: number = 0;
   private _height: number = 0;
 
+  private _canvas!: HTMLCanvasElement;
+  // private _controls!: OrbitControls;
+
   private _renderer!: WebGLRenderer;
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
@@ -41,6 +44,9 @@ export class SceneManagerService {
 
       // lights
       this._pointLight = new PointLight(0xffffff, 1);
+      if (this._camera) {
+        this._pointLight.position.copy(this._camera.position);
+      }
       this._scene.add(this._pointLight);
 
       this.objectManager.InitShapes(this._scene);
@@ -57,18 +63,22 @@ export class SceneManagerService {
       this._camera = new PerspectiveCamera(45, aspectRatio, 1, 75);
       this.objectManager.SetCamera(this._camera);
 
-      // face camera "up"
+      // face camera "up"; will be animated to face "forward"
       this._camera.rotation.x = Math.PI / 2;
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
+
+      // orbit controls
+      // this._controls = new OrbitControls(this._camera, this._canvas);
+      // this._controls.target.set(0, 0, 0);
+      // this._controls.update();
 
       // update interaction manager
       this.interactionManager.Camera = this._camera;
     } else {
       this._camera.aspect = aspectRatio;
       this._camera.updateProjectionMatrix();
-      this._pointLight?.position.copy(this._camera.position);
     }
 
     if (this._renderer) {
@@ -78,16 +88,15 @@ export class SceneManagerService {
 
   public InitRenderer(canvas: HTMLCanvasElement): void {
     if (canvas) {
-      this._renderer = new WebGLRenderer({ canvas: canvas, antialias: true });
+      this._canvas = canvas;
+      this._renderer = new WebGLRenderer({
+        canvas: this._canvas,
+        antialias: true,
+      });
     }
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
     }
-
-    // orbit controls
-    // this._controls = new OrbitControls(this._camera, this._canvas);
-    // this._controls.target.set(0, 0, 0);
-    // this._controls.update();
   }
 
   // called during main animation loop

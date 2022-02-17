@@ -131,9 +131,6 @@ export class EffectsManagerService {
       // complete
       this._selectionTweens[this._selectionTweens.length - 1].onComplete(() => {
         this.SelectionAnimationComplete.next(select);
-        if (isMinMatch) {
-          this.scoringService.UpdateScore(pieces.length);
-        }
       });
     }
   }

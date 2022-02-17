@@ -13,6 +13,7 @@ import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
+import { TextManagerService } from './text/text-manager.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -34,9 +35,11 @@ export class ObjectManagerService {
   constructor(
     private materialManager: MaterialManagerService,
     private effectsManager: EffectsManagerService,
+    private textManager: TextManagerService,
     private audioManager: AudioManagerService
   ) {
     this._stack = new Group();
+    this._stack.name = 'gameWheelStack';
     this.initCoords();
   }
 
@@ -52,6 +55,7 @@ export class ObjectManagerService {
     // store reference to scene for later level change
     if (scene && !this._scene) {
       this._scene = scene;
+      this._scene.add(this._stack);
     }
 
     // clear existing objects
@@ -59,6 +63,9 @@ export class ObjectManagerService {
 
     // select colors for the current level
     const materials = this.materialManager.InitMaterials();
+
+    // initiate font download
+    this.textManager.InitScene(this._scene);
 
     // create all the objects
     this._verticalTargets.forEach(() => {
@@ -70,8 +77,6 @@ export class ObjectManagerService {
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
     });
-
-    this._scene.add(this._stack);
 
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();

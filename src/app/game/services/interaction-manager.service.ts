@@ -13,6 +13,7 @@ import { ScoringManagerService } from './scoring-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { TextManagerService } from './text/text-manager.service';
 
 import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';
@@ -54,7 +55,8 @@ export class InteractionManagerService {
     private effectsManager: EffectsManagerService,
     private gameEngine: GameEngineService,
     private scoringManager: ScoringManagerService,
-    private audioManager: AudioManagerService
+    private audioManager: AudioManagerService,
+    private textManager: TextManagerService
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
@@ -82,12 +84,17 @@ export class InteractionManagerService {
           if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
             // initiate the removal animation
             this.effectsManager.AnimateRemove(this._matchingPieces);
+            // update score
+            this.scoringManager.UpdateScore(this._matchingPieces.length);
+
             if (this.scoringManager.LevelComplete) {
               this.audioManager.PlayLevelComplete();
               this.objectManager.AnimateLevelComplete();
               this.LockBoard(false);
+
               this.objectManager.LevelCompleted.next(false);
             } else {
+              this.textManager.ShowText(this.scoringManager.SplashText);
               this.effectsManager.AnimateLock(this.objectManager.Axle, false);
               this.LockBoard(false);
             }
