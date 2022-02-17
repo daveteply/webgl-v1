@@ -97,12 +97,12 @@ export class ScoringManagerService {
     if (speedBonus >= MINIMUM_SPEED_BONUS) {
       this._levelStats.fastMatchBonusTotal += speedBonus;
       scoreDelta += speedBonus;
-      this._splashText.push('Speed Bonus', `+${speedBonus}`);
+      this._splashText.push('Speed Bonus', `+${speedBonus} Points`);
 
       // also earn move
       this._levelStats.moveCountEarned++;
       this._playerMoves++;
-      this._splashText.push('Moves +1');
+      this._splashText.push('+1 Moves');
     }
 
     // update score
@@ -118,8 +118,8 @@ export class ScoringManagerService {
       const longMatchBonus =
         longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
       this._score += longMatchBonus;
-      this._splashText.push('Long Match', `+${longMatchBonus}`);
-      this._splashText.push(`Moves +${longMatchMovesEarned}`);
+      this._splashText.push('Long Match', `+${longMatchBonus} Points`);
+      this._splashText.push(`+${longMatchMovesEarned} Moves`);
     }
 
     this.ResetTimer();
