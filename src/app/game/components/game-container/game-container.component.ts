@@ -12,7 +12,6 @@ import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.compo
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 import { GameOverData } from '../dialogs/game-over/game-over-data';
 
-import { MathUtils } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 
 @Component({
@@ -26,6 +25,8 @@ export class GameContainerComponent implements OnInit {
   private _showWelcome: boolean = true;
 
   private _isGameOver: boolean = false;
+
+  ShowScoreProgress: boolean = false;
 
   public GridTemplateColumns: string = '';
   public GridTemplateRows: string = '';
@@ -45,7 +46,7 @@ export class GameContainerComponent implements OnInit {
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
-      this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
+      this.textureManager.InitLevelTextures(Math.floor(Math.random() * 3) + 1);
     });
 
     // texture load complete
@@ -91,7 +92,7 @@ export class GameContainerComponent implements OnInit {
     this.GridTemplateRows = this.layoutManager.GridTemplateRows;
 
     // start loading next level texture(s)
-    this.textureManager.InitLevelTextures(MathUtils.randInt(1, 3));
+    this.textureManager.InitLevelTextures(Math.floor(Math.random() * 3) + 1);
 
     // start loading fonts
     this.textManager.InitFonts();
@@ -115,6 +116,7 @@ export class GameContainerComponent implements OnInit {
       this.sceneManager.InitScene();
       this.animate();
       this._showWelcome = false;
+      this.ShowScoreProgress = true;
     } else {
       this.scoringManager.NextLevel();
       this.objectManager.InitShapes();

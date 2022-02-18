@@ -1,5 +1,10 @@
 @import "../../../../style_values.scss";
 
+@mixin fader {
+  opacity: 0;
+  transition: opacity 2s ease-out;
+}
+
 .game-container {
   height: 100%;
   display: grid;
@@ -9,6 +14,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 0.5em 0 0.5em;
+    @include fader;
+    &.show {
+      opacity: 1;
+    }
     @media screen and (min-width: $min-width) {
       padding-top: 0.5em;
       flex-direction: column;
@@ -24,6 +33,10 @@
     display: flex;
     padding: 0 0.5em 0 0.5em;
     align-items: center;
+    @include fader;
+    &.show {
+      opacity: 1;
+    }
     .mat-progress-bar {
       height: 70%;
       @media screen and (min-width: $min-width) {
