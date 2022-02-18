@@ -70,15 +70,33 @@ export class GameWheel extends Object3D {
   public AnimateLevelStartTween(
     targetY: number,
     delay: number,
-    start: boolean
+    start: boolean,
+    spinDirection: number
   ): void {
     if (this._levelChangeTween) {
       this._levelChangeTween.stop();
     }
 
+    let introSpinRangeMin = -10;
+    let introSpinRangeMax = 10;
+    switch (spinDirection) {
+      case 1:
+        introSpinRangeMin = 10;
+        introSpinRangeMax = 20;
+        break;
+      case 2:
+        introSpinRangeMin = -20;
+        introSpinRangeMax = -10;
+        break;
+      default:
+      // use original values
+    }
+
     const delta = {
       y: this.position.y,
-      theta: start ? MathUtils.randInt(-20, 20) * GRID_INC : this._theta,
+      theta: start
+        ? MathUtils.randInt(introSpinRangeMin, introSpinRangeMax) * GRID_INC
+        : this._theta,
     };
     const target = {
       y: targetY,

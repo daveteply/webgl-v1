@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
-import { PerspectiveCamera } from 'three';
+import { MathUtils, PerspectiveCamera } from 'three';
 import { MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
@@ -37,10 +37,16 @@ export class EffectsManagerService {
     }
 
     // vertical movement tweens
+    const introSpinDirection = MathUtils.randInt(1, 3);
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 100;
-      wheel.AnimateLevelStartTween(vTargets[inx], delay, start);
+      wheel.AnimateLevelStartTween(
+        vTargets[inx],
+        delay,
+        start,
+        introSpinDirection
+      );
     });
 
     // opacity of each game piece
