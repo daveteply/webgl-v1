@@ -9,3 +9,17 @@
     opacity: 0;
   }
 }
+
+.click-input {
+  display: block;
+  @media (pointer: coarse) {
+    display: none;
+  }
+}
+
+.touch-input {
+  display: block;
+  @media (pointer: fine) {
+    display: none;
+  }
+}

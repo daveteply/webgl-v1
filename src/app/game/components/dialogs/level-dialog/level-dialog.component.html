@@ -12,16 +12,29 @@
         </mat-expansion-panel-header>
         <ng-template matExpansionPanelContent>
           <p>
-            Game pieces can move <b>right</b> or <b>left</b>, or be flipped
-            <b>up</b> or <b>down</b>. Tap or press a game piece to make a match!
+            <mat-icon>arrow_back</mat-icon>
+            <mat-icon>arrow_forward</mat-icon>
+            Move game pieces right or left
           </p>
           <p>
-            Must match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
-            side-to-side.
+            <mat-icon>arrow_upward</mat-icon>
+            <mat-icon>arrow_downward</mat-icon> Flip pieces up or down
+          </p>
+          <p class="touch-input">
+            <mat-icon>touch_app</mat-icon>
+            Tap or press to make a match!
+          </p>
+          <p class="click-input">
+            <mat-icon>mouse</mat-icon>
+            Click or click-hold to make a match!
           </p>
           <p>
-            Watch your <b>moves</b>! You may only have a few moves left. Once
-            your moves are all used up, the game is over.
+            Match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
+            side-to-side
+          </p>
+          <p>
+            <mat-icon>sentiment_very_satisfied</mat-icon>
+            Earn moves by making faster matches and longer matches
           </p>
         </ng-template>
       </mat-expansion-panel>
