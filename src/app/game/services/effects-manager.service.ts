@@ -17,8 +17,8 @@ export class EffectsManagerService {
   LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
-    private audioService: AudioManagerService,
-    private scoringService: ScoringManagerService
+    private audioManager: AudioManagerService,
+    private scoringManager: ScoringManagerService
   ) {}
 
   public AnimateLevelChangeAnimation(
@@ -75,7 +75,7 @@ export class EffectsManagerService {
       })
       .onComplete(() => {
         this.LevelChangeAnimation.next(false);
-        this.scoringService.ResetTimer();
+        this.scoringManager.ResetTimer();
       })
       .start();
   }
@@ -104,7 +104,7 @@ export class EffectsManagerService {
 
       const isMinMatch = pieces.length >= MINIMUM_MATCH_COUNT;
       if (isMinMatch) {
-        this.scoringService.StopTimer();
+        this.scoringManager.StopTimer();
       }
 
       // init tweens
@@ -118,13 +118,13 @@ export class EffectsManagerService {
       this._selectionTweens[0].delay(250);
 
       // audio
-      this.audioService.StartProgression();
+      this.audioManager.StartProgression();
       this._selectionTweens.forEach((tween) => {
         tween.onStart(() => {
           if (isMinMatch) {
-            this.scoringService.UpdateLevelProgress();
+            this.scoringManager.UpdateLevelProgress();
           }
-          this.audioService.PlayAudio(
+          this.audioManager.PlayAudio(
             select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL,
             select ? true : false
           );
@@ -145,7 +145,7 @@ export class EffectsManagerService {
     if (selectedPieces.length) {
       selectedPieces.forEach((p) => {
         p.InitRemovalTween();
-        this.audioService.PlayAudio(AudioType.PIECE_REMOVE);
+        this.audioManager.PlayAudio(AudioType.PIECE_REMOVE);
       });
     }
   }
