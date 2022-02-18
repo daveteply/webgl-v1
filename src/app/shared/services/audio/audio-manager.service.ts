@@ -35,9 +35,28 @@ export class AudioManagerService {
   }
 
   public StopLevelComplete(): void {
-    this.StopMusic(AudioType.LEVEL_END_1);
-    this.StopMusic(AudioType.LEVEL_END_2);
-    this.StopMusic(AudioType.LEVEL_END_3);
+    this.stopMusic(AudioType.LEVEL_END_1);
+    this.stopMusic(AudioType.LEVEL_END_2);
+    this.stopMusic(AudioType.LEVEL_END_3);
+  }
+
+  public PlayLevelStart(): void {
+    switch (Math.floor(Math.random() * 5) + 1) {
+      case 1:
+        this.PlayAudio(AudioType.LEVEL_START_1);
+        break;
+      case 2:
+        this.PlayAudio(AudioType.LEVEL_START_2);
+        break;
+      case 3:
+        this.PlayAudio(AudioType.LEVEL_START_3);
+        break;
+      case 4:
+        this.PlayAudio(AudioType.LEVEL_START_4);
+        break;
+      default:
+        this.PlayAudio(AudioType.LEVEL_START_5);
+    }
   }
 
   public PlayAudio(audioType: AudioType, useNote: boolean = false): void {
@@ -58,7 +77,7 @@ export class AudioManagerService {
     }
   }
 
-  public StopMusic(audioType: AudioType): void {
+  private stopMusic(audioType: AudioType): void {
     const target = AUDIO_LIST.find((a) => a.audioType === audioType);
     if (target) {
       target.howl?.stop();
