@@ -109,17 +109,8 @@ export class ScoringManagerService {
     this._score += scoreDelta;
 
     // long match multiplier
-    const longMatchMovesEarned = Math.floor(
-      pieceCount / (MINIMUM_MATCH_COUNT + 1)
-    );
-    if (longMatchMovesEarned) {
-      this._playerMoves += longMatchMovesEarned;
-      this._levelStats.moveCountEarned += longMatchMovesEarned;
-      const longMatchBonus =
-        longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
-      this._score += longMatchBonus;
-      this._splashText.push('Long Match', `+${longMatchBonus} Points`);
-      this._splashText.push(`+${longMatchMovesEarned} Moves`);
+    if (pieceCount > MINIMUM_MATCH_COUNT) {
+      this.longMatchBonus(pieceCount);
     }
 
     this.ResetTimer();
@@ -158,6 +149,21 @@ export class ScoringManagerService {
     };
 
     this._timeStart = Date.now();
+  }
+
+  private longMatchBonus(pieceCount: number) {
+    const longMatchMovesEarned = Math.ceil(
+      MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1))
+    );
+    if (longMatchMovesEarned) {
+      this._playerMoves += longMatchMovesEarned;
+      this._levelStats.moveCountEarned += longMatchMovesEarned;
+      const longMatchBonus =
+        longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
+      this._score += longMatchBonus;
+      this._splashText.push('Long Match', `+${longMatchBonus} Points`);
+      this._splashText.push(`+${longMatchMovesEarned} Moves`);
+    }
   }
 
   private initLevelPieceTarget(): void {
