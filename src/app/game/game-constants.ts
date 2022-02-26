@@ -12,7 +12,7 @@ export const WHEEL_START_POSITION = 50;
 export const LAYOUT_ASPECT = 0.66;
 export const LAYOUT_CLIENT_HEIGHT_PERCENT = 0.86;
 export const LAYOUT_HEADER_OFFSET = 56; // pairs with scss variable
-export const LAYOUT_MIN_WIDTH = 600; // pairs with scss variable
+export const LAYOUT_MIN_WIDTH = 800; // pairs with scss variable
 
 // establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
