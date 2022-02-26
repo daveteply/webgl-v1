@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import {
   Color,
   PerspectiveCamera,
@@ -9,6 +9,8 @@ import {
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+import * as TWEEN from '@tweenjs/tween.js';
 
 @Injectable()
 export class SceneManagerService {
@@ -25,18 +27,18 @@ export class SceneManagerService {
   private _pointLight!: PointLight;
 
   constructor(
+    private ngZone: NgZone,
     private objectManager: ObjectManagerService,
     private interactionManager: InteractionManagerService
   ) {}
-
-  get scene(): Scene {
-    return this._scene;
-  }
 
   public InitScene(): void {
     if (!this._scene) {
       this._scene = new Scene();
       this._scene.background = new Color(0xf0f0f0f);
+
+      // pass along to object manager
+      this.objectManager.SetScene(this._scene);
 
       // axes
       // const axesHelper = new AxesHelper(5);
@@ -44,12 +46,7 @@ export class SceneManagerService {
 
       // lights
       this._pointLight = new PointLight(0xffffff, 1);
-      if (this._camera) {
-        this._pointLight.position.copy(this._camera.position);
-      }
       this._scene.add(this._pointLight);
-
-      this.objectManager.InitShapes(this._scene);
     }
   }
 
@@ -84,6 +81,9 @@ export class SceneManagerService {
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
     }
+
+    // start rendering frames
+    this.animate();
   }
 
   public InitRenderer(canvas: HTMLCanvasElement): void {
@@ -99,8 +99,14 @@ export class SceneManagerService {
     }
   }
 
-  // called during main animation loop
-  public RenderScene(): void {
-    this._renderer?.render(this._scene, this._camera);
+  private animate(): void {
+    this.ngZone.runOutsideAngular(() => {
+      TWEEN.update();
+      this._renderer?.render(this._scene, this._camera);
+    });
+
+    requestAnimationFrame(() => {
+      this.animate();
+    });
   }
 }

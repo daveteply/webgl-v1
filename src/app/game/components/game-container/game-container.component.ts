@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
@@ -11,8 +11,6 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 import { GameOverData } from '../dialogs/game-over/game-over-data';
-
-import * as TWEEN from '@tweenjs/tween.js';
 
 @Component({
   selector: 'wgl-game-container',
@@ -32,7 +30,6 @@ export class GameContainerComponent implements OnInit {
   public GridTemplateRows: string = '';
 
   constructor(
-    private ngZone: NgZone,
     private dialog: MatDialog,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
@@ -43,6 +40,8 @@ export class GameContainerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sceneManager.InitScene();
+
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
@@ -73,7 +72,7 @@ export class GameContainerComponent implements OnInit {
       } else {
         this._dialogRef = this.dialog.open(
           LevelDialogComponent,
-          this.diagConfig()
+          this.dialogConfig()
         );
         this._dialogRef.afterClosed().subscribe(() => {
           this.handleLevelDialogCLosed();
@@ -98,7 +97,7 @@ export class GameContainerComponent implements OnInit {
     this.textManager.InitFonts();
   }
 
-  private diagConfig(restartLevel: boolean = false): any {
+  private dialogConfig(restartLevel: boolean = false): any {
     return {
       maxWidth: '25em',
       disableClose: true,
@@ -112,25 +111,12 @@ export class GameContainerComponent implements OnInit {
 
   private handleLevelDialogCLosed(): void {
     if (this._showWelcome) {
-      // set up scene (if needed) and animate
-      this.sceneManager.InitScene();
-      this.animate();
       this._showWelcome = false;
       this.ShowScoreProgress = true;
+      this.objectManager.InitShapes();
     } else {
       this.scoringManager.NextLevel();
       this.objectManager.InitShapes();
     }
-  }
-
-  private animate(): void {
-    TWEEN.update();
-    this.ngZone.runOutsideAngular(() => {
-      this.sceneManager.RenderScene();
-    });
-
-    requestAnimationFrame(() => {
-      this.animate();
-    });
   }
 }

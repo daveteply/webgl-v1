@@ -50,13 +50,12 @@ export class ObjectManagerService {
     this._perspectiveCamera = camera;
   }
 
-  public InitShapes(scene?: Scene): void {
-    // store reference to scene for later level change
-    if (scene && !this._scene) {
-      this._scene = scene;
-      this._scene.add(this._stack);
-    }
+  public SetScene(scene: Scene): void {
+    this._scene = scene;
+    this._scene.add(this._stack);
+  }
 
+  public InitShapes(): void {
     // clear existing objects
     this.dispose();
 

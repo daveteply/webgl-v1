@@ -15,6 +15,8 @@ describe('CanvasComponent', () => {
   let component: CanvasComponent;
   let fixture: ComponentFixture<CanvasComponent>;
 
+  let sceneManagerService: SceneManagerService;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CanvasComponent],
@@ -30,6 +32,9 @@ describe('CanvasComponent', () => {
         AudioManagerService,
       ],
     }).compileComponents();
+
+    sceneManagerService = TestBed.inject(SceneManagerService);
+    spyOn<any>(sceneManagerService, 'animate');
   });
 
   beforeEach(() => {
