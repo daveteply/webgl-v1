@@ -13,6 +13,7 @@ import { MaterialManagerService } from './material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';
+import { StarField } from '../models/star-field/star-field';
 
 @Injectable()
 export class ObjectManagerService {
@@ -28,6 +29,8 @@ export class ObjectManagerService {
   private _scene!: Scene;
   private _perspectiveCamera!: PerspectiveCamera;
 
+  private _starField: StarField;
+
   // events
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
 
@@ -40,6 +43,8 @@ export class ObjectManagerService {
     this._stack = new Group();
     this._stack.name = 'gameWheelStack';
     this.initCoords();
+
+    this._starField = new StarField();
   }
 
   get Axle(): GameWheel[] {
@@ -53,6 +58,7 @@ export class ObjectManagerService {
   public SetScene(scene: Scene): void {
     this._scene = scene;
     this._scene.add(this._stack);
+    this._scene.add(this._starField);
   }
 
   public InitShapes(): void {
@@ -104,6 +110,14 @@ export class ObjectManagerService {
       this._perspectiveCamera,
       false
     );
+  }
+
+  public InitStarField(): void {
+    this._starField.InitParticles();
+  }
+
+  public UpdateStarField(): void {
+    this._starField.UpdateParticles();
   }
 
   private assignIterationValues(): void {

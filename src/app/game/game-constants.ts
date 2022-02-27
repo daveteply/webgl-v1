@@ -24,6 +24,7 @@ export const QUARTER_CIRCLE_RADIANS = MathUtils.degToRad(
 
 // math related constants
 export const TWO_PI = 2 * Math.PI;
+export const HALF_PI = Math.PI / 2;
 export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 
 // game rules

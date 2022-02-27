@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import {
+  // AxesHelper,
   Color,
   PerspectiveCamera,
   PointLight,
@@ -58,10 +59,8 @@ export class SceneManagerService {
 
     if (!this._camera) {
       this._camera = new PerspectiveCamera(45, aspectRatio, 1, 75);
+      this._camera.position.z = 5;
       this.objectManager.SetCamera(this._camera);
-
-      // face camera "up"; will be animated to face "forward"
-      this._camera.rotation.x = Math.PI / 2;
 
       // const helper = new CameraHelper(this._camera);
       // this._scene.add(helper);
@@ -81,6 +80,9 @@ export class SceneManagerService {
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
     }
+
+    // TODO:
+    //renderer.setPixelRatio( window.devicePixelRatio );
 
     // start rendering frames
     this.animate();
@@ -102,6 +104,7 @@ export class SceneManagerService {
   private animate(): void {
     this.ngZone.runOutsideAngular(() => {
       TWEEN.update();
+      this.objectManager.UpdateStarField();
       this._renderer?.render(this._scene, this._camera);
     });
 

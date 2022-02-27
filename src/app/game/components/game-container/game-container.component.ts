@@ -41,6 +41,7 @@ export class GameContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.sceneManager.InitScene();
+    this.objectManager.InitStarField();
 
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
