@@ -41,7 +41,6 @@ export class StarField extends Object3D {
         depthTest: true,
         depthWrite: false,
         transparent: true,
-        color: 0x00ff00,
       });
 
       this._points = new Points(this._geometry, this._material);
@@ -60,6 +59,15 @@ export class StarField extends Object3D {
   }
 
   public UpdateParticles(): void {
+    // update position
+    this._particles.forEach((p) => {
+      p.position.z += 0.01;
+      if (p.position.z >= 1.0) {
+        p.position.z = -10;
+      }
+    });
+
+    // update buffer geometry
     const positions = this._particles.flatMap((p) => [
       p.position.x,
       p.position.y,
