@@ -1,7 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { MathUtils, PerspectiveCamera } from 'three';
-import { MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
+import {
+  HALF_PI,
+  MINIMUM_MATCH_COUNT,
+  WHEEL_START_POSITION,
+} from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
@@ -64,8 +68,8 @@ export class EffectsManagerService {
     }
 
     // animate camera
-    const delta = { z: start ? 0.0 : 5.0, rotX: start ? Math.PI / 2 : 0 };
-    const target = { z: start ? 5.0 : 0.0, rotX: start ? 0.0 : -Math.PI / 2 };
+    const delta = start ? { z: 0.0, rotX: HALF_PI } : { z: 5.0, rotX: 0 };
+    const target = start ? { z: 5.0, rotX: 0.0 } : { z: 0.0, rotX: -HALF_PI };
     this._levelChangeCameraTween = new Tween(delta)
       .to(target, start ? 1000 : 2000)
       .delay(start ? 2000 : 500)
