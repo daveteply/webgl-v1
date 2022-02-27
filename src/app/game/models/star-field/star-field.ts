@@ -47,11 +47,11 @@ export class StarField extends Object3D {
       this._points = new Points(this._geometry, this._material);
       this.add(this._points);
 
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 1000; i++) {
         this._particles.push({
           position: new Vector3(
             MathUtils.randFloat(-10.0, 10.0),
-            MathUtils.randFloat(-10.0, 10.0),
+            MathUtils.randFloat(-15.0, 15.0),
             MathUtils.randFloat(-10.0, 10.0)
           ),
         });

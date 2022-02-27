@@ -85,12 +85,6 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    // reset camera
-    if (this._perspectiveCamera) {
-      this._perspectiveCamera.position.z = 0;
-      this._perspectiveCamera.rotation.x = Math.PI / 2;
-    }
-
     // trigger intro animations
     this.effectsManager.AnimateLevelChangeAnimation(
       this._axle,

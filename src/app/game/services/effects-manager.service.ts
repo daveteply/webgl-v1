@@ -15,7 +15,8 @@ import { ScoringManagerService } from './scoring-manager.service';
 @Injectable()
 export class EffectsManagerService {
   private _selectionTweens: any[] = [];
-  private _levelChangeCameraTween: any;
+  private _levelChangeCameraTween1: any;
+  private _levelChangeCameraTween2: any;
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
@@ -31,20 +32,52 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     start: boolean
   ): void {
+    // stop currently running tween
+    if (this._levelChangeCameraTween1) {
+      this._levelChangeCameraTween1.stop();
+    }
+    if (this._levelChangeCameraTween2) {
+      this._levelChangeCameraTween2.stop();
+    }
+
     this.LevelChangeAnimation.next(true);
 
     let vTargets = [...verticalTargets];
     if (!start) {
-      vTargets = verticalTargets.map((t) => {
+      vTargets = verticalTargets.map(() => {
         return -WHEEL_START_POSITION;
       });
     }
+
+    // animate camera
+    const delta1 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
+    const target1 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
+    this._levelChangeCameraTween1 = new Tween(delta1)
+      .to(target1, start ? 750 : 3000)
+      .onUpdate(() => {
+        camera.rotation.x = delta1.rotX;
+        camera.position.z = delta1.z;
+      });
+
+    const delta2 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
+    const target2 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
+    this._levelChangeCameraTween2 = new Tween(delta2)
+      .to(target2, start ? 2000 : 2000)
+      .delay(1250)
+      .onUpdate(() => {
+        camera.rotation.x = delta2.rotX;
+        camera.position.z = delta2.z;
+      })
+      .onComplete(() => {
+        this.LevelChangeAnimation.next(false);
+        this.scoringManager.ResetTimer();
+      });
 
     // vertical movement tweens
     const introSpinDirection = MathUtils.randInt(1, 3);
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
-      delay += 100;
+      delay += 250;
       wheel.AnimateLevelStartTween(
         vTargets[inx],
         delay,
@@ -62,26 +95,8 @@ export class EffectsManagerService {
       }
     });
 
-    // stop currently running tween
-    if (this._levelChangeCameraTween) {
-      this._levelChangeCameraTween.stop();
-    }
-
-    // animate camera
-    const delta = start ? { z: 0.0, rotX: HALF_PI } : { z: 5.0, rotX: 0 };
-    const target = start ? { z: 5.0, rotX: 0.0 } : { z: 0.0, rotX: -HALF_PI };
-    this._levelChangeCameraTween = new Tween(delta)
-      .to(target, start ? 1000 : 2000)
-      .delay(start ? 2000 : 500)
-      .onUpdate(() => {
-        camera.rotation.x = delta.rotX;
-        camera.position.z = delta.z;
-      })
-      .onComplete(() => {
-        this.LevelChangeAnimation.next(false);
-        this.scoringManager.ResetTimer();
-      })
-      .start();
+    this._levelChangeCameraTween1.chain(this._levelChangeCameraTween2);
+    this._levelChangeCameraTween1.start();
   }
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {
