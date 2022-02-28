@@ -32,6 +32,10 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     start: boolean
   ): void {
+    if (!camera) {
+      return;
+    }
+
     // stop currently running tween
     if (this._levelChangeCameraTween1) {
       this._levelChangeCameraTween1.stop();
