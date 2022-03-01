@@ -59,17 +59,18 @@ export class ObjectManagerService {
     this._scene = scene;
     this._scene.add(this._stack);
     this._scene.add(this._starField);
+
+    // initiate font download
+    this.textManager.InitScene(this._scene);
   }
 
   public InitShapes(): void {
     // clear existing objects
+    console.log('dispose');
     this.dispose();
 
     // select colors for the current level
     const materials = this.materialManager.InitMaterials();
-
-    // initiate font download
-    this.textManager.InitScene(this._scene);
 
     // create all the objects
     this._verticalTargets.forEach(() => {
