@@ -117,14 +117,15 @@ export class SplashText extends Object3D {
   }
 
   private initOutroTween(): void {
-    const delta = { o: 1.0, z: 0.0 };
-    const target = { o: 0.0, z: 2.0 };
+    const delta = { o: 1.0, z: 0.0, y: this._targetY };
+    const target = { o: 0.0, z: 5.0, y: 2.0 };
     this._outroTween = new Tween(delta)
-      .to(target, 500)
+      .to(target, 1000)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {
         this._material.opacity = delta.o;
         this._mesh.position.z = delta.z;
+        this._mesh.position.y = delta.y;
       });
   }
 }
