@@ -5,13 +5,13 @@ import {
   Object3D,
   Points,
   PointsMaterial,
-  Texture,
   TextureLoader,
   Vector3,
 } from 'three';
 
 export interface Particle {
   position: Vector3;
+  velocity: number;
 }
 
 export class StarField extends Object3D {
@@ -53,6 +53,7 @@ export class StarField extends Object3D {
             MathUtils.randFloat(-15.0, 15.0),
             MathUtils.randFloat(-10.0, 10.0)
           ),
+          velocity: MathUtils.randFloat(0.005, 0.03),
         });
       }
     });
@@ -61,7 +62,7 @@ export class StarField extends Object3D {
   public UpdateParticles(): void {
     // update position
     this._particles.forEach((p) => {
-      p.position.z += 0.01;
+      p.position.z += p.velocity;
       if (p.position.z >= 1.0) {
         p.position.z = -10;
       }
