@@ -36,6 +36,9 @@ export class EffectsManagerService {
       return;
     }
 
+    // lock board (interact manager)
+    this.LevelChangeAnimation.next(true);
+
     // stop currently running tween
     if (this._levelChangeCameraTween1) {
       this._levelChangeCameraTween1.stop();
@@ -43,8 +46,6 @@ export class EffectsManagerService {
     if (this._levelChangeCameraTween2) {
       this._levelChangeCameraTween2.stop();
     }
-
-    this.LevelChangeAnimation.next(true);
 
     let vTargets = [...verticalTargets];
     if (!start) {
@@ -73,6 +74,7 @@ export class EffectsManagerService {
         camera.position.z = delta2.z;
       })
       .onComplete(() => {
+        // unlock board (interact manager)
         this.LevelChangeAnimation.next(false);
         this.scoringManager.ResetTimer();
       });

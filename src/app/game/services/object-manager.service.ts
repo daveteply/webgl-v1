@@ -66,7 +66,6 @@ export class ObjectManagerService {
 
   public InitShapes(): void {
     // clear existing objects
-    console.log('dispose');
     this.dispose();
 
     // select colors for the current level
