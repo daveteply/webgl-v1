@@ -30,7 +30,7 @@ export class StarField extends Object3D {
   public InitParticles(): void {
     // texture
     const loader = new TextureLoader();
-    loader.load('assets/particle.png', (sprite) => {
+    loader.load('assets/particle.webp', (sprite) => {
       sprite.name = 'sprite';
       sprite.center.set(0.5, 0.5);
 
