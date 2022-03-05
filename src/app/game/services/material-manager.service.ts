@@ -5,6 +5,7 @@ import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-
 import { TextureManagerService } from './texture/texture-manager.service';
 import { LevelMaterialType } from '../models/level-material-type';
 import 'node_modules/color-scheme/lib/color-scheme.js';
+import * as shuffleArray from 'shuffle-array';
 
 declare var ColorScheme: any;
 
@@ -82,7 +83,8 @@ export class MaterialManagerService {
       .scheme(scheme)
       .variation('hard');
     const colors = colorScheme.colors() as [];
+    const shuffledColors = shuffleArray(colors);
 
-    return colors.map((c) => `#${c}`).slice(0, PLAYABLE_PIECE_COUNT);
+    return shuffledColors.map((c) => `#${c}`).slice(0, PLAYABLE_PIECE_COUNT);
   }
 }
