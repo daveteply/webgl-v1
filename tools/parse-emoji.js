@@ -13,15 +13,18 @@ const parseLine = (line) => {
   listArray.forEach((l) => {
     hexArray.push(Number("0x" + l));
   });
-  // let versionDesc = lineSegments[1].substr(lineSegments[1].indexOf(" E")).trim();
-  // const spaceIndex = versionDesc.indexOf(" ");
+  let versionDesc = lineSegments[1]
+    .substr(lineSegments[1].indexOf(" E"))
+    .trim();
+  const spaceIndex = versionDesc.indexOf(" ");
   return {
-    list: hexArray,
-    // version: versionDesc.substr(0, spaceIndex),
-    // desc: versionDesc.substr(spaceIndex + 1),
+    sequence: hexArray,
+    version: versionDesc.substr(0, spaceIndex),
+    desc: versionDesc.substr(spaceIndex + 1),
   };
 };
 
+// new file header
 const targetLines = [];
 targetLines.push("// - Generated file, do not modify -");
 targetLines.push("// Original data: https://unicode.org");
@@ -31,9 +34,17 @@ targetLines.push("");
 const groupStartId = "# group: ";
 const subGroupStartId = "# subgroup: ";
 const qualifedId = "; fully-qualified";
+const skipList = [
+  " spade suit",
+  " heart suit",
+  " diamond suit",
+  " club suit",
+  "flag:",
+  "E14.",
+];
 
 // start first group
-targetLines.push("export const EmojiData = [");
+targetLines.push("export const EmojiData = ");
 
 const emojiData = [];
 
@@ -55,15 +66,14 @@ sourceContents.split(/\r?\n/).forEach((line) => {
     subGroupInx = emojiData[groupInx].subGroup.length - 1;
     emojiData[groupInx].subGroup[subGroupInx].codes = [];
   } else if (line.indexOf(qualifedId) > -1) {
-    // line
-    emojiData[groupInx].subGroup[subGroupInx].codes.push(parseLine(line));
+    // skips
+    if (skipList.every((s) => line.indexOf(s) === -1)) {
+      emojiData[groupInx].subGroup[subGroupInx].codes.push(parseLine(line));
+    }
   }
 });
 
 targetLines.push(JSON.stringify(emojiData));
-
-// finish groups
-targetLines.push("];\r\n");
 
 fs.writeFile(targetFile, targetLines.join("\r\n"), (err) => {
   if (err) {
