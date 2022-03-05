@@ -140,7 +140,6 @@ export class TextureManagerService {
     canvas.width = canvas.height = scale;
 
     this._emojiList = this.randomEmojiCodeList();
-    console.log(this._emojiList);
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
