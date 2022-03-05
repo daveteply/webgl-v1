@@ -39,6 +39,13 @@ const skipList = [
   " heart suit",
   " diamond suit",
   " club suit",
+  " crown",
+  " pregnant man",
+  " troll",
+  " identification",
+  " bubbles",
+  " crutch",
+  " x-ray",
   "flag:",
   "E14.",
 ];
@@ -46,7 +53,7 @@ const skipList = [
 // start first group
 targetLines.push("export const EmojiData = ");
 
-const emojiData = [];
+let emojiData = [];
 
 let groupInx = 0;
 let subGroupInx = 0;
@@ -73,8 +80,19 @@ sourceContents.split(/\r?\n/).forEach((line) => {
   }
 });
 
+// there arne't a lot of flags so space them into other groups
+const peopleGroup = emojiData.find((e) => e.id === "People & Body");
+const familyGroup = peopleGroup.subGroup.find((s) => s.id === "family");
+const flagGroup = emojiData.find((e) => e.id === "Flags");
+const flagSubGroup = flagGroup.subGroup.find((f) => f.id === "flag");
+flagSubGroup.codes.forEach((flag) => familyGroup.codes.push(flag));
+
+emojiData = emojiData.filter((e) => e.id !== "Flags");
+
+// add data to array
 targetLines.push(JSON.stringify(emojiData));
 
+// write to disk
 fs.writeFile(targetFile, targetLines.join("\r\n"), (err) => {
   if (err) {
     console.error(err);

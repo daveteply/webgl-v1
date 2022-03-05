@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
+import * as shuffleArray from 'shuffle-array';
 import {
   LoadingManager,
   MathUtils,
@@ -9,11 +10,14 @@ import {
 } from 'three';
 import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
-import { BumpMaterials, BumpSymbols, EmojiCodes } from './texture-info';
+import { EmojiData } from './emoji-data';
+import { BumpMaterials, BumpSymbols } from './texture-info';
 
-interface EmojiData {
-  dataUrl: string;
-  emojiCode: string;
+interface EmojiSequence {
+  desc: string;
+  sequence: number[];
+  ver: string;
+  dataUrl?: string;
 }
 
 @Injectable()
@@ -29,6 +33,11 @@ export class TextureManagerService {
   private _levelType!: LevelMaterialType;
   get LevelType(): LevelMaterialType {
     return this._levelType;
+  }
+
+  private _emojiList: EmojiSequence[] = [];
+  get EmojiList(): EmojiSequence[] {
+    return this._emojiList;
   }
 
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
@@ -74,10 +83,10 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.Emoji:
-        const emojiData = this.initEmojiData();
-        emojiData.forEach((data) => {
-          this._textureLoader.load(data.dataUrl, (texture) => {
-            texture.name = data.emojiCode;
+        this.initEmojiData();
+        this._emojiList.forEach((data) => {
+          this._textureLoader.load(data?.dataUrl || '', (texture) => {
+            texture.name = data.desc;
             texture.center = new Vector2(0.5, 0.5);
             this._textures.push(texture);
           });
@@ -125,30 +134,42 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiData(): EmojiData[] {
+  private initEmojiData() {
     const canvas = this.document.createElement('canvas');
     const scale = 80;
     canvas.width = canvas.height = scale;
 
-    const data: EmojiData[] = [];
+    this._emojiList = this.randomEmojiCodeList();
+    console.log(this._emojiList);
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      const emojiSet = EmojiCodes[MathUtils.randInt(0, EmojiCodes.length - 1)];
       for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-        const emojiCode = emojiSet[i];
-
         ctx.clearRect(0, 0, scale, scale);
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, scale, scale);
 
         ctx.font = scale - 10 + 'px Arial';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.fillText(String.fromCodePoint(emojiCode), scale / 2, scale / 2 + 8);
-        data.push({ dataUrl: canvas.toDataURL(), emojiCode: emojiCode + '' });
+
+        const emoji = this._emojiList[i];
+
+        const emojiCode = String.fromCodePoint(...emoji.sequence);
+        ctx.fillText(emojiCode, scale / 2, scale / 2 + 8);
+        emoji.dataUrl = canvas.toDataURL();
       }
     }
-    return data;
+  }
+
+  private randomEmojiCodeList(): EmojiSequence[] {
+    const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
+    const shuffled = shuffleArray(emojiGroup.subGroup);
+    const emojiSequences = shuffled.slice(0, 3).flatMap((s) => s.codes);
+    const shuffledSequences = shuffleArray(emojiSequences);
+
+    return shuffledSequences.map((s) => {
+      return { desc: s.desc, sequence: s.sequence, ver: s.version };
+    });
   }
 }
