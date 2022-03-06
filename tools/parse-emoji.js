@@ -87,7 +87,7 @@ const flagGroup = emojiData.find((e) => e.id === "Flags");
 const flagSubGroup = flagGroup.subGroup.find((f) => f.id === "flag");
 flagSubGroup.codes.forEach((flag) => familyGroup.codes.push(flag));
 
-emojiData = emojiData.filter((e) => e.id !== "Flags");
+emojiData = emojiData.filter((e) => e.id !== "Flags" && e.id !== "Component");
 
 // add data to array
 targetLines.push(JSON.stringify(emojiData));
