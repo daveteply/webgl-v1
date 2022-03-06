@@ -1,6 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import {
-  // AxesHelper,
+  CameraHelper,
+  AxesHelper,
   Color,
   PerspectiveCamera,
   PointLight,
@@ -9,7 +11,7 @@ import {
 } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -19,7 +21,7 @@ export class SceneManagerService {
   private _height: number = 0;
 
   private _canvas!: HTMLCanvasElement;
-  // private _controls!: OrbitControls;
+  private _controls!: OrbitControls;
 
   private _renderer!: WebGLRenderer;
   private _scene!: Scene;
@@ -42,8 +44,10 @@ export class SceneManagerService {
       this.objectManager.SetScene(this._scene);
 
       // axes
-      // const axesHelper = new AxesHelper(5);
-      // this._scene.add(axesHelper);
+      if (environment.includeHelpers) {
+        const axesHelper = new AxesHelper(5);
+        this._scene.add(axesHelper);
+      }
 
       // lights
       this._pointLight = new PointLight(0xffffff, 1);
@@ -62,13 +66,17 @@ export class SceneManagerService {
       this._camera.position.z = 5;
       this.objectManager.SetCamera(this._camera);
 
-      // const helper = new CameraHelper(this._camera);
-      // this._scene.add(helper);
+      if (environment.includeHelpers) {
+        const helper = new CameraHelper(this._camera);
+        this._scene.add(helper);
+      }
 
       // orbit controls
-      // this._controls = new OrbitControls(this._camera, this._canvas);
-      // this._controls.target.set(0, 0, 0);
-      // this._controls.update();
+      if (environment.includeHelpers) {
+        this._controls = new OrbitControls(this._camera, this._canvas);
+        this._controls.target.set(0, 0, 0);
+        this._controls.update();
+      }
 
       // update interaction manager
       this.interactionManager.Camera = this._camera;

@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import * as shuffleArray from 'shuffle-array';
+import { environment } from 'src/environments/environment';
 import {
   LoadingManager,
   MathUtils,
@@ -163,8 +164,15 @@ export class TextureManagerService {
 
   private randomEmojiCodeList(): EmojiSequence[] {
     const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
-    const shuffled = shuffleArray(emojiGroup.subGroup);
-    const emojiSequences = shuffled.slice(0, 3).flatMap((s) => s.codes);
+
+    if (!environment.production) {
+      console.info('emoji group: ', emojiGroup.id);
+    }
+
+    const shuffledSubGroups = shuffleArray(emojiGroup.subGroup);
+    const emojiSequences = shuffledSubGroups
+      .slice(0, 3)
+      .flatMap((s) => s.codes);
     const shuffledSequences = shuffleArray(emojiSequences);
 
     return shuffledSequences.map((s) => {

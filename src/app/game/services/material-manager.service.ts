@@ -6,6 +6,7 @@ import { TextureManagerService } from './texture/texture-manager.service';
 import { LevelMaterialType } from '../models/level-material-type';
 import 'node_modules/color-scheme/lib/color-scheme.js';
 import * as shuffleArray from 'shuffle-array';
+import { environment } from 'src/environments/environment';
 
 declare var ColorScheme: any;
 
@@ -74,7 +75,7 @@ export class MaterialManagerService {
     const colorScheme = new ColorScheme();
 
     // get random scheme
-    const schemes = ['contrast', 'triade', 'tetrade', 'analogic'];
+    const schemes = ['contrast', 'triade', 'tetrade'];
     const scheme = schemes[MathUtils.randInt(0, schemes.length - 1)];
 
     // generate scheme
@@ -83,8 +84,20 @@ export class MaterialManagerService {
       .scheme(scheme)
       .variation('hard');
     const colors = colorScheme.colors() as [];
-    const shuffledColors = shuffleArray(colors);
 
-    return shuffledColors.map((c) => `#${c}`).slice(0, PLAYABLE_PIECE_COUNT);
+    if (!environment.production) {
+      console.info('color scheme:', scheme);
+      colors.sort().forEach((c) => console.info(`%c ${c}`, `color: #${c}`));
+    }
+
+    const shuffledColors = shuffleArray(colors)
+      .map((c) => `#${c}`)
+      .slice(0, PLAYABLE_PIECE_COUNT);
+
+    if (!environment.production) {
+      shuffledColors.forEach((c) => console.info(`%c ${c}`, `color: ${c}`));
+    }
+
+    return shuffledColors;
   }
 }
