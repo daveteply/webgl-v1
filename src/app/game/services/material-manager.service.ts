@@ -23,7 +23,7 @@ export class MaterialManagerService {
 
     let selectedColors: string[] = [];
 
-    // select style for current level
+    // selected style for current level
     switch (this.textureManager.LevelType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:

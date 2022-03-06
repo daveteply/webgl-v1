@@ -11,6 +11,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 import { GameOverData } from '../dialogs/game-over/game-over-data';
+import { environment } from 'src/environments/environment';
+import { LevelMaterialType } from '../../models/level-material-type';
 
 @Component({
   selector: 'wgl-game-container',
@@ -46,10 +48,10 @@ export class GameContainerComponent implements OnInit {
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
-      this.textureManager.InitLevelTextures(Math.floor(Math.random() * 3) + 1);
+      this.initTextures();
     });
 
-    // texture load complete
+    // texture load started
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
         this._dialogGameOverRef = this.dialog.open(GameOverComponent, {
@@ -92,10 +94,18 @@ export class GameContainerComponent implements OnInit {
     this.GridTemplateRows = this.layoutManager.GridTemplateRows;
 
     // start loading next level texture(s)
-    this.textureManager.InitLevelTextures(Math.floor(Math.random() * 3) + 1);
+    this.initTextures();
 
     // start loading fonts
     this.textManager.InitFonts();
+  }
+
+  private initTextures(): void {
+    const levelType = Math.floor(Math.random() * 3) + 1;
+    this.textureManager.InitLevelTextures(levelType);
+    if (!environment.production) {
+      console.info('Level Type: ', LevelMaterialType[levelType]);
+    }
   }
 
   private dialogConfig(restartLevel: boolean = false): any {
