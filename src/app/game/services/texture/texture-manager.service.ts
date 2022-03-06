@@ -36,11 +36,6 @@ export class TextureManagerService {
     return this._levelType;
   }
 
-  private _emojiList: EmojiSequence[] = [];
-  get EmojiList(): EmojiSequence[] {
-    return this._emojiList;
-  }
-
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadingStarted: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
@@ -84,8 +79,8 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.Emoji:
-        this.initEmojiData();
-        this._emojiList.forEach((data) => {
+        const emojiList = this.initEmojiData();
+        emojiList.forEach((data) => {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             texture.name = data.desc;
             texture.center = new Vector2(0.5, 0.5);
@@ -119,28 +114,28 @@ export class TextureManagerService {
 
   private loadBumpMaterials(): void {
     // select a bump map
-    const randMaterialMap =
+    const randBumpMaterialMap =
       BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
     // check if loaded
-    if (randMaterialMap.texture) {
-      this._textures.push(randMaterialMap.texture);
+    if (randBumpMaterialMap.texture) {
+      this._textures.push(randBumpMaterialMap.texture);
       this.LevelTexturesLoaded.next();
     } else {
-      this._textureLoader.load(randMaterialMap.src, (data) => {
+      this._textureLoader.load(randBumpMaterialMap.src, (data) => {
         data.center = new Vector2(0.5, 0.5);
-        data.name = randMaterialMap.src;
-        randMaterialMap.texture = data;
-        this._textures.push(randMaterialMap.texture);
+        data.name = randBumpMaterialMap.src;
+        randBumpMaterialMap.texture = data;
+        this._textures.push(randBumpMaterialMap.texture);
       });
     }
   }
 
-  private initEmojiData() {
+  private initEmojiData(): EmojiSequence[] {
     const canvas = this.document.createElement('canvas');
     const scale = 80;
     canvas.width = canvas.height = scale;
 
-    this._emojiList = this.randomEmojiCodeList();
+    const emojiSequence = this.randomEmojiCodeList();
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
@@ -153,13 +148,15 @@ export class TextureManagerService {
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
 
-        const emoji = this._emojiList[i];
+        const emoji = emojiSequence[i];
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
         ctx.fillText(emojiCode, scale / 2, scale / 2 + 8);
         emoji.dataUrl = canvas.toDataURL();
       }
     }
+
+    return emojiSequence;
   }
 
   private randomEmojiCodeList(): EmojiSequence[] {
@@ -170,6 +167,7 @@ export class TextureManagerService {
     }
 
     const shuffledSubGroups = shuffleArray(emojiGroup.subGroup);
+    // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
     const emojiSequences = shuffledSubGroups
       .slice(0, 3)
       .flatMap((s) => s.codes);
