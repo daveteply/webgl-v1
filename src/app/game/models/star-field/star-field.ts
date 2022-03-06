@@ -21,10 +21,13 @@ export class StarField extends Object3D {
   private _points!: Points;
   private _particles: Particle[] = [];
 
+  private _zLimit: number;
+
   constructor() {
     super();
     this._geometry = new BufferGeometry();
     this._geometry.setAttribute('position', new Float32BufferAttribute([], 3));
+    this._zLimit = 1.0;
   }
 
   public InitParticles(): void {
@@ -46,12 +49,12 @@ export class StarField extends Object3D {
       this._points = new Points(this._geometry, this._material);
       this.add(this._points);
 
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 900; i++) {
         this._particles.push({
           position: new Vector3(
             MathUtils.randFloat(-10.0, 10.0),
             MathUtils.randFloat(-15.0, 15.0),
-            MathUtils.randFloat(-10.0, 10.0)
+            MathUtils.randFloat(-8.0, 8.0)
           ),
           velocity: MathUtils.randFloat(0.005, 0.03),
         });
@@ -63,8 +66,8 @@ export class StarField extends Object3D {
     // update position
     this._particles.forEach((p) => {
       p.position.z += p.velocity;
-      if (p.position.z >= 1.0) {
-        p.position.z = -10;
+      if (p.position.z >= this._zLimit) {
+        p.position.z = -8;
       }
     });
 
