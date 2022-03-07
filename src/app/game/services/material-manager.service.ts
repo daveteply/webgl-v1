@@ -86,8 +86,8 @@ export class MaterialManagerService {
     const colors = colorScheme.colors() as [];
 
     if (!environment.production) {
-      console.info('color scheme:', scheme);
-      colors.sort().forEach((c) => console.info(`%c ${c}`, `color: #${c}`));
+      console.info('  color scheme:', scheme);
+      colors.sort().forEach((c) => console.info(`    %c ${c}`, `color: #${c}`));
     }
 
     const shuffledColors = shuffleArray(colors)
@@ -95,7 +95,10 @@ export class MaterialManagerService {
       .slice(0, PLAYABLE_PIECE_COUNT);
 
     if (!environment.production) {
-      shuffledColors.forEach((c) => console.info(`%c ${c}`, `color: ${c}`));
+      console.info('    game piece colors:', scheme);
+      shuffledColors.forEach((c) =>
+        console.info(`      %c ${c}`, `color: ${c}`)
+      );
     }
 
     return shuffledColors;
