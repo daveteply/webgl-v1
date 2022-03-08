@@ -84,13 +84,16 @@ export class MaterialManagerService {
       .scheme(scheme)
       .variation('hard');
     const colors = colorScheme.colors() as [];
+    const sortedColors = colors.sort();
 
     if (!environment.production) {
       console.info('  color scheme:', scheme);
-      colors.sort().forEach((c) => console.info(`    %c ${c}`, `color: #${c}`));
+      sortedColors
+        .sort()
+        .forEach((c) => console.info(`    %c ${c}`, `color: #${c}`));
     }
 
-    const shuffledColors = shuffleArray(colors)
+    const shuffledColors = shuffleArray(sortedColors)
       .map((c) => `#${c}`)
       .slice(0, PLAYABLE_PIECE_COUNT);
 
