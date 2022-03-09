@@ -3,7 +3,7 @@
   <p>You have exhausted your supply of moves!</p>
   <mat-progress-bar
     class="progress"
-    [class.fade-out]="!texturesStillLoading"
+    [class.fade-out]="!levelLoading"
     [value]="progress"
   ></mat-progress-bar>
 </mat-dialog-content>
@@ -12,7 +12,7 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="texturesStillLoading"
+    [disabled]="levelLoading"
     (click)="onCloseRestartLevel()"
   >
     Start Again at Level {{ data.level }}
@@ -20,7 +20,7 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="texturesStillLoading"
+    [disabled]="levelLoading"
     (click)="onCloseGameOver()"
   >
     Start Over
