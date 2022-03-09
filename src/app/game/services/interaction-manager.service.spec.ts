@@ -4,7 +4,7 @@ import { EffectsManagerService } from './effects-manager.service';
 import { GameEngineService } from './game-engine.service';
 
 import { InteractionManagerService } from './interaction-manager.service';
-import { MaterialManagerService } from './material-manager.service';
+import { MaterialManagerService } from './material/material-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
 import { TextureManagerService } from './texture/texture-manager.service';

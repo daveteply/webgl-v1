@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MathUtils, Texture } from 'three';
-import { PLAYABLE_PIECE_COUNT } from '../game-constants';
-import { GamePieceMaterialData } from '../models/game-piece/game-piece-material-data';
-import { TextureManagerService } from './texture/texture-manager.service';
-import { LevelMaterialType } from '../models/level-material-type';
-import 'node_modules/color-scheme/lib/color-scheme.js';
 import * as shuffleArray from 'shuffle-array';
 import { environment } from 'src/environments/environment';
-
-declare var ColorScheme: any;
+import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
+import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
+import { LevelMaterialType } from '../../models/level-material-type';
+import { TextureManagerService } from '../texture/texture-manager.service';
+import { ColorSchemeData } from './color-info';
 
 @Injectable()
 export class MaterialManagerService {
@@ -71,31 +69,21 @@ export class MaterialManagerService {
   }
 
   private initColorScheme(): string[] {
-    // https://github.com/c0bra/color-scheme-js
-    const colorScheme = new ColorScheme();
-
-    // get random scheme
-    const schemes = ['contrast', 'triade', 'tetrade'];
-    const scheme = schemes[MathUtils.randInt(0, schemes.length - 1)];
-
-    // generate scheme
-    colorScheme
-      .from_hue(MathUtils.randInt(0, 359))
-      .scheme(scheme)
-      .variation('hard');
-    const colors = colorScheme.colors() as [];
-    const sortedColors = colors.sort();
+    const scheme =
+      ColorSchemeData[MathUtils.randInt(0, ColorSchemeData.length - 1)];
+    const sortedColors = scheme.colors.sort();
 
     if (!environment.production) {
-      console.info('  color scheme:', scheme);
+      console.info('  color scheme:', scheme.id);
       sortedColors
         .sort()
-        .forEach((c) => console.info(`    %c ${c}`, `color: #${c}`));
+        .forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
     }
 
-    const shuffledColors = shuffleArray(sortedColors)
-      .map((c) => `#${c}`)
-      .slice(0, PLAYABLE_PIECE_COUNT);
+    const shuffledColors = shuffleArray(sortedColors).slice(
+      0,
+      PLAYABLE_PIECE_COUNT
+    );
 
     if (!environment.production) {
       console.info('    game piece colors:', scheme);

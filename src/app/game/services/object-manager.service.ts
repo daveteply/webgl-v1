@@ -9,7 +9,7 @@ import {
   GRID_VERTICAL_OFFSET,
   WHEEL_START_POSITION,
 } from '../game-constants';
-import { MaterialManagerService } from './material-manager.service';
+import { MaterialManagerService } from './material/material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';

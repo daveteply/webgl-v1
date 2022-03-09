@@ -5,7 +5,7 @@ import { GameWheel } from '../models/game-wheel';
 
 import { GameEngineService } from './game-engine.service';
 import { ObjectManagerService } from './object-manager.service';
-import { MaterialManagerService } from './material-manager.service';
+import { MaterialManagerService } from './material/material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { TextureManagerService } from './texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
