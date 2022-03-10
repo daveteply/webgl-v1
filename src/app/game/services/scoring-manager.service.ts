@@ -17,7 +17,7 @@ export class ScoringManagerService {
     this.initLevelPieceTarget();
   }
 
-  private _level: number = 0;
+  private _level: number = 1;
   get Level(): number {
     return this._level;
   }

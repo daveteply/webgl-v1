@@ -51,17 +51,26 @@ export class GameContainerComponent implements OnInit {
       this.initTextures();
     });
 
-    // texture load started (show dialog)
+    // texture load started
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
-        this._dialogGameOverRef = this.dialog.open(
-          GameOverComponent,
-          this.dialogConfig()
-        );
+        this._dialogGameOverRef = this.dialog.open(GameOverComponent, {
+          maxWidth: '25em',
+          disableClose: true,
+          data: {
+            level: this.scoringManager.Level,
+          },
+        });
         this._dialogGameOverRef
           .afterClosed()
           .subscribe((data: GameOverData) => {
-            this.handleLevelDialogCLosed(true, data.startOver);
+            if (data.startOver) {
+              this.scoringManager.RestartGame();
+            } else {
+              // reset stats will take care of move count based on level
+              this.scoringManager.ResetStats(data.restartLevel);
+            }
+            this.objectManager.InitShapes();
           });
       } else {
         this._dialogRef = this.dialog.open(
@@ -69,15 +78,9 @@ export class GameContainerComponent implements OnInit {
           this.dialogConfig()
         );
         this._dialogRef.afterClosed().subscribe(() => {
-          this.handleLevelDialogCLosed(false, false);
+          this.handleLevelDialogCLosed();
         });
       }
-    });
-
-    // continue to load objects for next level
-    this.textureManager.LevelTexturesLoaded.subscribe(() => {
-      // will fire event upon completion to signal dialog to enable CTA
-      this.objectManager.InitShapes();
     });
 
     // resize event
@@ -105,34 +108,26 @@ export class GameContainerComponent implements OnInit {
     }
   }
 
-  private dialogConfig(): any {
+  private dialogConfig(restartLevel: boolean = false): any {
     return {
       maxWidth: '25em',
       disableClose: true,
       data: {
         isWelcome: this._showWelcome,
         stats: this.scoringManager.LevelStats,
+        restartLevel: restartLevel,
       },
     };
   }
 
-  private handleLevelDialogCLosed(gameOver: boolean, startOver: boolean): void {
+  private handleLevelDialogCLosed(): void {
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-    }
-
-    if (gameOver) {
-      if (startOver) {
-        this.scoringManager.RestartGame();
-      } else {
-        // reset stats will take care of move count based on level
-        this.scoringManager.ResetStats(true);
-      }
+      this.objectManager.InitShapes();
     } else {
       this.scoringManager.NextLevel();
+      this.objectManager.InitShapes();
     }
-
-    this.objectManager.StartLevel();
   }
 }

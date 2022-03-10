@@ -33,7 +33,6 @@ export class ObjectManagerService {
 
   // events
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
-  public LevelInitCompleted: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,
@@ -86,14 +85,6 @@ export class ObjectManagerService {
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
 
-    this.LevelInitCompleted.next();
-  }
-
-  public StartLevel(): void {
-    // switch audio
-    this.audioManager.StopLevelComplete();
-    this.audioManager.PlayLevelStart();
-
     // trigger intro animations
     this.effectsManager.AnimateLevelChangeAnimation(
       this._axle,
@@ -101,6 +92,9 @@ export class ObjectManagerService {
       this._perspectiveCamera,
       true
     );
+
+    this.audioManager.StopLevelComplete();
+    this.audioManager.PlayLevelStart();
   }
 
   public AnimateLevelComplete(): void {
