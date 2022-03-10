@@ -26,13 +26,11 @@ export class GameOverComponent {
   }
 
   onCloseGameOver(): void {
-    this.data.restartLevel = false;
     this.data.startOver = true;
     this.dialogRef.close(this.data);
   }
 
   onCloseRestartLevel(): void {
-    this.data.restartLevel = true;
     this.data.startOver = false;
     this.dialogRef.close(this.data);
   }

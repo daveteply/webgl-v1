@@ -68,7 +68,7 @@ export class GameContainerComponent implements OnInit {
               this.scoringManager.RestartGame();
             } else {
               // reset stats will take care of move count based on level
-              this.scoringManager.ResetStats(data.restartLevel);
+              this.scoringManager.ResetStats(!data.startOver);
             }
             this.objectManager.InitShapes();
           });
