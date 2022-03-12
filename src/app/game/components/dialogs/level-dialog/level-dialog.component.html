@@ -29,8 +29,7 @@
             Click or click-hold to make a match!
           </p>
           <p>
-            Match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or
-            side-to-side
+            Match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or side-to-side
           </p>
           <p>
             <mat-icon>sentiment_very_satisfied</mat-icon>
@@ -64,20 +63,11 @@
       </tr>
     </table>
   </ng-template>
-  <mat-progress-bar
-    class="progress"
-    [class.fade-out]="!texturesStillLoading"
-    [value]="progress"
-  ></mat-progress-bar>
+  <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-  <button
-    mat-raised-button
-    color="primary"
-    mat-dialog-close
-    [disabled]="texturesStillLoading"
-  >
+  <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
     <span *ngIf="data.isWelcome; else levelButtonContent">Play!</span>
     <ng-template #levelButtonContent>
       <span>Next Level, let's go!</span>

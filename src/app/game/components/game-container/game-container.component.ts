@@ -61,22 +61,17 @@ export class GameContainerComponent implements OnInit {
             level: this.scoringManager.Level,
           },
         });
-        this._dialogGameOverRef
-          .afterClosed()
-          .subscribe((data: GameOverData) => {
-            if (data.startOver) {
-              this.scoringManager.RestartGame();
-            } else {
-              // reset stats will take care of move count based on level
-              this.scoringManager.ResetStats(!data.startOver);
-            }
-            this.objectManager.InitShapes();
-          });
+        this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
+          if (data.startOver) {
+            this.scoringManager.RestartGame();
+          } else {
+            // reset stats will take care of move count based on level
+            this.scoringManager.ResetStats(!data.startOver);
+          }
+          this.objectManager.InitShapes();
+        });
       } else {
-        this._dialogRef = this.dialog.open(
-          LevelDialogComponent,
-          this.dialogConfig()
-        );
+        this._dialogRef = this.dialog.open(LevelDialogComponent, this.dialogConfig());
         this._dialogRef.afterClosed().subscribe(() => {
           this.handleLevelDialogCLosed();
         });

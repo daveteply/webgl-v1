@@ -6,12 +6,7 @@ export class GamePieceMaterial {
   private _bumpTexture!: Texture;
   private _material!: Material;
 
-  constructor(
-    matchKey: number,
-    texture?: Texture,
-    bumpTexture?: Texture,
-    color?: string
-  ) {
+  constructor(matchKey: number, texture?: Texture, bumpTexture?: Texture, color?: string) {
     this._matchKey = matchKey;
 
     if (bumpTexture && color) {

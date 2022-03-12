@@ -1,11 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { MathUtils, PerspectiveCamera } from 'three';
-import {
-  HALF_PI,
-  MINIMUM_MATCH_COUNT,
-  WHEEL_START_POSITION,
-} from '../game-constants';
+import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
@@ -21,10 +17,7 @@ export class EffectsManagerService {
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(
-    private audioManager: AudioManagerService,
-    private scoringManager: ScoringManagerService
-  ) {}
+  constructor(private audioManager: AudioManagerService, private scoringManager: ScoringManagerService) {}
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -57,12 +50,10 @@ export class EffectsManagerService {
     // animate camera
     const delta1 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
     const target1 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
-    this._levelChangeCameraTween1 = new Tween(delta1)
-      .to(target1, start ? 750 : 3000)
-      .onUpdate(() => {
-        camera.rotation.x = delta1.rotX;
-        camera.position.z = delta1.z;
-      });
+    this._levelChangeCameraTween1 = new Tween(delta1).to(target1, start ? 750 : 3000).onUpdate(() => {
+      camera.rotation.x = delta1.rotX;
+      camera.position.z = delta1.z;
+    });
 
     const delta2 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
     const target2 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
@@ -84,12 +75,7 @@ export class EffectsManagerService {
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
       delay += 250;
-      wheel.AnimateLevelStartTween(
-        vTargets[inx],
-        delay,
-        start,
-        introSpinDirection
-      );
+      wheel.AnimateLevelStartTween(vTargets[inx], delay, start, introSpinDirection);
     });
 
     // opacity of each game piece
@@ -133,9 +119,7 @@ export class EffectsManagerService {
       }
 
       // init tweens
-      pieces.forEach((p) =>
-        this._selectionTweens.push(p.InitSelectionTween(select))
-      );
+      pieces.forEach((p) => this._selectionTweens.push(p.InitSelectionTween(select)));
       // start the chained tween upon completion of the initial tween
       for (let i = 0; i < this._selectionTweens.length - 1; i++) {
         this._selectionTweens[i].chain(this._selectionTweens[i + 1]);
@@ -149,10 +133,7 @@ export class EffectsManagerService {
           if (isMinMatch) {
             this.scoringManager.UpdateLevelProgress();
           }
-          this.audioManager.PlayAudio(
-            select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL,
-            select ? true : false
-          );
+          this.audioManager.PlayAudio(select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL, select ? true : false);
         });
       });
 
@@ -175,14 +156,7 @@ export class EffectsManagerService {
     }
   }
 
-  public AnimateFlip(
-    gamePiece: GamePiece,
-    velocity: number,
-    directionUp: boolean
-  ): void {
-    const flipTween = gamePiece.InitFlipTween(
-      Math.floor(velocity),
-      directionUp
-    );
+  public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
+    const flipTween = gamePiece.InitFlipTween(Math.floor(velocity), directionUp);
   }
 }

@@ -14,10 +14,7 @@ export class LevelDialogComponent {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
-  constructor(
-    private textureManager: TextureManagerService,
-    @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
-  ) {
+  constructor(private textureManager: TextureManagerService, @Inject(MAT_DIALOG_DATA) public data: LevelDialogData) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
       this.texturesStillLoading = false;
     });

@@ -25,17 +25,11 @@ export class CanvasComponent implements AfterViewInit {
       this.interactionManager.InitInteractions(el);
     }
 
-    this.sceneManager.UpdateSize(
-      this.layoutManager.Width,
-      this.layoutManager.Height
-    );
+    this.sceneManager.UpdateSize(this.layoutManager.Width, this.layoutManager.Height);
     this.updateSize();
 
     this.layoutManager.OnResize.subscribe(() => {
-      this.sceneManager.UpdateSize(
-        this.layoutManager.Width,
-        this.layoutManager.Height
-      );
+      this.sceneManager.UpdateSize(this.layoutManager.Width, this.layoutManager.Height);
       this.updateSize();
     });
   }

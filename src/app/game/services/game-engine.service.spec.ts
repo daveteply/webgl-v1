@@ -135,10 +135,7 @@ describe('GameEngineService', () => {
 
       expect((mockAxle[0].children[0] as GamePiece).IsMatch).toBeTrue();
       expect((mockAxle[0].children[1] as GamePiece).IsMatch).toBeTrue();
-      expect(
-        (mockAxle[0].children[mockAxle[0].children.length - 1] as GamePiece)
-          .IsMatch
-      ).toBeTrue();
+      expect((mockAxle[0].children[mockAxle[0].children.length - 1] as GamePiece).IsMatch).toBeTrue();
     });
 
     it('should match 2 vertical', () => {

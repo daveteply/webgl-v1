@@ -15,11 +15,7 @@ export class GameWheel extends Object3D {
 
   private _levelChangeTween: any;
 
-  constructor(
-    y: number,
-    meshPoints: PiecePoints[],
-    materialData: GamePieceMaterialData[]
-  ) {
+  constructor(y: number, meshPoints: PiecePoints[], materialData: GamePieceMaterialData[]) {
     super();
     this.position.y = y;
 
@@ -67,12 +63,7 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public AnimateLevelStartTween(
-    targetY: number,
-    delay: number,
-    start: boolean,
-    spinDirection: number
-  ): void {
+  public AnimateLevelStartTween(targetY: number, delay: number, start: boolean, spinDirection: number): void {
     if (this._levelChangeTween) {
       this._levelChangeTween.stop();
     }
@@ -94,9 +85,7 @@ export class GameWheel extends Object3D {
 
     const delta = {
       y: this.position.y,
-      theta: start
-        ? MathUtils.randInt(introSpinRangeMin, introSpinRangeMax) * GRID_INC
-        : this._theta,
+      theta: start ? MathUtils.randInt(introSpinRangeMin, introSpinRangeMax) * GRID_INC : this._theta,
     };
     const target = {
       y: targetY,

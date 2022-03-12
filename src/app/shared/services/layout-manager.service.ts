@@ -38,17 +38,12 @@ export class LayoutManagerService {
   OnResize: EventEmitter<void> = new EventEmitter();
 
   constructor(@Inject(DOCUMENT) private document: Document) {
-    this.updateSize(
-      this.document.defaultView?.innerWidth || 0,
-      this.document.defaultView?.innerHeight || 0
-    );
+    this.updateSize(this.document.defaultView?.innerWidth || 0, this.document.defaultView?.innerHeight || 0);
 
-    this._resizeSubscription = this._resizeObservable.subscribe(
-      (resizeEvent) => {
-        const win = resizeEvent.target as Window;
-        this.updateSize(win.innerWidth, win.innerHeight);
-      }
-    );
+    this._resizeSubscription = this._resizeObservable.subscribe((resizeEvent) => {
+      const win = resizeEvent.target as Window;
+      this.updateSize(win.innerWidth, win.innerHeight);
+    });
   }
 
   OnDestroy(): void {
@@ -56,15 +51,12 @@ export class LayoutManagerService {
   }
 
   private updateSize(viewportWidth: number, viewportHeight: number): void {
-    this._targetHeight = Math.ceil(
-      (viewportHeight - LAYOUT_HEADER_OFFSET) * LAYOUT_CLIENT_HEIGHT_PERCENT
-    );
+    this._targetHeight = Math.ceil((viewportHeight - LAYOUT_HEADER_OFFSET) * LAYOUT_CLIENT_HEIGHT_PERCENT);
     this._targetWidth = Math.ceil(this._targetHeight * LAYOUT_ASPECT);
 
     // re-scale if device is very narrow
     if (this._targetWidth >= viewportWidth) {
-      this._targetHeight =
-        (viewportWidth * this._targetHeight) / this._targetWidth;
+      this._targetHeight = (viewportWidth * this._targetHeight) / this._targetWidth;
       this._targetWidth = viewportWidth;
     }
 

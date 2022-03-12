@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  LEVEL_ADDITIVE,
-  MINIMUM_MATCH_COUNT,
-  MINIMUM_SPEED_BONUS,
-} from '../game-constants';
+import { LEVEL_ADDITIVE, MINIMUM_MATCH_COUNT, MINIMUM_SPEED_BONUS } from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
@@ -73,8 +69,7 @@ export class ScoringManagerService {
 
   public UpdateLevelProgress(): void {
     this._levelStats.pieceCount++;
-    this._levelProgress =
-      (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
+    this._levelProgress = (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
   }
 
   public UpdateScore(pieceCount: number): void {
@@ -152,14 +147,11 @@ export class ScoringManagerService {
   }
 
   private longMatchBonus(pieceCount: number) {
-    const longMatchMovesEarned = Math.ceil(
-      MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1))
-    );
+    const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
     if (longMatchMovesEarned) {
       this._playerMoves += longMatchMovesEarned;
       this._levelStats.moveCountEarned += longMatchMovesEarned;
-      const longMatchBonus =
-        longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
+      const longMatchBonus = longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
       this._score += longMatchBonus;
       this._splashText.push('Long Match', `+${longMatchBonus} Points`);
       this._splashText.push(`+${longMatchMovesEarned} Moves`);
@@ -167,7 +159,6 @@ export class ScoringManagerService {
   }
 
   private initLevelPieceTarget(): void {
-    this._levelPieceTarget =
-      Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
+    this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
   }
 }

@@ -64,9 +64,7 @@ export class InteractionManagerService {
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
-    this._hammer
-      .get(HammerEvents.SWIPE)
-      .set({ direction: Hammer.DIRECTION_VERTICAL });
+    this._hammer.get(HammerEvents.SWIPE).set({ direction: Hammer.DIRECTION_VERTICAL });
 
     this.initPanStartEvent();
     this.initPanEvent();
@@ -77,37 +75,35 @@ export class InteractionManagerService {
       this.LockBoard(start);
     });
 
-    this.effectsManager.SelectionAnimationComplete.subscribe(
-      (selectionMode) => {
-        // selection animation complete
-        if (selectionMode) {
-          if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
-            // initiate the removal animation
-            this.effectsManager.AnimateRemove(this._matchingPieces);
-            // update score
-            this.scoringManager.UpdateScore(this._matchingPieces.length);
+    this.effectsManager.SelectionAnimationComplete.subscribe((selectionMode) => {
+      // selection animation complete
+      if (selectionMode) {
+        if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
+          // initiate the removal animation
+          this.effectsManager.AnimateRemove(this._matchingPieces);
+          // update score
+          this.scoringManager.UpdateScore(this._matchingPieces.length);
 
-            if (this.scoringManager.LevelComplete) {
-              this.audioManager.PlayLevelComplete();
-              this.objectManager.AnimateLevelComplete();
-              this.LockBoard(false);
+          if (this.scoringManager.LevelComplete) {
+            this.audioManager.PlayLevelComplete();
+            this.objectManager.AnimateLevelComplete();
+            this.LockBoard(false);
 
-              this.objectManager.LevelCompleted.next(false);
-            } else {
-              this.textManager.ShowText(this.scoringManager.SplashText);
-              this.effectsManager.AnimateLock(this.objectManager.Axle, false);
-              this.LockBoard(false);
-            }
+            this.objectManager.LevelCompleted.next(false);
           } else {
-            // unselect
+            this.textManager.ShowText(this.scoringManager.SplashText);
             this.effectsManager.AnimateLock(this.objectManager.Axle, false);
-            this.effectsManager.AnimateSelected(this._matchingPieces, false);
+            this.LockBoard(false);
           }
         } else {
-          this.LockBoard(false);
+          // unselect
+          this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+          this.effectsManager.AnimateSelected(this._matchingPieces, false);
         }
+      } else {
+        this.LockBoard(false);
       }
-    );
+    });
   }
 
   public LockBoard(locked: boolean): void {
@@ -122,10 +118,7 @@ export class InteractionManagerService {
 
   private initPanStartEvent(): void {
     this._hammer.on(HammerEvents.PAN_START, (panStartEvent: HammerInput) => {
-      const gamePiece = this.getPickedGamePiece(
-        panStartEvent.center.x,
-        panStartEvent.center.y
-      );
+      const gamePiece = this.getPickedGamePiece(panStartEvent.center.x, panStartEvent.center.y);
       if (gamePiece && !gamePiece?.IsRemoved) {
         this._activeWheel = gamePiece.parent as GameWheel;
         this._activeWheel.UpdateMoveStartTheta();
@@ -161,10 +154,7 @@ export class InteractionManagerService {
   private initSwipeEvent(): void {
     // swipe recognizer is only configured for vertical
     this._hammer.on(HammerEvents.SWIPE, (swipeEvent) => {
-      const gamePiece = this.getPickedGamePiece(
-        swipeEvent.center.x,
-        swipeEvent.center.y - swipeEvent.deltaY
-      );
+      const gamePiece = this.getPickedGamePiece(swipeEvent.center.x, swipeEvent.center.y - swipeEvent.deltaY);
       if (gamePiece && !gamePiece?.IsRemoved) {
         this.effectsManager.AnimateFlip(
           gamePiece,
@@ -183,9 +173,7 @@ export class InteractionManagerService {
   }
 
   private initTapAndPressEvents(): void {
-    this._hammer.on(HammerEvents.TAP, (tapEvent) =>
-      this.handleTapOrPress(tapEvent)
-    );
+    this._hammer.on(HammerEvents.TAP, (tapEvent) => this.handleTapOrPress(tapEvent));
     this._hammer.on(HammerEvents.PRESS, (pressEvent) => {
       this.handleTapOrPress(pressEvent);
     });
@@ -199,10 +187,7 @@ export class InteractionManagerService {
     const gamePiece = this.getPickedGamePiece(event.center.x, event.center.y);
     if (gamePiece && !gamePiece?.IsRemoved) {
       // run matches algorithm
-      this._matchingPieces = this.gameEngine.FindMatches(
-        gamePiece,
-        this.objectManager.Axle
-      );
+      this._matchingPieces = this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
 
       // launch animation sequence
       this.effectsManager.AnimateSelected(this._matchingPieces, true);
@@ -216,11 +201,7 @@ export class InteractionManagerService {
   private deviceCordRotation(x: number): void {
     const deltaX = x - this._x;
     if (this._activeWheel) {
-      this._activeWheel.UpdateTheta(
-        MathUtils.degToRad(deltaX) *
-          (ROTATIONAL_CONSTANT / this._canvasRect.width) *
-          -1
-      );
+      this._activeWheel.UpdateTheta(MathUtils.degToRad(deltaX) * (ROTATIONAL_CONSTANT / this._canvasRect.width) * -1);
     }
   }
 
@@ -232,9 +213,7 @@ export class InteractionManagerService {
     this._pointerPos.y = -((y - this._canvasRect.top) / height) * 2 + 1;
 
     this._rayCaster.setFromCamera(this._pointerPos, this._camera);
-    const intersects = this._rayCaster.intersectObjects(
-      this.objectManager.Axle
-    );
+    const intersects = this._rayCaster.intersectObjects(this.objectManager.Axle);
     if (intersects.length) {
       const castTarget = intersects[0].object;
       // target may be "inner" game piece

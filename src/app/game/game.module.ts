@@ -24,12 +24,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [
-    CanvasComponent,
-    GameContainerComponent,
-    LevelDialogComponent,
-    GameOverComponent,
-  ],
+  declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent, GameOverComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

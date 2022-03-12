@@ -40,10 +40,7 @@ export class MaterialManagerService {
       case LevelMaterialType.ColorBumpMaterial:
         selectedColors = this.initColorScheme();
 
-        const bumpTexture =
-          this.textureManager.Textures[
-            MathUtils.randInt(0, this.textureManager.Textures.length - 1)
-          ];
+        const bumpTexture = this.textureManager.Textures[MathUtils.randInt(0, this.textureManager.Textures.length - 1)];
 
         selectedColors.forEach((color) => {
           materials.push({
@@ -69,27 +66,19 @@ export class MaterialManagerService {
   }
 
   private initColorScheme(): string[] {
-    const scheme =
-      ColorSchemeData[MathUtils.randInt(0, ColorSchemeData.length - 1)];
+    const scheme = ColorSchemeData[MathUtils.randInt(0, ColorSchemeData.length - 1)];
     const sortedColors = scheme.colors.sort();
 
     if (!environment.production) {
       console.info('  color scheme:', scheme.id);
-      sortedColors
-        .sort()
-        .forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
+      sortedColors.sort().forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
     }
 
-    const shuffledColors = shuffleArray(sortedColors).slice(
-      0,
-      PLAYABLE_PIECE_COUNT
-    );
+    const shuffledColors = shuffleArray(sortedColors).slice(0, PLAYABLE_PIECE_COUNT);
 
     if (!environment.production) {
       console.info('    game piece colors:', scheme);
-      shuffledColors.forEach((c) =>
-        console.info(`      %c ${c}`, `color: ${c}`)
-      );
+      shuffledColors.forEach((c) => console.info(`      %c ${c}`, `color: ${c}`));
     }
 
     return shuffledColors;

@@ -8,13 +8,6 @@ describe('GamePieceMaterial', () => {
   const mockColor = 'blue';
 
   it('should create an instance', () => {
-    expect(
-      new GamePieceMaterial(
-        mockMatchKey,
-        mockTexture,
-        mockBumpTexture,
-        mockColor
-      )
-    ).toBeTruthy();
+    expect(new GamePieceMaterial(mockMatchKey, mockTexture, mockBumpTexture, mockColor)).toBeTruthy();
   });
 });

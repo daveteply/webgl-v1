@@ -1,11 +1,4 @@
-import {
-  BoxBufferGeometry,
-  BoxGeometry,
-  MathUtils,
-  Mesh,
-  Object3D,
-  Texture,
-} from 'three';
+import { BoxBufferGeometry, BoxGeometry, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
@@ -50,13 +43,7 @@ export class GamePiece extends Object3D {
     return this._isRemoved;
   }
 
-  constructor(
-    x: number,
-    y: number,
-    z: number,
-    rotation: number,
-    materialData: GamePieceMaterialData[]
-  ) {
+  constructor(x: number, y: number, z: number, rotation: number, materialData: GamePieceMaterialData[]) {
     super();
 
     // position shell in grid
@@ -81,8 +68,7 @@ export class GamePiece extends Object3D {
     this._thetaOffset = this._thetaStart;
 
     // 1 is the default (or "front"), will change when piece is flipped
-    this._matchKey =
-      this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
+    this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -192,24 +178,18 @@ export class GamePiece extends Object3D {
     // set direction
     const delta = { theta: this.rotation.z };
     const final = {
-      theta:
-        this.rotation.z +
-        QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
+      theta: this.rotation.z + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
     };
 
     // update match key by shifting array number of rotations
     for (let i = 0; i < turns; i++) {
       this._matchKeySequence = this._matchKeySequence.concat(
-        this._matchKeySequence.splice(
-          0,
-          directionUp ? this._matchKeySequence.length - 1 : 1
-        )
+        this._matchKeySequence.splice(0, directionUp ? this._matchKeySequence.length - 1 : 1)
       );
     }
 
     // set match key
-    this._matchKey =
-      this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
+    this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
 
     // tween
     return new Tween(delta)
@@ -234,8 +214,7 @@ export class GamePiece extends Object3D {
 
     const shuffledMaterials = shuffleArray(materials);
     const shuffledGamePieceMaterials = shuffledMaterials.map(
-      (m) =>
-        new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
+      (m) => new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
     );
     this._gamePieceMaterials.push(...shuffledGamePieceMaterials);
 
@@ -261,10 +240,7 @@ export class GamePiece extends Object3D {
     // }
   }
 
-  private cloneRotateTexture(
-    texture: Texture,
-    edge: number
-  ): Texture | undefined {
+  private cloneRotateTexture(texture: Texture, edge: number): Texture | undefined {
     // 0 'back'
     // 1 'front'
     // 2 'top'

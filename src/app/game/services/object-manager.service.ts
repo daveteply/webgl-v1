@@ -73,11 +73,7 @@ export class ObjectManagerService {
 
     // create all the objects
     this._verticalTargets.forEach(() => {
-      const gameWheel = new GameWheel(
-        WHEEL_START_POSITION,
-        this._piecePoints,
-        materials
-      );
+      const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints, materials);
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
     });
@@ -86,24 +82,14 @@ export class ObjectManagerService {
     this.assignIterationValues();
 
     // trigger intro animations
-    this.effectsManager.AnimateLevelChangeAnimation(
-      this._axle,
-      this._verticalTargets,
-      this._perspectiveCamera,
-      true
-    );
+    this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, true);
 
     this.audioManager.StopLevelComplete();
     this.audioManager.PlayLevelStart();
   }
 
   public AnimateLevelComplete(): void {
-    this.effectsManager.AnimateLevelChangeAnimation(
-      this._axle,
-      this._verticalTargets,
-      this._perspectiveCamera,
-      false
-    );
+    this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, false);
   }
 
   public InitStarField(): void {

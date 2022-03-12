@@ -11,13 +11,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [GainControlComponent, AboutComponent],
-  imports: [
-    CommonModule,
-    MatSliderModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-  ],
+  imports: [CommonModule, MatSliderModule, MatButtonModule, MatIconModule, MatDialogModule],
   exports: [GainControlComponent, AboutComponent],
 })
 export class WglSharedModule {}

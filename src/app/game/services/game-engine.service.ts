@@ -108,8 +108,7 @@ export class GameEngineService {
         !p.IsMatch &&
         !p.IsRemoved &&
         p.MatchKey === gamePiece.MatchKey &&
-        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) <
-          DECIMAL_COMPARISON_TOLERANCE
+        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) < DECIMAL_COMPARISON_TOLERANCE
     );
   }
 
@@ -125,8 +124,7 @@ export class GameEngineService {
         !p.IsMatch &&
         !p.IsRemoved &&
         p.MatchKey === gamePiece.MatchKey &&
-        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) <
-          DECIMAL_COMPARISON_TOLERANCE
+        Math.abs(p.ThetaOffset - gamePiece.ThetaOffset) < DECIMAL_COMPARISON_TOLERANCE
     );
   }
 }

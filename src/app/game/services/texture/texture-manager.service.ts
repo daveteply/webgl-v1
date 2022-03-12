@@ -2,17 +2,8 @@ import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import * as shuffleArray from 'shuffle-array';
 import { environment } from 'src/environments/environment';
-import {
-  LoadingManager,
-  MathUtils,
-  Texture,
-  TextureLoader,
-  Vector2,
-} from 'three';
-import {
-  CANVAS_TEXTURE_SCALE,
-  PLAYABLE_PIECE_COUNT,
-} from '../../game-constants';
+import { LoadingManager, MathUtils, Texture, TextureLoader, Vector2 } from 'three';
+import { CANVAS_TEXTURE_SCALE, PLAYABLE_PIECE_COUNT } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { EmojiData } from './emoji-data';
 import { BumpMaterials, BumpSymbols } from './texture-info';
@@ -125,8 +116,7 @@ export class TextureManagerService {
 
   private loadBumpMaterials(): void {
     // select a bump map
-    const randBumpMaterialMap =
-      BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
+    const randBumpMaterialMap = BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
     // check if loaded
     if (randBumpMaterialMap.texture) {
       this._textures.push(randBumpMaterialMap.texture);
@@ -144,8 +134,7 @@ export class TextureManagerService {
   private initEmojiData(): EmojiSequence[] {
     if (!this._canvasElement) {
       this._canvasElement = this.document.createElement('canvas');
-      this._canvasElement.width = this._canvasElement.height =
-        CANVAS_TEXTURE_SCALE;
+      this._canvasElement.width = this._canvasElement.height = CANVAS_TEXTURE_SCALE;
     }
 
     if (!this._canvasContext) {
@@ -158,19 +147,9 @@ export class TextureManagerService {
       emojiSequence = this.randomEmojiCodeList();
 
       for (let i = 0; i < emojiSequence.length; i++) {
-        this._canvasContext.clearRect(
-          0,
-          0,
-          CANVAS_TEXTURE_SCALE,
-          CANVAS_TEXTURE_SCALE
-        );
+        this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
         this._canvasContext.fillStyle = '#ffffff';
-        this._canvasContext.fillRect(
-          0,
-          0,
-          CANVAS_TEXTURE_SCALE,
-          CANVAS_TEXTURE_SCALE
-        );
+        this._canvasContext.fillRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
 
         this._canvasContext.font = CANVAS_TEXTURE_SCALE - 10 + 'px Arial';
         this._canvasContext.textBaseline = 'middle';
@@ -179,11 +158,7 @@ export class TextureManagerService {
         const emoji = emojiSequence[i];
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
-        this._canvasContext.fillText(
-          emojiCode,
-          CANVAS_TEXTURE_SCALE / 2,
-          CANVAS_TEXTURE_SCALE / 2 + 8
-        );
+        this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);
         emoji.dataUrl = this._canvasElement.toDataURL();
       }
     }
@@ -200,9 +175,7 @@ export class TextureManagerService {
 
     const shuffledSubGroups = shuffleArray(emojiGroup.subGroup);
     // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
-    const emojiSequences = shuffledSubGroups
-      .slice(0, 3)
-      .flatMap((s) => s.codes);
+    const emojiSequences = shuffledSubGroups.slice(0, 3).flatMap((s) => s.codes);
     const shuffledSequences = shuffleArray(emojiSequences);
 
     return shuffledSequences

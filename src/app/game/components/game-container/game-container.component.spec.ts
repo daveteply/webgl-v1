@@ -21,12 +21,7 @@ describe('GameContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        MatDialogModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-      ],
+      imports: [BrowserAnimationsModule, MatDialogModule, MatProgressBarModule, MatProgressSpinnerModule],
       declarations: [GameContainerComponent, CanvasComponent],
       providers: [
         SceneManagerService,

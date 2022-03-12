@@ -12,9 +12,7 @@ export const WHEEL_START_POSITION = 50;
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 // rotation
 const QUARTER_CIRCLE_DEGREES = 90;
-export const QUARTER_CIRCLE_RADIANS = MathUtils.degToRad(
-  QUARTER_CIRCLE_DEGREES
-);
+export const QUARTER_CIRCLE_RADIANS = MathUtils.degToRad(QUARTER_CIRCLE_DEGREES);
 
 // HTML page layout
 export const LAYOUT_ASPECT = 0.66;

@@ -8,9 +8,8 @@ describe('GainControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GainControlComponent ]
-    })
-    .compileComponents();
+      declarations: [GainControlComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

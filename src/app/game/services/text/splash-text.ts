@@ -50,17 +50,15 @@ export class SplashText extends Object3D {
     this._introTween.chain(this._outroTween);
   }
 
-  public Animate$: Observable<TextSplashEventType> = new Observable(
-    (observer) => {
-      this._introTween.start();
-      this._introTween.onComplete(() => {
-        observer.next(TextSplashEventType.IntroComplete);
-      });
-      this._outroTween.onComplete(() => {
-        observer.next(TextSplashEventType.OutroComplete);
-      });
-    }
-  );
+  public Animate$: Observable<TextSplashEventType> = new Observable((observer) => {
+    this._introTween.start();
+    this._introTween.onComplete(() => {
+      observer.next(TextSplashEventType.IntroComplete);
+    });
+    this._outroTween.onComplete(() => {
+      observer.next(TextSplashEventType.OutroComplete);
+    });
+  });
 
   public Dispose(): void {
     this._material.dispose();
@@ -70,9 +68,7 @@ export class SplashText extends Object3D {
   private xOffset(textGeometry: TextGeometry): number {
     textGeometry.computeBoundingBox();
     if (textGeometry.boundingBox) {
-      return (
-        -0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x)
-      );
+      return -0.5 * (textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x);
     }
     return 0;
   }

@@ -1,14 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import {
-  CameraHelper,
-  AxesHelper,
-  Color,
-  PerspectiveCamera,
-  PointLight,
-  Scene,
-  WebGLRenderer,
-} from 'three';
+import { CameraHelper, AxesHelper, Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';

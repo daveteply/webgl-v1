@@ -36,12 +36,9 @@ export class TextManagerService {
   }
 
   public InitFonts(): void {
-    this._fontLoader.load(
-      'assets/fonts/typeface/Roboto_Regular.json',
-      (response) => {
-        this._robotoRegular = response;
-      }
-    );
+    this._fontLoader.load('assets/fonts/typeface/Roboto_Regular.json', (response) => {
+      this._robotoRegular = response;
+    });
   }
 
   public InitScene(scene: Scene): void {

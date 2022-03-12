@@ -9,11 +9,7 @@ describe('EffectsManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        EffectsManagerService,
-        AudioManagerService,
-        ScoringManagerService,
-      ],
+      providers: [EffectsManagerService, AudioManagerService, ScoringManagerService],
     });
     service = TestBed.inject(EffectsManagerService);
   });

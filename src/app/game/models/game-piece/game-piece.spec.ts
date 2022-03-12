@@ -8,8 +8,6 @@ describe('GamePiece', () => {
     const mockZ = 0;
     const mockRot = 0;
     const mockMaterialData: GamePieceMaterialData[] = [{ MatchKey: 1 }];
-    expect(
-      new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterialData)
-    ).toBeTruthy();
+    expect(new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterialData)).toBeTruthy();
   });
 });

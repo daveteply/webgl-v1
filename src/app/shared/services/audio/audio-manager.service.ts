@@ -60,9 +60,7 @@ export class AudioManagerService {
   }
 
   public PlayAudio(audioType: AudioType, useNote: boolean = false): void {
-    const target = AUDIO_LIST.find(
-      (audioTrack) => audioTrack.audioType === audioType
-    );
+    const target = AUDIO_LIST.find((audioTrack) => audioTrack.audioType === audioType);
     if (target) {
       if (target.howl) {
         this.playLoadedAudio(target.howl, useNote);
