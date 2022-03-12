@@ -111,10 +111,13 @@ export class InteractionManagerService {
   }
 
   public LockBoard(locked: boolean): void {
-    this._hammer.get(HammerEvents.SWIPE).set({ enable: !locked });
     this._hammer.get(HammerEvents.PAN).set({ enable: !locked });
     this._hammer.get(HammerEvents.TAP).set({ enable: !locked });
     this._hammer.get(HammerEvents.PRESS).set({ enable: !locked });
+  }
+
+  public LockSwipe(locked: boolean): void {
+    this._hammer.get(HammerEvents.SWIPE).set({ enable: !locked });
   }
 
   private initPanStartEvent(): void {
@@ -174,6 +177,9 @@ export class InteractionManagerService {
         }
       }
     });
+
+    // establish event but disable initially; will be used later
+    this._hammer.get(HammerEvents.SWIPE).set({ enable: false });
   }
 
   private initTapAndPressEvents(): void {

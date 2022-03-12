@@ -10,6 +10,7 @@ import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
+import * as shuffleArray from 'shuffle-array';
 
 export class GamePiece extends Object3D {
   private _innerGeometry: BoxGeometry;
@@ -230,26 +231,34 @@ export class GamePiece extends Object3D {
     // 1 'front'
     // 2 'top'
     // 3 'bottom'
-    for (let i = 0; i < 6; i++) {
-      const randMaterial =
-        materials[Math.floor(Math.random() * materials.length)];
 
-      let texture;
-      if (randMaterial) {
-        if (randMaterial.Texture) {
-          texture = this.cloneRotateTexture(randMaterial.Texture, i);
-        }
+    const shuffledMaterials = shuffleArray(materials);
+    const shuffledGamePieceMaterials = shuffledMaterials.map(
+      (m) =>
+        new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
+    );
+    this._gamePieceMaterials.push(...shuffledGamePieceMaterials);
 
-        this._gamePieceMaterials.push(
-          new GamePieceMaterial(
-            randMaterial.MatchKey,
-            texture,
-            randMaterial.BumpTexture,
-            randMaterial.Color
-          )
-        );
-      }
-    }
+    // for (let i = 0; i < 6; i++) {
+    //   const randMaterial =
+    //     materials[Math.floor(Math.random() * materials.length)];
+
+    //   let texture;
+    //   if (randMaterial) {
+    //     if (randMaterial.Texture) {
+    //       texture = this.cloneRotateTexture(randMaterial.Texture, i);
+    //     }
+
+    //     this._gamePieceMaterials.push(
+    //       new GamePieceMaterial(
+    //         randMaterial.MatchKey,
+    //         texture,
+    //         randMaterial.BumpTexture,
+    //         randMaterial.Color
+    //       )
+    //     );
+    //   }
+    // }
   }
 
   private cloneRotateTexture(
