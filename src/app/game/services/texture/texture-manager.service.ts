@@ -9,7 +9,10 @@ import {
   TextureLoader,
   Vector2,
 } from 'three';
-import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
+import {
+  CANVAS_TEXTURE_SCALE,
+  PLAYABLE_PIECE_COUNT,
+} from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { EmojiData } from './emoji-data';
 import { BumpMaterials, BumpSymbols } from './texture-info';
@@ -25,6 +28,9 @@ interface EmojiSequence {
 export class TextureManagerService {
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
+
+  private _canvasElement!: HTMLCanvasElement;
+  private _canvasContext!: CanvasRenderingContext2D | null;
 
   private _textures: Texture[] = [];
   get Textures(): Texture[] {
@@ -87,6 +93,11 @@ export class TextureManagerService {
             this._textures.push(texture);
           });
         });
+
+        if (!environment.production) {
+          emojiList.forEach((emoji) => console.info(`  ${emoji.desc}`));
+        }
+
         break;
     }
   }
@@ -131,28 +142,49 @@ export class TextureManagerService {
   }
 
   private initEmojiData(): EmojiSequence[] {
-    const canvas = this.document.createElement('canvas');
-    const scale = 80;
-    canvas.width = canvas.height = scale;
+    if (!this._canvasElement) {
+      this._canvasElement = this.document.createElement('canvas');
+      this._canvasElement.width = this._canvasElement.height =
+        CANVAS_TEXTURE_SCALE;
+    }
 
-    const emojiSequence = this.randomEmojiCodeList();
+    if (!this._canvasContext) {
+      this._canvasContext = this._canvasElement.getContext('2d');
+    }
 
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
-        ctx.clearRect(0, 0, scale, scale);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, scale, scale);
+    let emojiSequence: EmojiSequence[] = [];
 
-        ctx.font = scale - 10 + 'px Arial';
-        ctx.textBaseline = 'middle';
-        ctx.textAlign = 'center';
+    if (this._canvasContext) {
+      emojiSequence = this.randomEmojiCodeList();
+
+      for (let i = 0; i < emojiSequence.length; i++) {
+        this._canvasContext.clearRect(
+          0,
+          0,
+          CANVAS_TEXTURE_SCALE,
+          CANVAS_TEXTURE_SCALE
+        );
+        this._canvasContext.fillStyle = '#ffffff';
+        this._canvasContext.fillRect(
+          0,
+          0,
+          CANVAS_TEXTURE_SCALE,
+          CANVAS_TEXTURE_SCALE
+        );
+
+        this._canvasContext.font = CANVAS_TEXTURE_SCALE - 10 + 'px Arial';
+        this._canvasContext.textBaseline = 'middle';
+        this._canvasContext.textAlign = 'center';
 
         const emoji = emojiSequence[i];
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
-        ctx.fillText(emojiCode, scale / 2, scale / 2 + 8);
-        emoji.dataUrl = canvas.toDataURL();
+        this._canvasContext.fillText(
+          emojiCode,
+          CANVAS_TEXTURE_SCALE / 2,
+          CANVAS_TEXTURE_SCALE / 2 + 8
+        );
+        emoji.dataUrl = this._canvasElement.toDataURL();
       }
     }
 
@@ -173,8 +205,10 @@ export class TextureManagerService {
       .flatMap((s) => s.codes);
     const shuffledSequences = shuffleArray(emojiSequences);
 
-    return shuffledSequences.map((s) => {
-      return { desc: s.desc, sequence: s.sequence, ver: s.version };
-    });
+    return shuffledSequences
+      .map((s) => {
+        return { desc: s.desc, sequence: s.sequence, ver: s.version };
+      })
+      .slice(0, PLAYABLE_PIECE_COUNT);
   }
 }
