@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, BoxGeometry, MathUtils, Mesh, Object3D, Texture } from 'three';
+import { BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
@@ -52,6 +52,18 @@ export class GamePiece extends Object3D {
 
     // set up visual piece
     this._innerGeometry = new BoxBufferGeometry(1, 1, 1);
+
+    // rotate uv so all vertical flipping displays correctly
+    const sides = [
+      [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
+      [0, 1, 1, 1, 0, 0, 1, 0], // front
+      [0, 0, 0, 1, 1, 0, 1, 1], // top
+      [1, 1, 1, 0, 0, 1, 0, 0], // bottom
+      [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
+      [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
+    ];
+    const uvs = new Float32Array(sides.flat());
+    this._innerGeometry.setAttribute('uv', new BufferAttribute(uvs, 2));
 
     // materials
     this.initMaterials(materialData);
@@ -207,67 +219,11 @@ export class GamePiece extends Object3D {
   }
 
   private initMaterials(materials: GamePieceMaterialData[]): void {
-    // 0 'back'
-    // 1 'front'
-    // 2 'top'
-    // 3 'bottom'
-
     const shuffledMaterials = shuffleArray(materials);
     const shuffledGamePieceMaterials = shuffledMaterials.map(
       (m) => new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
     );
     this._gamePieceMaterials.push(...shuffledGamePieceMaterials);
-
-    // for (let i = 0; i < 6; i++) {
-    //   const randMaterial =
-    //     materials[Math.floor(Math.random() * materials.length)];
-
-    //   let texture;
-    //   if (randMaterial) {
-    //     if (randMaterial.Texture) {
-    //       texture = this.cloneRotateTexture(randMaterial.Texture, i);
-    //     }
-
-    //     this._gamePieceMaterials.push(
-    //       new GamePieceMaterial(
-    //         randMaterial.MatchKey,
-    //         texture,
-    //         randMaterial.BumpTexture,
-    //         randMaterial.Color
-    //       )
-    //     );
-    //   }
-    // }
-  }
-
-  private cloneRotateTexture(texture: Texture, edge: number): Texture | undefined {
-    // 0 'back'
-    // 1 'front'
-    // 2 'top'
-    // 3 'bottom'
-
-    if (texture) {
-      const cloned = texture.clone();
-      if (cloned) {
-        cloned.needsUpdate = true;
-
-        switch (edge) {
-          case 0:
-            cloned.rotation = QUARTER_CIRCLE_RADIANS * 2;
-            break;
-
-          case 2:
-            cloned.rotation = QUARTER_CIRCLE_RADIANS * 3;
-            break;
-
-          case 3:
-            cloned.rotation = QUARTER_CIRCLE_RADIANS;
-            break;
-        }
-        return cloned;
-      }
-    }
-    return undefined;
   }
 
   private mod(a: number, n: number): number {
