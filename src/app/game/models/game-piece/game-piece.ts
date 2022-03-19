@@ -251,6 +251,9 @@ export class GamePiece extends Object3D {
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
+    // reset vertical flip
+    this.rotation.z = 0;
+
     // create new geometry, material, mesh
     this._powerMoveGeometry = new CylinderGeometry(1, 1, 1.5, 16);
     this._powerMoveGeometry.scale(0.01, 0.01, 0.01);
