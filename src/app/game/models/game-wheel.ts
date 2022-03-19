@@ -4,6 +4,7 @@ import { GRID_INC, TWO_PI } from '../game-constants';
 import { GamePiece } from './game-piece/game-piece';
 import { GamePieceMaterialData } from './game-piece/game-piece-material-data';
 import { PiecePoints } from './piece-points';
+import { PowerMoveType } from './power-move-type';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
@@ -14,6 +15,7 @@ export class GameWheel extends Object3D {
   private _wheelBelow: GameWheel | undefined;
 
   private _levelChangeTween: any;
+  private _powerMoveTween: any;
 
   constructor(y: number, meshPoints: PiecePoints[], materialData: GamePieceMaterialData[]) {
     super();
@@ -102,6 +104,68 @@ export class GameWheel extends Object3D {
         this._theta = delta.theta;
       })
       .start();
+  }
+
+  public AnimateRotation(moveType: PowerMoveType): void {
+    if (this._powerMoveTween) {
+      this._powerMoveTween.stop();
+    }
+
+    const delta = {
+      theta: this._theta,
+    };
+
+    let targetTheta = 0;
+    switch (moveType) {
+      case PowerMoveType.HorizontalLeft:
+        targetTheta = MathUtils.randInt(5, 10) * GRID_INC + this._theta;
+        break;
+
+      case PowerMoveType.HorizontalRight:
+        targetTheta = (MathUtils.randInt(5, 10) * GRID_INC + this._theta) * -1;
+        break;
+
+      case PowerMoveType.HorizontalMix:
+        targetTheta = MathUtils.randInt(-10, 10) * GRID_INC + this._theta;
+        break;
+    }
+
+    const target = {
+      theta: targetTheta,
+    };
+
+    this._powerMoveTween = new Tween(delta)
+      .to(target, 2000)
+      .easing(Easing.Elastic.In)
+      .onUpdate(() => {
+        this._theta = delta.theta;
+        this.rotation.y = this._theta;
+      })
+      .onComplete(() => {
+        this.SnapToGrid();
+      })
+      .start();
+  }
+
+  public AnimateVerticalFlip(moveType: PowerMoveType): void {
+    for (let i = 0; i < this.children.length; i++) {
+      const gamePiece = this.children[i] as GamePiece;
+
+      const turns = MathUtils.randInt(0, 3);
+      switch (moveType) {
+        case PowerMoveType.VerticalUp:
+          gamePiece.AnimateFlipTween(turns, true);
+          break;
+
+        case PowerMoveType.VerticalDown:
+          gamePiece.AnimateFlipTween(turns, false);
+          break;
+
+        case PowerMoveType.VerticalMix:
+          gamePiece.AnimateFlipTween(turns, MathUtils.randInt(0, 1) === 1);
+          break;
+      }
+    }
   }
 
   public UpdateMoveStartTheta(): void {

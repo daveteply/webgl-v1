@@ -1,8 +1,13 @@
 import { Texture } from 'three';
+import { PowerMoveType } from '../../models/power-move-type';
 
-interface BumpData {
+export interface BumpData {
   src: string;
   texture?: Texture;
+}
+
+export interface PowerMoveBumpData extends BumpData {
+  moveType: PowerMoveType;
 }
 
 export const BumpMaterials: BumpData[] = [
@@ -28,4 +33,13 @@ export const BumpSymbols: BumpData[] = [
   { src: 'assets/maps/bump/symbol/flake.webp' },
   { src: 'assets/maps/bump/symbol/plus.webp' },
   { src: 'assets/maps/bump/symbol/sun.webp' },
+];
+
+export const PowerMoveMaterials: PowerMoveBumpData[] = [
+  { src: 'assets/maps/bump/power-move/right.webp', moveType: PowerMoveType.HorizontalRight },
+  { src: 'assets/maps/bump/power-move/left.webp', moveType: PowerMoveType.HorizontalLeft },
+  { src: 'assets/maps/bump/power-move/right-left.webp', moveType: PowerMoveType.HorizontalMix },
+  { src: 'assets/maps/bump/power-move/up.webp', moveType: PowerMoveType.VerticalUp },
+  { src: 'assets/maps/bump/power-move/down.webp', moveType: PowerMoveType.VerticalDown },
+  { src: 'assets/maps/bump/power-move/up-down.webp', moveType: PowerMoveType.VerticalMix },
 ];

@@ -1,12 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import * as shuffleArray from 'shuffle-array';
 import { environment } from 'src/environments/environment';
-import { LoadingManager, MathUtils, Texture, TextureLoader, Vector2 } from 'three';
+import { LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE, PLAYABLE_PIECE_COUNT } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
+import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
-import { BumpMaterials, BumpSymbols } from './texture-info';
+import { BumpMaterials, BumpSymbols, PowerMoveBumpData, PowerMoveMaterials } from './texture-info';
 
 interface EmojiSequence {
   desc: string;
@@ -32,6 +34,8 @@ export class TextureManagerService {
   get LevelType(): LevelMaterialType {
     return this._levelType;
   }
+
+  private _powerMoveTextures: PowerMoveBumpData[] = [];
 
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadingStarted: EventEmitter<void> = new EventEmitter();
@@ -86,11 +90,37 @@ export class TextureManagerService {
         });
 
         if (!environment.production) {
-          emojiList.forEach((emoji) => console.info(`  ${emoji.desc}`));
+          emojiList.forEach((emoji) => console.info(`  ${emoji.desc} ${emoji.sequence}`));
         }
 
         break;
     }
+  }
+
+  public GetPowerMoveTexture(moveType: PowerMoveType): Observable<Texture> {
+    return new Observable((observer) => {
+      const moveTexture = PowerMoveMaterials.find((pt) => pt.moveType === moveType);
+      if (moveTexture) {
+        if (moveTexture?.texture) {
+          observer.next(moveTexture.texture);
+          observer.complete();
+        } else {
+          new TextureLoader().load(
+            moveTexture.src,
+            (data) => {
+              moveTexture.texture = data;
+              moveTexture.texture.wrapS = RepeatWrapping;
+              moveTexture.texture.repeat.set(3, 1);
+              observer.next(data);
+            },
+            () => {},
+            (error) => {
+              observer.error(error);
+            }
+          );
+        }
+      }
+    });
   }
 
   private loadBumpSymbols(): void {
@@ -119,12 +149,18 @@ export class TextureManagerService {
     const randBumpMaterialMap = BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
     // check if loaded
     if (randBumpMaterialMap.texture) {
+      if (!environment.production) {
+        console.info('Texture Manager: pulled from cache ', randBumpMaterialMap.src);
+      }
       this._textures.push(randBumpMaterialMap.texture);
       this.LevelTexturesLoaded.next();
     } else {
       this._textureLoader.load(randBumpMaterialMap.src, (data) => {
         data.center = new Vector2(0.5, 0.5);
         data.name = randBumpMaterialMap.src;
+        if (!environment.production) {
+          console.info('Texture Manager: caching ', data.name);
+        }
         randBumpMaterialMap.texture = data;
         this._textures.push(randBumpMaterialMap.texture);
       });

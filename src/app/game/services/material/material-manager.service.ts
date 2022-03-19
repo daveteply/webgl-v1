@@ -7,6 +7,8 @@ import { GamePieceMaterialData } from '../../models/game-piece/game-piece-materi
 import { LevelMaterialType } from '../../models/level-material-type';
 import { TextureManagerService } from '../texture/texture-manager.service';
 import { ColorSchemeData } from './color-info';
+import { Observable } from 'rxjs';
+import { PowerMoveType } from '../../models/power-move-type';
 
 @Injectable()
 export class MaterialManagerService {
@@ -63,6 +65,10 @@ export class MaterialManagerService {
     }
 
     return materials;
+  }
+
+  public GetPowerMovePieceTexture(moveType: PowerMoveType): Observable<Texture> {
+    return this.textureManager.GetPowerMoveTexture(moveType);
   }
 
   private initColorScheme(): string[] {

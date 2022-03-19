@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Group, MathUtils, PerspectiveCamera, Scene, Texture, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
 import {
@@ -14,6 +14,9 @@ import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';
 import { StarField } from '../models/star-field/star-field';
+import { Subscription } from 'rxjs';
+import { PowerMoveType } from '../models/power-move-type';
+import { GamePiece } from '../models/game-piece/game-piece';
 
 @Injectable()
 export class ObjectManagerService {
@@ -30,6 +33,8 @@ export class ObjectManagerService {
   private _perspectiveCamera!: PerspectiveCamera;
 
   private _starField: StarField;
+
+  private _powerMoveTextureSubscription!: Subscription;
 
   // events
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
@@ -98,6 +103,21 @@ export class ObjectManagerService {
 
   public UpdateStarField(): void {
     this._starField.UpdateParticles();
+  }
+
+  public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType): void {
+    this._powerMoveTextureSubscription = this.materialManager
+      .GetPowerMovePieceTexture(moveType)
+      .subscribe((textureData) => {
+        gamePiece.PowerMoveAdd(moveType, textureData);
+        if (this._powerMoveTextureSubscription) {
+          this._powerMoveTextureSubscription.unsubscribe();
+        }
+      });
+  }
+
+  public AnimatePowerMove(moveType: PowerMoveType): void {
+    this.effectsManager.AnimatePowerMove(this._axle, moveType);
   }
 
   private assignIterationValues(): void {

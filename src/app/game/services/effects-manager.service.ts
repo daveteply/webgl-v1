@@ -7,6 +7,7 @@ import { GameWheel } from '../models/game-wheel';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
+import { PowerMoveType } from '../models/power-move-type';
 
 @Injectable()
 export class EffectsManagerService {
@@ -70,7 +71,7 @@ export class EffectsManagerService {
         this.scoringManager.ResetTimer();
       });
 
-    // vertical movement tweens
+    // vertical movement and horizontal rotations tweens
     const introSpinDirection = MathUtils.randInt(1, 3);
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
@@ -89,6 +90,26 @@ export class EffectsManagerService {
 
     this._levelChangeCameraTween1.chain(this._levelChangeCameraTween2);
     this._levelChangeCameraTween1.start();
+  }
+
+  public AnimatePowerMove(gameWheels: GameWheel[], moveType: PowerMoveType): void {
+    switch (moveType) {
+      case PowerMoveType.HorizontalLeft:
+      case PowerMoveType.HorizontalRight:
+      case PowerMoveType.HorizontalMix:
+        gameWheels.forEach((wheel) => {
+          wheel.AnimateRotation(moveType);
+        });
+        break;
+
+      case PowerMoveType.VerticalUp:
+      case PowerMoveType.VerticalDown:
+      case PowerMoveType.VerticalMix:
+        gameWheels.forEach((wheel) => {
+          wheel.AnimateVerticalFlip(moveType);
+        });
+        break;
+    }
   }
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {
@@ -150,13 +171,13 @@ export class EffectsManagerService {
   public AnimateRemove(selectedPieces: GamePiece[]): void {
     if (selectedPieces.length) {
       selectedPieces.forEach((p) => {
-        p.InitRemovalTween();
+        p.AnimateRemovalTween();
         this.audioManager.PlayAudio(AudioType.PIECE_REMOVE);
       });
     }
   }
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
-    const flipTween = gamePiece.InitFlipTween(Math.floor(velocity), directionUp);
+    gamePiece.AnimateFlipTween(Math.floor(velocity), directionUp);
   }
 }

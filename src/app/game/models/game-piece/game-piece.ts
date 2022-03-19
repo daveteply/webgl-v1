@@ -1,13 +1,29 @@
-import { BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D } from 'three';
+import {
+  BoxBufferGeometry,
+  BoxGeometry,
+  BufferAttribute,
+  CylinderGeometry,
+  MathUtils,
+  Mesh,
+  MeshPhongMaterial,
+  Object3D,
+  Texture,
+} from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import * as shuffleArray from 'shuffle-array';
+import { PowerMoveType } from '../power-move-type';
 
 export class GamePiece extends Object3D {
-  private _innerGeometry: BoxGeometry;
+  private _geometry: BoxGeometry;
   private _mesh: Mesh;
+
+  private _powerMoveGeometry!: CylinderGeometry;
+  private _powerMoveMesh!: Mesh;
+  private _powerMoveMaterial!: MeshPhongMaterial;
+  private _powerMoveSpinTween!: any;
 
   private _gamePieceMaterials: GamePieceMaterial[] = [];
 
@@ -43,6 +59,16 @@ export class GamePiece extends Object3D {
     return this._isRemoved;
   }
 
+  private _isPowerMove: boolean = false;
+  get IsPowerMove(): boolean {
+    return this._isPowerMove;
+  }
+
+  private _powerMoveType!: PowerMoveType;
+  get PowerMoveType(): PowerMoveType {
+    return this._powerMoveType;
+  }
+
   constructor(x: number, y: number, z: number, rotation: number, materialData: GamePieceMaterialData[]) {
     super();
 
@@ -51,25 +77,25 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // set up visual piece
-    this._innerGeometry = new BoxBufferGeometry(1, 1, 1);
+    this._geometry = new BoxBufferGeometry(1, 1, 1);
 
     // rotate uv so all vertical flipping displays correctly
     const sides = [
       [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
-      [0, 1, 1, 1, 0, 0, 1, 0], // front
-      [0, 0, 0, 1, 1, 0, 1, 1], // top
-      [1, 1, 1, 0, 0, 1, 0, 0], // bottom
+      [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)
+      [0, 0, 0, 1, 1, 0, 1, 1], // top (rotate PI/2)
+      [1, 1, 1, 0, 0, 1, 0, 0], // bottom (rotate -PI/2)
       [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
       [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
     ];
     const uvs = new Float32Array(sides.flat());
-    this._innerGeometry.setAttribute('uv', new BufferAttribute(uvs, 2));
+    this._geometry.setAttribute('uv', new BufferAttribute(uvs, 2));
 
     // materials
     this.initMaterials(materialData);
 
     this._mesh = new Mesh(
-      this._innerGeometry,
+      this._geometry,
       this._gamePieceMaterials.map((m) => m.Material)
     );
 
@@ -111,7 +137,7 @@ export class GamePiece extends Object3D {
   }
 
   public AnimateLock(lock: boolean): void {
-    if (!this._isRemoved && !this.IsMatch) {
+    if (!this._isRemoved && !this.IsMatch && !this._isPowerMove) {
       // stop if running
       if (this._lockTween) {
         this._lockTween.stop();
@@ -126,7 +152,7 @@ export class GamePiece extends Object3D {
 
       // init tween
       this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
-        this.scale.set(delta.x, delta.y, delta.z);
+        this._mesh.scale.set(delta.x, delta.y, delta.z);
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
       });
 
@@ -156,15 +182,15 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public InitRemovalTween(): void {
+  public AnimateRemovalTween(): void {
     // update removed state
     this._isRemoved = true;
 
     // set animation properties
     const delta = {
-      x: this.rotation.x,
-      y: this.rotation.y,
-      z: this.rotation.y,
+      x: this._mesh.rotation.x,
+      y: this._mesh.rotation.y,
+      z: this._mesh.rotation.y,
       o: 1.0,
     };
     const target = {
@@ -177,45 +203,124 @@ export class GamePiece extends Object3D {
     new Tween(delta)
       .to(target, MathUtils.randInt(250, 750))
       .onUpdate(() => {
-        this.rotation.x = delta.x;
-        this.rotation.y = delta.y;
-        this.rotation.z = delta.x;
-        this.scale.setScalar(delta.o);
+        this._mesh.rotation.x = delta.x;
+        this._mesh.rotation.y = delta.y;
+        this._mesh.rotation.z = delta.x;
+        this._mesh.scale.setScalar(delta.o);
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
       })
       .start();
   }
 
-  public InitFlipTween(turns: number, directionUp: boolean): any {
-    // set direction
-    const delta = { theta: this.rotation.z };
-    const final = {
-      theta: this.rotation.z + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
-    };
+  public AnimateFlipTween(turns: number, directionUp: boolean): void {
+    if (!this._isPowerMove) {
+      // set direction
+      const delta = { theta: this.rotation.z };
+      const final = {
+        theta: this.rotation.z + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
+      };
 
-    // update match key by shifting array number of rotations
-    for (let i = 0; i < turns; i++) {
-      this._matchKeySequence = this._matchKeySequence.concat(
-        this._matchKeySequence.splice(0, directionUp ? this._matchKeySequence.length - 1 : 1)
-      );
+      // update match key by shifting array number of rotations
+      for (let i = 0; i < turns; i++) {
+        this._matchKeySequence = this._matchKeySequence.concat(
+          this._matchKeySequence.splice(0, directionUp ? this._matchKeySequence.length - 1 : 1)
+        );
+      }
+
+      // set match key
+      this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
+
+      // tween
+      new Tween(delta)
+        .to(final, 2000)
+        .easing(Easing.Sinusoidal.In)
+        .delay(MathUtils.randInt(250, 750))
+        .onUpdate(() => {
+          this.rotation.z = delta.theta;
+        })
+        .start();
     }
+  }
 
-    // set match key
-    this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
+  // only 1 instance of power move; when the power move is selected, the
+  //  state returns to removed
+  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture): void {
+    // update states
+    this._isPowerMove = true;
+    this._isRemoved = false;
+    this._matchKey = 0;
+    this._powerMoveType = moveType;
 
-    // tween
-    return new Tween(delta)
-      .to(final, 500)
+    // create new geometry, material, mesh
+    this._powerMoveGeometry = new CylinderGeometry(1, 1, 1.5, 16);
+    this._powerMoveGeometry.scale(0.01, 0.01, 0.01);
+    this._powerMoveMaterial = new MeshPhongMaterial({
+      // TODO: create cycling color
+      transparent: true,
+      opacity: 0.0,
+      bumpMap: texture,
+      bumpScale: 0.5,
+    });
+    this._powerMoveMesh = new Mesh(this._powerMoveGeometry, this._powerMoveMaterial);
+    this.add(this._powerMoveMesh);
+
+    const delta = { s: 0.1, o: 0.0 };
+    const target = { s: 40.0, o: 0.8 };
+    new Tween(delta)
+      .to(target, 750)
+      .easing(Easing.Bounce.InOut)
+      .onUpdate(() => {
+        this._powerMoveMesh.scale.setScalar(delta.s);
+        this._powerMoveMaterial.opacity = delta.o;
+      })
+      .start();
+
+    this._powerMoveSpinTween = new Tween({})
+      .repeat(Infinity)
+      .onUpdate(() => {
+        this._powerMoveMesh.rotateY(0.005);
+      })
+      .start();
+  }
+
+  public PowerMoveRemove(): void {
+    this._isRemoved = true;
+    this._isPowerMove = false;
+
+    const delta = { s: this._powerMoveMesh.scale.x, o: 0.8 };
+    const target = { s: 300.0, o: 0.0 };
+    new Tween(delta)
+      .to(target, 500)
       .easing(Easing.Sinusoidal.InOut)
       .onUpdate(() => {
-        this.rotation.z = delta.theta;
+        this._powerMoveMesh.scale.setScalar(delta.s);
+        this._powerMoveMesh.translateZ(-0.01);
+        this._powerMoveMaterial.opacity = delta.o;
+      })
+      .onComplete(() => {
+        this._powerMoveMesh.scale.setScalar(0);
+        if (this._powerMoveSpinTween) {
+          this._powerMoveSpinTween.stop();
+        }
       })
       .start();
   }
 
   public Dispose(): void {
+    // power move piece
+    if (this._powerMoveGeometry) {
+      this._powerMoveGeometry.dispose();
+    }
+    if (this._powerMoveMaterial) {
+      this._powerMoveMaterial.dispose();
+    }
+    if (this._powerMoveSpinTween) {
+      this._powerMoveSpinTween.stop();
+    }
+
+    // game piece
     this._gamePieceMaterials.forEach((m) => m.Dispose());
-    this._innerGeometry.dispose();
+    this._geometry.dispose();
   }
 
   private initMaterials(materials: GamePieceMaterialData[]): void {

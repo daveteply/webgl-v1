@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { MathUtils } from 'three';
 import { DECIMAL_COMPARISON_TOLERANCE } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
+import { PowerMoveType } from '../models/power-move-type';
 
 // forcing strings in enum
 enum Direction {
@@ -35,6 +38,20 @@ export class GameEngineService {
 
     // all matches should be complete
     return this._matches;
+  }
+
+  public PowerMoveSelection(): PowerMoveType {
+    const enumValues = Object.keys(PowerMoveType)
+      .map((po) => Number.parseInt(po))
+      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
+    const inx = MathUtils.randInt(0, enumValues.length - 1);
+    const moveType = enumValues[inx];
+
+    if (!environment.production) {
+      console.log('    Power Move Type: ', inx, PowerMoveType[moveType]);
+    }
+
+    return moveType;
   }
 
   private directionalSearch(gamePiece: GamePiece): void {

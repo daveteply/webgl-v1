@@ -7,6 +7,7 @@ import { MINIMUM_MATCH_COUNT, ROTATIONAL_CONSTANT } from '../game-constants';
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece/game-piece';
+import { PowerMoveType } from '../models/power-move-type';
 
 import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
@@ -15,13 +16,12 @@ import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';
 
-import { DIRECTION_UP } from 'hammerjs';
 import 'hammerjs';
+import { environment } from 'src/environments/environment';
 
 enum HammerEvents {
   PAN = 'pan',
   PAN_START = 'panstart',
-  SWIPE = 'swipe',
   TAP = 'tap',
   PRESS = 'press',
 }
@@ -64,12 +64,10 @@ export class InteractionManagerService {
 
   public InitInteractions(el: HTMLElement): void {
     this._hammer = new Hammer(el);
-    this._hammer.get(HammerEvents.SWIPE).set({ direction: Hammer.DIRECTION_VERTICAL });
 
     this.initPanStartEvent();
     this.initPanEvent();
     this.initTapAndPressEvents();
-    this.initSwipeEvent();
 
     this.effectsManager.LevelChangeAnimation.subscribe((start) => {
       this.LockBoard(start);
@@ -83,7 +81,6 @@ export class InteractionManagerService {
           this.effectsManager.AnimateRemove(this._matchingPieces);
           // update score
           this.scoringManager.UpdateScore(this._matchingPieces.length);
-
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
@@ -91,6 +88,18 @@ export class InteractionManagerService {
 
             this.objectManager.LevelCompleted.next(false);
           } else {
+            // power move (must be higher number of matches)
+            if (this._matchingPieces.length > MINIMUM_MATCH_COUNT) {
+              if (!environment.production) {
+                console.info('Power Move Candidate Match!');
+              }
+              const moveType = this.gameEngine.PowerMoveSelection();
+              if (moveType !== PowerMoveType.None) {
+                this.objectManager.GamePiecePowerMove(this._matchingPieces[0], moveType);
+              }
+            }
+
+            //text splash
             this.textManager.ShowText(this.scoringManager.SplashText);
             this.effectsManager.AnimateLock(this.objectManager.Axle, false);
             this.LockBoard(false);
@@ -110,10 +119,6 @@ export class InteractionManagerService {
     this._hammer.get(HammerEvents.PAN).set({ enable: !locked });
     this._hammer.get(HammerEvents.TAP).set({ enable: !locked });
     this._hammer.get(HammerEvents.PRESS).set({ enable: !locked });
-  }
-
-  public LockSwipe(locked: boolean): void {
-    this._hammer.get(HammerEvents.SWIPE).set({ enable: !locked });
   }
 
   private initPanStartEvent(): void {
@@ -151,27 +156,6 @@ export class InteractionManagerService {
     });
   }
 
-  private initSwipeEvent(): void {
-    // swipe recognizer is only configured for vertical
-    this._hammer.on(HammerEvents.SWIPE, (swipeEvent) => {
-      const gamePiece = this.getPickedGamePiece(swipeEvent.center.x, swipeEvent.center.y - swipeEvent.deltaY);
-      if (gamePiece && !gamePiece?.IsRemoved) {
-        this.effectsManager.AnimateFlip(
-          gamePiece,
-          Math.abs(swipeEvent.velocity),
-          swipeEvent.direction === DIRECTION_UP
-        );
-        this.scoringManager.UpdateMoveCount();
-        if (this.scoringManager.GameOver) {
-          this.objectManager.LevelCompleted.next(true);
-        }
-      }
-    });
-
-    // establish event but disable initially; will be used later
-    this._hammer.get(HammerEvents.SWIPE).set({ enable: false });
-  }
-
   private initTapAndPressEvents(): void {
     this._hammer.on(HammerEvents.TAP, (tapEvent) => this.handleTapOrPress(tapEvent));
     this._hammer.on(HammerEvents.PRESS, (pressEvent) => {
@@ -186,12 +170,20 @@ export class InteractionManagerService {
     // find selected game piece
     const gamePiece = this.getPickedGamePiece(event.center.x, event.center.y);
     if (gamePiece && !gamePiece?.IsRemoved) {
-      // run matches algorithm
-      this._matchingPieces = this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
+      // power move
+      if (gamePiece.IsPowerMove) {
+        this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
+        gamePiece.PowerMoveRemove();
+        this.scoringManager.UpdateMoveCount();
+        this.LockBoard(false);
+      } else {
+        // run matches algorithm
+        this._matchingPieces = this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
 
-      // launch animation sequence
-      this.effectsManager.AnimateSelected(this._matchingPieces, true);
-      this.effectsManager.AnimateLock(this.objectManager.Axle, true);
+        // launch animation sequence
+        this.effectsManager.AnimateSelected(this._matchingPieces, true);
+        this.effectsManager.AnimateLock(this.objectManager.Axle, true);
+      }
     } else {
       // unlock board if no pieces selected
       this.LockBoard(false);
@@ -220,6 +212,7 @@ export class InteractionManagerService {
       if (castTarget.parent instanceof GamePiece) {
         return castTarget.parent;
       } else {
+        // TODO: why is this here?
         return castTarget as GamePiece;
       }
     } else {
