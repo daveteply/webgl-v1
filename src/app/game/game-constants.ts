@@ -36,3 +36,4 @@ export const MINIMUM_SPEED_BONUS = 800;
 
 // Misc
 export const CANVAS_TEXTURE_SCALE = 80;
+export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];

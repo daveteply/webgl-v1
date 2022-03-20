@@ -1,5 +1,6 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
-import { CylinderGeometry, Mesh, MeshPhongMaterial, Texture } from 'three';
+import { CylinderGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
+import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class PowerMove {
   private _geometry!: CylinderGeometry;
@@ -18,7 +19,7 @@ export class PowerMove {
     this._geometry = new CylinderGeometry(1, 1, 1.5, 16);
     this._geometry.scale(0.01, 0.01, 0.01);
     this._material = new MeshPhongMaterial({
-      // TODO: create cycling color
+      color: RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)],
       transparent: true,
       opacity: 0.0,
       bumpMap: texture,
