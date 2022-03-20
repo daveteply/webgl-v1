@@ -5,7 +5,9 @@ export class PowerMove {
   private _geometry!: CylinderGeometry;
   private _mesh!: Mesh;
   private _material!: MeshPhongMaterial;
+
   private _spinTween!: any;
+  private _bounceTween!: any;
 
   get PowerMoveMesh(): Mesh {
     return this._mesh;
@@ -43,6 +45,18 @@ export class PowerMove {
         this._mesh.rotateY(0.005);
       })
       .start();
+
+    const deltaB = { y: -0.05 };
+    const targetB = { y: 0.05 };
+    this._bounceTween = new Tween(deltaB)
+      .to(targetB, 750)
+      .repeat(Infinity)
+      .easing(Easing.Quadratic.InOut)
+      .yoyo(true)
+      .onUpdate(() => {
+        this._mesh.position.y = deltaB.y;
+      })
+      .start();
   }
 
   public Remove(): void {
@@ -68,6 +82,9 @@ export class PowerMove {
   public Dispose(): void {
     if (this._spinTween) {
       this._spinTween.stop();
+    }
+    if (this._bounceTween) {
+      this._bounceTween.stop();
     }
     if (this._geometry) {
       this._geometry.dispose();
