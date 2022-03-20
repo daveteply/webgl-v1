@@ -1,29 +1,16 @@
-import {
-  BoxBufferGeometry,
-  BoxGeometry,
-  BufferAttribute,
-  CylinderGeometry,
-  MathUtils,
-  Mesh,
-  MeshPhongMaterial,
-  Object3D,
-  Texture,
-} from 'three';
+import { BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import * as shuffleArray from 'shuffle-array';
 import { PowerMoveType } from '../power-move-type';
+import { PowerMove } from './power-move';
 
 export class GamePiece extends Object3D {
   private _geometry: BoxGeometry;
   private _mesh: Mesh;
-
-  private _powerMoveGeometry!: CylinderGeometry;
-  private _powerMoveMesh!: Mesh;
-  private _powerMoveMaterial!: MeshPhongMaterial;
-  private _powerMoveSpinTween!: any;
+  private _powerMove!: PowerMove;
 
   private _gamePieceMaterials: GamePieceMaterial[] = [];
 
@@ -254,71 +241,21 @@ export class GamePiece extends Object3D {
     // reset vertical flip
     this.rotation.z = 0;
 
-    // create new geometry, material, mesh
-    this._powerMoveGeometry = new CylinderGeometry(1, 1, 1.5, 16);
-    this._powerMoveGeometry.scale(0.01, 0.01, 0.01);
-    this._powerMoveMaterial = new MeshPhongMaterial({
-      // TODO: create cycling color
-      transparent: true,
-      opacity: 0.0,
-      bumpMap: texture,
-      bumpScale: 0.5,
-    });
-    this._powerMoveMesh = new Mesh(this._powerMoveGeometry, this._powerMoveMaterial);
-    this.add(this._powerMoveMesh);
-
-    const delta = { s: 0.1, o: 0.0 };
-    const target = { s: 40.0, o: 0.8 };
-    new Tween(delta)
-      .to(target, 750)
-      .easing(Easing.Bounce.InOut)
-      .onUpdate(() => {
-        this._powerMoveMesh.scale.setScalar(delta.s);
-        this._powerMoveMaterial.opacity = delta.o;
-      })
-      .start();
-
-    this._powerMoveSpinTween = new Tween({})
-      .repeat(Infinity)
-      .onUpdate(() => {
-        this._powerMoveMesh.rotateY(0.005);
-      })
-      .start();
+    this._powerMove = new PowerMove(texture);
+    this.add(this._powerMove.PowerMoveMesh);
+    this._powerMove.AnimateIntro();
   }
 
   public PowerMoveRemove(): void {
     this._isRemoved = true;
     this._isPowerMove = false;
 
-    const delta = { s: this._powerMoveMesh.scale.x, o: 0.8 };
-    const target = { s: 300.0, o: 0.0 };
-    new Tween(delta)
-      .to(target, 500)
-      .easing(Easing.Sinusoidal.InOut)
-      .onUpdate(() => {
-        this._powerMoveMesh.scale.setScalar(delta.s);
-        this._powerMoveMesh.translateZ(-0.01);
-        this._powerMoveMaterial.opacity = delta.o;
-      })
-      .onComplete(() => {
-        this._powerMoveMesh.scale.setScalar(0);
-        if (this._powerMoveSpinTween) {
-          this._powerMoveSpinTween.stop();
-        }
-      })
-      .start();
+    this._powerMove.Remove();
   }
 
   public Dispose(): void {
-    // power move piece
-    if (this._powerMoveGeometry) {
-      this._powerMoveGeometry.dispose();
-    }
-    if (this._powerMoveMaterial) {
-      this._powerMoveMaterial.dispose();
-    }
-    if (this._powerMoveSpinTween) {
-      this._powerMoveSpinTween.stop();
+    if (this._powerMove) {
+      this._powerMove.Dispose();
     }
 
     // game piece
