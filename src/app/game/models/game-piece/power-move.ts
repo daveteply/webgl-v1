@@ -5,7 +5,7 @@ import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 export class PowerMove {
   private _geometry!: CylinderGeometry;
   private _mesh!: Mesh;
-  private _material!: MeshPhongMaterial;
+  private _materials: MeshPhongMaterial[] = [];
 
   private _spinTween!: any;
   private _bounceTween!: any;
@@ -18,14 +18,22 @@ export class PowerMove {
     // create new geometry, material, mesh
     this._geometry = new CylinderGeometry(1, 1, 1.5, 16);
     this._geometry.scale(0.01, 0.01, 0.01);
-    this._material = new MeshPhongMaterial({
-      color: RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)],
-      transparent: true,
-      opacity: 0.0,
-      bumpMap: texture,
-      bumpScale: 0.5,
-    });
-    this._mesh = new Mesh(this._geometry, this._material);
+
+    const color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+
+    this._materials.push(
+      new MeshPhongMaterial({
+        color: color,
+        transparent: true,
+        opacity: 0.0,
+        bumpMap: texture,
+        bumpScale: 0.5,
+      })
+    );
+    this._materials.push(new MeshPhongMaterial({ color: color }));
+    this._materials.push(new MeshPhongMaterial({ color: color }));
+
+    this._mesh = new Mesh(this._geometry, this._materials);
   }
 
   public AnimateIntro(): void {
@@ -36,7 +44,7 @@ export class PowerMove {
       .easing(Easing.Bounce.InOut)
       .onUpdate(() => {
         this._mesh.scale.setScalar(delta.s);
-        this._material.opacity = delta.o;
+        this._materials.forEach((m) => (m.opacity = delta.o));
       })
       .start();
 
@@ -69,7 +77,7 @@ export class PowerMove {
       .onUpdate(() => {
         this._mesh.scale.setScalar(delta.s);
         this._mesh.translateZ(-0.01);
-        this._material.opacity = delta.o;
+        this._materials.forEach((m) => (m.opacity = delta.o));
       })
       .onComplete(() => {
         this._mesh.scale.setScalar(0);
@@ -90,8 +98,6 @@ export class PowerMove {
     if (this._geometry) {
       this._geometry.dispose();
     }
-    if (this._material) {
-      this._material.dispose();
-    }
+    this._materials.forEach((m) => m.dispose());
   }
 }
