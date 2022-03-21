@@ -122,7 +122,7 @@ export class GameWheel extends Object3D {
         break;
 
       case PowerMoveType.HorizontalRight:
-        targetTheta = MathUtils.randInt(-10, 5) * GRID_INC + this._theta;
+        targetTheta = MathUtils.randInt(-10, -5) * GRID_INC + this._theta;
         break;
 
       case PowerMoveType.HorizontalMix:
