@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { LEVEL_ADDITIVE, MINIMUM_MATCH_COUNT, MINIMUM_SPEED_BONUS } from '../game-constants';
+import {
+  LEVEL_ADDITIVE,
+  LONG_MATCH_SCORE_MULTIPLIER,
+  MINIMUM_MATCH_COUNT,
+  MINIMUM_SPEED_BONUS,
+  POWER_MOVE_USE_SCORE_MULTIPLIER,
+} from '../game-constants';
 import { LevelStats } from '../models/level-stats';
 
 @Injectable()
@@ -79,9 +85,6 @@ export class ScoringManagerService {
       this._levelStats.fastestMatchMs = timeDiff;
     }
 
-    // splash text
-    this._splashText = [];
-
     let scoreDelta = 0;
 
     // level multiplier
@@ -114,6 +117,15 @@ export class ScoringManagerService {
   public UpdateMoveCount(): void {
     this._levelStats.moveCount++;
     this._playerMoves--;
+  }
+
+  public UsePowerMove(): void {
+    this.UpdateMoveCount();
+
+    const usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
+    this._score += usePowerMoveBonus;
+
+    this._splashText.push('Power Move!', `+${usePowerMoveBonus} Points`);
   }
 
   public RestartGame(): void {
@@ -151,7 +163,8 @@ export class ScoringManagerService {
     if (longMatchMovesEarned) {
       this._playerMoves += longMatchMovesEarned;
       this._levelStats.moveCountEarned += longMatchMovesEarned;
-      const longMatchBonus = longMatchMovesEarned * this._level * LEVEL_ADDITIVE;
+
+      const longMatchBonus = longMatchMovesEarned * this._level * LONG_MATCH_SCORE_MULTIPLIER;
       this._score += longMatchBonus;
       this._splashText.push('Long Match', `+${longMatchBonus} Points`);
       this._splashText.push(`+${longMatchMovesEarned} Moves`);

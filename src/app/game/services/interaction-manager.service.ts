@@ -174,7 +174,7 @@ export class InteractionManagerService {
       if (gamePiece.IsPowerMove) {
         this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
         gamePiece.PowerMoveRemove();
-        this.scoringManager.UpdateMoveCount();
+        this.scoringManager.UsePowerMove();
         this.LockBoard(false);
       } else {
         // run matches algorithm
