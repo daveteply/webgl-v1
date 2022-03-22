@@ -7,6 +7,7 @@ import {
   POWER_MOVE_USE_SCORE_MULTIPLIER,
 } from '../game-constants';
 import { LevelStats } from '../models/level-stats';
+import { TextManagerService } from './text/text-manager.service';
 
 @Injectable()
 export class ScoringManagerService {
@@ -14,7 +15,7 @@ export class ScoringManagerService {
   private _timeStart!: number;
   private _timeStop!: number;
 
-  constructor() {
+  constructor(private textTextManager: TextManagerService) {
     this.ResetStats();
     this.initLevelPieceTarget();
   }
@@ -47,11 +48,6 @@ export class ScoringManagerService {
     return this._playerMoves === 0;
   }
 
-  private _splashText: string[] = [];
-  get SplashText(): string[] {
-    return this._splashText;
-  }
-
   get LevelComplete(): boolean {
     return this.LevelProgress >= 100;
   }
@@ -78,7 +74,7 @@ export class ScoringManagerService {
     this._levelProgress = (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
   }
 
-  public UpdateScore(pieceCount: number): void {
+  public UpdateScore(pieceCount: number, skipText: boolean): void {
     // update since previous match
     const timeDiff = this._timeStop - this._timeStart;
     if (timeDiff < this._levelStats.fastestMatchMs) {
@@ -95,12 +91,15 @@ export class ScoringManagerService {
     if (speedBonus >= MINIMUM_SPEED_BONUS) {
       this._levelStats.fastMatchBonusTotal += speedBonus;
       scoreDelta += speedBonus;
-      this._splashText.push('Speed Bonus', `+${speedBonus} Points`);
 
       // also earn move
       this._levelStats.moveCountEarned++;
       this._playerMoves++;
-      this._splashText.push('+1 Moves');
+
+      // splash text
+      if (!skipText) {
+        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`, '+1 Moves']);
+      }
     }
 
     // update score
@@ -108,7 +107,7 @@ export class ScoringManagerService {
 
     // long match multiplier
     if (pieceCount > MINIMUM_MATCH_COUNT) {
-      this.longMatchBonus(pieceCount);
+      this.longMatchBonus(pieceCount, skipText);
     }
 
     this.ResetTimer();
@@ -125,7 +124,7 @@ export class ScoringManagerService {
     const usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
     this._score += usePowerMoveBonus;
 
-    this._splashText.push('Power Move!', `+${usePowerMoveBonus} Points`);
+    this.textTextManager.ShowText(['Power Move!', `+${usePowerMoveBonus} Points`]);
   }
 
   public RestartGame(): void {
@@ -158,7 +157,7 @@ export class ScoringManagerService {
     this._timeStart = Date.now();
   }
 
-  private longMatchBonus(pieceCount: number) {
+  private longMatchBonus(pieceCount: number, skipText: boolean) {
     const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
     if (longMatchMovesEarned) {
       this._playerMoves += longMatchMovesEarned;
@@ -166,8 +165,10 @@ export class ScoringManagerService {
 
       const longMatchBonus = longMatchMovesEarned * this._level * LONG_MATCH_SCORE_MULTIPLIER;
       this._score += longMatchBonus;
-      this._splashText.push('Long Match', `+${longMatchBonus} Points`);
-      this._splashText.push(`+${longMatchMovesEarned} Moves`);
+
+      if (!skipText) {
+        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`, `+${longMatchMovesEarned} Moves`]);
+      }
     }
   }
 

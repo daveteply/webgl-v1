@@ -20,19 +20,19 @@ describe('ScoringManagerService', () => {
     });
     describe('move count', () => {
       it('should calc 0 moves earned for minimum match count', () => {
-        service.UpdateScore(3);
+        service.UpdateScore(3, false);
         expect(service.LevelStats.moveCountEarned).toBe(0);
       });
       it('should increase moves earned - 4', () => {
-        service.UpdateScore(4);
+        service.UpdateScore(4, false);
         expect(service.LevelStats.moveCountEarned).toBe(1);
       });
       it('should increase moves earned - 5', () => {
-        service.UpdateScore(5);
+        service.UpdateScore(5, false);
         expect(service.LevelStats.moveCountEarned).toBe(2);
       });
       it('should increase moves earned - 7', () => {
-        service.UpdateScore(7);
+        service.UpdateScore(7, false);
         expect(service.LevelStats.moveCountEarned).toBe(3);
       });
     });

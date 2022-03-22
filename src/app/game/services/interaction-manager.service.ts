@@ -80,7 +80,9 @@ export class InteractionManagerService {
           // initiate the removal animation
           this.effectsManager.AnimateRemove(this._matchingPieces);
           // update score
-          this.scoringManager.UpdateScore(this._matchingPieces.length);
+          this.scoringManager.UpdateScore(this._matchingPieces.length, this.scoringManager.LevelComplete);
+
+          // level completed
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
@@ -99,8 +101,6 @@ export class InteractionManagerService {
               }
             }
 
-            //text splash
-            this.textManager.ShowText(this.scoringManager.SplashText);
             this.effectsManager.AnimateLock(this.objectManager.Axle, false);
             this.LockBoard(false);
           }
