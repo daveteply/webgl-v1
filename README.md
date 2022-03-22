@@ -1,5 +1,5 @@
-# WebGL v1
+# WebGL v2
 
 An application utilizing the [Angular](https://angular.io/) framework and [three.js](https://threejs.org/) to learn more about object graphs and 3D object interactivity.
 
-See [demo](https://daveteply.github.io/webgl-v1?i=90)!
+See [demo](https://daveteply.github.io/webgl-v1?i=91)!

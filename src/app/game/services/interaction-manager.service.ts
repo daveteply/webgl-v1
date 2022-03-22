@@ -81,6 +81,10 @@ export class InteractionManagerService {
           this.effectsManager.AnimateRemove(this._matchingPieces);
           // update score
           this.scoringManager.UpdateScore(this._matchingPieces.length, this.scoringManager.LevelComplete);
+          // long match audio
+          if (this._matchingPieces.length > MINIMUM_MATCH_COUNT) {
+            this.audioManager.PlayLongMatch(this._matchingPieces.length);
+          }
 
           // level completed
           if (this.scoringManager.LevelComplete) {
@@ -97,6 +101,7 @@ export class InteractionManagerService {
               }
               const moveType = this.gameEngine.PowerMoveSelection();
               if (moveType !== PowerMoveType.None) {
+                this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
                 this.objectManager.GamePiecePowerMove(this._matchingPieces[0], moveType);
               }
             }
@@ -172,6 +177,7 @@ export class InteractionManagerService {
     if (gamePiece && !gamePiece?.IsRemoved) {
       // power move
       if (gamePiece.IsPowerMove) {
+        this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
         this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
         gamePiece.PowerMoveRemove();
         this.scoringManager.UsePowerMove();

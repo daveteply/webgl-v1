@@ -11,6 +11,9 @@ export enum AudioType {
   PIECE_REMOVE,
   PIECE_SELECT,
   MATCH_FAIL,
+  MATCH_LONG,
+  POWER_MOVE_APPEAR,
+  POWER_MOVE_USE,
   LEVEL_END_1,
   LEVEL_END_2,
   LEVEL_END_3,
@@ -64,6 +67,18 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/match-fail.mp3',
     audioType: AudioType.MATCH_FAIL,
+  },
+  {
+    url: 'assets/audio/long-match.mp3',
+    audioType: AudioType.MATCH_LONG,
+  },
+  {
+    url: 'assets/audio/power-move-appear.mp3',
+    audioType: AudioType.POWER_MOVE_APPEAR,
+  },
+  {
+    url: 'assets/audio/power-move-use.mp3',
+    audioType: AudioType.POWER_MOVE_USE,
   },
   {
     url: 'assets/audio/level-complete/Assassins.mp3',

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AudioType, AUDIO_LIST } from './audio-info';
 import { Howl, Howler } from 'howler';
+import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,10 @@ export class AudioManagerService {
     }
   }
 
+  public StartProgression(): void {
+    this._progressionNext = this.ProgressionMin;
+  }
+
   public PlayAudio(audioType: AudioType, useNote: boolean = false): void {
     const target = AUDIO_LIST.find((audioTrack) => audioTrack.audioType === audioType);
     if (target) {
@@ -75,20 +80,25 @@ export class AudioManagerService {
     }
   }
 
-  private stopMusic(audioType: AudioType): void {
-    const target = AUDIO_LIST.find((a) => a.audioType === audioType);
-    if (target) {
-      target.howl?.stop();
+  public PlayLongMatch(matchLength: number): void {
+    this.StartProgression();
+    let targetNote = 0;
+    for (let i = 0; i < matchLength - MINIMUM_MATCH_COUNT; i++) {
+      targetNote = this.nextProgression;
     }
-  }
-
-  public StartProgression(): void {
-    this._progressionNext = this.ProgressionMin;
+    this.PlayAudio(AudioType.MATCH_LONG, true);
   }
 
   private playLoadedAudio(target: Howl, useNote: boolean): void {
     target.rate(useNote ? this.nextProgression : 1);
     target.play();
+  }
+
+  private stopMusic(audioType: AudioType): void {
+    const target = AUDIO_LIST.find((a) => a.audioType === audioType);
+    if (target) {
+      target.howl?.stop();
+    }
   }
 
   private get nextProgression(): number {

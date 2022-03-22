@@ -48,7 +48,7 @@ export class GameEngineService {
     const moveType = enumValues[inx];
 
     if (!environment.production) {
-      console.log('    Power Move Type: ', inx, PowerMoveType[moveType]);
+      console.info('    Power Move Type: ', inx, PowerMoveType[moveType]);
     }
 
     return moveType;

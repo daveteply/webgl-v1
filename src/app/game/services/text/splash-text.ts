@@ -62,15 +62,12 @@ export class SplashText extends Object3D {
 
   public Dispose(): void {
     if (this._material) {
-      console.log('dispose material opacity 0');
       this._material.opacity = 0;
     }
     if (this._introTween) {
-      console.log('stop intro');
       this._introTween.stop();
     }
     if (this._outroTween) {
-      console.log('stop outro');
       this._outroTween.stop();
     }
     this._material.dispose();
