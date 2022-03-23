@@ -54,7 +54,7 @@ export class SceneManagerService {
     const aspectRatio = this._width / this._height;
 
     if (!this._camera) {
-      this._camera = new PerspectiveCamera(45, aspectRatio, 1, 75);
+      this._camera = new PerspectiveCamera(45, aspectRatio, 1, 50);
       this._camera.position.z = 5;
       this.objectManager.SetCamera(this._camera);
 

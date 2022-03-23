@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
+import { Box3, BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
@@ -10,6 +10,7 @@ import { PowerMove } from './power-move';
 export class GamePiece extends Object3D {
   private _geometry: BoxGeometry;
   private _mesh: Mesh;
+  private _boundingBox: Box3;
   private _powerMove!: PowerMove;
 
   private _gamePieceMaterials: GamePieceMaterial[] = [];
@@ -87,6 +88,9 @@ export class GamePiece extends Object3D {
     );
 
     this.add(this._mesh);
+
+    // bounding box
+    this._boundingBox = new Box3(this._mesh.geometry.boundingBox?.min, this._mesh.geometry.boundingBox?.max);
 
     // interaction and matching values
     this._thetaStart = Math.abs(rotation);
