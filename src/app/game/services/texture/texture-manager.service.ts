@@ -35,8 +35,6 @@ export class TextureManagerService {
     return this._levelType;
   }
 
-  private _powerMoveTextures: PowerMoveBumpData[] = [];
-
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadingStarted: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
