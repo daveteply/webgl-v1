@@ -10,7 +10,7 @@ export interface PowerMoveBumpData extends BumpData {
   moveType: PowerMoveType;
 }
 
-export const BumpMaterials: BumpData[] = [
+export const BumpTextures: BumpData[] = [
   { src: 'assets/maps/bump/material/bark-1.webp' },
   { src: 'assets/maps/bump/material/bark-2.webp' },
   { src: 'assets/maps/bump/material/brick-1.webp' },
@@ -26,7 +26,7 @@ export const BumpMaterials: BumpData[] = [
   { src: 'assets/maps/bump/material/rubber-1.webp' },
 ];
 
-export const BumpSymbols: BumpData[] = [
+export const BumpSymbolTextures: BumpData[] = [
   { src: 'assets/maps/bump/symbol/box.webp' },
   { src: 'assets/maps/bump/symbol/diamond.webp' },
   { src: 'assets/maps/bump/symbol/dits.webp' },
@@ -35,7 +35,7 @@ export const BumpSymbols: BumpData[] = [
   { src: 'assets/maps/bump/symbol/sun.webp' },
 ];
 
-export const PowerMoveMaterials: PowerMoveBumpData[] = [
+export const PowerMoveTextures: PowerMoveBumpData[] = [
   { src: 'assets/maps/bump/power-move/right.webp', moveType: PowerMoveType.HorizontalRight },
   { src: 'assets/maps/bump/power-move/left.webp', moveType: PowerMoveType.HorizontalLeft },
   { src: 'assets/maps/bump/power-move/right-left.webp', moveType: PowerMoveType.HorizontalMix },

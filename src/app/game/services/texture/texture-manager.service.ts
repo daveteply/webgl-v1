@@ -8,7 +8,7 @@ import { CANVAS_TEXTURE_SCALE, PLAYABLE_PIECE_COUNT } from '../../game-constants
 import { LevelMaterialType } from '../../models/level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
-import { BumpMaterials, BumpSymbols, PowerMoveBumpData, PowerMoveMaterials } from './texture-info';
+import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
 
 interface EmojiSequence {
   desc: string;
@@ -70,11 +70,11 @@ export class TextureManagerService {
 
     switch (this._levelType) {
       case LevelMaterialType.ColorBumpShape:
-        this.loadBumpSymbols();
+        this.loadBumpSymbolTextures();
         break;
 
       case LevelMaterialType.ColorBumpMaterial:
-        this.loadBumpMaterials();
+        this.loadBumpTextures();
         break;
 
       case LevelMaterialType.Emoji:
@@ -90,14 +90,13 @@ export class TextureManagerService {
         if (!environment.production) {
           emojiList.forEach((emoji) => console.info(`  ${emoji.desc} ${emoji.sequence}`));
         }
-
         break;
     }
   }
 
   public GetPowerMoveTexture(moveType: PowerMoveType): Observable<Texture> {
     return new Observable((observer) => {
-      const moveTexture = PowerMoveMaterials.find((pt) => pt.moveType === moveType);
+      const moveTexture = PowerMoveTextures.find((pt) => pt.moveType === moveType);
       if (moveTexture) {
         if (moveTexture?.texture) {
           observer.next(moveTexture.texture);
@@ -121,10 +120,10 @@ export class TextureManagerService {
     });
   }
 
-  private loadBumpSymbols(): void {
-    const bumpSymbolsLoaded = BumpSymbols.every((b) => b.texture);
+  private loadBumpSymbolTextures(): void {
+    const bumpSymbolsLoaded = BumpSymbolTextures.every((b) => b.texture);
     if (bumpSymbolsLoaded) {
-      BumpSymbols.forEach((s) => {
+      BumpSymbolTextures.forEach((s) => {
         if (s.texture) {
           this._textures.push(s.texture);
         }
@@ -132,7 +131,7 @@ export class TextureManagerService {
       this.LevelTexturesLoaded.next();
     } else {
       // load and cache
-      BumpSymbols.forEach((map) => {
+      BumpSymbolTextures.forEach((map) => {
         this._textureLoader.load(map.src, (data) => {
           data.name = map.src;
           map.texture = data;
@@ -142,9 +141,9 @@ export class TextureManagerService {
     }
   }
 
-  private loadBumpMaterials(): void {
+  private loadBumpTextures(): void {
     // select a bump map
-    const randBumpMaterialMap = BumpMaterials[MathUtils.randInt(0, BumpMaterials.length - 1)];
+    const randBumpMaterialMap = BumpTextures[MathUtils.randInt(0, BumpTextures.length - 1)];
     // check if loaded
     if (randBumpMaterialMap.texture) {
       if (!environment.production) {
