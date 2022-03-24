@@ -101,6 +101,9 @@ export class InteractionManagerService {
               }
               const moveType = this.gameEngine.PowerMoveSelection();
               if (moveType !== PowerMoveType.None) {
+                if (!environment.production) {
+                  console.info('  ', PowerMoveType[moveType]);
+                }
                 this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
                 this.objectManager.GamePiecePowerMove(this._matchingPieces[0], moveType);
               }
