@@ -50,20 +50,19 @@ export class SplashText extends Object3D {
     this._introTween.chain(this._outroTween);
   }
 
-  public Animate$: Observable<TextSplashEventType> = new Observable((observer) => {
-    this._introTween.start();
-    this._introTween.onComplete(() => {
-      observer.next(TextSplashEventType.IntroComplete);
+  public AnimateText(): Observable<TextSplashEventType> {
+    return new Observable((observer) => {
+      this._introTween.start();
+      this._introTween.onComplete(() => {
+        observer.next(TextSplashEventType.IntroComplete);
+      });
+      this._outroTween.onComplete(() => {
+        observer.next(TextSplashEventType.OutroComplete);
+      });
     });
-    this._outroTween.onComplete(() => {
-      observer.next(TextSplashEventType.OutroComplete);
-    });
-  });
+  }
 
   public Dispose(): void {
-    if (this._material) {
-      this._material.opacity = 0;
-    }
     if (this._introTween) {
       this._introTween.stop();
     }

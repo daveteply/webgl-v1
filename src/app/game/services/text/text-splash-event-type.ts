@@ -1,4 +1,4 @@
 export enum TextSplashEventType {
-  IntroComplete,
+  IntroComplete = 1,
   OutroComplete,
 }

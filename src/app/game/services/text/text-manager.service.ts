@@ -19,6 +19,8 @@ export class TextManagerService {
   private _queue: SplashText[] = [];
   private _textGroup!: Group;
 
+  private _isPresenting: boolean = false;
+
   constructor() {
     this._loadingManager = new LoadingManager(
       () => {
@@ -66,22 +68,26 @@ export class TextManagerService {
   }
 
   private nextText(): void {
-    const next = this._queue.shift();
-    if (next) {
-      this._textGroup.add(next);
-      const sub = next.Animate$.subscribe((nextEvent) => {
-        switch (nextEvent) {
-          case TextSplashEventType.IntroComplete:
-            this.nextText();
-            break;
+    if (!this._isPresenting) {
+      const next = this._queue.shift();
+      if (next) {
+        this._textGroup.add(next);
+        this._isPresenting = true;
+        const sub = next.AnimateText().subscribe((nextEvent) => {
+          switch (nextEvent) {
+            case TextSplashEventType.IntroComplete:
+              this._isPresenting = false;
+              this.nextText();
+              break;
 
-          case TextSplashEventType.OutroComplete:
-            next.Dispose();
-            sub.unsubscribe();
-            this._textGroup.remove(next);
-            break;
-        }
-      });
+            case TextSplashEventType.OutroComplete:
+              this._textGroup.remove(next);
+              next.Dispose();
+              sub.unsubscribe();
+              break;
+          }
+        });
+      }
     }
   }
 }
