@@ -66,25 +66,22 @@ export class TextManagerService {
   }
 
   private nextText(): void {
-    if (this._queue.length) {
-      const next = this._queue.shift();
-      if (next) {
-        this._textGroup.add(next);
-        if (next) {
-          const sub = next.Animate$.subscribe((nextEvent) => {
-            switch (nextEvent) {
-              case TextSplashEventType.IntroComplete:
-                this.nextText();
-                break;
+    const next = this._queue.shift();
+    if (next) {
+      this._textGroup.add(next);
+      const sub = next.Animate$.subscribe((nextEvent) => {
+        switch (nextEvent) {
+          case TextSplashEventType.IntroComplete:
+            this.nextText();
+            break;
 
-              case TextSplashEventType.OutroComplete:
-                next.Dispose();
-                sub.unsubscribe();
-                break;
-            }
-          });
+          case TextSplashEventType.OutroComplete:
+            next.Dispose();
+            sub.unsubscribe();
+            this._textGroup.remove(next);
+            break;
         }
-      }
+      });
     }
   }
 }
