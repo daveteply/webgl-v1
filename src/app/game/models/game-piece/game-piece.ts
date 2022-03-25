@@ -24,6 +24,8 @@ export class GamePiece extends Object3D {
   private _lockTween: any;
   private _levelChangeTween: any;
 
+  private _originalZRotation: number;
+
   // Each side material is arranged as follows:
   // 0 'back'
   // 1 'front'
@@ -94,6 +96,8 @@ export class GamePiece extends Object3D {
 
     // 1 is the default (or "front"), will change when piece is flipped
     this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
+
+    this._originalZRotation = this.rotation.z;
   }
 
   set ThetaOffset(theta: number) {
@@ -174,15 +178,12 @@ export class GamePiece extends Object3D {
     this._isRemoved = true;
 
     // set animation properties
-    const delta = Object.assign(
-      {},
-      {
-        x: this._mesh.rotation.x,
-        y: this._mesh.rotation.y,
-        z: this._mesh.rotation.z,
-        o: 1.0,
-      }
-    );
+    const delta = {
+      x: this._mesh.rotation.x,
+      y: this._mesh.rotation.y,
+      z: this._mesh.rotation.z,
+      o: 1.0,
+    };
     const target = {
       x: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
       y: delta.y + MathUtils.randFloat(-Math.PI, Math.PI),
@@ -191,7 +192,7 @@ export class GamePiece extends Object3D {
     };
 
     new Tween(delta)
-      .to(target, MathUtils.randInt(250, 750))
+      .to(target, MathUtils.randInt(500, 1000))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;
@@ -205,9 +206,9 @@ export class GamePiece extends Object3D {
   public AnimateFlipTween(turns: number, directionUp: boolean): void {
     if (!this._isPowerMove) {
       // set direction
-      const delta = Object.assign({}, { theta: this.rotation.z });
+      const delta = { theta: this.rotation.z };
       const final = {
-        theta: this.rotation.z + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
+        theta: delta.theta + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
       };
 
       // update match key by shifting array number of rotations
@@ -222,7 +223,7 @@ export class GamePiece extends Object3D {
 
       // tween
       new Tween(delta)
-        .to(final, 2000)
+        .to(final, 1500)
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
         .onUpdate(() => {
@@ -242,7 +243,7 @@ export class GamePiece extends Object3D {
     this._powerMoveType = moveType;
 
     // reset vertical flip
-    this.rotation.z = 0;
+    this.rotation.z = this._originalZRotation;
 
     this._powerMove = new PowerMove(texture);
     this.add(this._powerMove.PowerMoveMesh);

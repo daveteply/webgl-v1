@@ -151,6 +151,7 @@ export class GameWheel extends Object3D {
     for (let i = 0; i < this.children.length; i++) {
       const gamePiece = this.children[i] as GamePiece;
 
+      // including zero to allow some not to rotate
       const turns = MathUtils.randInt(0, 3);
       switch (moveType) {
         case PowerMoveType.VerticalUp:
