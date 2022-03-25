@@ -1,4 +1,4 @@
-import { Box3, BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
+import { BoxBufferGeometry, BoxGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { GamePieceMaterial } from './game-piece-material';
 import { GamePieceMaterialData } from './game-piece-material-data';
@@ -174,12 +174,15 @@ export class GamePiece extends Object3D {
     this._isRemoved = true;
 
     // set animation properties
-    const delta = {
-      x: this._mesh.rotation.x,
-      y: this._mesh.rotation.y,
-      z: this._mesh.rotation.y,
-      o: 1.0,
-    };
+    const delta = Object.assign(
+      {},
+      {
+        x: this._mesh.rotation.x,
+        y: this._mesh.rotation.y,
+        z: this._mesh.rotation.z,
+        o: 1.0,
+      }
+    );
     const target = {
       x: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
       y: delta.y + MathUtils.randFloat(-Math.PI, Math.PI),
@@ -192,7 +195,7 @@ export class GamePiece extends Object3D {
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;
-        this._mesh.rotation.z = delta.x;
+        this._mesh.rotation.z = delta.z;
         this._mesh.scale.setScalar(delta.o);
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
       })
@@ -239,7 +242,7 @@ export class GamePiece extends Object3D {
     this._powerMoveType = moveType;
 
     // reset vertical flip
-    this.rotation.z = 0;
+    // this.rotation.z = 0;
 
     this._powerMove = new PowerMove(texture);
     this.add(this._powerMove.PowerMoveMesh);

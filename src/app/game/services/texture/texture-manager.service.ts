@@ -108,7 +108,8 @@ export class TextureManagerService {
               moveTexture.texture = data;
               moveTexture.texture.wrapS = RepeatWrapping;
               moveTexture.texture.repeat.set(3, 1);
-              observer.next(data);
+              observer.next(moveTexture.texture);
+              observer.complete();
             },
             () => {},
             (error) => {
