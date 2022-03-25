@@ -205,7 +205,7 @@ export class GamePiece extends Object3D {
   public AnimateFlipTween(turns: number, directionUp: boolean): void {
     if (!this._isPowerMove) {
       // set direction
-      const delta = { theta: this.rotation.z };
+      const delta = Object.assign({}, { theta: this.rotation.z });
       const final = {
         theta: this.rotation.z + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
       };
@@ -242,7 +242,7 @@ export class GamePiece extends Object3D {
     this._powerMoveType = moveType;
 
     // reset vertical flip
-    // this.rotation.z = 0;
+    this.rotation.z = 0;
 
     this._powerMove = new PowerMove(texture);
     this.add(this._powerMove.PowerMoveMesh);
