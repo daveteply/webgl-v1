@@ -99,6 +99,11 @@ export class SceneManagerService {
     if (this._renderer) {
       this._renderer.setSize(this._width, this._height, false);
     }
+
+    // DEBUG
+    // setInterval(() => {
+    //   console.log(this._renderer?.info);
+    // }, 5000);
   }
 
   private animate(): void {
