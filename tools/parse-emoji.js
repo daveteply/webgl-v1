@@ -13,9 +13,7 @@ const parseLine = (line) => {
   listArray.forEach((l) => {
     hexArray.push(Number("0x" + l));
   });
-  let versionDesc = lineSegments[1]
-    .substr(lineSegments[1].indexOf(" E"))
-    .trim();
+  let versionDesc = lineSegments[1].substr(lineSegments[1].indexOf(" E")).trim();
   const spaceIndex = versionDesc.indexOf(" ");
   return {
     sequence: hexArray,
