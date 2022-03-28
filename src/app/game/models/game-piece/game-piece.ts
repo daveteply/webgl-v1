@@ -119,8 +119,8 @@ export class GamePiece extends Object3D {
     const delta = start ? { o: 0.0 } : { o: 1.0 };
     const target = start ? { o: 1.0 } : { o: 0.0 };
     this._levelChangeTween = new Tween(delta)
-      .to(target, 3000)
-      .delay(MathUtils.randInt(850, 1250))
+      .to(target, 2500)
+      .delay(MathUtils.randInt(250, 1500))
       .onUpdate(() => {
         this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
       })
@@ -192,7 +192,7 @@ export class GamePiece extends Object3D {
     };
 
     new Tween(delta)
-      .to(target, MathUtils.randInt(500, 1000))
+      .to(target, MathUtils.randInt(1000, 1500))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;

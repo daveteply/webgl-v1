@@ -118,12 +118,9 @@ export class ScoringManagerService {
     this._playerMoves--;
   }
 
-  public UsePowerMove(): void {
-    this.UpdateMoveCount();
-
+  public UpdatePowerMoveBonus(): void {
     const usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
     this._score += usePowerMoveBonus;
-
     this.textTextManager.ShowText(['Power Move!', `+${usePowerMoveBonus} Points`]);
   }
 

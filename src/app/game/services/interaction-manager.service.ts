@@ -55,8 +55,7 @@ export class InteractionManagerService {
     private effectsManager: EffectsManagerService,
     private gameEngine: GameEngineService,
     private scoringManager: ScoringManagerService,
-    private audioManager: AudioManagerService,
-    private textManager: TextManagerService
+    private audioManager: AudioManagerService
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
@@ -153,6 +152,7 @@ export class InteractionManagerService {
           this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
           this.scoringManager.UpdateMoveCount();
           if (this.scoringManager.GameOver) {
+            this.audioManager.PlayAudio(AudioType.GAME_OVER);
             this.objectManager.LevelCompleted.next(true);
           }
         } else {
@@ -180,10 +180,16 @@ export class InteractionManagerService {
     if (gamePiece && !gamePiece?.IsRemoved) {
       // power move
       if (gamePiece.IsPowerMove) {
-        this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
-        this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
+        this.scoringManager.UpdateMoveCount();
         gamePiece.PowerMoveRemove();
-        this.scoringManager.UsePowerMove();
+        if (this.scoringManager.GameOver) {
+          this.audioManager.PlayAudio(AudioType.GAME_OVER);
+          this.objectManager.LevelCompleted.next(true);
+        } else {
+          this.scoringManager.UpdatePowerMoveBonus();
+          this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+          this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
+        }
         this.LockBoard(false);
       } else {
         // run matches algorithm

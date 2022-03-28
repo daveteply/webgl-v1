@@ -172,8 +172,10 @@ export class EffectsManagerService {
     if (selectedPieces.length) {
       selectedPieces.forEach((p) => {
         p.AnimateRemovalTween();
-        this.audioManager.PlayAudio(AudioType.PIECE_REMOVE);
       });
+      const removeSoundType =
+        selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
+      this.audioManager.PlayAudio(removeSoundType);
     }
   }
 
