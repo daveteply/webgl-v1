@@ -299,7 +299,6 @@ export const ColorSchemeData = [
   {
     id: 25,
     colors: [
-      '#fffae6',
       '#997d00',
       '#ffe366',
       '#c2ff00',
