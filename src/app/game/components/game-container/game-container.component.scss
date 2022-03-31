@@ -13,9 +13,10 @@
 
   .game-scoring {
     font-size: x-large;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: unset;
+    place-items: center;
     padding: 0 0.5em 0 0.5em;
     @include fader;
     &.show {
@@ -23,9 +24,11 @@
     }
     @media screen and (min-width: $min-width) {
       padding-top: 0.5em;
+      display: flex;
       flex-direction: column;
-      justify-content: unset;
-      align-items: flex-end;
+      .moves-remaining {
+        margin-top: 1em;
+      }
     }
     .moves-remaining {
       display: flex;
