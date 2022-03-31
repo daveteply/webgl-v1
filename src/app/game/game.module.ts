@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 
 import { GameRoutingModule } from './game-routing.module';
 
@@ -22,9 +22,18 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
+import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
 
 @NgModule({
-  declarations: [CanvasComponent, GameContainerComponent, LevelDialogComponent, GameOverComponent],
+  declarations: [
+    CanvasComponent,
+    GameContainerComponent,
+    LevelDialogComponent,
+    GameOverComponent,
+    TextZoomComponent,
+    ZoomCharComponent,
+  ],
   imports: [
     CommonModule,
     GameRoutingModule,
@@ -43,6 +52,7 @@ import { MatIconModule } from '@angular/material/icon';
     GameEngineService,
     ScoringManagerService,
     EffectsManagerService,
+    DecimalPipe,
   ],
 })
 export class GameModule {}

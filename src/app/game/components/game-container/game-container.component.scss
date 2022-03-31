@@ -12,6 +12,7 @@
   display: grid;
 
   .game-scoring {
+    font-size: x-large;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,6 +26,21 @@
       flex-direction: column;
       justify-content: unset;
       align-items: flex-end;
+    }
+    .moves-remaining {
+      display: flex;
+      align-items: center;
+      font-size: large;
+      .move-count {
+        border: 0.125em solid lightgray;
+        padding: 0.25em 0.5em;
+        color: black;
+        background-color: lightgray;
+      }
+    }
+    .level-info {
+      display: flex;
+      align-items: center;
     }
   }
   .game-canvas {

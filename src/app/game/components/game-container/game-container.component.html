@@ -4,9 +4,16 @@
   [style.grid-template-columns]="GridTemplateColumns"
 >
   <div class="game-scoring" [class.show]="ShowScoreProgress">
-    <span>Score: {{ scoringManager.Score | number }}</span>
-    <span>Moves left: {{ scoringManager.PlayerMoves }}</span>
-    <span>Level: {{ scoringManager.Level }}</span>
+    <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
+    <div class="moves-remaining">
+      <mat-icon>arrow_back</mat-icon>
+      <div class="move-count">{{ scoringManager.PlayerMoves }}</div>
+      <mat-icon>arrow_forward</mat-icon>
+    </div>
+    <div class="level-info">
+      <span>Level</span>
+      <h2>{{ scoringManager.Level }}</h2>
+    </div>
   </div>
   <wgl-canvas class="game-canvas"></wgl-canvas>
   <div class="level-progress" [class.show]="ShowScoreProgress">
