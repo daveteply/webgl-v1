@@ -36,9 +36,9 @@ export class AudioManagerService {
   }
 
   public StopLevelComplete(): void {
-    this.stopMusic(AudioType.LEVEL_END_1);
-    this.stopMusic(AudioType.LEVEL_END_2);
-    this.stopMusic(AudioType.LEVEL_END_3);
+    this.StopAudio(AudioType.LEVEL_END_1);
+    this.StopAudio(AudioType.LEVEL_END_2);
+    this.StopAudio(AudioType.LEVEL_END_3);
   }
 
   public PlayLevelStart(): void {
@@ -64,16 +64,16 @@ export class AudioManagerService {
     this._progressionNext = this.ProgressionMin;
   }
 
-  public PlayAudio(audioType: AudioType, useNote: boolean = false): void {
+  public PlayAudio(audioType: AudioType, useNote: boolean = false, loop: boolean = false): void {
     const target = AUDIO_LIST.find((audioTrack) => audioTrack.audioType === audioType);
     if (target) {
       if (target.howl) {
-        this.playLoadedAudio(target.howl, useNote);
+        this.playLoadedAudio(target.howl, useNote, loop);
       } else {
         target.howl = new Howl({ src: target.url });
         target.howl.on('load', () => {
           if (target.howl) {
-            this.playLoadedAudio(target.howl, useNote);
+            this.playLoadedAudio(target.howl, useNote, loop);
           }
         });
       }
@@ -89,16 +89,17 @@ export class AudioManagerService {
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
 
-  private playLoadedAudio(target: Howl, useNote: boolean): void {
-    target.rate(useNote ? this.nextProgression : 1);
-    target.play();
-  }
-
-  private stopMusic(audioType: AudioType): void {
+  public StopAudio(audioType: AudioType): void {
     const target = AUDIO_LIST.find((a) => a.audioType === audioType);
     if (target) {
       target.howl?.stop();
     }
+  }
+
+  private playLoadedAudio(target: Howl, useNote: boolean, loop: boolean): void {
+    target.loop(loop);
+    target.rate(useNote ? this.nextProgression : 1);
+    target.play();
   }
 
   private get nextProgression(): number {

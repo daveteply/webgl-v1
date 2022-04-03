@@ -1,0 +1,13 @@
+<div class="moves-remaining-container">
+  <mat-icon>arrow_back</mat-icon>
+  <div
+    class="move-count"
+    [class.warn]="IsWarn"
+    [class.danger]="IsDanger"
+    [class.panic]="IsPanic"
+    [class.zer0]="moves === 0"
+  >
+    {{ moves }}
+  </div>
+  <mat-icon>arrow_forward</mat-icon>
+</div>

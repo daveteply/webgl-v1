@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
-import { MathUtils } from 'three';
 
 @Component({
   selector: 'wgl-zoom-char',

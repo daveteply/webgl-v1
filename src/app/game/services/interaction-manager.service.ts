@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
-import { MINIMUM_MATCH_COUNT, ROTATIONAL_CONSTANT } from '../game-constants';
+import { MINIMUM_MATCH_COUNT, MOVES_REMAINING_COUNT_PANIC, ROTATIONAL_CONSTANT } from '../game-constants';
 
 import { GameWheel } from '../models/game-wheel';
 import { GameEngineService } from './game-engine.service';
@@ -14,7 +14,6 @@ import { ScoringManagerService } from './scoring-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
-import { TextManagerService } from './text/text-manager.service';
 
 import 'hammerjs';
 import { environment } from 'src/environments/environment';
@@ -85,6 +84,11 @@ export class InteractionManagerService {
             this.audioManager.PlayLongMatch(this._matchingPieces.length);
           }
 
+          // stop panic music
+          if (this.scoringManager.PlayerMoves > MOVES_REMAINING_COUNT_PANIC) {
+            this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
+          }
+
           // level completed
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
@@ -151,8 +155,15 @@ export class InteractionManagerService {
         if (this._activeWheel?.SnapToGrid()) {
           this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
           this.scoringManager.UpdateMoveCount();
+
+          // panic
+          if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
+            this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
+          }
+
           if (this.scoringManager.GameOver) {
             this.audioManager.PlayAudio(AudioType.GAME_OVER);
+            this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
             this.objectManager.LevelCompleted.next(true);
           }
         } else {
@@ -185,10 +196,15 @@ export class InteractionManagerService {
         if (this.scoringManager.GameOver) {
           this.audioManager.PlayAudio(AudioType.GAME_OVER);
           this.objectManager.LevelCompleted.next(true);
+          this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
         } else {
           this.scoringManager.UpdatePowerMoveBonus();
           this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
           this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
+          // panic
+          if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
+            this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
+          }
         }
         this.LockBoard(false);
       } else {

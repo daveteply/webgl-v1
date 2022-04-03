@@ -24,6 +24,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
 import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
+import { MovesLeftComponent } from './components/moves-left/moves-left.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.co
     GameOverComponent,
     TextZoomComponent,
     ZoomCharComponent,
+    MovesLeftComponent,
   ],
   imports: [
     CommonModule,

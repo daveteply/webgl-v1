@@ -1,0 +1,43 @@
+$background: lightgray;
+
+.moves-remaining-container {
+  display: flex;
+  align-items: center;
+  font-size: large;
+
+  .move-count {
+    padding: 0.25em 0.5em;
+    color: black;
+    font-weight: bold;
+    background-color: $background;
+    transition: background-color 1s ease-out;
+  }
+
+  .warn {
+    background-color: orange;
+  }
+
+  .danger {
+    background-color: red;
+  }
+
+  .panic {
+    animation: panic-animation 1s infinite;
+  }
+
+  .zero {
+    background-color: $background;
+  }
+
+  @keyframes panic-animation {
+    0% {
+      background-color: $background;
+    }
+    50% {
+      background-color: red;
+    }
+    100% {
+      background-color: $background;
+    }
+  }
+}

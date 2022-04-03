@@ -7,6 +7,7 @@ export enum AudioType {
   LEVEL_START_4,
   LEVEL_START_5,
   PIECE_MOVE,
+  PIECE_MOVE_REMAINING_PANIC,
   PIECE_NON_MOVE,
   PIECE_REMOVE,
   PIECE_REMOVE_2,
@@ -56,6 +57,10 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/piece-non-move.mp3',
     audioType: AudioType.PIECE_NON_MOVE,
+  },
+  {
+    url: 'assets/audio/moves-remaining-panic.mp3',
+    audioType: AudioType.PIECE_MOVE_REMAINING_PANIC,
   },
 
   {

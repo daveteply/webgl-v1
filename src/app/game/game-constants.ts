@@ -35,6 +35,9 @@ export const LEVEL_ADDITIVE = 3;
 export const MINIMUM_SPEED_BONUS = 800;
 export const LONG_MATCH_SCORE_MULTIPLIER = 10;
 export const POWER_MOVE_USE_SCORE_MULTIPLIER = 50;
+export const MOVES_REMAINING_COUNT_WARNING = 3;
+export const MOVES_REMAINING_COUNT_DANGER = 2;
+export const MOVES_REMAINING_COUNT_PANIC = 1;
 
 // Misc
 export const CANVAS_TEXTURE_SCALE = 80;

@@ -17,7 +17,6 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: unset;
     place-items: center;
-    padding: 0 0.5em 0 0.5em;
     @include fader;
     &.show {
       opacity: 1;
@@ -27,18 +26,7 @@
       display: flex;
       flex-direction: column;
       .moves-remaining {
-        margin-top: 1em;
-      }
-    }
-    .moves-remaining {
-      display: flex;
-      align-items: center;
-      font-size: large;
-      .move-count {
-        border: 0.125em solid lightgray;
-        padding: 0.25em 0.5em;
-        color: black;
-        background-color: lightgray;
+        margin-top: 0.5em;
       }
     }
     .level-info {

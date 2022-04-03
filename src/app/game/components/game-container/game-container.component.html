@@ -5,11 +5,7 @@
 >
   <div class="game-scoring" [class.show]="ShowScoreProgress">
     <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
-    <div class="moves-remaining">
-      <mat-icon>arrow_back</mat-icon>
-      <div class="move-count">{{ scoringManager.PlayerMoves }}</div>
-      <mat-icon>arrow_forward</mat-icon>
-    </div>
+    <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
     <div class="level-info">
       <span>Level</span>
       <h2>{{ scoringManager.Level }}</h2>

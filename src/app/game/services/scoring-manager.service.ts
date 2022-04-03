@@ -98,7 +98,7 @@ export class ScoringManagerService {
 
       // splash text
       if (!skipText) {
-        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`, '+1 Moves']);
+        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`]);
       }
     }
 
@@ -164,7 +164,7 @@ export class ScoringManagerService {
       this._score += longMatchBonus;
 
       if (!skipText) {
-        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`, `+${longMatchMovesEarned} Moves`]);
+        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`]);
       }
     }
   }
