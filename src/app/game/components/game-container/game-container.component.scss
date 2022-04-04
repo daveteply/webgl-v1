@@ -17,14 +17,15 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: unset;
     place-items: center;
+    padding: 0.5em;
     @include fader;
     &.show {
       opacity: 1;
     }
     @media screen and (min-width: $min-width) {
-      padding-top: 0.5em;
       display: flex;
       flex-direction: column;
+      align-items: flex-end;
       .moves-remaining {
         margin-top: 0.5em;
       }
@@ -40,21 +41,21 @@
   }
   .level-progress {
     display: flex;
-    padding: 0 0.5em 0 0.5em;
     align-items: center;
+    padding: 0.5em;
     @include fader;
     &.show {
       opacity: 1;
     }
     .mat-progress-bar {
       height: 70%;
+      max-height: 3em;
       @media screen and (min-width: $min-width) {
         height: 2em;
       }
     }
     @media screen and (min-width: $min-width) {
       align-items: unset;
-      padding-top: 0.5em;
     }
   }
 }
