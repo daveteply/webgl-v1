@@ -1,4 +1,4 @@
-// code generation tool - convert emoji data dump into typescript
+// code generation tool - convert emoji data dump into TypeScript const object
 
 const fs = require("fs");
 const sourceFile = "emoji-test.txt";
@@ -22,8 +22,9 @@ const parseLine = (line) => {
   };
 };
 
-// new file header
 const targetLines = [];
+
+// new file header
 targetLines.push("// - Generated file, do not modify -");
 targetLines.push("// Original data: https://unicode.org");
 targetLines.push("");
