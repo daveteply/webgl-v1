@@ -24,8 +24,6 @@ export class GamePiece extends Object3D {
   private _lockTween: any;
   private _levelChangeTween: any;
 
-  private _originalZRotation: number;
-
   // Each side material is arranged as follows:
   // 0 'back'
   // 1 'front'
@@ -96,8 +94,6 @@ export class GamePiece extends Object3D {
 
     // 1 is the default (or "front"), will change when piece is flipped
     this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
-
-    this._originalZRotation = this.rotation.z;
   }
 
   set ThetaOffset(theta: number) {
@@ -206,7 +202,7 @@ export class GamePiece extends Object3D {
   public AnimateFlipTween(turns: number, directionUp: boolean): void {
     if (!this._isPowerMove) {
       // set direction
-      const delta = { theta: this.rotation.z };
+      const delta = { theta: this._mesh.rotation.z };
       const final = {
         theta: delta.theta + QUARTER_CIRCLE_RADIANS * (directionUp ? -1 : 1) * turns,
       };
@@ -227,7 +223,7 @@ export class GamePiece extends Object3D {
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
         .onUpdate(() => {
-          this.rotation.z = delta.theta;
+          this._mesh.rotation.z = delta.theta;
         })
         .start();
     }
@@ -241,9 +237,6 @@ export class GamePiece extends Object3D {
     this._isRemoved = false;
     this._matchKey = 0;
     this._powerMoveType = moveType;
-
-    // reset vertical flip
-    this.rotation.z = this._originalZRotation;
 
     this._powerMove = new PowerMove(texture);
     this.add(this._powerMove.PowerMoveMesh);
