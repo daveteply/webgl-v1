@@ -153,17 +153,18 @@ export class GamePiece extends Object3D {
   }
 
   public InitSelectionTween(select: boolean): any {
-    // set direction
-    const origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
-    const final = { x: 1.5, y: 1.25, z: 1.25, o: 1.0 };
+    // values
+    const origin = { x: 1.0, y: 1.0, z: 1.0 };
+    const final = { x: 1.5, y: 1.25, z: 1.25 };
 
+    // set direction
     const delta = select ? origin : final;
     const target = select ? final : origin;
 
     // init tween
     return new Tween(delta)
-      .to(target, 300)
-      .easing(Easing.Quintic.Out)
+      .to(target, 250)
+      .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {
         this.scale.set(delta.x, delta.y, delta.z);
       });
