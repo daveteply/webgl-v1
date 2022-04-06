@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Group, MathUtils, PerspectiveCamera, Scene, Texture, Vector3 } from 'three';
+import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
 import {
