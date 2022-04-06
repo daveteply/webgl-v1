@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import * as shuffleArray from 'shuffle-array';
 import { environment } from 'src/environments/environment';
 import { LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE, PLAYABLE_PIECE_COUNT } from '../../game-constants';
@@ -9,6 +8,7 @@ import { LevelMaterialType } from '../../models/level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
 import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
+import * as shuffleArray from 'shuffle-array';
 
 interface EmojiSequence {
   desc: string;
@@ -193,6 +193,11 @@ export class TextureManagerService {
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
         this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);
+
+        // white pixel (blank emoji) test
+        this.renderTest(this._canvasContext);
+
+        // set data Url (to be used by three js texture engine)
         emoji.dataUrl = this._canvasElement.toDataURL();
       }
     }
@@ -203,11 +208,19 @@ export class TextureManagerService {
   private randomEmojiCodeList(): EmojiSequence[] {
     const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
 
+    // DEBUG
+    // const emojiGroup = EmojiData.find((e) => e.id === 'Symbols') || EmojiData[0];
+    // DEBUG
+
     if (!environment.production) {
       console.info('emoji group: ', emojiGroup.id);
     }
 
     const shuffledSubGroups = shuffleArray(emojiGroup.subGroup);
+    // DEBUG
+    // const shuffledSubGroups = emojiGroup.subGroup.filter((s) => s.id === 'arrow');
+    // DEBUG
+
     // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
     const emojiSequences = shuffledSubGroups.slice(0, 3).flatMap((s) => s.codes);
     const shuffledSequences = shuffleArray(emojiSequences);
@@ -217,5 +230,21 @@ export class TextureManagerService {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })
       .slice(0, PLAYABLE_PIECE_COUNT);
+  }
+
+  private renderTest(canvasContext: CanvasRenderingContext2D) {
+    if (canvasContext) {
+      const targetScale = CANVAS_TEXTURE_SCALE * 0.2;
+      const targetStart = CANVAS_TEXTURE_SCALE / 2 - targetScale / 2;
+      const imgData = canvasContext.getImageData(targetStart, targetStart, targetScale, targetScale);
+      if (imgData.data.every((d) => d === 255)) {
+        if (!environment.production) {
+          console.info('  - Blank emoji, back-filling');
+        }
+        const randColor = Math.floor(Math.random() * 16777215).toString(16);
+        canvasContext.fillStyle = `#${randColor}`;
+        canvasContext.fillRect(targetStart, targetStart, targetScale, targetScale);
+      }
+    }
   }
 }
