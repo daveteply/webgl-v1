@@ -97,7 +97,7 @@ export class GamePiece extends Object3D {
   }
 
   set ThetaOffset(theta: number) {
-    this._thetaOffset = this.mod(this._thetaStart - theta, TWO_PI);
+    this._thetaOffset = (((this._thetaStart - theta) % TWO_PI) + TWO_PI) % TWO_PI;
   }
   get ThetaOffset(): number {
     return this._thetaOffset;
@@ -267,9 +267,5 @@ export class GamePiece extends Object3D {
       (m) => new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
     );
     this._gamePieceMaterials.push(...shuffledGamePieceMaterials);
-  }
-
-  private mod(a: number, n: number): number {
-    return ((a % n) + n) % n;
   }
 }
