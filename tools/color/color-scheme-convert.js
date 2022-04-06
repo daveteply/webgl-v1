@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const sourceFile = "color-info.css";
-const targetFile = "../src/app/game/services/material/color-info.ts";
+const targetFile = "../../src/app/game/services/material/color-info.ts";
 
 const targetLines = [];
 targetLines.push("export const ColorSchemeData = ");

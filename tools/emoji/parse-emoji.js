@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const sourceFile = "emoji-test.txt";
-const targetFile = "../src/app/game/services/texture/emoji-data.ts";
+const targetFile = "../../src/app/game/services/texture/emoji-data.ts";
 
 const parseLine = (line) => {
   const lineSegments = line.split(";");
