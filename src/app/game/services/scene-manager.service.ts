@@ -81,9 +81,6 @@ export class SceneManagerService {
       this._renderer.setSize(this._width, this._height, false);
     }
 
-    // TODO:
-    //renderer.setPixelRatio( window.devicePixelRatio );
-
     // start rendering frames
     this.animate();
   }
