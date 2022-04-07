@@ -58,14 +58,6 @@ export class InteractionManagerService {
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
-  }
-
-  public InitInteractions(el: HTMLElement): void {
-    this._hammer = new Hammer(el);
-
-    this.initPanStartEvent();
-    this.initPanEvent();
-    this.initTapAndPressEvents();
 
     this.effectsManager.LevelChangeAnimation.subscribe((start) => {
       this.LockBoard(start);
@@ -124,6 +116,13 @@ export class InteractionManagerService {
         this.LockBoard(false);
       }
     });
+  }
+
+  public InitInteractions(el: HTMLElement): void {
+    this._hammer = new Hammer(el);
+    this.initPanStartEvent();
+    this.initPanEvent();
+    this.initTapAndPressEvents();
   }
 
   public LockBoard(locked: boolean): void {
