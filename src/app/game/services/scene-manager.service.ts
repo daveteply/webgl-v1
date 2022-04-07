@@ -78,7 +78,7 @@ export class SceneManagerService {
     }
 
     if (this._renderer) {
-      this._renderer.setSize(this._width, this._height, false);
+      this._renderer.setSize(this._width, this._height);
     }
 
     // start rendering frames
