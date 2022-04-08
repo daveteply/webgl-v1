@@ -12,6 +12,8 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('mainCanvas')
   public canvas!: ElementRef<HTMLCanvasElement>;
 
+  private _canvasElement!: HTMLCanvasElement;
+
   constructor(
     private sceneManager: SceneManagerService,
     private interactionManager: InteractionManagerService,
@@ -19,26 +21,27 @@ export class CanvasComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    const el = this.canvas?.nativeElement;
-    if (el) {
-      this.sceneManager.InitRenderer(el);
-      this.interactionManager.InitInteractions(el);
+    this._canvasElement = this.canvas?.nativeElement;
+    if (this._canvasElement) {
+      this.sceneManager.InitRenderer(this._canvasElement);
+      this.interactionManager.InitInteractions(this._canvasElement);
     }
 
-    this.sceneManager.UpdateSize(this.layoutManager.Width, this.layoutManager.Height);
-    this.updateSize();
-
     this.layoutManager.OnResize.subscribe(() => {
-      this.sceneManager.UpdateSize(this.layoutManager.Width, this.layoutManager.Height);
       this.updateSize();
     });
+
+    // set initial size
+    this.sceneManager.UpdateSize(this.layoutManager.Width, this.layoutManager.Height);
+    this.updateSize();
   }
 
   private updateSize(): void {
-    const rect = this.canvas?.nativeElement.getBoundingClientRect();
-    if (rect) {
-      this.sceneManager.UpdateSize(rect.width, rect.height);
-      this.interactionManager.CanvasRect = rect;
+    if (this._canvasElement) {
+      const rect = this.canvas?.nativeElement.getBoundingClientRect();
+      if (rect) {
+        this.interactionManager.CanvasRect = rect;
+      }
     }
   }
 }
