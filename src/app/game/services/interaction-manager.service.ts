@@ -231,8 +231,8 @@ export class InteractionManagerService {
     const width = this._canvasRect.right - this._canvasRect.left;
     const height = this._canvasRect.bottom - this._canvasRect.top;
 
-    this._pointerPos.x = ((x - this._canvasRect.left) / width) * 2 - 1;
-    this._pointerPos.y = -((y - this._canvasRect.top) / height) * 2 + 1;
+    this._pointerPos.x = ((x - Math.floor(this._canvasRect.left)) / width) * 2 - 1;
+    this._pointerPos.y = -((y - Math.floor(this._canvasRect.top)) / height) * 2 + 1;
 
     this._rayCaster.setFromCamera(this._pointerPos, this._camera);
     const intersects = this._rayCaster.intersectObjects(this.objectManager.Axle);

@@ -60,6 +60,10 @@ export class LayoutManagerService {
       this._targetWidth = viewportWidth;
     }
 
+    // normalize
+    this._targetWidth = Math.floor(this._targetWidth);
+    this._targetHeight = Math.floor(this._targetHeight);
+
     // set grid styles
     if (viewportWidth >= LAYOUT_MIN_WIDTH) {
       this._gridTemplateColumns = `1fr ${this._targetWidth}px 1fr`;

@@ -40,6 +40,7 @@ export class CanvasComponent implements AfterViewInit {
     if (this._canvasElement) {
       const rect = this.canvas?.nativeElement.getBoundingClientRect();
       if (rect) {
+        this.sceneManager.UpdateSize(rect.width, rect.height);
         this.interactionManager.CanvasRect = rect;
       }
     }
