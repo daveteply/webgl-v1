@@ -11,9 +11,11 @@
       <h2>{{ scoringManager.Level }}</h2>
     </div>
   </div>
-  <wgl-canvas class="game-canvas"></wgl-canvas>
-  <div class="level-progress" [class.show]="ShowScoreProgress">
-    <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
-    <mat-progress-bar value="{{ scoringManager.LevelProgress }}"></mat-progress-bar>
+  <div>
+    <wgl-canvas class="game-canvas"></wgl-canvas>
+    <div class="level-progress" [class.show]="ShowScoreProgress">
+      <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
+      <mat-progress-bar value="{{ scoringManager.LevelProgress }}"></mat-progress-bar>
+    </div>
   </div>
 </div>
