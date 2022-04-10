@@ -1,12 +1,10 @@
-@import "./style_values";
+@import "./style-values";
+@import "./style-fonts";
 
 html,
 body {
   height: 100%;
   margin: 0;
-}
-body {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 // allow the header to be remain intractable while Angular
