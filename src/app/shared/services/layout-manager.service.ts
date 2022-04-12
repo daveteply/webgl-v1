@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
 import {
   LAYOUT_ASPECT,
   LAYOUT_CLIENT_HEIGHT_PERCENT,
@@ -40,7 +40,7 @@ export class LayoutManagerService {
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.updateSize(this.document.defaultView?.innerWidth || 0, this.document.defaultView?.innerHeight || 0);
 
-    this._resizeSubscription = this._resizeObservable.subscribe((resizeEvent) => {
+    this._resizeSubscription = this._resizeObservable.pipe(debounceTime(250)).subscribe((resizeEvent) => {
       const win = resizeEvent.target as Window;
       this.updateSize(win.innerWidth, win.innerHeight);
     });
