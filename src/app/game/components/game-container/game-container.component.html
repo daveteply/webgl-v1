@@ -1,19 +1,24 @@
-<div
-  class="game-container"
-  [style.grid-template-rows]="GridTemplateRows"
-  [style.grid-template-columns]="GridTemplateColumns"
->
-  <div class="game-scoring" [class.show]="ShowScoreProgress">
-    <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
-    <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
-    <div class="level-info">
-      <span>Level</span>
-      <h2>{{ scoringManager.Level }}</h2>
+<div class="game-view-layout">
+  <nav>
+    <mat-toolbar color="primary">
+      <span>Ricle</span>
+    </mat-toolbar>
+  </nav>
+  <div class="game-layout">
+    <div class="game-scoring" [class.show]="ShowScoreProgress">
+      <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
+      <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
+      <div class="level-info">
+        <span>Level</span>
+        <h2>{{ scoringManager.Level }}</h2>
+      </div>
     </div>
-  </div>
-  <wgl-canvas class="game-canvas"></wgl-canvas>
-  <div class="level-progress" [class.show]="ShowScoreProgress">
-    <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
-    <mat-progress-bar value="{{ scoringManager.LevelProgress }}"></mat-progress-bar>
+    <div class="game">
+      <canvas class="game-canvas" #gameCanvas></canvas>
+    </div>
+    <div class="level-progress" [class.show]="ShowScoreProgress">
+      <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
+      <mat-progress-bar value="{{ scoringManager.LevelProgress }}"></mat-progress-bar>
+    </div>
   </div>
 </div>

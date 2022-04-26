@@ -42,9 +42,10 @@ export class InteractionManagerService {
 
   private _rayCaster!: Raycaster;
 
-  private _camera!: PerspectiveCamera;
-  set Camera(camera: PerspectiveCamera) {
-    this._camera = camera;
+  private _perspectiveCamera!: PerspectiveCamera;
+
+  public SetCamera(camera: PerspectiveCamera): void {
+    this._perspectiveCamera = camera;
   }
 
   private _matchingPieces: GamePiece[] = [];
@@ -234,7 +235,7 @@ export class InteractionManagerService {
     this._pointerPos.x = ((x - Math.floor(this._canvasRect.left)) / width) * 2 - 1;
     this._pointerPos.y = -((y - Math.floor(this._canvasRect.top)) / height) * 2 + 1;
 
-    this._rayCaster.setFromCamera(this._pointerPos, this._camera);
+    this._rayCaster.setFromCamera(this._pointerPos, this._perspectiveCamera);
     const intersects = this._rayCaster.intersectObjects(this.objectManager.Axle);
     if (intersects.length) {
       const castTarget = intersects[0].object;

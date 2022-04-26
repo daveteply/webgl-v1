@@ -12,7 +12,6 @@ import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
-import { CanvasComponent } from '../canvas/canvas.component';
 import { GameContainerComponent } from './game-container.component';
 
 describe('GameContainerComponent', () => {
@@ -22,7 +21,7 @@ describe('GameContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, MatDialogModule, MatProgressBarModule, MatProgressSpinnerModule],
-      declarations: [GameContainerComponent, CanvasComponent],
+      declarations: [GameContainerComponent],
       providers: [
         SceneManagerService,
         ObjectManagerService,

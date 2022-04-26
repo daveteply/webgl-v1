@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
-import { LayoutManagerService } from 'src/app/shared/services/layout-manager.service';
 import { TextManagerService } from '../../services/text/text-manager.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -13,13 +12,21 @@ import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 import { GameOverData } from '../dialogs/game-over/game-over-data';
 import { environment } from 'src/environments/environment';
 import { LevelMaterialType } from '../../models/level-material-type';
+import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'wgl-game-container',
   templateUrl: './game-container.component.html',
   styleUrls: ['./game-container.component.scss'],
 })
-export class GameContainerComponent implements OnInit {
+export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('gameCanvas')
+  gameCanvas!: ElementRef<HTMLCanvasElement>;
+
+  private resize$: Observable<Event>;
+  private resizeSubscription: Subscription;
+
   private _dialogRef!: MatDialogRef<LevelDialogComponent>;
   private _dialogGameOverRef!: MatDialogRef<GameOverComponent>;
   private _showWelcome: boolean = true;
@@ -36,21 +43,24 @@ export class GameContainerComponent implements OnInit {
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
-    private layoutManager: LayoutManagerService,
     private textManager: TextManagerService,
-    public scoringManager: ScoringManagerService
-  ) {}
-
-  ngOnInit(): void {
-    this.sceneManager.InitScene();
-    this.objectManager.InitStarField();
+    public scoringManager: ScoringManagerService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    // set up window resizing event
+    this.resize$ = fromEvent(window, 'resize');
+    this.resizeSubscription = this.resize$.pipe(debounceTime(10)).subscribe(() => {
+      this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
+    });
 
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
       this.initTextures();
     });
+  }
 
+  ngOnInit(): void {
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
@@ -78,21 +88,22 @@ export class GameContainerComponent implements OnInit {
       }
     });
 
-    // resize event
-    this.layoutManager.OnResize.subscribe(() => {
-      this.GridTemplateColumns = this.layoutManager.GridTemplateColumns;
-      this.GridTemplateRows = this.layoutManager.GridTemplateRows;
-    });
-
-    // initial size
-    this.GridTemplateColumns = this.layoutManager.GridTemplateColumns;
-    this.GridTemplateRows = this.layoutManager.GridTemplateRows;
-
     // start loading next level texture(s)
     this.initTextures();
 
     // start loading fonts
     this.textManager.InitFonts();
+  }
+
+  ngAfterViewInit(): void {
+    this.sceneManager.InitScene(this.gameCanvas.nativeElement);
+    this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
+
+    this.objectManager.InitStarField();
+  }
+
+  ngOnDestroy(): void {
+    this.resizeSubscription.unsubscribe();
   }
 
   private initTextures(): void {
