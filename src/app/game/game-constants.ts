@@ -14,12 +14,6 @@ export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 const QUARTER_CIRCLE_DEGREES = 90;
 export const QUARTER_CIRCLE_RADIANS = MathUtils.degToRad(QUARTER_CIRCLE_DEGREES);
 
-// HTML page layout
-export const LAYOUT_ASPECT = 0.66;
-export const LAYOUT_CLIENT_HEIGHT_PERCENT = 0.86;
-export const LAYOUT_HEADER_OFFSET = 56; // pairs with scss variable
-export const LAYOUT_MIN_WIDTH = 800; // pairs with scss variable
-
 // Math related constants
 export const TWO_PI = 2 * Math.PI;
 export const HALF_PI = Math.PI / 2;

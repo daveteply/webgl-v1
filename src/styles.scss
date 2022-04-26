@@ -7,17 +7,6 @@ body {
   margin: 0;
 }
 
-// allow the header to be remain intractable while Angular
-// Material's dialog is displayed
-.cdk-overlay-container {
-  top: $toolbar-height;
-  height: calc(100% - $toolbar-height);
-}
-
-.cdk-overlay-dark-backdrop {
-  background: rgba(0, 0, 0, 0);
-}
-
 @keyframes dialog-slide-up {
   0% {
   }
@@ -35,8 +24,4 @@ body {
 .cdk-overlay-pane {
   transform: translateY(250%);
   animation: dialog-slide-up 0.5s forwards 0s ease-in-out;
-}
-
-.mat-toolbar {
-  max-height: $toolbar-height;
 }
