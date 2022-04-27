@@ -7,22 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { WglSharedModule } from './shared/wgl-shared.module';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HammerModule,
-    BrowserAnimationsModule,
-    WglSharedModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [BrowserModule, AppRoutingModule, HammerModule, BrowserAnimationsModule, WglSharedModule],
   providers: [],
   bootstrap: [AppComponent],
 })
