@@ -1,12 +1,16 @@
 <div class="game-layout">
   <div class="game-scoring" [class.show]="ShowScoreProgress">
-    <span>Ricle</span>
+    <div class="game-title">{{ gameTitle }}</div>
     <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
     <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
     <div class="level-info">
       <span>Level</span>
-      <h2>{{ scoringManager.Level }}</h2>
+      <span>&nbsp;</span>
+      <div>{{ scoringManager.Level }}</div>
     </div>
+    <button color="primary" mat-icon-button (click)="aboutClick()">
+      <mat-icon>info</mat-icon>
+    </button>
   </div>
   <div class="game">
     <canvas class="game-canvas" #gameCanvas></canvas>

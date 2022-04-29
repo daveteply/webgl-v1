@@ -14,6 +14,8 @@ import { environment } from 'src/environments/environment';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { GAME_TITLE } from '../../game-constants';
+import { NotifyService } from 'src/app/shared/services/notify.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -38,12 +40,15 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   public GridTemplateColumns: string = '';
   public GridTemplateRows: string = '';
 
+  gameTitle = GAME_TITLE;
+
   constructor(
     private dialog: MatDialog,
     private sceneManager: SceneManagerService,
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
     private textManager: TextManagerService,
+    private notify: NotifyService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -104,6 +109,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.resizeSubscription.unsubscribe();
+  }
+
+  public aboutClick(): void {
+    this.notify.Notify();
   }
 
   private initTextures(): void {

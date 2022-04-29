@@ -14,9 +14,9 @@
   flex-direction: column;
 
   .game-scoring {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    place-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 0.1em;
     font-size: x-large;
     @include fader;
@@ -26,6 +26,9 @@
     .level-info {
       display: flex;
       align-items: center;
+    }
+    .game-title {
+      margin-left: 0.5em;
     }
   }
 

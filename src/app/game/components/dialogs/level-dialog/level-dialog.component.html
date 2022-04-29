@@ -1,5 +1,5 @@
 <h2 class="dialog-header">
-  <span *ngIf="data.isWelcome; else levelHeader">Welcome!</span>
+  <span *ngIf="data.isWelcome; else levelHeader">Welcome to {{ gameTitle }}!</span>
   <ng-template #levelHeader>Level Complete!</ng-template>
 </h2>
 
@@ -16,10 +16,6 @@
             <mat-icon>arrow_forward</mat-icon>
             Move rows right or left
           </p>
-          <!-- <p>
-            <mat-icon>arrow_upward</mat-icon>
-            <mat-icon>arrow_downward</mat-icon> Flip pieces up or down
-          </p> -->
           <p class="touch-input">
             <mat-icon>touch_app</mat-icon>
             Tap or press to make a match!
