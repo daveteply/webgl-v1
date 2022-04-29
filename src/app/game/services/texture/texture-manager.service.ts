@@ -234,10 +234,13 @@ export class TextureManagerService {
 
   private renderTest(canvasContext: CanvasRenderingContext2D) {
     if (canvasContext) {
-      const targetScale = CANVAS_TEXTURE_SCALE * 0.2;
-      const targetStart = CANVAS_TEXTURE_SCALE / 2 - targetScale / 2;
-      const imgData = canvasContext.getImageData(targetStart, targetStart, targetScale, targetScale);
+      const imgData = canvasContext.getImageData(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
+      // Note: this is checking every r, g, b, a value
+      //  of every pixel every time.  Someday this should be
+      //  a diagonal line test.
       if (imgData.data.every((d) => d === 255)) {
+        const targetScale = CANVAS_TEXTURE_SCALE * 0.2;
+        const targetStart = CANVAS_TEXTURE_SCALE / 2 - targetScale / 2;
         if (!environment.production) {
           console.info('  - Blank emoji, back-filling');
         }
