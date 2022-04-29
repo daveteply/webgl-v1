@@ -191,22 +191,7 @@ export class InteractionManagerService {
     if (gamePiece && !gamePiece?.IsRemoved) {
       // power move
       if (gamePiece.IsPowerMove) {
-        this.scoringManager.UpdateMoveCount();
-        gamePiece.PowerMoveRemove();
-        if (this.scoringManager.GameOver) {
-          this.audioManager.PlayAudio(AudioType.GAME_OVER);
-          this.objectManager.LevelCompleted.next(true);
-          this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
-        } else {
-          this.scoringManager.UpdatePowerMoveBonus();
-          this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
-          this.objectManager.AnimatePowerMove(gamePiece.PowerMoveType);
-          // panic
-          if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
-            this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
-          }
-        }
-        this.LockBoard(false);
+        this.powerMove(gamePiece);
       } else {
         // run matches algorithm
         this._matchingPieces = this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
@@ -219,6 +204,47 @@ export class InteractionManagerService {
       // unlock board if no pieces selected
       this.LockBoard(false);
     }
+  }
+
+  private powerMove(targetGamePiece: GamePiece): void {
+    // find other power moves
+    const powerMoveGamePieces: GamePiece[] = [];
+    this.objectManager.Axle.forEach((gameWheel) => {
+      for (const gamePiece of gameWheel.children as GamePiece[]) {
+        if (gamePiece.IsPowerMove && gamePiece.id !== targetGamePiece.id) {
+          powerMoveGamePieces.push(gamePiece);
+        }
+      }
+    });
+
+    // execute power move
+    this.scoringManager.UpdateMoveCount();
+    targetGamePiece.PowerMoveRemove();
+    if (this.scoringManager.GameOver) {
+      this.audioManager.PlayAudio(AudioType.GAME_OVER);
+      this.objectManager.LevelCompleted.next(true);
+      this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
+    } else {
+      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length);
+      this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+      this.objectManager.AnimatePowerMove(targetGamePiece.PowerMoveType);
+      // panic
+      if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
+        this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
+      }
+    }
+
+    // clear other power moves
+    //  Reason: player could engage another power move while the
+    //   initial power move was still animating.  This caused havoc
+    //   with placement, etc.  Was simpler to do this than to figure out
+    //   when the current power move was done animating.
+    powerMoveGamePieces.forEach((gamePiece) => {
+      gamePiece.PowerMoveRemove();
+    });
+
+    // unlock the game board
+    this.LockBoard(false);
   }
 
   private deviceCordRotation(x: number): void {

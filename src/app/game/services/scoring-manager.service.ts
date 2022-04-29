@@ -118,10 +118,14 @@ export class ScoringManagerService {
     this._playerMoves--;
   }
 
-  public UpdatePowerMoveBonus(): void {
-    const usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
+  public UpdatePowerMoveBonus(additionalMoveCount: number): void {
+    let usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
+    if (additionalMoveCount) {
+      usePowerMoveBonus *= additionalMoveCount + 1;
+    }
     this._score += usePowerMoveBonus;
-    this.textTextManager.ShowText(['Power Move!', `+${usePowerMoveBonus} Points`]);
+    const multiMove = additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
+    this.textTextManager.ShowText([`${multiMove}`, `+${usePowerMoveBonus} Points`]);
   }
 
   public RestartGame(): void {
