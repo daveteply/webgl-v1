@@ -1,21 +1,25 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
 
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
 import { TextManagerService } from '../../services/text/text-manager.service';
+import { GameEngineService } from '../../services/game-engine.service';
+import { NotifyService } from 'src/app/shared/services/notify.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
+
 import { GameOverData } from '../dialogs/game-over/game-over-data';
-import { environment } from 'src/environments/environment';
 import { LevelMaterialType } from '../../models/level-material-type';
-import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
+
 import { GAME_TITLE } from '../../game-constants';
-import { NotifyService } from 'src/app/shared/services/notify.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -49,6 +53,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private textureManager: TextureManagerService,
     private textManager: TextManagerService,
     private notify: NotifyService,
+    private gameEngine: GameEngineService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -83,7 +88,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             // reset stats will take care of move count based on level
             this.scoringManager.ResetStats(!data.startOver);
           }
-          this.objectManager.InitShapes();
+          this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
         });
       } else {
         this._dialogRef = this.dialog.open(LevelDialogComponent, this.dialogConfig());
@@ -117,7 +122,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private initTextures(): void {
     const levelType = Math.floor(Math.random() * 3) + 1;
-    this.textureManager.InitLevelTextures(levelType);
+    this.textureManager.InitLevelTextures(levelType, this.gameEngine.PlayableTextureCount);
     if (!environment.production) {
       console.info('Level Type: ', LevelMaterialType[levelType]);
     }
@@ -139,10 +144,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-      this.objectManager.InitShapes();
+      this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.InitShapes();
+      this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
     }
   }
 }

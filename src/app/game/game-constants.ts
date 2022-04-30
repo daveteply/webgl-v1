@@ -20,7 +20,7 @@ export const HALF_PI = Math.PI / 2;
 export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 
 // Game rules
-export const PLAYABLE_PIECE_COUNT = 6;
+export const DEFAULT_PLAYABLE_TEXTURE_COUNT = 6;
 export const MINIMUM_MATCH_COUNT = 3;
 // this is used with the target piece count along with a
 // logarithmic function to slowly increase as the player

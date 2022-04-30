@@ -33,6 +33,10 @@ export const BumpSymbolTextures: BumpData[] = [
   { src: 'assets/maps/bump/symbol/flake.webp' },
   { src: 'assets/maps/bump/symbol/plus.webp' },
   { src: 'assets/maps/bump/symbol/sun.webp' },
+  { src: 'assets/maps/bump/symbol/001.webp' },
+  { src: 'assets/maps/bump/symbol/002.webp' },
+  { src: 'assets/maps/bump/symbol/003.webp' },
+  { src: 'assets/maps/bump/symbol/004.webp' },
 ];
 
 export const PowerMoveTextures: PowerMoveBumpData[] = [

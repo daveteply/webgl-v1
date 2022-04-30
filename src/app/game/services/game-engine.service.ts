@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { MathUtils } from 'three';
-import { DECIMAL_COMPARISON_TOLERANCE } from '../game-constants';
+import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
@@ -16,10 +16,21 @@ enum SearchDirection {
 
 @Injectable()
 export class GameEngineService {
-  // reset matches
   private _matches: GamePiece[] = [];
 
-  constructor() {}
+  private _playableTextureCount: number = DEFAULT_PLAYABLE_TEXTURE_COUNT;
+  get PlayableTextureCount(): number {
+    return this._playableTextureCount;
+  }
+
+  public UpdatePlayableTextureCount(level: number): void {
+    if (level === 10 || level === 20) {
+      this._playableTextureCount++;
+      if (!environment.production) {
+        console.info('Updated Playable Texture Count: ', this._playableTextureCount);
+      }
+    }
+  }
 
   public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): GamePiece[] {
     // reset all game piece isMatch

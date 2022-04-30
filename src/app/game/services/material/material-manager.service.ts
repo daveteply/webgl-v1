@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { MathUtils, Texture } from 'three';
 import * as shuffleArray from 'shuffle-array';
 import { environment } from 'src/environments/environment';
-import { PLAYABLE_PIECE_COUNT } from '../../game-constants';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { TextureManagerService } from '../texture/texture-manager.service';
@@ -14,7 +13,7 @@ import { PowerMoveType } from '../../models/power-move-type';
 export class MaterialManagerService {
   constructor(private textureManager: TextureManagerService) {}
 
-  public InitMaterials(): GamePieceMaterialData[] {
+  public InitMaterials(playableTextureCount: number): GamePieceMaterialData[] {
     // reset array
     const materials: GamePieceMaterialData[] = [];
 
@@ -27,7 +26,7 @@ export class MaterialManagerService {
     switch (this.textureManager.LevelType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:
-        selectedColors = this.initColorScheme();
+        selectedColors = this.initColorScheme(playableTextureCount);
 
         selectedColors.forEach((color, inx) => {
           materials.push({
@@ -40,7 +39,7 @@ export class MaterialManagerService {
 
       // colors and bump maps
       case LevelMaterialType.ColorBumpMaterial:
-        selectedColors = this.initColorScheme();
+        selectedColors = this.initColorScheme(playableTextureCount);
 
         const bumpTexture = this.textureManager.Textures[MathUtils.randInt(0, this.textureManager.Textures.length - 1)];
 
@@ -55,7 +54,7 @@ export class MaterialManagerService {
 
       // emojis
       case LevelMaterialType.Emoji:
-        for (let i = 0; i < PLAYABLE_PIECE_COUNT; i++) {
+        for (let i = 0; i < playableTextureCount; i++) {
           materials.push({
             MatchKey: matchKey++,
             Texture: this.textureManager.Textures[i],
@@ -71,7 +70,7 @@ export class MaterialManagerService {
     return this.textureManager.GetPowerMoveTexture(moveType);
   }
 
-  private initColorScheme(): string[] {
+  private initColorScheme(playableTextureCount: number): string[] {
     const scheme = ColorSchemeData[MathUtils.randInt(0, ColorSchemeData.length - 1)];
     const sortedColors = scheme.colors.sort();
 
@@ -80,7 +79,7 @@ export class MaterialManagerService {
       sortedColors.sort().forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
     }
 
-    const shuffledColors = shuffleArray(sortedColors).slice(0, PLAYABLE_PIECE_COUNT);
+    const shuffledColors = shuffleArray(sortedColors).slice(0, playableTextureCount);
 
     if (!environment.production) {
       console.info('    game piece colors:', scheme);

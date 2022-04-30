@@ -69,12 +69,12 @@ export class ObjectManagerService {
     this.textManager.InitScene(this._scene);
   }
 
-  public InitShapes(): void {
+  public InitShapes(playableTextureCount: number): void {
     // clear existing objects
     this.dispose();
 
     // select colors for the current level
-    const materials = this.materialManager.InitMaterials();
+    const materials = this.materialManager.InitMaterials(playableTextureCount);
 
     // create all the objects
     this._verticalTargets.forEach(() => {

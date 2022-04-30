@@ -17,7 +17,7 @@ import { InteractionManagerService } from './interaction-manager.service';
 function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
   const scene = new Scene();
   objectManager.SetScene(scene);
-  objectManager.InitShapes();
+  objectManager.InitShapes(6);
 
   objectManager.Axle.forEach((gameWheel: GameWheel) => {
     for (const gamePiece of gameWheel.children as GamePiece[]) {

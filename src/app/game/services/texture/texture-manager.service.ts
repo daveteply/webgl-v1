@@ -3,7 +3,7 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
-import { CANVAS_TEXTURE_SCALE, PLAYABLE_PIECE_COUNT } from '../../game-constants';
+import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
@@ -58,7 +58,7 @@ export class TextureManagerService {
     this._textureLoader = new TextureLoader(this._loaderManager);
   }
 
-  public InitLevelTextures(levelType: LevelMaterialType): void {
+  public InitLevelTextures(levelType: LevelMaterialType, playableTextureCount: number): void {
     this.LevelTextureLoadingStarted.next();
 
     // set level type
@@ -78,7 +78,7 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.Emoji:
-        const emojiList = this.initEmojiData();
+        const emojiList = this.initEmojiData(playableTextureCount);
         emojiList.forEach((data) => {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             texture.name = data.desc;
@@ -165,7 +165,7 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiData(): EmojiSequence[] {
+  private initEmojiData(playableTextureCount: number): EmojiSequence[] {
     if (!this._canvasElement) {
       this._canvasElement = this.document.createElement('canvas');
       this._canvasElement.width = this._canvasElement.height = CANVAS_TEXTURE_SCALE;
@@ -178,7 +178,7 @@ export class TextureManagerService {
     let emojiSequence: EmojiSequence[] = [];
 
     if (this._canvasContext) {
-      emojiSequence = this.randomEmojiCodeList();
+      emojiSequence = this.randomEmojiCodeList(playableTextureCount);
 
       for (let i = 0; i < emojiSequence.length; i++) {
         this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
@@ -205,7 +205,7 @@ export class TextureManagerService {
     return emojiSequence;
   }
 
-  private randomEmojiCodeList(): EmojiSequence[] {
+  private randomEmojiCodeList(playableTextureCount: number): EmojiSequence[] {
     const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
 
     // DEBUG
@@ -229,7 +229,7 @@ export class TextureManagerService {
       .map((s) => {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })
-      .slice(0, PLAYABLE_PIECE_COUNT);
+      .slice(0, playableTextureCount);
   }
 
   private renderTest(canvasContext: CanvasRenderingContext2D) {
