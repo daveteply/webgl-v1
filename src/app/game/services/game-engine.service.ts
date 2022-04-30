@@ -7,7 +7,7 @@ import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
 
 // forcing strings in enum
-enum Direction {
+enum SearchDirection {
   Up = 'Up',
   Down = 'Down',
   Next = 'Next',
@@ -57,19 +57,19 @@ export class GameEngineService {
   private directionalSearch(gamePiece: GamePiece): void {
     let match: GamePiece | undefined;
 
-    for (const direction in Direction) {
+    for (const direction in SearchDirection) {
       match = undefined;
       switch (direction) {
-        case Direction.Next:
+        case SearchDirection.Next:
           match = this.matchNext(gamePiece);
           break;
-        case Direction.Prev:
+        case SearchDirection.Prev:
           match = this.matchPrev(gamePiece);
           break;
-        case Direction.Up:
+        case SearchDirection.Up:
           match = this.matchAbove(gamePiece);
           break;
-        case Direction.Down:
+        case SearchDirection.Down:
           match = this.matchBelow(gamePiece);
           break;
         default:
