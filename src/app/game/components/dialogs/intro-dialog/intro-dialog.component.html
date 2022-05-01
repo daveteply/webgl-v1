@@ -1,0 +1,28 @@
+<div class="dialog-content">
+  <h1>Welcome to {{ gameTitle }}!</h1>
+
+  <mat-dialog-content>
+    <p class="intro-line">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Move rows right or left</span>
+      <mat-icon>arrow_forward</mat-icon>
+    </p>
+    <p class="intro-line touch-input">
+      <mat-icon>touch_app</mat-icon>
+      Tap or press to match
+    </p>
+    <p class="intro-line click-input">
+      <mat-icon>mouse</mat-icon>
+      Click/click-hold to match
+    </p>
+    <br />
+    <p class="intro-line">Match at least like {{ matchTarget }} pieces</p>
+    <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
+      <span>Play!</span>
+    </button>
+  </mat-dialog-actions>
+</div>

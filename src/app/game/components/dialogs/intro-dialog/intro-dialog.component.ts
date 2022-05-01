@@ -1,27 +1,29 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
 import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
-import { LevelDialogData } from './level-dialog-data';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 
 @Component({
-  selector: 'wgl-level-dialog',
-  templateUrl: './level-dialog.component.html',
-  styleUrls: ['./level-dialog.component.scss'],
+  selector: 'wgl-intro-dialog',
+  templateUrl: './intro-dialog.component.html',
+  styleUrls: ['./intro-dialog.component.scss'],
 })
-export class LevelDialogComponent {
+export class IntroDialogComponent {
+  gameTitle = GAME_TITLE;
   matchTarget = MINIMUM_MATCH_COUNT;
+
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
-  gameTitle = GAME_TITLE;
-
-  constructor(private textureManager: TextureManagerService, @Inject(MAT_DIALOG_DATA) public data: LevelDialogData) {
+  constructor(private textureManager: TextureManagerService, private audioManager: AudioManagerService) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
       this.texturesStillLoading = false;
     });
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;
     });
+
+    // start-up music
+    this.audioManager.PlayLevelComplete();
   }
 }

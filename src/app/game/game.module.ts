@@ -5,6 +5,7 @@ import { GameRoutingModule } from './game-routing.module';
 
 import { GameContainerComponent } from './components/game-container/game-container.component';
 import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
+import { IntroDialogComponent } from './components/dialogs/intro-dialog/intro-dialog.component';
 import { GameOverComponent } from './components/dialogs/game-over/game-over.component';
 import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
 import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
@@ -32,6 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
     TextZoomComponent,
     ZoomCharComponent,
     MovesLeftComponent,
+    IntroDialogComponent,
   ],
   imports: [CommonModule, GameRoutingModule, MatProgressBarModule, MatDialogModule, MatButtonModule, MatIconModule],
   providers: [

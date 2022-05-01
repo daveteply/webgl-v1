@@ -13,6 +13,7 @@ import { GameEngineService } from '../../services/game-engine.service';
 import { NotifyService } from 'src/app/shared/services/notify.service';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 
@@ -33,9 +34,11 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private resize$: Observable<Event>;
   private resizeSubscription: Subscription;
 
-  private _dialogRef!: MatDialogRef<LevelDialogComponent>;
-  private _dialogGameOverRef!: MatDialogRef<GameOverComponent>;
   private _showWelcome: boolean = true;
+
+  private _dialogRefLevel!: MatDialogRef<LevelDialogComponent>;
+  private _dialogRefIntro!: MatDialogRef<IntroDialogComponent>;
+  private _dialogGameOverRef!: MatDialogRef<GameOverComponent>;
 
   private _isGameOver: boolean = false;
 
@@ -91,10 +94,17 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
         });
       } else {
-        this._dialogRef = this.dialog.open(LevelDialogComponent, this.dialogConfig());
-        this._dialogRef.afterClosed().subscribe(() => {
-          this.handleLevelDialogCLosed();
-        });
+        if (this._showWelcome) {
+          this._dialogRefIntro = this.dialog.open(IntroDialogComponent, this.dialogConfig());
+          this._dialogRefIntro.afterClosed().subscribe(() => {
+            this.handleLevelDialogCLosed();
+          });
+        } else {
+          this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig());
+          this._dialogRefLevel.afterClosed().subscribe(() => {
+            this.handleLevelDialogCLosed();
+          });
+        }
       }
     });
 
@@ -133,7 +143,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       maxWidth: '25em',
       disableClose: true,
       data: {
-        isWelcome: this._showWelcome,
         stats: this.scoringManager.LevelStats,
         restartLevel: restartLevel,
       },

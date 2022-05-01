@@ -1,58 +1,33 @@
-<h1 class="dialog-header">
-  <span *ngIf="data.isWelcome; else levelHeader">Welcome to {{ gameTitle }}!</span>
-  <ng-template #levelHeader>Level Complete!</ng-template>
-</h1>
+<h2 class="dialog-header">Level Complete!</h2>
 
 <mat-dialog-content>
-  <div *ngIf="data.isWelcome; else levelContent" class="intro-content">
-    <p class="intro-line">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Move rows right or left</span>
-      <mat-icon>arrow_forward</mat-icon>
-    </p>
-    <p class="intro-line touch-input">
-      <mat-icon>touch_app</mat-icon>
-      Tap or press to match
-    </p>
-    <p class="intro-line click-input">
-      <mat-icon>mouse</mat-icon>
-      Click/click-hold to match
-    </p>
-    <br />
-    <p class="intro-line">Match at least like {{ matchTarget }} pieces</p>
-  </div>
-  <ng-template #levelContent>
-    <table>
-      <tr *ngIf="data.stats.fastMatchBonusTotal">
-        <td>Speed bonus:</td>
-        <td>{{ data.stats.fastMatchBonusTotal | number }}</td>
-      </tr>
-      <tr *ngIf="data.stats.fastMatchBonusTotal">
-        <td>Fastest match time:</td>
-        <td>{{ data.stats.fastestMatchMs / 1000 | number: "1.1-1" }}s</td>
-      </tr>
-      <tr *ngIf="data.stats.moveCount">
-        <td>Moves used:</td>
-        <td>{{ data.stats.moveCount }}</td>
-      </tr>
-      <tr *ngIf="data.stats.moveCountEarned">
-        <td>Moves earned:</td>
-        <td>{{ data.stats.moveCountEarned }}</td>
-      </tr>
-      <tr>
-        <td>Piece count:</td>
-        <td>{{ data.stats.pieceCount }}</td>
-      </tr>
-    </table>
-  </ng-template>
+  <table>
+    <tr *ngIf="data.stats.fastMatchBonusTotal">
+      <td>Speed bonus:</td>
+      <td>{{ data.stats.fastMatchBonusTotal | number }}</td>
+    </tr>
+    <tr *ngIf="data.stats.fastMatchBonusTotal">
+      <td>Fastest match time:</td>
+      <td>{{ data.stats.fastestMatchMs / 1000 | number: "1.1-1" }}s</td>
+    </tr>
+    <tr *ngIf="data.stats.moveCount">
+      <td>Moves used:</td>
+      <td>{{ data.stats.moveCount }}</td>
+    </tr>
+    <tr *ngIf="data.stats.moveCountEarned">
+      <td>Moves earned:</td>
+      <td>{{ data.stats.moveCountEarned }}</td>
+    </tr>
+    <tr>
+      <td>Piece count:</td>
+      <td>{{ data.stats.pieceCount }}</td>
+    </tr>
+  </table>
   <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
   <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
-    <span *ngIf="data.isWelcome; else levelButtonContent">Play!</span>
-    <ng-template #levelButtonContent>
-      <span>Next Level, let's go!</span>
-    </ng-template>
+    <span>Next Level, let's go!</span>
   </button>
 </mat-dialog-actions>

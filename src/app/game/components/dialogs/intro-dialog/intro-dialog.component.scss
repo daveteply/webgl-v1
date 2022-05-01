@@ -1,0 +1,30 @@
+.dialog-content {
+  text-align: center;
+  font-size: large;
+
+  .intro-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .click-input {
+    @media (pointer: coarse) {
+      display: none;
+    }
+  }
+
+  .touch-input {
+    @media (pointer: fine) {
+      display: none;
+    }
+  }
+
+  .progress {
+    opacity: 1;
+    transition: opacity 500ms;
+    &.fade-out {
+      opacity: 0;
+    }
+  }
+}
