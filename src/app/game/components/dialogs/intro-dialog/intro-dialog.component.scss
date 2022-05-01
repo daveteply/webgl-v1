@@ -27,4 +27,12 @@
       opacity: 0;
     }
   }
+
+  .tutorial-image {
+    height: 5em;
+    background-image: url("/assets/tutorial.webp");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
 }
