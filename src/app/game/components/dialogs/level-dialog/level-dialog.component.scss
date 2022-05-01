@@ -10,16 +10,24 @@
   }
 }
 
-.click-input {
-  display: block;
-  @media (pointer: coarse) {
-    display: none;
-  }
-}
+.intro-content {
+  font-size: large;
 
-.touch-input {
-  display: block;
-  @media (pointer: fine) {
-    display: none;
+  .intro-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .click-input {
+    @media (pointer: coarse) {
+      display: none;
+    }
+  }
+
+  .touch-input {
+    @media (pointer: fine) {
+      display: none;
+    }
   }
 }

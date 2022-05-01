@@ -1,43 +1,25 @@
-<h2 class="dialog-header">
+<h1 class="dialog-header">
   <span *ngIf="data.isWelcome; else levelHeader">Welcome to {{ gameTitle }}!</span>
   <ng-template #levelHeader>Level Complete!</ng-template>
-</h2>
+</h1>
 
 <mat-dialog-content>
-  <div class="intro" *ngIf="data.isWelcome; else levelContent">
-    <mat-accordion>
-      <mat-expansion-panel hideToggle>
-        <mat-expansion-panel-header>
-          <span>How to play?</span>
-        </mat-expansion-panel-header>
-        <ng-template matExpansionPanelContent>
-          <p>
-            <mat-icon>arrow_back</mat-icon>
-            <mat-icon>arrow_forward</mat-icon>
-            Move rows right or left
-          </p>
-          <p class="touch-input">
-            <mat-icon>touch_app</mat-icon>
-            Tap or press to make a match!
-          </p>
-          <p class="click-input">
-            <mat-icon>mouse</mat-icon>
-            Click/click-hold to make a match!
-          </p>
-          <p>
-            Match <b>at least {{ matchTarget }} pieces</b> top-to-bottom or side-to-side
-          </p>
-          <p>
-            <mat-icon>sentiment_very_satisfied</mat-icon>
-            Earn moves by making faster matches and longer matches
-          </p>
-          <p>
-            <mat-icon>bolt</mat-icon>
-            Get <b>Power Moves</b> with longer matches
-          </p>
-        </ng-template>
-      </mat-expansion-panel>
-    </mat-accordion>
+  <div *ngIf="data.isWelcome; else levelContent" class="intro-content">
+    <p class="intro-line">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Move rows right or left</span>
+      <mat-icon>arrow_forward</mat-icon>
+    </p>
+    <p class="intro-line touch-input">
+      <mat-icon>touch_app</mat-icon>
+      Tap or press to match
+    </p>
+    <p class="intro-line click-input">
+      <mat-icon>mouse</mat-icon>
+      Click/click-hold to match
+    </p>
+    <br />
+    <p class="intro-line">Match at least like {{ matchTarget }} pieces</p>
   </div>
   <ng-template #levelContent>
     <table>

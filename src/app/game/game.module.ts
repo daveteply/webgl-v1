@@ -22,7 +22,6 @@ import { TextureManagerService } from './services/texture/texture-manager.servic
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
@@ -34,15 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
     ZoomCharComponent,
     MovesLeftComponent,
   ],
-  imports: [
-    CommonModule,
-    GameRoutingModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatExpansionModule,
-    MatIconModule,
-  ],
+  imports: [CommonModule, GameRoutingModule, MatProgressBarModule, MatDialogModule, MatButtonModule, MatIconModule],
   providers: [
     SceneManagerService,
     MaterialManagerService,
