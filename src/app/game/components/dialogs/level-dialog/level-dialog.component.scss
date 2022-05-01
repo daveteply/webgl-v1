@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.level-info-line {
+  display: none;
+  &.show {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 .progress {
   opacity: 1;
   transition: opacity 500ms;

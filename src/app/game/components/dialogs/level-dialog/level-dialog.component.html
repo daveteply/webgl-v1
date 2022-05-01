@@ -1,28 +1,26 @@
 <h2 class="dialog-header">Level Complete!</h2>
 
 <mat-dialog-content>
-  <table>
-    <tr *ngIf="data.stats.fastMatchBonusTotal">
-      <td>Speed bonus:</td>
-      <td>{{ data.stats.fastMatchBonusTotal | number }}</td>
-    </tr>
-    <tr *ngIf="data.stats.fastMatchBonusTotal">
-      <td>Fastest match time:</td>
-      <td>{{ data.stats.fastestMatchMs / 1000 | number: "1.1-1" }}s</td>
-    </tr>
-    <tr *ngIf="data.stats.moveCount">
-      <td>Moves used:</td>
-      <td>{{ data.stats.moveCount }}</td>
-    </tr>
-    <tr *ngIf="data.stats.moveCountEarned">
-      <td>Moves earned:</td>
-      <td>{{ data.stats.moveCountEarned }}</td>
-    </tr>
-    <tr>
-      <td>Piece count:</td>
-      <td>{{ data.stats.pieceCount }}</td>
-    </tr>
-  </table>
+  <div class="level-info-line" [class.show]="data.stats.fastMatchBonusTotal">
+    <span>Speed bonus</span>
+    <wgl-text-zoom [text]="data.stats.fastMatchBonusTotal"></wgl-text-zoom>
+  </div>
+  <div class="level-info-line" [class.show]="data.stats.fastMatchBonusTotal">
+    <span>Fastest match time (seconds)</span>
+    <wgl-text-zoom [text]="data.stats.fastestMatchMs"></wgl-text-zoom>
+  </div>
+  <div class="level-info-line" [class.show]="data.stats.moveCount">
+    <span>Moves used</span>
+    <wgl-text-zoom [text]="data.stats.moveCount"></wgl-text-zoom>
+  </div>
+  <div class="level-info-line" [class.show]="data.stats.moveCountEarned">
+    <span>Moves earned</span>
+    <wgl-text-zoom [text]="data.stats.moveCountEarned"></wgl-text-zoom>
+  </div>
+  <div class="level-info-line" [class.show]="data.stats.pieceCount">
+    <span>Pieces captured</span>
+    <wgl-text-zoom [text]="data.stats.pieceCount"></wgl-text-zoom>
+  </div>
   <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
 </mat-dialog-content>
 

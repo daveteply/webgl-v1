@@ -140,7 +140,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private dialogConfig(restartLevel: boolean = false): any {
     return {
-      maxWidth: '25em',
+      minWidth: '20em',
       disableClose: true,
       data: {
         stats: this.scoringManager.LevelStats,
