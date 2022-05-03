@@ -78,7 +78,7 @@ export class ScoringManagerService {
     // update since previous match
     const timeDiff = this._timeStop - this._timeStart;
     if (timeDiff < this._levelStats.fastestMatchMs) {
-      this._levelStats.fastestMatchMs = timeDiff;
+      this._levelStats.fastestMatchMs = Math.round(timeDiff);
     }
 
     let scoreDelta = 0;
