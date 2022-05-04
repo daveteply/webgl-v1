@@ -54,27 +54,34 @@ export class LevelDialogComponent implements OnDestroy {
       this.progress = progress;
     });
 
-    this.timerEvent.pipe(delay(600)).subscribe((stat: LevelStat) => {
-      this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+    this.timerEvent.pipe(delay(550)).subscribe((stat: LevelStat) => {
       switch (stat.statType) {
         case LevelElementType.fastMatchBonusTotal:
           this.fastMatchBonusTotal = stat.statValue;
+          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
         case LevelElementType.fastestMatchMs:
-          this.fastestMatchMs = stat.statValue;
+          if (this.fastMatchBonusTotal) {
+            // only show if there was a bonus involved
+            this.fastestMatchMs = stat.statValue / 1000;
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+          }
           break;
 
         case LevelElementType.moveCount:
           this.moveCount = stat.statValue;
+          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
         case LevelElementType.moveCountEarned:
           this.moveCountEarned = stat.statValue;
+          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
         case LevelElementType.pieceCount:
           this.pieceCount = stat.statValue;
+          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
         default:
