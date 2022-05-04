@@ -21,6 +21,7 @@ import { EffectsManagerService } from './services/effects-manager.service';
 import { TextureManagerService } from './services/texture/texture-manager.service';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,7 +36,15 @@ import { MatIconModule } from '@angular/material/icon';
     MovesLeftComponent,
     IntroDialogComponent,
   ],
-  imports: [CommonModule, GameRoutingModule, MatProgressBarModule, MatDialogModule, MatButtonModule, MatIconModule],
+  imports: [
+    CommonModule,
+    GameRoutingModule,
+    MatProgressBarModule,
+    MatExpansionModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   providers: [
     SceneManagerService,
     MaterialManagerService,

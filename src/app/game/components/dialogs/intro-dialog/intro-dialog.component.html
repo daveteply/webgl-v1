@@ -2,21 +2,27 @@
   <h1>Welcome to {{ gameTitle }}!</h1>
 
   <mat-dialog-content>
-    <p class="intro-line">
-      <mat-icon>arrow_back</mat-icon>
-      <span>Move rows right or left</span>
-      <mat-icon>arrow_forward</mat-icon>
-    </p>
-    <p class="intro-line touch-input">
-      <mat-icon>touch_app</mat-icon>
-      Tap or press to match
-    </p>
-    <p class="intro-line click-input">
-      <mat-icon>mouse</mat-icon>
-      Click/click-hold to match
-    </p>
-    <br />
-    <p class="intro-line">Match&nbsp;<i> at least </i>&nbsp;like {{ matchTarget }} pieces</p>
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> How to play? </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="intro-line">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Move rows right or left</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </p>
+        <p class="intro-line touch-input">
+          <mat-icon>touch_app</mat-icon>
+          Tap or press to match
+        </p>
+        <p class="intro-line click-input">
+          <mat-icon>mouse</mat-icon>
+          Click/click-hold to match
+        </p>
+        <p class="intro-line">Match&nbsp;<i> at least </i>&nbsp;like {{ matchTarget }} pieces</p>
+      </mat-expansion-panel>
+    </mat-accordion>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
 
