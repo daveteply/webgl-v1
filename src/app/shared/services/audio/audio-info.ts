@@ -6,6 +6,7 @@ export enum AudioType {
   LEVEL_START_3,
   LEVEL_START_4,
   LEVEL_START_5,
+  LEVEL_STAT,
   PIECE_MOVE,
   PIECE_MOVE_REMAINING_PANIC,
   PIECE_NON_MOVE,
@@ -48,6 +49,11 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-start/mixkit-futuristic-machine-starting-2689.mp3',
     audioType: AudioType.LEVEL_START_5,
+  },
+
+  {
+    url: 'assets/audio/level-dialog-stat.mp3',
+    audioType: AudioType.LEVEL_STAT,
   },
 
   {

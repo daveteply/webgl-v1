@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { delay } from 'rxjs';
 import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { LevelDialogData } from './level-dialog-data';
 
 enum LevelElementType {
@@ -40,7 +42,11 @@ export class LevelDialogComponent implements OnDestroy {
 
   gameTitle = GAME_TITLE;
 
-  constructor(private textureManager: TextureManagerService, @Inject(MAT_DIALOG_DATA) public data: LevelDialogData) {
+  constructor(
+    private textureManager: TextureManagerService,
+    private audioManager: AudioManagerService,
+    @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
+  ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
       this.texturesStillLoading = false;
     });
@@ -49,6 +55,7 @@ export class LevelDialogComponent implements OnDestroy {
     });
 
     this.timerEvent.pipe(delay(600)).subscribe((stat: LevelStat) => {
+      this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
       switch (stat.statType) {
         case LevelElementType.fastMatchBonusTotal:
           this.fastMatchBonusTotal = stat.statValue;
