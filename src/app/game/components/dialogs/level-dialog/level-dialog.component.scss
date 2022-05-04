@@ -1,19 +1,29 @@
-.dialog-header {
-  text-align: center;
-}
+#level-dialog {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-.level-info-line {
-  display: none;
-  &.show {
-    display: flex;
-    justify-content: space-between;
+  .dialog-header {
+    text-align: center;
   }
-}
 
-.progress {
-  opacity: 1;
-  transition: opacity 500ms;
-  &.fade-out {
-    opacity: 0;
+  .content {
+    flex: 1;
+  }
+
+  .level-info-line {
+    display: none;
+    &.show {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .progress {
+    opacity: 1;
+    transition: opacity 500ms;
+    &.fade-out {
+      opacity: 0;
+    }
   }
 }

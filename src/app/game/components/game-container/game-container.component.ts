@@ -12,7 +12,7 @@ import { TextManagerService } from '../../services/text/text-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { NotifyService } from 'src/app/shared/services/notify.service';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverComponent } from '../dialogs/game-over/game-over.component';
@@ -94,7 +94,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             this.handleLevelDialogCLosed();
           });
         } else {
-          this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig());
+          this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig('30%'));
           this._dialogRefLevel.afterClosed().subscribe(() => {
             this.handleLevelDialogCLosed();
           });
@@ -132,8 +132,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private dialogConfig(): any {
-    return {
+  private dialogConfig(height: string = ``): MatDialogConfig {
+    let config = {
       minWidth: '20em',
       disableClose: true,
       data: {
@@ -141,6 +141,12 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         level: this.scoringManager.Level,
       },
     };
+
+    if (height) {
+      config = Object.assign({ height }, config);
+    }
+
+    return config;
   }
 
   private handleLevelDialogCLosed(): void {

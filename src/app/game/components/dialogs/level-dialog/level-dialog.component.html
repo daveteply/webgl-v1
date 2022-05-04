@@ -1,31 +1,33 @@
-<h2 class="dialog-header">Level Complete!</h2>
+<div id="level-dialog">
+  <h2 class="dialog-header">Level Complete!</h2>
 
-<mat-dialog-content>
-  <div class="level-info-line" [class.show]="fastMatchBonusTotal">
-    <span>Speed bonus</span>
-    <wgl-text-zoom [text]="fastMatchBonusTotal"></wgl-text-zoom>
-  </div>
-  <div class="level-info-line" [class.show]="fastestMatchMs">
-    <span>Fastest match time (seconds)</span>
-    <wgl-text-zoom [text]="fastestMatchMs"></wgl-text-zoom>
-  </div>
-  <div class="level-info-line" [class.show]="moveCount">
-    <span>Moves used</span>
-    <wgl-text-zoom [text]="moveCount"></wgl-text-zoom>
-  </div>
-  <div class="level-info-line" [class.show]="moveCountEarned">
-    <span>Moves earned</span>
-    <wgl-text-zoom [text]="moveCountEarned"></wgl-text-zoom>
-  </div>
-  <div class="level-info-line" [class.show]="pieceCount">
-    <span>Pieces captured</span>
-    <wgl-text-zoom [text]="pieceCount"></wgl-text-zoom>
-  </div>
-  <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
-</mat-dialog-content>
+  <mat-dialog-content class="content">
+    <div class="level-info-line" [class.show]="fastMatchBonusTotal">
+      <span>Speed bonus</span>
+      <wgl-text-zoom [text]="fastMatchBonusTotal"></wgl-text-zoom>
+    </div>
+    <div class="level-info-line" [class.show]="fastestMatchMs">
+      <span>Fastest match time (seconds)</span>
+      <wgl-text-zoom [text]="fastestMatchMs"></wgl-text-zoom>
+    </div>
+    <div class="level-info-line" [class.show]="moveCount">
+      <span>Moves used</span>
+      <wgl-text-zoom [text]="moveCount"></wgl-text-zoom>
+    </div>
+    <div class="level-info-line" [class.show]="moveCountEarned">
+      <span>Moves earned</span>
+      <wgl-text-zoom [text]="moveCountEarned"></wgl-text-zoom>
+    </div>
+    <div class="level-info-line" [class.show]="pieceCount">
+      <span>Pieces captured</span>
+      <wgl-text-zoom [text]="pieceCount"></wgl-text-zoom>
+    </div>
+    <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="center">
-  <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
-    <span>Next Level, let's go!</span>
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
+      <span>Next Level, let's go!</span>
+    </button>
+  </mat-dialog-actions>
+</div>
