@@ -48,7 +48,7 @@ export class LevelDialogComponent implements OnDestroy {
       this.progress = progress;
     });
 
-    this.timerEvent.pipe(delay(750)).subscribe((stat: LevelStat) => {
+    this.timerEvent.pipe(delay(600)).subscribe((stat: LevelStat) => {
       switch (stat.statType) {
         case LevelElementType.fastMatchBonusTotal:
           this.fastMatchBonusTotal = stat.statValue;
