@@ -1,25 +1,25 @@
 <h2 class="dialog-header">Level Complete!</h2>
 
 <mat-dialog-content>
-  <div class="level-info-line" [class.show]="data.stats.fastMatchBonusTotal">
+  <div class="level-info-line" [class.show]="fastMatchBonusTotal">
     <span>Speed bonus</span>
-    <wgl-text-zoom [text]="data.stats.fastMatchBonusTotal"></wgl-text-zoom>
+    <wgl-text-zoom [text]="fastMatchBonusTotal"></wgl-text-zoom>
   </div>
-  <div class="level-info-line" [class.show]="data.stats.fastMatchBonusTotal">
+  <div class="level-info-line" [class.show]="fastestMatchMs">
     <span>Fastest match time (seconds)</span>
-    <wgl-text-zoom [text]="data.stats.fastestMatchMs"></wgl-text-zoom>
+    <wgl-text-zoom [text]="fastestMatchMs"></wgl-text-zoom>
   </div>
-  <div class="level-info-line" [class.show]="data.stats.moveCount">
+  <div class="level-info-line" [class.show]="moveCount">
     <span>Moves used</span>
-    <wgl-text-zoom [text]="data.stats.moveCount"></wgl-text-zoom>
+    <wgl-text-zoom [text]="moveCount"></wgl-text-zoom>
   </div>
-  <div class="level-info-line" [class.show]="data.stats.moveCountEarned">
+  <div class="level-info-line" [class.show]="moveCountEarned">
     <span>Moves earned</span>
-    <wgl-text-zoom [text]="data.stats.moveCountEarned"></wgl-text-zoom>
+    <wgl-text-zoom [text]="moveCountEarned"></wgl-text-zoom>
   </div>
-  <div class="level-info-line" [class.show]="data.stats.pieceCount">
+  <div class="level-info-line" [class.show]="pieceCount">
     <span>Pieces captured</span>
-    <wgl-text-zoom [text]="data.stats.pieceCount"></wgl-text-zoom>
+    <wgl-text-zoom [text]="pieceCount"></wgl-text-zoom>
   </div>
   <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
 </mat-dialog-content>
