@@ -77,13 +77,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
-        this._dialogGameOverRef = this.dialog.open(GameOverComponent, {
-          maxWidth: '25em',
-          disableClose: true,
-          data: {
-            level: this.scoringManager.Level,
-          },
-        });
+        this._dialogGameOverRef = this.dialog.open(GameOverComponent, this.dialogConfig());
         this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
           if (data.startOver) {
             this.scoringManager.RestartGame();
@@ -138,13 +132,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private dialogConfig(restartLevel: boolean = false): any {
+  private dialogConfig(): any {
     return {
       minWidth: '20em',
       disableClose: true,
       data: {
         stats: this.scoringManager.LevelStats,
-        restartLevel: restartLevel,
+        level: this.scoringManager.Level,
       },
     };
   }

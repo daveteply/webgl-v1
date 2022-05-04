@@ -12,6 +12,8 @@ export class GameOverComponent {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
+  isLevelOne: boolean;
+
   constructor(
     private textureManager: TextureManagerService,
     private dialogRef: MatDialogRef<GameOverComponent>,
@@ -23,6 +25,8 @@ export class GameOverComponent {
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;
     });
+
+    this.isLevelOne = data.level === 1;
   }
 
   onCloseGameOver(): void {
