@@ -1,5 +1,6 @@
+<canvas #dialogCanvas class="canvas-backer"></canvas>
 <div id="level-dialog">
-  <h2 class="dialog-header">Level Complete!</h2>
+  <h1 class="dialog-header">Level Complete!</h1>
 
   <mat-dialog-content class="content">
     <div class="level-info-line" [class.show]="fastMatchBonusTotal">
@@ -27,7 +28,7 @@
 
   <mat-dialog-actions align="center">
     <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
-      <span>Next Level, let's go!</span>
+      <span>Next Level, <i>let's go!</i></span>
     </button>
   </mat-dialog-actions>
 </div>
