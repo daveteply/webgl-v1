@@ -199,7 +199,7 @@ export class TextureManagerService {
         const emojiCode = String.fromCodePoint(...emoji.sequence);
         this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);
 
-        // white pixel (blank emoji) test
+        // white pixel test (incompatible emojis)
         this.renderTest(this._canvasContext);
 
         // set data Url (to be used by three js texture engine)
