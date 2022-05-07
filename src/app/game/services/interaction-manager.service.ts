@@ -84,7 +84,6 @@ export class InteractionManagerService {
 
           // level completed
           if (this.scoringManager.LevelComplete) {
-            this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
             this.LockBoard(false);

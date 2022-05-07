@@ -85,6 +85,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             // reset stats will take care of move count based on level
             this.scoringManager.ResetStats(!data.startOver);
           }
+          this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
           this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
         });
       } else {
@@ -126,6 +127,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private initTextures(): void {
     const levelType = Math.floor(Math.random() * 3) + 1;
+    this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
     this.textureManager.InitLevelTextures(levelType, this.gameEngine.PlayableTextureCount);
     if (!environment.production) {
       console.info('Level Type: ', LevelMaterialType[levelType]);
@@ -150,6 +152,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private handleLevelDialogCLosed(): void {
+    this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;

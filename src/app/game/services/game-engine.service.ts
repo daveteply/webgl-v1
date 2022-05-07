@@ -24,6 +24,17 @@ export class GameEngineService {
   }
 
   public UpdatePlayableTextureCount(level: number): void {
+    let target = DEFAULT_PLAYABLE_TEXTURE_COUNT;
+    if (level <= 10) {
+      this._playableTextureCount = target;
+    } else if (level > 10 && level <= 20) {
+      this._playableTextureCount = target + 1;
+    } else if (level > 20 && level <= 40) {
+      this._playableTextureCount = target + 2;
+    } else if (level > 40) {
+      this._playableTextureCount = target + 3;
+    }
+
     if (level === 10 || level === 20) {
       this._playableTextureCount++;
       if (!environment.production) {
