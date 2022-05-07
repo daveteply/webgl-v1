@@ -1,3 +1,22 @@
 .dialog-header {
   text-align: center;
 }
+
+.level-colors {
+  display: flex;
+  justify-content: space-around;
+
+  .color-block {
+    width: 2em;
+    height: 2em;
+    box-shadow: 0.5em 0s5em 0s5em gray;
+  }
+}
+
+.level-emoji-row {
+  display: flex;
+
+  .level-emoji {
+    font-size: x-large;
+  }
+}

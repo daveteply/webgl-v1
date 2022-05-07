@@ -11,6 +11,7 @@ import { TextureManagerService } from '../../services/texture/texture-manager.se
 import { TextManagerService } from '../../services/text/text-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { NotifyService } from 'src/app/shared/services/notify.service';
+import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
@@ -57,6 +58,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private textManager: TextManagerService,
     private notify: NotifyService,
     private gameEngine: GameEngineService,
+    private store: StoreService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -69,6 +71,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
       this._isGameOver = gameOver;
+      this.store.ClearAll();
       this.initTextures();
     });
   }

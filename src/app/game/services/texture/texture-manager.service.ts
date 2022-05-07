@@ -1,7 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Inject, Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
+import { StoreService } from 'src/app/app-store/services/store.service';
+
 import { LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../models/level-material-type';
@@ -40,7 +44,7 @@ export class TextureManagerService {
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
   public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  constructor(@Inject(DOCUMENT) private document: Document, private store: StoreService) {
     this._loaderManager = new LoadingManager(
       // all images loaded
       () => {
@@ -179,6 +183,7 @@ export class TextureManagerService {
 
     if (this._canvasContext) {
       emojiSequence = this.randomEmojiCodeList(playableTextureCount);
+      this.store.UpdateEmojiList(emojiSequence);
 
       for (let i = 0; i < emojiSequence.length; i++) {
         this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
@@ -207,6 +212,7 @@ export class TextureManagerService {
 
   private randomEmojiCodeList(playableTextureCount: number): EmojiSequence[] {
     const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
+    this.store.UpdateEmojiGroup(emojiGroup.id);
 
     // DEBUG
     // const emojiGroup = EmojiData.find((e) => e.id === 'Symbols') || EmojiData[0];
@@ -222,7 +228,9 @@ export class TextureManagerService {
     // DEBUG
 
     // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
-    const emojiSequences = shuffledSubGroups.slice(0, 3).flatMap((s) => s.codes);
+    const subGroups = shuffledSubGroups.slice(0, 3);
+    this.store.UpdateEmojiSubGroups(subGroups.map((s) => s.id));
+    const emojiSequences = subGroups.flatMap((s) => s.codes);
     const shuffledSequences = shuffleArray(emojiSequences);
 
     return shuffledSequences

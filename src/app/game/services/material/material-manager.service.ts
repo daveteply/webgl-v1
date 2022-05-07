@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+
+import { Observable } from 'rxjs';
 import { MathUtils, Texture } from 'three';
 import * as shuffleArray from 'shuffle-array';
-import { environment } from 'src/environments/environment';
+
+import { TextureManagerService } from '../texture/texture-manager.service';
+import { StoreService } from 'src/app/app-store/services/store.service';
+
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
 import { LevelMaterialType } from '../../models/level-material-type';
-import { TextureManagerService } from '../texture/texture-manager.service';
 import { ColorSchemeData } from './color-info';
-import { Observable } from 'rxjs';
 import { PowerMoveType } from '../../models/power-move-type';
 
 @Injectable()
 export class MaterialManagerService {
-  constructor(private textureManager: TextureManagerService) {}
+  constructor(private textureManager: TextureManagerService, private store: StoreService) {}
 
   public InitMaterials(playableTextureCount: number): GamePieceMaterialData[] {
     // reset array
@@ -27,6 +31,7 @@ export class MaterialManagerService {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:
         selectedColors = this.initColorScheme(playableTextureCount);
+        this.store.UpdateLevelColors(selectedColors);
 
         selectedColors.forEach((color, inx) => {
           materials.push({
@@ -40,6 +45,7 @@ export class MaterialManagerService {
       // colors and bump maps
       case LevelMaterialType.ColorBumpMaterial:
         selectedColors = this.initColorScheme(playableTextureCount);
+        this.store.UpdateLevelColors(selectedColors);
 
         const bumpTexture = this.textureManager.Textures[MathUtils.randInt(0, this.textureManager.Textures.length - 1)];
 

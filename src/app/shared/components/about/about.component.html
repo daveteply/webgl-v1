@@ -8,9 +8,27 @@
     Sound effect by
     <a target="_blank" href="https://mixkit.co/">mixkit</a>
   </p>
-</div>
-<div mat-dialog-actions align="center">
-  <button mat-button mat-dialog-close mat-icon-button color="primary" mat-mini-fab>
-    <mat-icon aria-hidden="false" aria-label="CLose">close</mat-icon>
-  </button>
+  <div *ngIf="levelColors?.length">
+    <h2>Colors</h2>
+    <div class="level-colors">
+      <div *ngFor="let color of levelColors">
+        <div class="color-block" [style.backgroundColor]="color"></div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="levelEmojis?.emojiList?.length">
+    <h2>Emojis</h2>
+    <p>Group: {{ levelEmojis.group }}</p>
+    <p>Subgroups: {{ levelEmojis.subGroups?.join(", ") }}</p>
+    <div>
+      <div *ngFor="let emoji of levelEmojis.emojiList">
+        <p class="level-emoji-row">
+          <span class="level-emoji">{{ emoji.emojiCode }}</span> {{ emoji.desc }} - {{ emoji.ver }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions align="center">
+    <button mat-stroked-button mat-dialog-close cdkFocusInitial>Dismiss</button>
+  </div>
 </div>
