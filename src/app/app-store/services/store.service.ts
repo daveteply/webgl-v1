@@ -10,6 +10,7 @@ export class StoreService {
     return this._levelColors;
   }
   public UpdateLevelColors(colorList: string[]): void {
+    this.resetAll();
     this._levelColors = colorList;
   }
 
@@ -19,6 +20,7 @@ export class StoreService {
   }
 
   public UpdateEmojiGroup(group: string): void {
+    this.resetAll();
     this._emojiInfo.group = group;
   }
 
@@ -31,12 +33,12 @@ export class StoreService {
     this._emojiInfo.emojiList.forEach((e) => (e.emojiCode = String.fromCodePoint(...e.sequence)));
   }
 
-  public ClearAll(): void {
-    this._levelColors = [];
+  constructor() {
     this._emojiInfo = {};
   }
 
-  constructor() {
+  private resetAll(): void {
     this._emojiInfo = {};
+    this._levelColors = [];
   }
 }
