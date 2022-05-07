@@ -1,22 +1,27 @@
-.dialog-header {
-  text-align: center;
-}
+#about-dialog {
+  font-size: larger;
 
-.level-colors {
-  display: flex;
-  justify-content: space-around;
-
-  .color-block {
-    width: 2em;
-    height: 2em;
-    box-shadow: 0.5em 0s5em 0s5em gray;
+  .dialog-header {
+    text-align: center;
   }
-}
 
-.level-emoji-row {
-  display: flex;
+  .level-colors {
+    display: flex;
+    justify-content: space-around;
 
-  .level-emoji {
-    font-size: x-large;
+    .color-block {
+      width: 2em;
+      height: 2em;
+      filter: drop-shadow(0 0.5em 0.5em rgba(0, 0, 0, 0.4));
+    }
+  }
+
+  .level-emoji-row {
+    display: flex;
+
+    .level-emoji {
+      font-size: x-large;
+      filter: drop-shadow(0 0.25em 0.25em rgba(0, 0, 0, 0.4));
+    }
   }
 }
