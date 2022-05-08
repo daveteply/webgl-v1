@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
+import { GameEngineService } from './game-engine.service';
 import { MaterialManagerService } from './material/material-manager.service';
 
 import { ObjectManagerService } from './object-manager.service';
@@ -19,6 +20,7 @@ describe('ObjectManagerService', () => {
         TextureManagerService,
         AudioManagerService,
         ScoringManagerService,
+        GameEngineService,
       ],
     });
     service = TestBed.inject(ObjectManagerService);

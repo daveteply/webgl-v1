@@ -70,7 +70,8 @@ describe('GameEngineService', () => {
       mockMaterialService,
       effectManagerService,
       textManagerService,
-      audioManagerService
+      audioManagerService,
+      service
     );
     mockAxle = createMockAxle(objectManagerService);
   });

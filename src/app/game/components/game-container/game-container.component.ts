@@ -127,8 +127,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private initTextures(): void {
-    const levelType = Math.floor(Math.random() * 3) + 1;
+    // game difficulty level (change in number of textures used)
     this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
+    // visual indicator for difficulty level
+    this.objectManager.UpdateStarFieldColor(this.gameEngine.PlayableTextureCountColor);
+
+    // select next level type
+    const levelType = Math.floor(Math.random() * 3) + 1;
     this.textureManager.InitLevelTextures(levelType, this.gameEngine.PlayableTextureCount);
     if (!environment.production) {
       console.info('Level Type: ', LevelMaterialType[levelType]);

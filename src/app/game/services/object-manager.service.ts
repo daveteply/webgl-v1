@@ -1,7 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
+
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
+import { GamePiece } from '../models/game-piece/game-piece';
 import {
   GRID_STEP_DEGREES,
   GRID_MAX_DEGREES,
@@ -9,14 +13,14 @@ import {
   GRID_VERTICAL_OFFSET,
   WHEEL_START_POSITION,
 } from '../game-constants';
+import { PowerMoveType } from '../models/power-move-type';
+import { StarField } from '../models/star-field/star-field';
+
 import { MaterialManagerService } from './material/material-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';
-import { StarField } from '../models/star-field/star-field';
-import { Subscription } from 'rxjs';
-import { PowerMoveType } from '../models/power-move-type';
-import { GamePiece } from '../models/game-piece/game-piece';
+import { GameEngineService } from './game-engine.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -43,7 +47,8 @@ export class ObjectManagerService {
     private materialManager: MaterialManagerService,
     private effectsManager: EffectsManagerService,
     private textManager: TextManagerService,
-    private audioManager: AudioManagerService
+    private audioManager: AudioManagerService,
+    private gameEngine: GameEngineService
   ) {
     this._stack = new Group();
     this._stack.name = 'gameWheelStack';
@@ -103,6 +108,10 @@ export class ObjectManagerService {
 
   public UpdateStarField(): void {
     this._starField.UpdateParticles();
+  }
+
+  public UpdateStarFieldColor(color: number): void {
+    this._starField.UpdateColor(color);
   }
 
   public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType): void {

@@ -1,5 +1,6 @@
 import {
   BufferGeometry as BufferGeometry,
+  Color,
   Float32BufferAttribute,
   MathUtils,
   Object3D,
@@ -75,5 +76,11 @@ export class StarField extends Object3D {
     const positions = this._particles.flatMap((p) => [p.position.x, p.position.y, p.position.z]);
     this._geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
     this._geometry.attributes['position'].needsUpdate = true;
+  }
+
+  public UpdateColor(starColor: number): void {
+    if (this._material) {
+      this._material.color = new Color(starColor);
+    }
   }
 }

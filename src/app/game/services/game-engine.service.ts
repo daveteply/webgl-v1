@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { MathUtils } from 'three';
-import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../game-constants';
+import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT, DIFFICULT_LEVEL_COLOR } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
@@ -29,15 +29,23 @@ export class GameEngineService {
       this._playableTextureCount = target;
     } else if (level > 10 && level <= 20) {
       this._playableTextureCount = target + 1;
+      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[1];
     } else if (level > 20 && level <= 40) {
       this._playableTextureCount = target + 2;
+      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[2];
     } else if (level > 40) {
       this._playableTextureCount = target + 3;
+      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[3];
     }
 
     if (!environment.production) {
       console.info('Playable Texture Count: ', this._playableTextureCount, 'for level:', level);
     }
+  }
+
+  private _playableTextureCountColor: number = DIFFICULT_LEVEL_COLOR[0];
+  get PlayableTextureCountColor(): number {
+    return this._playableTextureCountColor;
   }
 
   public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): GamePiece[] {
