@@ -27,6 +27,7 @@ export class GameEngineService {
     let target = DEFAULT_PLAYABLE_TEXTURE_COUNT;
     if (level <= 10) {
       this._playableTextureCount = target;
+      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
     } else if (level > 10 && level <= 20) {
       this._playableTextureCount = target + 1;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[1];

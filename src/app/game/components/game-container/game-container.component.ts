@@ -43,6 +43,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private _isGameOver: boolean = false;
 
   ShowScoreProgress: boolean = false;
+  LevelLabelColor!: string;
 
   public GridTemplateColumns: string = '';
   public GridTemplateRows: string = '';
@@ -87,6 +88,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             this.scoringManager.ResetStats(!data.startOver);
           }
           this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
+          this.updateDifficultyColor();
           this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
         });
       } else {
@@ -129,8 +131,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private initTextures(): void {
     // game difficulty level (change in number of textures used)
     this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
-    // visual indicator for difficulty level
-    this.objectManager.UpdateStarFieldColor(this.gameEngine.PlayableTextureCountColor);
+    this.updateDifficultyColor();
 
     // select next level type
     const levelType = Math.floor(Math.random() * 3) + 1;
@@ -166,5 +167,11 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       this.scoringManager.NextLevel();
       this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
     }
+  }
+
+  private updateDifficultyColor(): void {
+    // visual indicator for difficulty level
+    this.LevelLabelColor = `#${this.gameEngine.PlayableTextureCountColor.toString(16)}`;
+    this.objectManager.UpdateStarFieldColor(this.gameEngine.PlayableTextureCountColor);
   }
 }

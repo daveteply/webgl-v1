@@ -3,7 +3,7 @@
     <div class="game-title">{{ gameTitle }}</div>
     <wgl-text-zoom [text]="scoringManager.Score"></wgl-text-zoom>
     <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
-    <div class="level-info">
+    <div class="level-info" [style.color]="LevelLabelColor">
       <span>Level</span>
       <span>&nbsp;</span>
       <div>{{ scoringManager.Level }}</div>
