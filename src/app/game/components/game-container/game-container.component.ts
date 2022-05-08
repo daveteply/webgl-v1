@@ -68,6 +68,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
+      this.scoringManager.IncLevel();
       this._isGameOver = gameOver;
       this.initTextures();
     });
@@ -152,7 +153,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private handleLevelDialogCLosed(): void {
-    this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;

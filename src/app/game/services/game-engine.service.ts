@@ -35,11 +35,8 @@ export class GameEngineService {
       this._playableTextureCount = target + 3;
     }
 
-    if (level === 10 || level === 20) {
-      this._playableTextureCount++;
-      if (!environment.production) {
-        console.info('Updated Playable Texture Count: ', this._playableTextureCount);
-      }
+    if (!environment.production) {
+      console.info('Playable Texture Count: ', this._playableTextureCount, 'for level:', level);
     }
   }
 

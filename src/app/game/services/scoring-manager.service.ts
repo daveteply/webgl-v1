@@ -63,8 +63,11 @@ export class ScoringManagerService {
     this._timeStop = performance.now();
   }
 
-  public NextLevel(): void {
+  public IncLevel(): void {
     this._level++;
+  }
+
+  public NextLevel(): void {
     this.initLevelPieceTarget();
     this.ResetStats();
   }
