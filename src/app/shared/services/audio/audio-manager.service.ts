@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AudioType, AUDIO_LIST } from './audio-info';
 import { Howl, Howler } from 'howler';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
+import { AppVisibilityService } from '../app-visibility.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,14 @@ export class AudioManagerService {
   set Volume(gainLevel: number) {
     this._trackVolume = gainLevel;
     Howler.volume(this._trackVolume);
+  }
+
+  private _visiblySubscription!: Subscription;
+
+  constructor(private appVisibility: AppVisibilityService) {
+    this._visiblySubscription = this.appVisibility.VisibilityChanged.subscribe((isVisible) => {
+      Howler.mute(!isVisible);
+    });
   }
 
   public PlayLevelComplete(): void {
@@ -108,5 +118,9 @@ export class AudioManagerService {
       this._progressionNext = this.ProgressionMin;
     }
     return Math.pow(2, (this._progressionNext - 60) / 12);
+  }
+
+  OnDestroy() {
+    this._visiblySubscription.unsubscribe();
   }
 }
