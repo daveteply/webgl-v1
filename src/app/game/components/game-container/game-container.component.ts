@@ -11,6 +11,7 @@ import { TextureManagerService } from '../../services/texture/texture-manager.se
 import { TextManagerService } from '../../services/text/text-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { NotifyService } from 'src/app/shared/services/notify.service';
+import { DialogNotifyService } from '../dialogs/dialog-notify.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
@@ -57,6 +58,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private textureManager: TextureManagerService,
     private textManager: TextManagerService,
     private notify: NotifyService,
+    private dialogNotify: DialogNotifyService,
     private gameEngine: GameEngineService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
@@ -99,6 +101,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           });
         } else {
           this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig('30%'));
+          this._dialogRefLevel.backdropClick().subscribe(() => {
+            this.dialogNotify.Notify();
+          });
           this._dialogRefLevel.afterClosed().subscribe(() => {
             this.handleLevelDialogCLosed();
           });

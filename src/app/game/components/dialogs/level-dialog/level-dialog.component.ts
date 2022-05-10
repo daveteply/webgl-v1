@@ -1,14 +1,19 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } from '@angular/core';
+
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { delay } from 'rxjs';
-import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
-import { StoreService } from 'src/app/app-store/services/store.service';
-import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
-import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
-import { AudioType } from 'src/app/shared/services/audio/audio-info';
-import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { MathUtils } from 'three';
+import { Tween } from '@tweenjs/tween.js';
+
+import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
+import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { LevelDialogData } from './level-dialog-data';
+
+import { StoreService } from 'src/app/app-store/services/store.service';
+import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { DialogNotifyService } from '../dialog-notify.service';
 
 enum LevelElementType {
   fastMatchBonusTotal = 1,
@@ -55,6 +60,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   gameTitle = GAME_TITLE;
 
+  borderStyle!: string;
+
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -69,6 +76,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
     private store: StoreService,
+    private dialogNotify: DialogNotifyService,
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
   ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
@@ -76,6 +84,21 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     });
     this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
       this.progress = progress;
+    });
+
+    this.dialogNotify.DialogNotifyEvent.subscribe(() => {
+      const delta = { b: 1 };
+      new Tween(delta)
+        .to({ b: 30 }, 100)
+        .repeat(2)
+        .yoyo(true)
+        .onUpdate(() => {
+          this.borderStyle = `border: ${delta.b}px dashed white`;
+        })
+        .onComplete(() => {
+          this.borderStyle = 'border: unset';
+        })
+        .start();
     });
 
     this.timerEvent.pipe(delay(550)).subscribe((stat: LevelStat) => {
