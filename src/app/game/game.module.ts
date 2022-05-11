@@ -21,10 +21,10 @@ import { EffectsManagerService } from './services/effects-manager.service';
 import { TextureManagerService } from './services/texture/texture-manager.service';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -40,10 +40,10 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     GameRoutingModule,
     MatProgressBarModule,
-    MatExpansionModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
+    MatTabsModule,
   ],
   providers: [
     SceneManagerService,
