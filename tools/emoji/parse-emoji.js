@@ -45,6 +45,7 @@ const skipList = [
   " bubbles",
   " crutch",
   " x-ray",
+  " middle finger",
   "flag:",
   "E14.",
 ];
