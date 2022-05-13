@@ -1,18 +1,19 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
 @Injectable()
-export class SceneManagerService {
+export class SceneManagerService implements OnDestroy {
   private _renderer!: WebGLRenderer;
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
   private _pointLight!: PointLight;
+
+  private _animateRequestId!: number;
 
   constructor(
     private ngZone: NgZone,
@@ -21,6 +22,10 @@ export class SceneManagerService {
   ) {
     this._scene = new Scene();
     this._scene.background = new Color(0xf0f0f0f);
+  }
+
+  ngOnDestroy(): void {
+    cancelAnimationFrame(this._animateRequestId);
   }
 
   public InitScene(canvas: HTMLCanvasElement): void {

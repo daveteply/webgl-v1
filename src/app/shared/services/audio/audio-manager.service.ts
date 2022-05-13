@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AudioType, AUDIO_LIST } from './audio-info';
 import { Howl, Howler } from 'howler';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class AudioManagerService {
+export class AudioManagerService implements OnDestroy {
   private readonly ProgressionMin = 48;
   private readonly ProgressionMax = 71;
   private _progressionNext: number = this.ProgressionMin;
@@ -120,7 +120,7 @@ export class AudioManagerService {
     return Math.pow(2, (this._progressionNext - 60) / 12);
   }
 
-  OnDestroy() {
+  ngOnDestroy(): void {
     this._visiblySubscription.unsubscribe();
   }
 }

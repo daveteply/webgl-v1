@@ -48,6 +48,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
+  private _animateRequestId!: number;
+
   // target values (for sequential binding)
   fastMatchBonusTotal: number = 0;
   fastestMatchMs: number = 0;
@@ -151,6 +153,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     }
     this.timerEvent.complete();
     this.timerEvent.unsubscribe();
+
+    cancelAnimationFrame(this._animateRequestId);
   }
 
   private setData(levelData: LevelDialogData): void {
@@ -301,7 +305,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   private animate(): void {
     this.updateBoxes();
 
-    requestAnimationFrame(() => {
+    this._animateRequestId = requestAnimationFrame(() => {
       this.animate();
     });
   }
