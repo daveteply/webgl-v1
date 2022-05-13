@@ -48,8 +48,6 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
-  private _animateRequestId!: number;
-
   // target values (for sequential binding)
   fastMatchBonusTotal: number = 0;
   fastestMatchMs: number = 0;
@@ -57,7 +55,9 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   moveCountEarned: number = 0;
   pieceCount: number = 0;
 
-  timerQueue: LevelStat[] = [];
+  private _animateRequestId!: number;
+
+  private _timerQueue: LevelStat[] = [];
   timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();
 
   gameTitle = GAME_TITLE;
@@ -67,12 +67,12 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  canvas!: HTMLCanvasElement;
-  ctx!: CanvasRenderingContext2D | null;
-  boxesTop!: boxParticle[];
-  boxesBottom!: boxParticle[];
-  levelColors!: string[];
-  levelEmojis!: EmojiInfo;
+  private _canvas!: HTMLCanvasElement;
+  private _ctx!: CanvasRenderingContext2D | null;
+  private _boxesTop!: boxParticle[];
+  private _boxesBottom!: boxParticle[];
+  private _levelColors!: string[];
+  private _levelEmojis!: EmojiInfo;
 
   constructor(
     private textureManager: TextureManagerService,
@@ -148,8 +148,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.timerQueue.length) {
-      this.timerQueue = [];
+    if (this._timerQueue.length) {
+      this._timerQueue = [];
     }
     this.timerEvent.complete();
     this.timerEvent.unsubscribe();
@@ -159,7 +159,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   private setData(levelData: LevelDialogData): void {
     // reset values
-    this.timerQueue = [];
+    this._timerQueue = [];
     this.fastMatchBonusTotal = 0;
     this.fastestMatchMs = 0;
     this.moveCount = 0;
@@ -167,35 +167,35 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     this.pieceCount = 0;
 
     if (levelData.stats.fastMatchBonusTotal) {
-      this.timerQueue.push({
+      this._timerQueue.push({
         statType: LevelElementType.fastMatchBonusTotal,
         statValue: levelData.stats.fastMatchBonusTotal,
       });
     }
 
     if (levelData.stats.fastestMatchMs) {
-      this.timerQueue.push({
+      this._timerQueue.push({
         statType: LevelElementType.fastestMatchMs,
         statValue: levelData.stats.fastestMatchMs,
       });
     }
 
     if (levelData.stats.moveCount) {
-      this.timerQueue.push({
+      this._timerQueue.push({
         statType: LevelElementType.moveCount,
         statValue: levelData.stats.moveCount,
       });
     }
 
     if (levelData.stats.moveCountEarned) {
-      this.timerQueue.push({
+      this._timerQueue.push({
         statType: LevelElementType.moveCountEarned,
         statValue: levelData.stats.moveCountEarned,
       });
     }
 
     if (levelData.stats.pieceCount) {
-      this.timerQueue.push({
+      this._timerQueue.push({
         statType: LevelElementType.pieceCount,
         statValue: levelData.stats.pieceCount,
       });
@@ -205,8 +205,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   private processQueue(): void {
-    if (this.timerQueue.length) {
-      const nextElement = this.timerQueue.shift();
+    if (this._timerQueue.length) {
+      const nextElement = this._timerQueue.shift();
       if (nextElement) {
         this.timerEvent.next(nextElement);
       }
@@ -214,22 +214,22 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   private setScene(): void {
-    this.levelColors = this.store.LevelColors;
-    this.levelEmojis = this.store.EmojiInfo;
+    this._levelColors = this.store.LevelColors;
+    this._levelEmojis = this.store.EmojiInfo;
 
-    this.canvas = this.dialogCanvas.nativeElement;
+    this._canvas = this.dialogCanvas.nativeElement;
     // resize canvas to match css size
-    this.canvas.width = this.canvas.clientWidth;
-    this.canvas.height = this.canvas.clientHeight;
+    this._canvas.width = this._canvas.clientWidth;
+    this._canvas.height = this._canvas.clientHeight;
 
-    this.ctx = this.canvas.getContext('2d');
-    if (this.ctx) {
+    this._ctx = this._canvas.getContext('2d');
+    if (this._ctx) {
       // create boxes
-      this.boxesTop = [];
-      this.boxesBottom = [];
+      this._boxesTop = [];
+      this._boxesBottom = [];
       for (let i = 0; i < 20; i++) {
-        this.boxesTop.push(this.createBox());
-        this.boxesBottom.push(this.createBox(true));
+        this._boxesTop.push(this.createBox());
+        this._boxesBottom.push(this.createBox(true));
       }
 
       this.animate();
@@ -238,26 +238,26 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   private createBox(isBottom: boolean = false): boxParticle {
     const size = MathUtils.randInt(20, 50);
-    const x = MathUtils.randInt(0, this.canvas.width);
+    const x = MathUtils.randInt(0, this._canvas.width);
     const velocity = MathUtils.randFloat(0.1, 0.3);
 
     let y = -size;
     let limit = MathUtils.randInt(20, 40);
     if (isBottom) {
-      y = this.canvas.height + size;
-      limit = this.canvas.height - (limit + size);
+      y = this._canvas.height + size;
+      limit = this._canvas.height - (limit + size);
     }
 
     // color
     let color = '';
-    if (this.levelColors?.length) {
-      color = this.levelColors[MathUtils.randInt(0, this.levelColors.length - 1)];
+    if (this._levelColors?.length) {
+      color = this._levelColors[MathUtils.randInt(0, this._levelColors.length - 1)];
     }
 
     // emoji
     let emoji = '';
-    if (this.levelEmojis?.emojiList?.length) {
-      emoji = this.levelEmojis.emojiList[MathUtils.randInt(0, this.levelEmojis.emojiList.length - 1)]
+    if (this._levelEmojis?.emojiList?.length) {
+      emoji = this._levelEmojis.emojiList[MathUtils.randInt(0, this._levelEmojis.emojiList.length - 1)]
         .emojiCode as string;
     }
 
@@ -265,38 +265,38 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   private updateBoxes(): void {
-    if (this.ctx) {
-      this.ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this._ctx) {
+      this._ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
       // box lengths are the same
-      for (let i = 0; i < this.boxesTop.length; i++) {
+      for (let i = 0; i < this._boxesTop.length; i++) {
         // top
-        this.boxesTop[i].y += this.boxesTop[i].velocity;
-        if (this.boxesTop[i].y > this.boxesTop[i].limit) {
-          this.boxesTop[i] = this.createBox();
+        this._boxesTop[i].y += this._boxesTop[i].velocity;
+        if (this._boxesTop[i].y > this._boxesTop[i].limit) {
+          this._boxesTop[i] = this.createBox();
         }
-        const boxTop = this.boxesTop[i];
+        const boxTop = this._boxesTop[i];
         if (boxTop.color) {
-          this.ctx.fillStyle = boxTop.color as string;
-          this.ctx.fillRect(boxTop.x, boxTop.y, boxTop.size, boxTop.size);
+          this._ctx.fillStyle = boxTop.color as string;
+          this._ctx.fillRect(boxTop.x, boxTop.y, boxTop.size, boxTop.size);
         } else if (boxTop.emoji) {
-          this.ctx.font = `${boxTop.size}px Arial`;
-          this.ctx.fillText(boxTop.emoji, boxTop.x, boxTop.y, boxTop.size);
+          this._ctx.font = `${boxTop.size}px Arial`;
+          this._ctx.fillText(boxTop.emoji, boxTop.x, boxTop.y, boxTop.size);
         }
 
         // bottom
-        this.boxesBottom[i].y -= this.boxesBottom[i].velocity;
-        if (this.boxesBottom[i].y < this.boxesBottom[i].limit) {
-          this.boxesBottom[i] = this.createBox(true);
+        this._boxesBottom[i].y -= this._boxesBottom[i].velocity;
+        if (this._boxesBottom[i].y < this._boxesBottom[i].limit) {
+          this._boxesBottom[i] = this.createBox(true);
         }
-        const boxBottom = this.boxesBottom[i];
+        const boxBottom = this._boxesBottom[i];
         if (boxBottom.color) {
-          this.ctx.fillStyle = boxBottom.color as string;
-          this.ctx.fillRect(boxBottom.x, boxBottom.y, boxBottom.size, boxBottom.size);
+          this._ctx.fillStyle = boxBottom.color as string;
+          this._ctx.fillRect(boxBottom.x, boxBottom.y, boxBottom.size, boxBottom.size);
         } else if (boxBottom.emoji) {
-          this.ctx.font = `${boxBottom.size}px Arial`;
-          this.ctx.fillText(boxBottom.emoji, boxBottom.x, boxBottom.y, boxBottom.size);
+          this._ctx.font = `${boxBottom.size}px Arial`;
+          this._ctx.fillText(boxBottom.emoji, boxBottom.x, boxBottom.y, boxBottom.size);
         }
       }
     }
