@@ -64,7 +64,7 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // set up visual piece
-    this._geometry = new BoxBufferGeometry(1, 1, 1);
+    this._geometry = new BoxBufferGeometry();
 
     // rotate uv so all vertical flipping displays correctly
     const sides = [
