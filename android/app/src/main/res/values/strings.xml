@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">webgl-v1</string>
-    <string name="title_activity_main">webgl-v1</string>
+    <string name="app_name">Rikkle</string>
+    <string name="title_activity_main">Rikkle</string>
     <string name="package_name">com.daveteply.webgl01</string>
     <string name="custom_url_scheme">com.daveteply.webgl01</string>
 </resources>
