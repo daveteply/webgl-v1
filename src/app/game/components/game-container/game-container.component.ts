@@ -20,8 +20,7 @@ import { GameOverComponent } from '../dialogs/game-over/game-over.component';
 
 import { GameOverData } from '../dialogs/game-over/game-over-data';
 import { LevelMaterialType } from '../../models/level-material-type';
-
-import { GAME_TITLE } from '../../game-constants';
+import { GAME_TITLE } from 'src/app/app-constants';
 
 @Component({
   selector: 'wgl-game-container',

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
+import { GAME_TITLE } from 'src/app/app-constants';
+import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 

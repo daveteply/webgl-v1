@@ -6,7 +6,8 @@ import { MathUtils } from 'three';
 import { Tween } from '@tweenjs/tween.js';
 
 import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
-import { GAME_TITLE, MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
+import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
+import { GAME_TITLE } from 'src/app/app-constants';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { LevelDialogData } from './level-dialog-data';
 

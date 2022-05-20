@@ -34,7 +34,6 @@ export const MOVES_REMAINING_COUNT_DANGER = 2;
 export const MOVES_REMAINING_COUNT_PANIC = 1;
 
 // Misc
-export const GAME_TITLE = 'Rikkle';
 export const CANVAS_TEXTURE_SCALE = 80;
 export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
 export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00bfff, 0x8000ff, 0xff0080];
