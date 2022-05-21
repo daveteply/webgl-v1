@@ -7,18 +7,18 @@ $background: lightgray;
 
   .move-count {
     padding: 0.25em 0.5em;
-    color: black;
+    color: #000000;
     font-weight: bold;
     background-color: $background;
     transition: background-color 1s ease-out;
   }
 
   .warn {
-    background-color: orange;
+    background-color: #ffa600;
   }
 
   .danger {
-    background-color: red;
+    background-color: #ff0000;
   }
 
   .panic {
@@ -34,7 +34,7 @@ $background: lightgray;
       background-color: $background;
     }
     50% {
-      background-color: red;
+      background-color: #ff0000;
     }
     100% {
       background-color: $background;
