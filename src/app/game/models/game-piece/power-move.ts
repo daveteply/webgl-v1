@@ -30,8 +30,8 @@ export class PowerMove {
         bumpScale: 0.5,
       })
     );
-    this._materials.push(new MeshPhongMaterial({ color: color }));
-    this._materials.push(new MeshPhongMaterial({ color: color }));
+    this._materials.push(new MeshPhongMaterial({ color }));
+    this._materials.push(new MeshPhongMaterial({ color }));
 
     this._mesh = new Mesh(this._geometry, this._materials);
   }
