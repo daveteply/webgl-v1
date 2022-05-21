@@ -12,7 +12,7 @@ export class GamePieceMaterial {
     if (bumpTexture && color) {
       this._bumpTexture = bumpTexture;
       this._material = new MeshPhongMaterial({
-        color: color,
+        color,
         bumpMap: this._bumpTexture,
         bumpScale: 0.03,
       });
