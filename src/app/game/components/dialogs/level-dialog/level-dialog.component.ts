@@ -130,6 +130,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     }
     this.timerEvent.complete();
     this.timerEvent.unsubscribe();
+
+    this.dialogAnimation.Dispose();
   }
 
   private setData(levelData: LevelDialogData): void {

@@ -1,9 +1,10 @@
+<canvas #dialogCanvas class="canvas-backer"></canvas>
+
 <div id="intro-dialog">
-  <h1>Welcome to {{ gameTitle }}!</h1>
+  <div class="logo"></div>
 
-  <mat-dialog-content>
-    <button mat-stroked-button color="primary" (click)="openTutorialDialog()">How to play</button>
-
+  <mat-dialog-content class="content">
+    <button mat-raised-button (click)="openTutorialDialog()">How to play</button>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
 
