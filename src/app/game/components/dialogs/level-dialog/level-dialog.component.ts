@@ -120,6 +120,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
+    this.dialogAnimation.CreateLevelDialogBoxes();
+    this.dialogAnimation.Animate();
   }
 
   ngOnDestroy(): void {

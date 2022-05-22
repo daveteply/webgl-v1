@@ -45,25 +45,27 @@ export class DialogAnimationService implements OnDestroy {
       this._levelColors = this.store.LevelColors;
       this._levelEmojis = this.store.EmojiInfo;
 
+      // main context
       this._ctx = canvas.getContext('2d');
-      if (this._ctx) {
-        // create boxes
-        this._boxesTop = [];
-        this._boxesBottom = [];
-        for (let i = 0; i < 20; i++) {
-          this._boxesTop.push(this.createBox());
-          this._boxesBottom.push(this.createBox(true));
-        }
+    }
+  }
 
-        this.animate();
+  public CreateLevelDialogBoxes(): void {
+    if (this._ctx) {
+      // create boxes
+      this._boxesTop = [];
+      this._boxesBottom = [];
+      for (let i = 0; i < 20; i++) {
+        this._boxesTop.push(this.createLevelDialogBox());
+        this._boxesBottom.push(this.createLevelDialogBox(true));
       }
     }
   }
 
-  private createBox(isBottom: boolean = false): boxParticle {
+  private createLevelDialogBox(isBottom: boolean = false): boxParticle {
     const size = MathUtils.randInt(20, 50);
     const x = MathUtils.randInt(0, this._canvas.width);
-    const velocity = MathUtils.randFloat(0.1, 0.2);
+    const velocity = MathUtils.randFloat(0.13, 0.27);
 
     let y = -size;
     let limit = MathUtils.randInt(20, 40);
@@ -90,15 +92,14 @@ export class DialogAnimationService implements OnDestroy {
 
   private updateBoxes(): void {
     if (this._ctx) {
-      this._ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+      this.clearCanvas(this._ctx);
 
       // box lengths are the same
       for (let i = 0; i < this._boxesTop.length; i++) {
         // top
         this._boxesTop[i].y += this._boxesTop[i].velocity;
         if (this._boxesTop[i].y > this._boxesTop[i].limit) {
-          this._boxesTop[i] = this.createBox();
+          this._boxesTop[i] = this.createLevelDialogBox();
         }
         const boxTop = this._boxesTop[i];
         if (boxTop.color) {
@@ -112,7 +113,7 @@ export class DialogAnimationService implements OnDestroy {
         // bottom
         this._boxesBottom[i].y -= this._boxesBottom[i].velocity;
         if (this._boxesBottom[i].y < this._boxesBottom[i].limit) {
-          this._boxesBottom[i] = this.createBox(true);
+          this._boxesBottom[i] = this.createLevelDialogBox(true);
         }
         const boxBottom = this._boxesBottom[i];
         if (boxBottom.color) {
@@ -126,11 +127,16 @@ export class DialogAnimationService implements OnDestroy {
     }
   }
 
-  private animate(): void {
+  private clearCanvas(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+  }
+
+  public Animate(): void {
     this.updateBoxes();
 
     this._animateRequestId = requestAnimationFrame(() => {
-      this.animate();
+      this.Animate();
     });
   }
 }
