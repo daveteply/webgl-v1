@@ -2,19 +2,15 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, 
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { delay } from 'rxjs';
-import { MathUtils } from 'three';
 import { Tween } from '@tweenjs/tween.js';
 
-import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
-import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
-import { GAME_TITLE } from 'src/app/app-constants';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { LevelDialogData } from './level-dialog-data';
 
-import { StoreService } from 'src/app/app-store/services/store.service';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogNotifyService } from '../dialog-notify.service';
+import { DialogAnimationService } from '../dialog-animation.service';
 
 enum LevelElementType {
   fastMatchBonusTotal = 1,
@@ -29,23 +25,12 @@ interface LevelStat {
   statValue: number;
 }
 
-interface boxParticle {
-  x: number;
-  y: number;
-  size: number;
-  velocity: number;
-  limit: number;
-  color?: string;
-  emoji?: string;
-}
-
 @Component({
   selector: 'wgl-level-dialog',
   templateUrl: './level-dialog.component.html',
   styleUrls: ['./level-dialog.component.scss'],
 })
 export class LevelDialogComponent implements OnDestroy, AfterViewInit {
-  matchTarget = MINIMUM_MATCH_COUNT;
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
@@ -56,30 +41,19 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   moveCountEarned: number = 0;
   pieceCount: number = 0;
 
-  private _animateRequestId!: number;
-
   private _timerQueue: LevelStat[] = [];
   timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();
-
-  gameTitle = GAME_TITLE;
 
   borderStyle!: string;
 
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  private _canvas!: HTMLCanvasElement;
-  private _ctx!: CanvasRenderingContext2D | null;
-  private _boxesTop!: boxParticle[];
-  private _boxesBottom!: boxParticle[];
-  private _levelColors!: string[];
-  private _levelEmojis!: EmojiInfo;
-
   constructor(
     private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
-    private store: StoreService,
     private dialogNotify: DialogNotifyService,
+    private dialogAnimation: DialogAnimationService,
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
   ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
@@ -145,7 +119,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setScene();
+    this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
   }
 
   ngOnDestroy(): void {
@@ -154,8 +128,6 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     }
     this.timerEvent.complete();
     this.timerEvent.unsubscribe();
-
-    cancelAnimationFrame(this._animateRequestId);
   }
 
   private setData(levelData: LevelDialogData): void {
@@ -212,102 +184,5 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
         this.timerEvent.next(nextElement);
       }
     }
-  }
-
-  private setScene(): void {
-    this._levelColors = this.store.LevelColors;
-    this._levelEmojis = this.store.EmojiInfo;
-
-    this._canvas = this.dialogCanvas.nativeElement;
-    // resize canvas to match css size
-    this._canvas.width = this._canvas.clientWidth;
-    this._canvas.height = this._canvas.clientHeight;
-
-    this._ctx = this._canvas.getContext('2d');
-    if (this._ctx) {
-      // create boxes
-      this._boxesTop = [];
-      this._boxesBottom = [];
-      for (let i = 0; i < 20; i++) {
-        this._boxesTop.push(this.createBox());
-        this._boxesBottom.push(this.createBox(true));
-      }
-
-      this.animate();
-    }
-  }
-
-  private createBox(isBottom: boolean = false): boxParticle {
-    const size = MathUtils.randInt(20, 50);
-    const x = MathUtils.randInt(0, this._canvas.width);
-    const velocity = MathUtils.randFloat(0.1, 0.3);
-
-    let y = -size;
-    let limit = MathUtils.randInt(20, 40);
-    if (isBottom) {
-      y = this._canvas.height + size;
-      limit = this._canvas.height - (limit + size);
-    }
-
-    // color
-    let color = '';
-    if (this._levelColors?.length) {
-      color = this._levelColors[MathUtils.randInt(0, this._levelColors.length - 1)];
-    }
-
-    // emoji
-    let emoji = '';
-    if (this._levelEmojis?.emojiList?.length) {
-      emoji = this._levelEmojis.emojiList[MathUtils.randInt(0, this._levelEmojis.emojiList.length - 1)]
-        .emojiCode as string;
-    }
-
-    return { size, x, y, velocity, limit, color, emoji };
-  }
-
-  private updateBoxes(): void {
-    if (this._ctx) {
-      this._ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-
-      // box lengths are the same
-      for (let i = 0; i < this._boxesTop.length; i++) {
-        // top
-        this._boxesTop[i].y += this._boxesTop[i].velocity;
-        if (this._boxesTop[i].y > this._boxesTop[i].limit) {
-          this._boxesTop[i] = this.createBox();
-        }
-        const boxTop = this._boxesTop[i];
-        if (boxTop.color) {
-          this._ctx.fillStyle = boxTop.color as string;
-          this._ctx.fillRect(boxTop.x, boxTop.y, boxTop.size, boxTop.size);
-        } else if (boxTop.emoji) {
-          this._ctx.font = `${boxTop.size}px Arial`;
-          this._ctx.fillText(boxTop.emoji, boxTop.x, boxTop.y, boxTop.size);
-        }
-
-        // bottom
-        this._boxesBottom[i].y -= this._boxesBottom[i].velocity;
-        if (this._boxesBottom[i].y < this._boxesBottom[i].limit) {
-          this._boxesBottom[i] = this.createBox(true);
-        }
-        const boxBottom = this._boxesBottom[i];
-        if (boxBottom.color) {
-          this._ctx.fillStyle = boxBottom.color as string;
-          this._ctx.fillRect(boxBottom.x, boxBottom.y, boxBottom.size, boxBottom.size);
-        } else if (boxBottom.emoji) {
-          this._ctx.font = `${boxBottom.size}px Arial`;
-          this._ctx.fillText(boxBottom.emoji, boxBottom.x, boxBottom.y, boxBottom.size);
-        }
-      }
-    }
-  }
-
-  private animate(): void {
-    this.updateBoxes();
-
-    this._animateRequestId = requestAnimationFrame(() => {
-      this.animate();
-    });
   }
 }
