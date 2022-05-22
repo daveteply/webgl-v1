@@ -1,29 +1,9 @@
-<div class="dialog-content">
+<div id="intro-dialog">
   <h1>Welcome to {{ gameTitle }}!</h1>
 
   <mat-dialog-content>
-    <p class="tutorial-title">How to play {{ gameTitle }}</p>
-    <mat-tab-group headerPosition="below">
-      <mat-tab label="-">
-        <div class="tutorial-1-backer"></div>
-        <ul class="tutorial-phrase">
-          <li>Move rows right or left</li>
-          <li>Match at least {{ matchTarget }} like pieces</li>
-          <li>
-            <span class="touch">Tap or press</span>
-            <span class="click">Click or hold</span>
-            <span> to complete the match!</span>
-          </li>
-        </ul>
-      </mat-tab>
-      <mat-tab label="More hints...">
-        <div class="tutorial-2-backer"></div>
-        <ul class="tutorial-phrase">
-          <li>There's only so many moves, so watch out!</li>
-          <li>Earn moves by making longer and faster matches</li>
-        </ul>
-      </mat-tab>
-    </mat-tab-group>
+    <button mat-stroked-button color="primary" (click)="openTutorialDialog()">How to play</button>
+
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
 

@@ -1,0 +1,27 @@
+<div id="tutorial-dialog">
+  <p class="tutorial-title">How to play {{ gameTitle }}</p>
+  <mat-tab-group headerPosition="below">
+    <mat-tab label="-">
+      <div class="tutorial-1-backer"></div>
+      <ul class="tutorial-phrase">
+        <li>Move rows right or left</li>
+        <li>Match at least {{ matchTarget }} like pieces</li>
+        <li>
+          <span class="touch">Tap or press</span>
+          <span class="click">Click or hold</span>
+          <span> to complete the match!</span>
+        </li>
+      </ul>
+    </mat-tab>
+    <mat-tab label="More hints...">
+      <div class="tutorial-2-backer"></div>
+      <ul class="tutorial-phrase">
+        <li>Moves are limited, so watch out!</li>
+        <li>Moves are earned during play; be fast and strategic!</li>
+      </ul>
+    </mat-tab>
+  </mat-tab-group>
+  <mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" mat-dialog-close><span>I got it!</span></button>
+  </mat-dialog-actions>
+</div>

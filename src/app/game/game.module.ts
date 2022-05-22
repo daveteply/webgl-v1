@@ -6,6 +6,7 @@ import { GameRoutingModule } from './game-routing.module';
 import { GameContainerComponent } from './components/game-container/game-container.component';
 import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 import { IntroDialogComponent } from './components/dialogs/intro-dialog/intro-dialog.component';
+import { TutorialDialogComponent } from './components/dialogs/tutorial-dialog/tutorial-dialog.component';
 import { GameOverDialogComponent } from './components/dialogs/game-over-dialog/game-over-dialog.component';
 import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
 import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
@@ -35,6 +36,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     TextZoomComponent,
     ZoomCharComponent,
     MovesLeftComponent,
+    TutorialDialogComponent,
   ],
   imports: [
     CommonModule,

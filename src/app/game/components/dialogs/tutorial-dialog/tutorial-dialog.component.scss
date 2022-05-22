@@ -1,0 +1,48 @@
+#tutorial-dialog {
+  font-size: large;
+
+  .tutorial-title {
+    text-align: center;
+    width: 100%;
+  }
+
+  .tutorial-phrase {
+    text-align: left;
+    list-style-type: square;
+    line-height: 1.5em;
+  }
+
+  .touch {
+    @media (pointer: fine) {
+      display: none;
+    }
+  }
+
+  .click {
+    @media (pointer: coarse) {
+      display: none;
+    }
+  }
+
+  .tutorial-1-backer {
+    background-image: url("/assets/tutorial/tutorial-touch-1.gif");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 10em;
+    @media (pointer: fine) {
+      background-image: url("/assets/tutorial/tutorial-click-1.gif");
+    }
+  }
+
+  .tutorial-2-backer {
+    background-image: url("/assets/tutorial/tutorial-touch-2.gif");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 10em;
+    @media (pointer: fine) {
+      background-image: url("/assets/tutorial/tutorial-click-2.gif");
+    }
+  }
+}

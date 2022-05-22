@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { GAME_TITLE } from 'src/app/app-constants';
-import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { TutorialDialogComponent } from '../tutorial-dialog/tutorial-dialog.component';
 
 @Component({
   selector: 'wgl-intro-dialog',
@@ -11,12 +12,14 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 })
 export class IntroDialogComponent {
   gameTitle = GAME_TITLE;
-  matchTarget = MINIMUM_MATCH_COUNT;
-
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
-  constructor(private textureManager: TextureManagerService, private audioManager: AudioManagerService) {
+  constructor(
+    private textureManager: TextureManagerService,
+    private audioManager: AudioManagerService,
+    private dialog: MatDialog
+  ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {
       this.texturesStillLoading = false;
     });
@@ -26,5 +29,9 @@ export class IntroDialogComponent {
 
     // start-up music
     this.audioManager.PlayLevelComplete();
+  }
+
+  openTutorialDialog(): void {
+    this.dialog.open(TutorialDialogComponent);
   }
 }
