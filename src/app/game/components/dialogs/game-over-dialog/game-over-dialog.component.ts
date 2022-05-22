@@ -4,11 +4,11 @@ import { TextureManagerService } from 'src/app/game/services/texture/texture-man
 import { GameOverData } from './game-over-data';
 
 @Component({
-  selector: 'wgl-game-over',
-  templateUrl: './game-over.component.html',
-  styleUrls: ['./game-over.component.scss'],
+  selector: 'wgl-game-over-dialog',
+  templateUrl: './game-over-dialog.component.html',
+  styleUrls: ['./game-over-dialog.component.scss'],
 })
-export class GameOverComponent {
+export class GameOverDialogComponent {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
@@ -16,7 +16,7 @@ export class GameOverComponent {
 
   constructor(
     private textureManager: TextureManagerService,
-    private dialogRef: MatDialogRef<GameOverComponent>,
+    private dialogRef: MatDialogRef<GameOverDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GameOverData
   ) {
     this.textureManager.LevelTexturesLoaded.subscribe(() => {

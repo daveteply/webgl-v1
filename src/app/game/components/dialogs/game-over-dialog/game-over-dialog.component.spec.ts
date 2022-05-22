@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 
-import { GameOverComponent } from './game-over.component';
+import { GameOverDialogComponent } from './game-over-dialog.component';
 
-describe('GameOverComponent', () => {
-  let component: GameOverComponent;
-  let fixture: ComponentFixture<GameOverComponent>;
+describe('GameOverDialogComponent', () => {
+  let component: GameOverDialogComponent;
+  let fixture: ComponentFixture<GameOverDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatProgressBarModule],
-      declarations: [GameOverComponent],
+      declarations: [GameOverDialogComponent],
       providers: [
         TextureManagerService,
         {
@@ -25,7 +23,7 @@ describe('GameOverComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GameOverComponent);
+    fixture = TestBed.createComponent(GameOverDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -16,9 +16,9 @@ import { DialogNotifyService } from '../dialogs/dialog-notify.service';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
-import { GameOverComponent } from '../dialogs/game-over/game-over.component';
+import { GameOverDialogComponent } from '../dialogs/game-over-dialog/game-over-dialog.component';
 
-import { GameOverData } from '../dialogs/game-over/game-over-data';
+import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { GAME_TITLE } from 'src/app/app-constants';
 
@@ -38,7 +38,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private _dialogRefLevel!: MatDialogRef<LevelDialogComponent>;
   private _dialogRefIntro!: MatDialogRef<IntroDialogComponent>;
-  private _dialogGameOverRef!: MatDialogRef<GameOverComponent>;
+  private _dialogGameOverRef!: MatDialogRef<GameOverDialogComponent>;
 
   private _isGameOver: boolean = false;
 
@@ -80,7 +80,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
       if (this._isGameOver) {
-        this._dialogGameOverRef = this.dialog.open(GameOverComponent, this.dialogConfig());
+        this._dialogGameOverRef = this.dialog.open(GameOverDialogComponent, this.dialogConfig());
         this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
           if (data.startOver) {
             this.scoringManager.RestartGame();
