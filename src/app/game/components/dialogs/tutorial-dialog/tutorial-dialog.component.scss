@@ -3,7 +3,17 @@
 
   .tutorial-title {
     text-align: center;
+    font-size: x-large;
     width: 100%;
+
+    .logo {
+      height: 3em;
+      background-image: url("/assets/Rikkle-Logo-m.webp");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: drop-shadow(0 0.5em 0.5em rgba(0, 0, 0, 0.4));
+    }
   }
 
   .tutorial-phrase {
@@ -44,5 +54,9 @@
     @media (pointer: fine) {
       background-image: url("/assets/tutorial/tutorial-click-2.gif");
     }
+  }
+
+  .mat-raised-button {
+    font-size: x-large;
   }
 }

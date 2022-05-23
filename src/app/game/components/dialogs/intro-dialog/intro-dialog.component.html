@@ -4,13 +4,15 @@
   <div class="logo"></div>
 
   <mat-dialog-content class="content">
-    <button mat-raised-button (click)="openTutorialDialog()">How to play</button>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
 
   <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
-      <span>Play!</span>
-    </button>
+    <div class="dialog-buttons">
+      <button mat-raised-button (click)="openTutorialDialog()">How to play</button>
+      <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="texturesStillLoading">
+        <span>Play!</span>
+      </button>
+    </div>
   </mat-dialog-actions>
 </div>

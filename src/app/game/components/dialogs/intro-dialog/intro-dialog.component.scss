@@ -16,6 +16,7 @@
 
   .content {
     z-index: 1;
+    flex: 1;
   }
 
   .progress {
@@ -24,6 +25,18 @@
     &.fade-out {
       opacity: 0;
     }
+  }
+
+  .dialog-buttons {
+    display: flex;
+    flex-direction: column;
+    button {
+      margin: 0.25em;
+    }
+  }
+
+  .mat-raised-button {
+    font-size: x-large;
   }
 }
 
