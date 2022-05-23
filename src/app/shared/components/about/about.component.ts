@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
 import { StoreService } from 'src/app/app-store/services/store.service';
 
@@ -11,7 +12,11 @@ export class AboutComponent implements OnInit {
   levelColors!: string[];
   levelEmojis!: EmojiInfo;
 
-  constructor(private store: StoreService) {}
+  hideLevelInfoData: boolean;
+
+  constructor(private store: StoreService, @Inject(MAT_DIALOG_DATA) public hideLevelInfo: boolean) {
+    this.hideLevelInfoData = hideLevelInfo;
+  }
 
   ngOnInit(): void {
     this.levelColors = this.store.LevelColors;

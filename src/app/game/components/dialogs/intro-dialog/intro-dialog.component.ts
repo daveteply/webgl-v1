@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { GAME_TITLE } from 'src/app/app-constants';
 import { TutorialDialogComponent } from '../tutorial-dialog/tutorial-dialog.component';
+import { AboutComponent } from 'src/app/shared/components/about/about.component';
 
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
@@ -50,5 +51,9 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
 
   openTutorialDialog(): void {
     this.dialog.open(TutorialDialogComponent);
+  }
+
+  openAbout(): void {
+    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true } });
   }
 }
