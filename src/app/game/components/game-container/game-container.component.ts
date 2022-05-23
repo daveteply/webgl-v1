@@ -20,7 +20,6 @@ import { GameOverDialogComponent } from '../dialogs/game-over-dialog/game-over-d
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import { LevelMaterialType } from '../../models/level-material-type';
-import { GAME_TITLE } from 'src/app/app-constants';
 
 @Component({
   selector: 'wgl-game-container',
@@ -47,8 +46,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   public GridTemplateColumns: string = '';
   public GridTemplateRows: string = '';
-
-  gameTitle = GAME_TITLE;
 
   constructor(
     private dialog: MatDialog,

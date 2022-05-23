@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { GAME_TITLE } from 'src/app/app-constants';
 import { TutorialDialogComponent } from '../tutorial-dialog/tutorial-dialog.component';
 import { AboutComponent } from 'src/app/shared/components/about/about.component';
 
@@ -18,7 +17,6 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  gameTitle = GAME_TITLE;
   texturesStillLoading: boolean = true;
   progress: number = 100;
 

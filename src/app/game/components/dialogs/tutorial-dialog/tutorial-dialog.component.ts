@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { GAME_TITLE } from 'src/app/app-constants';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 
 @Component({
@@ -8,6 +7,5 @@ import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
   styleUrls: ['./tutorial-dialog.component.scss'],
 })
 export class TutorialDialogComponent {
-  gameTitle = GAME_TITLE;
   matchTarget = MINIMUM_MATCH_COUNT;
 }
