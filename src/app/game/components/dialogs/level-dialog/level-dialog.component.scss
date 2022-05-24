@@ -17,6 +17,8 @@
   }
 
   .level-info-line {
+    font-size: x-large;
+    padding-bottom: 0.5em;
     display: none;
     &.show {
       display: flex;
@@ -30,6 +32,10 @@
     &.fade-out {
       opacity: 0;
     }
+  }
+
+  .mat-raised-button {
+    font-size: x-large;
   }
 }
 

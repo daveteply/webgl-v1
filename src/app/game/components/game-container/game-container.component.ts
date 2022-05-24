@@ -97,8 +97,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           });
         } else {
           const height = `${this.scoringManager.StatsEntries() * 8}%`;
-          console.log(1, height);
-
           this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig(height));
           this._dialogRefLevel.backdropClick().subscribe(() => {
             this.dialogNotify.Notify();
