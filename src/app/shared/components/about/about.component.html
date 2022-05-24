@@ -26,14 +26,12 @@
       </mat-tab>
 
       <mat-tab label="Credits">
-        <p>
-          Level End Music by
-          <a target="_blank" href="https://audionautix.com/">audionautix.com</a>
-        </p>
-        <p>
-          Sound effect by
-          <a target="_blank" href="https://mixkit.co/">mixkit</a>
-        </p>
+        <div class="credits">
+          <div *ngFor="let credit of creditsData" class="credit-item">
+            <span>{{ credit.desc }}&NonBreakingSpace;</span>
+            <a target="_blank" [href]="credit.href">{{ credit.title }}</a>
+          </div>
+        </div>
       </mat-tab>
     </mat-tab-group>
 
