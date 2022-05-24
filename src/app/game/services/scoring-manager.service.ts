@@ -161,6 +161,16 @@ export class ScoringManagerService {
     this._timeStart = Date.now();
   }
 
+  public StatsEntries(): number {
+    let entryCount = 0;
+    for (const value of Object.values(this._levelStats)) {
+      if (value) {
+        entryCount++;
+      }
+    }
+    return entryCount;
+  }
+
   private longMatchBonus(pieceCount: number, skipText: boolean) {
     const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
     if (longMatchMovesEarned) {
