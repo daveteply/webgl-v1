@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    namespace 'com.daveteply.webgl01'
+    namespace 'com.turbogeekbear.rikkle01'
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.turbogeekbear.rikkle"

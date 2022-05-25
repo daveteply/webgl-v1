@@ -1,4 +1,4 @@
-package com.daveteply.webgl01;
+package com.turbogeekbear.rikkle01;
 
 import com.getcapacitor.BridgeActivity;
 
