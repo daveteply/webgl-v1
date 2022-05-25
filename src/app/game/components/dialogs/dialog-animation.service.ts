@@ -2,6 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
 import { StoreService } from 'src/app/app-store/services/store.service';
 import { MathUtils } from 'three';
+import { INTRO_DIALOG_COLORS } from '../../game-constants';
+import { Easing, Tween } from '@tweenjs/tween.js';
+import * as TWEEN from '@tweenjs/tween.js';
 
 interface boxParticle {
   x: number;
@@ -32,7 +35,8 @@ export class DialogAnimationService implements OnDestroy {
   private _levelEmojis!: EmojiInfo;
 
   private _introBoxRows!: introRows;
-  private _introDefaultColors: string[] = ['#78ff66', '#f20036', '#0082a6', '#ff6688', '#004e63', '#108b00'];
+  private _introTween!: any;
+  private _introAnimateRight: boolean = true;
 
   private _canvas!: HTMLCanvasElement;
   private _ctx!: CanvasRenderingContext2D | null;
@@ -44,11 +48,21 @@ export class DialogAnimationService implements OnDestroy {
   constructor(private store: StoreService) {}
 
   ngOnDestroy(): void {
-    cancelAnimationFrame(this._animateRequestId);
+    this.cleanUp();
   }
 
   public Dispose(): void {
-    cancelAnimationFrame(this._animateRequestId);
+    this.cleanUp();
+  }
+
+  private cleanUp(): void {
+    if (this._introTween) {
+      this._introTween.stop();
+      delete this._introTween;
+    }
+    if (this._animateRequestId) {
+      cancelAnimationFrame(this._animateRequestId);
+    }
   }
 
   public SetScene(canvas: HTMLCanvasElement): void {
@@ -71,7 +85,8 @@ export class DialogAnimationService implements OnDestroy {
   public Animate(): void {
     switch (this._animationType) {
       case DialogAnimationType.Intro:
-        this.updateIntroDialogBoxes();
+        // this.drawIntroDialogBoxes();
+        TWEEN.update();
         break;
 
       case DialogAnimationType.Level:
@@ -89,19 +104,48 @@ export class DialogAnimationService implements OnDestroy {
 
     const size: number = 44;
     const offset: number = 5;
+    const rowCount: number = 4;
 
     if (this._ctx) {
       const rows = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < rowCount; i++) {
         rows.push(this.createIntroRow(size, offset, i * (size + offset)));
       }
 
       this._introBoxRows = { rows };
+      this.drawIntroDialogBoxes();
+
+      let targetRowIndex = MathUtils.randInt(1, rowCount - 1);
+      const delta = { x: 0.0 };
+      const target = { x: 4.0 };
+
+      this._introTween = new Tween(delta)
+        .to(target, 900)
+        .delay(1000)
+        .repeat(Infinity)
+        .onUpdate(() => {
+          for (let i = 0; i < this._introBoxRows.rows[targetRowIndex].length; i++) {
+            const box = this._introBoxRows.rows[targetRowIndex][i];
+            if (this._introAnimateRight) {
+              box.x += delta.x;
+            } else {
+              box.x -= delta.x;
+            }
+            this.drawIntroDialogBoxes();
+          }
+        })
+        .onRepeat(() => {
+          this._introAnimateRight = !this._introAnimateRight;
+          if (this._introAnimateRight) {
+            targetRowIndex = MathUtils.randInt(1, rowCount - 1);
+          }
+        })
+        .start();
     }
   }
 
   private createIntroRow(size: number, offset: number, y: number): boxParticle[] {
-    const boxesPerRow = 10;
+    const boxesPerRow = 16;
 
     const boxesWidth = boxesPerRow * (size + offset) - offset;
     const marginOffset = this._canvas.width / 2 - boxesWidth / 2;
@@ -153,7 +197,7 @@ export class DialogAnimationService implements OnDestroy {
       color = this._levelColors[MathUtils.randInt(0, this._levelColors.length - 1)];
     }
     if (!color) {
-      color = this._introDefaultColors[MathUtils.randInt(0, this._introDefaultColors.length - 1)];
+      color = INTRO_DIALOG_COLORS[MathUtils.randInt(0, INTRO_DIALOG_COLORS.length - 1)];
     }
     return color;
   }
@@ -169,7 +213,8 @@ export class DialogAnimationService implements OnDestroy {
 
   private updateLevelDialogBoxes(): void {
     if (this._ctx) {
-      this.clearCanvas(this._ctx);
+      this._ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
       // box lengths are the same
       for (let i = 0; i < this._boxesTop.length; i++) {
@@ -204,29 +249,18 @@ export class DialogAnimationService implements OnDestroy {
     }
   }
 
-  private updateIntroDialogBoxes(): void {
+  private drawIntroDialogBoxes(): void {
     if (this._ctx) {
-      this.clearCanvas(this._ctx);
+      this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
       for (let i = 0; i < this._introBoxRows.rows.length; i++) {
         const row = this._introBoxRows.rows[i];
         for (let j = 0; j < row.length; j++) {
           const box = row[j];
-
-          if (box.color) {
-            this._ctx.fillStyle = box.color as string;
-            this._ctx.fillRect(box.x, box.y, box.size, box.size);
-          } else if (box.emoji) {
-            this._ctx.font = `${box.size}px Arial`;
-            this._ctx.fillText(box.emoji, box.x, box.y, box.size);
-          }
+          this._ctx.fillStyle = box.color as string;
+          this._ctx.fillRect(box.x, box.y, box.size, box.size);
         }
       }
     }
-  }
-
-  private clearCanvas(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = 'rgba(255,255,255,0.1)';
-    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
   }
 }
