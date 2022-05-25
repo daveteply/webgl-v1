@@ -13,17 +13,17 @@ body {
   0% {
   }
   30% {
-    transform: translateY(-25%);
+    transform: translateY(-5%);
   }
   50% {
-    transform: translateY(0);
+    transform: translateY(20%);
   }
   100% {
-    transform: translateY(-20%);
+    transform: translateY(0);
   }
 }
 
 .cdk-overlay-pane {
-  transform: translateY(250%);
+  transform: translateY(100%);
   animation: dialog-slide-up 0.5s forwards 0s ease-in-out;
 }
