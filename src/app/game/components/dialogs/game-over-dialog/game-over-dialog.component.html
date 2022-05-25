@@ -8,15 +8,16 @@
   <mat-dialog-actions align="center">
     <button
       *ngIf="!isLevelOne"
-      mat-raised-button
+      mat-stroked-button
       color="primary"
       [disabled]="texturesStillLoading"
       (click)="onCloseRestartLevel()"
     >
-      Start Again at Level {{ data.level }}
+      Start Level {{ data.level }} again
     </button>
     <button mat-raised-button color="primary" [disabled]="texturesStillLoading" (click)="onCloseGameOver()">
-      Start Over
+      <span *ngIf="!isLevelOne; else playAgain">Start Over</span>
+      <ng-template #playAgain><span>Play again!</span></ng-template>
     </button>
   </mat-dialog-actions>
 </div>

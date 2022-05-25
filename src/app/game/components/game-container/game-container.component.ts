@@ -67,8 +67,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // level completed
     this.objectManager.LevelCompleted.subscribe((gameOver) => {
-      this.scoringManager.IncLevel();
       this._isGameOver = gameOver;
+      if (!this._isGameOver) {
+        this.scoringManager.IncLevel();
+      }
       this.initTextures();
     });
   }
