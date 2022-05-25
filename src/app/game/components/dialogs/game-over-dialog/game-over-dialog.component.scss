@@ -1,11 +1,21 @@
-.text-center {
-  text-align: center;
-}
+#game-over {
+  font-size: x-large;
 
-.progress {
-  opacity: 1;
-  transition: opacity 500ms;
-  &.fade-out {
-    opacity: 0;
+  .text-center {
+    text-align: center;
+  }
+
+  .game-over-emoji {
+    text-align: center;
+    font-size: 3em;
+    line-height: 1em;
+  }
+
+  .progress {
+    opacity: 1;
+    transition: opacity 500ms;
+    &.fade-out {
+      opacity: 0;
+    }
   }
 }

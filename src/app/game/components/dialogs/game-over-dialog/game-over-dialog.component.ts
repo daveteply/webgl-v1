@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
+import { MathUtils } from 'three';
 import { GameOverData } from './game-over-data';
 
 @Component({
@@ -13,6 +14,8 @@ export class GameOverDialogComponent {
   progress: number = 100;
 
   isLevelOne: boolean;
+  gameOverEmojis: number[] = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
+  gameOverEmoji = String.fromCodePoint(this.gameOverEmojis[MathUtils.randInt(0, this.gameOverEmojis.length - 1)]);
 
   constructor(
     private textureManager: TextureManagerService,
