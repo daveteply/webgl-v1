@@ -43,13 +43,13 @@ export const Credits = [
   },
   {
     order: 8,
-    desc: 'color-scheme',
+    desc: 'Color scheme generator',
     title: 'color-scheme.js',
     href: 'https://www.npmjs.com/package/color-scheme',
   },
   {
     order: 9,
-    desc: 'color-sort',
+    desc: 'Color sorter',
     title: 'color-sort.js',
     href: 'https://www.npmjs.com/package/color-sort',
   },
