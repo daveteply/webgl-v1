@@ -1,4 +1,5 @@
 #level-dialog {
+  font-size: x-large;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -17,7 +18,6 @@
   }
 
   .level-info-line {
-    font-size: x-large;
     padding-bottom: 0.5em;
     display: none;
     &.show {

@@ -8,9 +8,9 @@
       <span>Speed bonus</span>
       <wgl-text-zoom [text]="fastMatchBonusTotal"></wgl-text-zoom>
     </div>
-    <div class="level-info-line" [class.show]="fastestMatchMs">
-      <span>Fastest match time (seconds)</span>
-      <wgl-text-zoom [text]="fastestMatchMs"></wgl-text-zoom>
+    <div class="level-info-line" [class.show]="fastestMatchTime">
+      <span>Fastest match</span>
+      <wgl-text-zoom [text]="fastestMatchTime"></wgl-text-zoom>
     </div>
     <div class="level-info-line" [class.show]="moveCount">
       <span>Moves used</span>
@@ -21,7 +21,7 @@
       <wgl-text-zoom [text]="moveCountEarned"></wgl-text-zoom>
     </div>
     <div class="level-info-line" [class.show]="pieceCount">
-      <span>Pieces captured</span>
+      <span>Pieces</span>
       <wgl-text-zoom [text]="pieceCount"></wgl-text-zoom>
     </div>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>

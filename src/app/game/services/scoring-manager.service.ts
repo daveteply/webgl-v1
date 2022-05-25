@@ -80,8 +80,8 @@ export class ScoringManagerService {
   public UpdateScore(pieceCount: number, skipText: boolean): void {
     // update since previous match
     const timeDiff = this._timeStop - this._timeStart;
-    if (timeDiff < this._levelStats.fastestMatchMs) {
-      this._levelStats.fastestMatchMs = Math.round(timeDiff);
+    if (timeDiff < this._levelStats.fastestMatchTime) {
+      this._levelStats.fastestMatchTime = Math.round(timeDiff);
     }
 
     let scoreDelta = 0;
@@ -151,7 +151,7 @@ export class ScoringManagerService {
 
     this._levelProgress = 0;
     this._levelStats = {
-      fastestMatchMs: Number.MAX_SAFE_INTEGER,
+      fastestMatchTime: Number.MAX_SAFE_INTEGER,
       fastMatchBonusTotal: 0,
       moveCount: 0,
       moveCountEarned: 0,

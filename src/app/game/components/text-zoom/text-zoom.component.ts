@@ -9,8 +9,8 @@ import { Component, Input } from '@angular/core';
 export class TextZoomComponent {
   chars: string[] = [];
 
-  @Input() set text(target: number) {
-    const formatted = this.decimalPipe.transform(target);
+  @Input() set text(target: number | string) {
+    const formatted = Number(target) ? this.decimalPipe.transform(target) : target;
     if (formatted) {
       this.chars = formatted.toString().split('');
     }

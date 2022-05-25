@@ -1,5 +1,5 @@
 export interface LevelStats {
-  fastestMatchMs: number;
+  fastestMatchTime: number;
   fastMatchBonusTotal: number;
   moveCount: number;
   moveCountEarned: number;

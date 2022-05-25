@@ -36,7 +36,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   // target values (for sequential binding)
   fastMatchBonusTotal: number = 0;
-  fastestMatchMs: number = 0;
+  fastestMatchTime!: string;
   moveCount: number = 0;
   moveCountEarned: number = 0;
   pieceCount: number = 0;
@@ -88,7 +88,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
         case LevelElementType.fastestMatchMs:
           if (this.fastMatchBonusTotal) {
             // only show if there was a bonus involved
-            this.fastestMatchMs = stat.statValue / 1000;
+            const roundedTime = Math.round((stat.statValue / 1000) * 100) / 100;
+            this.fastestMatchTime = `${roundedTime}s`;
             this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           }
           break;
@@ -138,7 +139,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     // reset values
     this._timerQueue = [];
     this.fastMatchBonusTotal = 0;
-    this.fastestMatchMs = 0;
+    this.fastestMatchTime = '';
     this.moveCount = 0;
     this.moveCountEarned = 0;
     this.pieceCount = 0;
@@ -150,10 +151,10 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
       });
     }
 
-    if (levelData.stats.fastestMatchMs) {
+    if (levelData.stats.fastestMatchTime) {
       this._timerQueue.push({
         statType: LevelElementType.fastestMatchMs,
-        statValue: levelData.stats.fastestMatchMs,
+        statValue: levelData.stats.fastestMatchTime,
       });
     }
 
