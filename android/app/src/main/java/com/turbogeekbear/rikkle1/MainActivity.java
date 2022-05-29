@@ -1,4 +1,4 @@
-package com.turbogeekbear.rikkle01;
+package com.turbogeekbear.rikkle1;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,11 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-
-    namespace 'com.turbogeekbear.rikkle01'
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.turbogeekbear.rikkle"
+        applicationId "com.turbogeekbear.rikkle1"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
