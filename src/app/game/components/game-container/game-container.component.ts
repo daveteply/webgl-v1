@@ -22,6 +22,7 @@ import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
 import { LEVEL_TO_START_ADS } from '../../game-constants';
+import { HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
 
 @Component({
   selector: 'wgl-game-container',
@@ -59,6 +60,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private dialogNotify: DialogNotifyService,
     private gameEngine: GameEngineService,
     private admob: AdmobManagerService,
+    private highScores: HighScoreManagerService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -73,6 +75,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
+      } else {
+        this.highScores.UpdateHighScores(this.scoringManager.Score);
       }
 
       if (this.scoringManager.Level > LEVEL_TO_START_ADS) {
