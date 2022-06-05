@@ -11,7 +11,7 @@ export class TextZoomComponent {
 
   @Input() set text(target: number | string) {
     const formatted = Number(target) ? this.decimalPipe.transform(target) : target;
-    if (formatted) {
+    if (formatted !== null) {
       this.chars = formatted.toString().split('');
     }
   }
