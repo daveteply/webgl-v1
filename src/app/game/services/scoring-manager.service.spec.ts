@@ -18,6 +18,7 @@ describe('ScoringManagerService', () => {
     beforeEach(() => {
       service.ResetStats();
     });
+
     describe('move count', () => {
       it('should calc 0 moves earned for minimum match count', () => {
         service.UpdateScore(3, false);
@@ -36,5 +37,20 @@ describe('ScoringManagerService', () => {
         expect(service.LevelStats.moveCountEarned).toBe(3);
       });
     });
+  });
+
+  describe('level piece target', () => {
+    it('should start at 4', () => {
+      service['initLevelPieceTarget']();
+      expect(service.LevelPieceTarget).toBe(4);
+    });
+
+    // it('should log the piece target curve', () => {
+    //   for (let i = 1; i < 100; i++) {
+    //     service['_level'] = i;
+    //     service['initLevelPieceTarget']();
+    //     console.log(service.Level, service.LevelPieceTarget);
+    //   }
+    // });
   });
 });
