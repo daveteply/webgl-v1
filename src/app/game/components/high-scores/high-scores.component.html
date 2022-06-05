@@ -1,0 +1,7 @@
+<div id="highScores" *ngIf="highScores?.length">
+  <div class="title">High Scores</div>
+  <div class="score-entry" *ngFor="let highScore of highScores">
+    <span>{{ highScore.occurred | date: "mediumDate" }}</span>
+    <span>{{ highScore.score | number }} </span>
+  </div>
+</div>

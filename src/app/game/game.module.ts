@@ -11,6 +11,7 @@ import { GameOverDialogComponent } from './components/dialogs/game-over-dialog/g
 import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
 import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
 import { MovesLeftComponent } from './components/moves-left/moves-left.component';
+import { HighScoresComponent } from './components/high-scores/high-scores.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -37,6 +38,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     ZoomCharComponent,
     MovesLeftComponent,
     TutorialDialogComponent,
+    HighScoresComponent,
   ],
   imports: [
     CommonModule,

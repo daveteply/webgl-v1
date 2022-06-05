@@ -4,6 +4,7 @@
     <p class="game-over-emoji">{{ gameOverEmoji }}</p>
     <p class="text-center">You have exhausted your supply of moves!</p>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
+    <wgl-high-scores></wgl-high-scores>
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button
