@@ -60,7 +60,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private dialogNotify: DialogNotifyService,
     private gameEngine: GameEngineService,
     private admob: AdmobManagerService,
-    private highScores: HighScoreManagerService,
+    private highScoreManager: HighScoreManagerService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -76,7 +76,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
       } else {
-        this.highScores.UpdateHighScores(this.scoringManager.Score);
+        this.highScoreManager.UpdateHighScores(this.scoringManager.Score);
       }
 
       if (this.scoringManager.Level > LEVEL_TO_START_ADS) {
