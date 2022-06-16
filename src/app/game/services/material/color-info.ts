@@ -1,4 +1,4 @@
-export const INTRO_DIALOG_COLORS = ['#78ff66', '#f20036', '#0082a6', '#ff6688', '#004e63', '#108b00'];
+export const INTRO_DIALOG_COLORS = ['#1919B3', '#E9E9FF', '#400099', '#7B7BFF', '#0F0F6B'];
 
 export const COLOR_SCHEME_DATA = [
   {
