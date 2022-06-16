@@ -6,12 +6,12 @@
 
   .logo {
     height: 10em;
-    z-index: 1;
-    background-image: url("^assets/Rikkle-Logo-m.webp");
+    width: 18em;
+    background-image: url("^assets/rikkle-final.webp");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
-    filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 0 1.5em rgba(200, 200, 200, 0.8));
   }
 
   .content {
