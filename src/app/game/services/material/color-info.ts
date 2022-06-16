@@ -1,4 +1,6 @@
-export const ColorSchemeData = [
+export const INTRO_DIALOG_COLORS = ['#78ff66', '#f20036', '#0082a6', '#ff6688', '#004e63', '#108b00'];
+
+export const COLOR_SCHEME_DATA = [
   {
     id: 1,
     colors: [

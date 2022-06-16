@@ -38,7 +38,6 @@ export const CANVAS_TEXTURE_SCALE = 80;
 export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
 export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00bfff, 0x8000ff, 0xff0080];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
-export const INTRO_DIALOG_COLORS = ['#78ff66', '#f20036', '#0082a6', '#ff6688', '#004e63', '#108b00'];
 
 // Ads
 export const LEVEL_TO_START_ADS = 3;

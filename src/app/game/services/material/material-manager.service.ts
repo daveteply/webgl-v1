@@ -10,7 +10,7 @@ import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
 import { LevelMaterialType } from '../../models/level-material-type';
-import { ColorSchemeData } from './color-info';
+import { COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 
 @Injectable()
@@ -77,7 +77,7 @@ export class MaterialManagerService {
   }
 
   private initColorScheme(playableTextureCount: number): string[] {
-    const scheme = ColorSchemeData[MathUtils.randInt(0, ColorSchemeData.length - 1)];
+    const scheme = COLOR_SCHEME_DATA[MathUtils.randInt(0, COLOR_SCHEME_DATA.length - 1)];
     const sortedColors = scheme.colors.sort();
 
     if (!environment.production) {

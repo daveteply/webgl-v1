@@ -1,10 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
-import { StoreService } from 'src/app/app-store/services/store.service';
-import { MathUtils } from 'three';
-import { INTRO_DIALOG_COLORS } from '../../game-constants';
-import { Easing, Tween } from '@tweenjs/tween.js';
+
+import { Tween } from '@tweenjs/tween.js';
 import * as TWEEN from '@tweenjs/tween.js';
+
+import { StoreService } from 'src/app/app-store/services/store.service';
+
+import { EmojiInfo } from 'src/app/app-store/models/emoji-info';
+import { MathUtils } from 'three';
+import { INTRO_DIALOG_COLORS } from '../../services/material/color-info';
 
 interface boxParticle {
   x: number;
