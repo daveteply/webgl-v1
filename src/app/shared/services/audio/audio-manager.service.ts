@@ -31,7 +31,7 @@ export class AudioManagerService implements OnDestroy {
   }
 
   public PlayLevelComplete(): void {
-    switch (Math.floor(Math.random() * 3) + 1) {
+    switch (Math.floor(Math.random() * 4) + 1) {
       case 1:
         this.PlayAudio(AudioType.LEVEL_END_1);
         break;
@@ -40,8 +40,12 @@ export class AudioManagerService implements OnDestroy {
         this.PlayAudio(AudioType.LEVEL_END_2);
         break;
 
-      default:
+      case 3:
         this.PlayAudio(AudioType.LEVEL_END_3);
+        break;
+
+      default:
+        this.PlayAudio(AudioType.LEVEL_END_4);
     }
   }
 
@@ -49,6 +53,7 @@ export class AudioManagerService implements OnDestroy {
     this.StopAudio(AudioType.LEVEL_END_1);
     this.StopAudio(AudioType.LEVEL_END_2);
     this.StopAudio(AudioType.LEVEL_END_3);
+    this.StopAudio(AudioType.LEVEL_END_4);
   }
 
   public PlayLevelStart(): void {

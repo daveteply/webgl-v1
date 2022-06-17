@@ -21,6 +21,7 @@ export enum AudioType {
   LEVEL_END_1,
   LEVEL_END_2,
   LEVEL_END_3,
+  LEVEL_END_4,
 }
 
 export interface AudioInfo {
@@ -31,23 +32,23 @@ export interface AudioInfo {
 
 export const AUDIO_LIST: AudioInfo[] = [
   {
-    url: 'assets/audio/level-start/mixkit-slow-tape-rewind-cinematic-transition-1089.mp3',
+    url: 'assets/audio/level-start/s1.mp3',
     audioType: AudioType.LEVEL_START_1,
   },
   {
-    url: 'assets/audio/level-start/mixkit-cinematic-laser-gun-thunder-1287.mp3',
+    url: 'assets/audio/level-start/s2.mp3',
     audioType: AudioType.LEVEL_START_2,
   },
   {
-    url: 'assets/audio/level-start/mixkit-epic-movie-trailer-whoosh-impact-2918.mp3',
+    url: 'assets/audio/level-start/s3.mp3',
     audioType: AudioType.LEVEL_START_3,
   },
   {
-    url: 'assets/audio/level-start/mixkit-epic-movie-transition-2904.mp3',
+    url: 'assets/audio/level-start/s4.mp3',
     audioType: AudioType.LEVEL_START_4,
   },
   {
-    url: 'assets/audio/level-start/mixkit-futuristic-machine-starting-2689.mp3',
+    url: 'assets/audio/level-start/s5.mp3',
     audioType: AudioType.LEVEL_START_5,
   },
 
@@ -103,15 +104,19 @@ export const AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.GAME_OVER,
   },
   {
-    url: 'assets/audio/level-complete/Assassins.mp3',
+    url: 'assets/audio/level-complete/l1.mp3',
     audioType: AudioType.LEVEL_END_1,
   },
   {
-    url: 'assets/audio/level-complete/Essence.mp3',
+    url: 'assets/audio/level-complete/l2.mp3',
     audioType: AudioType.LEVEL_END_2,
   },
   {
-    url: 'assets/audio/level-complete/Sk8board.mp3',
+    url: 'assets/audio/level-complete/l3.mp3',
     audioType: AudioType.LEVEL_END_3,
+  },
+  {
+    url: 'assets/audio/level-complete/l4.mp3',
+    audioType: AudioType.LEVEL_END_4,
   },
 ];
