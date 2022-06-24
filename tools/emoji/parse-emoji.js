@@ -2,7 +2,10 @@
 
 const fs = require("fs");
 const sourceFile = "emoji-test.txt";
-const targetFile = "../../src/app/game/services/texture/emoji-data.ts";
+const targetFile = [
+  "../../src/app/game/services/texture/emoji-data.ts",
+  "../../../emoji-swap/src/app/game/emoji-data.ts",
+];
 
 const parseLine = (line) => {
   const lineSegments = line.split(";");
@@ -93,10 +96,12 @@ emojiData = emojiData.filter((e) => e.id !== "Flags" && e.id !== "Component");
 targetLines.push(JSON.stringify(emojiData));
 
 // write to disk
-fs.writeFile(targetFile, targetLines.join("\r\n"), (err) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log("done!");
+targetFile.forEach((file) => {
+  fs.writeFile(file, targetLines.join("\r\n"), (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("done!");
+  });
 });
