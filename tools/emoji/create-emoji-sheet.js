@@ -1,3 +1,5 @@
+// tool to create an html view of emojis for testing on various systems
+
 const fs = require("fs");
 const sourceFile = "../../src/app/game/services/texture/emoji-data.ts";
 const targetFile = "output.html";
