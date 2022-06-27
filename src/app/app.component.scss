@@ -8,10 +8,10 @@
   @media screen and (min-width: $default-app-width) {
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(15, 15, 15, 1) 20%,
-      rgba(15, 15, 15, 1) 80%,
-      rgba(255, 255, 255, 1) 100%
+      rgb(255, 255, 255) 0%,
+      rgb(15, 15, 15) 20%,
+      rgb(15, 15, 15) 80%,
+      rgb(255, 255, 255) 100%
     );
 
     grid-template-columns: 1fr $default-app-width 1fr;
@@ -20,10 +20,10 @@
   @media screen and (orientation: landscape) {
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(15, 15, 15, 1) 20%,
-      rgba(15, 15, 15, 1) 80%,
-      rgba(255, 255, 255, 1) 100%
+      rgb(255, 255, 255) 0%,
+      rgb(15, 15, 15) 20%,
+      rgb(15, 15, 15) 80%,
+      rgb(255, 255, 255) 100%
     );
 
     grid-template-columns: 1fr $landscape-width 1fr;
