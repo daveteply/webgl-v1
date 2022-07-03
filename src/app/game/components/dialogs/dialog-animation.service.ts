@@ -59,10 +59,7 @@ export class DialogAnimationService implements OnDestroy {
   }
 
   private cleanUp(): void {
-    if (this._introTween) {
-      this._introTween.stop();
-      delete this._introTween;
-    }
+    this._introTween?.stop();
     if (this._animateRequestId) {
       cancelAnimationFrame(this._animateRequestId);
     }

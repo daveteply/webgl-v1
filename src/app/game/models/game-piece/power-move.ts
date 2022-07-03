@@ -81,23 +81,15 @@ export class PowerMove {
       })
       .onComplete(() => {
         this._mesh.scale.setScalar(0);
-        if (this._spinTween) {
-          this._spinTween.stop();
-        }
+        this._spinTween?.stop();
       })
       .start();
   }
 
   public Dispose(): void {
-    if (this._spinTween) {
-      this._spinTween.stop();
-    }
-    if (this._bounceTween) {
-      this._bounceTween.stop();
-    }
-    if (this._geometry) {
-      this._geometry.dispose();
-    }
+    this._spinTween?.stop();
+    this._bounceTween?.stop();
+    this._geometry?.dispose();
     this._materials.forEach((m) => m.dispose());
   }
 }

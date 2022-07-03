@@ -63,12 +63,8 @@ export class SplashText extends Object3D {
   }
 
   public Dispose(): void {
-    if (this._introTween) {
-      this._introTween.stop();
-    }
-    if (this._outroTween) {
-      this._outroTween.stop();
-    }
+    this._introTween?.stop();
+    this._outroTween?.stop();
     this._material.dispose();
     this._textGeometry.dispose();
   }
