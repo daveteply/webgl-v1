@@ -7,7 +7,7 @@ describe('GamePiece', () => {
     const mockY = 0;
     const mockZ = 0;
     const mockRot = 0;
-    const mockMaterialData: GamePieceMaterialData[] = [{ MatchKey: 1 }];
-    expect(new GamePiece(mockX, mockY, mockZ, mockRot, mockMaterialData)).toBeTruthy();
+    const mockMaterialData: GamePieceMaterialData[] = [{ matchKey: 1 }];
+    expect(new GamePiece(mockX, mockY, mockZ, mockRot)).toBeTruthy();
   });
 });
