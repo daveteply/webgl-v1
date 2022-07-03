@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 
 import { TutorialDialogComponent } from '../tutorial-dialog/tutorial-dialog.component';
 import { AboutComponent } from 'src/app/shared/components/about/about.component';
@@ -20,17 +21,16 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   texturesStillLoading: boolean = true;
   progress: number = 100;
 
+  private notifier = new Subject();
+
   constructor(
     private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
     private dialogAnimation: DialogAnimationService,
     private dialog: MatDialog
   ) {
-    this.textureManager.LevelTexturesLoaded.subscribe(() => {
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntil(this.notifier)).subscribe(() => {
       this.texturesStillLoading = false;
-    });
-    this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
-      this.progress = progress;
     });
 
     // start-up music
@@ -39,6 +39,8 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dialogAnimation.Dispose();
+    this.notifier.next(undefined);
+    this.notifier.complete();
   }
 
   ngAfterViewInit(): void {
