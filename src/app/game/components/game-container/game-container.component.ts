@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { debounceTime, fromEvent, Observable, Subscription } from 'rxjs';
+import { debounceTime, fromEvent, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
@@ -33,6 +33,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('gameCanvas')
   gameCanvas!: ElementRef<HTMLCanvasElement>;
 
+  private notifier = new Subject();
+
   private resize$: Observable<Event>;
   private resizeSubscription: Subscription;
 
@@ -64,14 +66,19 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
+    this.objectManager.InitShapes();
+
     // set up window resizing event
     this.resize$ = fromEvent(window, 'resize');
-    this.resizeSubscription = this.resize$.pipe(debounceTime(10)).subscribe(() => {
-      this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
-    });
+    this.resizeSubscription = this.resize$
+      .pipe(debounceTime(10))
+      .pipe(takeUntil(this.notifier))
+      .subscribe(() => {
+        this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
+      });
 
     // level completed
-    this.objectManager.LevelCompleted.subscribe((gameOver) => {
+    this.objectManager.LevelCompleted.pipe(takeUntil(this.notifier)).subscribe((gameOver) => {
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
@@ -79,18 +86,23 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         this.highScoreManager.UpdateHighScores(this.scoringManager.Score);
       }
 
+      // ads
       if (this.scoringManager.Level > LEVEL_TO_START_ADS) {
         this.admob.ShowBanner();
       }
 
       this.initTextures();
     });
+
+    // start loading fonts
+    this.textManager.InitFonts();
   }
 
   ngOnInit(): void {
     // texture load started
-    this.textureManager.LevelTextureLoadingStarted.subscribe(() => {
+    this.textureManager.LevelTextureLoadingStarted.pipe(takeUntil(this.notifier)).subscribe(() => {
       if (this._isGameOver) {
+        // game over
         this._dialogGameOverRef = this.dialog.open(GameOverDialogComponent, this.dialogConfig());
         this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
           if (data.startOver) {
@@ -101,15 +113,17 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           }
           this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
           this.updateDifficultyColor();
-          this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
+          this.objectManager.NextLevel(/*this.gameEngine.PlayableTextureCount*/);
         });
       } else {
         if (this._showWelcome) {
+          // intro
           this._dialogRefIntro = this.dialog.open(IntroDialogComponent, this.dialogConfig());
           this._dialogRefIntro.afterClosed().subscribe(() => {
             this.handleLevelDialogCLosed();
           });
         } else {
+          // level complete
           const height = `${this.scoringManager.StatsEntries() * 2.2 + 8}rem`;
           this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig(height));
           this._dialogRefLevel.backdropClick().subscribe(() => {
@@ -122,11 +136,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
-    // start loading next level texture(s)
+    // start loading initial level texture(s)
     this.initTextures();
-
-    // start loading fonts
-    this.textManager.InitFonts();
   }
 
   ngAfterViewInit(): void {
@@ -138,6 +149,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnDestroy(): void {
     this.resizeSubscription.unsubscribe();
+    this.notifier.next(undefined);
+    this.notifier.complete();
   }
 
   public aboutClick(): void {
@@ -179,10 +192,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-      this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
+      this.objectManager.NextLevel();
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.InitShapes(this.gameEngine.PlayableTextureCount);
+      this.objectManager.NextLevel();
     }
   }
 

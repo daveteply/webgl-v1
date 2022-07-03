@@ -1,28 +1,27 @@
 import { BoxBufferGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
-import { GamePieceMaterial } from './game-piece-material';
-import { GamePieceMaterialData } from './game-piece-material-data';
 import { Tween, Easing } from '@tweenjs/tween.js';
-import * as shuffleArray from 'shuffle-array';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
+import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
 
 export class GamePiece extends Object3D {
   private _geometry: BoxBufferGeometry;
   private _mesh: Mesh;
   private _powerMove!: PowerMove;
 
-  private _gamePieceMaterials: GamePieceMaterial[] = [];
+  private _originalRotationY!: number;
+
+  private _pieceMaterials!: PieceSideMaterial[];
 
   // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
-  // This will eventually be used to understand if the piece is
-  //   within the current view frustum.
   private _thetaStart: number;
   private _thetaOffset: number;
 
   private _lockTween: any;
   private _levelChangeTween: any;
+  private _removeTween: any;
 
   // Each side material is arranged as follows:
   // 0 'back'
@@ -33,7 +32,7 @@ export class GamePiece extends Object3D {
   //  flips.  This array will be shifted right or left based on
   //  flip direction.
   private _matchKeySequence: number[] = [1, 2, 0, 3];
-  private _matchKey: number;
+  private _matchKey!: number;
 
   // for iterating over pieces checking for matches
   public Next!: GamePiece;
@@ -56,8 +55,10 @@ export class GamePiece extends Object3D {
     return this._powerMoveType;
   }
 
-  constructor(x: number, y: number, z: number, rotation: number, materialData: GamePieceMaterialData[]) {
+  constructor(x: number, y: number, z: number, rotation: number) {
     super();
+
+    this._originalRotationY = rotation;
 
     // position shell in grid
     this.position.set(x, y, z);
@@ -78,22 +79,12 @@ export class GamePiece extends Object3D {
     const uvs = new Float32Array(sides.flat());
     this._geometry.setAttribute('uv', new BufferAttribute(uvs, 2));
 
-    // materials
-    this.initMaterials(materialData);
-
-    this._mesh = new Mesh(
-      this._geometry,
-      this._gamePieceMaterials.map((m) => m.Material)
-    );
-
+    this._mesh = new Mesh(this._geometry);
     this.add(this._mesh);
 
     // interaction and matching values
     this._thetaStart = Math.abs(rotation);
     this._thetaOffset = this._thetaStart;
-
-    // 1 is the default (or "front"), will change when piece is flipped
-    this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]]?.MatchKey;
   }
 
   set ThetaOffset(theta: number) {
@@ -107,10 +98,41 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
-  public AnimateLevelChangeTween(start: boolean): void {
-    if (this._levelChangeTween) {
-      this._levelChangeTween.stop();
+  public Reset(): void {
+    this._removeTween?.stop();
+    this._isRemoved = false;
+
+    // reset power move
+    if (this._powerMove) {
+      this._isPowerMove = false;
+      this.remove(this._powerMove.PowerMoveMesh);
+      this._powerMove?.Dispose();
     }
+
+    this._mesh.scale.set(1, 1, 1);
+    this._mesh.rotation.x = 0;
+    this._mesh.rotation.y = 0;
+    this._mesh.rotation.z = 0;
+
+    this._thetaStart = Math.abs(this._originalRotationY);
+    this._thetaOffset = this._thetaStart;
+
+    this._matchKeySequence = [1, 2, 0, 3];
+  }
+
+  public UpdateMaterials(pieceMaterials: PieceMaterials): void {
+    this._pieceMaterials = pieceMaterials.materials;
+
+    this._mesh.material = this._pieceMaterials.map((m) => {
+      return m.useBasic ? m.materialBasic : m.materialPhong;
+    });
+
+    // 1 is the default (or "front"), will change when piece is flipped
+    this._matchKey = this._pieceMaterials[this._matchKeySequence[0]]?.matchKey;
+  }
+
+  public AnimateLevelChangeTween(start: boolean): void {
+    this._levelChangeTween?.stop();
 
     const delta = start ? { o: 0.0 } : { o: 1.0 };
     const target = start ? { o: 1.0 } : { o: 0.0 };
@@ -118,17 +140,21 @@ export class GamePiece extends Object3D {
       .to(target, 2500)
       .delay(MathUtils.randInt(250, 1500))
       .onUpdate(() => {
-        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+        this._pieceMaterials.forEach((m) => {
+          if (m.useBasic) {
+            m.materialBasic.opacity = delta.o;
+          } else {
+            m.materialPhong.opacity = delta.o;
+          }
+        });
       })
       .start();
   }
 
   public AnimateLock(lock: boolean): void {
     if (!this._isRemoved && !this.IsMatch && !this._isPowerMove) {
-      // stop if running
-      if (this._lockTween) {
-        this._lockTween.stop();
-      }
+      // stop tween
+      this._lockTween?.stop();
 
       // set direction
       const origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
@@ -138,9 +164,15 @@ export class GamePiece extends Object3D {
       const target = lock ? final : origin;
 
       // init tween
-      this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
+      this._lockTween = new Tween(delta).to(target, 750).onUpdate(() => {
         this._mesh.scale.set(delta.x, delta.y, delta.z);
-        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+        this._pieceMaterials.forEach((m) => {
+          if (m.useBasic) {
+            m.materialBasic.opacity = delta.o;
+          } else {
+            m.materialPhong.opacity = delta.o;
+          }
+        });
       });
 
       if (lock) {
@@ -166,7 +198,7 @@ export class GamePiece extends Object3D {
       .to(target, 250)
       .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {
-        this.scale.set(delta.x, delta.y, delta.z);
+        this._mesh.scale.set(delta.x, delta.y, delta.z);
       });
   }
 
@@ -188,14 +220,20 @@ export class GamePiece extends Object3D {
       o: 0.0,
     };
 
-    new Tween(delta)
+    this._removeTween = new Tween(delta)
       .to(target, MathUtils.randInt(1000, 1500))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;
         this._mesh.rotation.z = delta.z;
-        this._mesh.scale.setScalar(delta.o);
-        this._gamePieceMaterials.forEach((m) => (m.Material.opacity = delta.o));
+        this._mesh.scale.set(delta.o, delta.o, delta.o);
+        this._pieceMaterials.forEach((m) => {
+          if (m.useBasic) {
+            m.materialBasic.opacity = delta.o;
+          } else {
+            m.materialPhong.opacity = delta.o;
+          }
+        });
       })
       .start();
   }
@@ -216,7 +254,7 @@ export class GamePiece extends Object3D {
       }
 
       // set match key
-      this._matchKey = this._gamePieceMaterials[this._matchKeySequence[0]].MatchKey;
+      this._matchKey = this._pieceMaterials[this._matchKeySequence[0]].matchKey;
 
       // tween
       new Tween(delta)
@@ -247,25 +285,6 @@ export class GamePiece extends Object3D {
   public PowerMoveRemove(): void {
     this._isRemoved = true;
     this._isPowerMove = false;
-
     this._powerMove.Remove();
-  }
-
-  public Dispose(): void {
-    if (this._powerMove) {
-      this._powerMove.Dispose();
-    }
-
-    // game piece
-    this._gamePieceMaterials.forEach((m) => m.Dispose());
-    this._geometry.dispose();
-  }
-
-  private initMaterials(materials: GamePieceMaterialData[]): void {
-    const shuffledMaterials = shuffleArray(materials);
-    const shuffledGamePieceMaterials = shuffledMaterials.map(
-      (m) => new GamePieceMaterial(m.MatchKey, m.Texture, m.BumpTexture, m.Color)
-    );
-    this._gamePieceMaterials.push(...shuffledGamePieceMaterials);
   }
 }

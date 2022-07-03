@@ -34,12 +34,8 @@ export class EffectsManagerService {
     this.LevelChangeAnimation.next(true);
 
     // stop currently running tween
-    if (this._levelChangeCameraTween1) {
-      this._levelChangeCameraTween1.stop();
-    }
-    if (this._levelChangeCameraTween2) {
-      this._levelChangeCameraTween2.stop();
-    }
+    this._levelChangeCameraTween1?.stop();
+    this._levelChangeCameraTween2?.stop();
 
     let vTargets = [...verticalTargets];
     if (!start) {
@@ -81,10 +77,9 @@ export class EffectsManagerService {
 
     // opacity of each game piece
     gameWheels.forEach((wheel) => {
-      for (const gamePiece of wheel.children as GamePiece[]) {
-        if (!gamePiece.IsMatch) {
-          gamePiece.AnimateLevelChangeTween(start);
-        }
+      for (let i = 0; i < wheel.children.length; i++) {
+        const gamePiece = wheel.children[i] as GamePiece;
+        gamePiece.AnimateLevelChangeTween(start);
       }
     });
 
@@ -114,7 +109,8 @@ export class EffectsManagerService {
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {
     axle.forEach((a) => {
-      for (const gamePiece of a.children as GamePiece[]) {
+      for (let i = 0; i < a.children.length; i++) {
+        const gamePiece = a.children[i] as GamePiece;
         if (!gamePiece.IsMatch) {
           gamePiece.AnimateLock(lock);
         }

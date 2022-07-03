@@ -74,26 +74,41 @@ export class ObjectManagerService {
     this.textManager.InitScene(this._scene);
   }
 
-  public InitShapes(playableTextureCount: number): void {
-    // clear existing objects
-    this.dispose();
-
-    // select colors for the current level
-    const materials = this.materialManager.InitMaterials(playableTextureCount);
-
-    // create all the objects
-    this._verticalTargets.forEach(() => {
-      const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints, materials);
+  // called once in the beginning of the application load
+  public InitShapes(): void {
+    // create wheels, wheels will create game pieces
+    for (let i = 0; i < this._verticalTargets.length; i++) {
+      const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints);
       this._axle.push(gameWheel);
       this._stack.add(gameWheel);
-    });
+    }
+
+    // initialize materials
+    this.materialManager.InitMaterials(this._verticalTargets.length, this._piecePoints.length);
 
     // assign iteration values (wheels are built bottom-up)
     this.assignIterationValues();
+  }
+
+  public NextLevel(): void {
+    // update materials in the material manager service
+    this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount);
+
+    // update the properties and materials for the grid
+    for (let i = 0; i < this._axle.length; i++) {
+      const wheel = this._axle[i] as GameWheel;
+
+      // reset properties for wheel and wheel's pieces
+      wheel.Reset();
+
+      // apply the updated materials
+      wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
+    }
 
     // trigger intro animations
     this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, true);
 
+    // change audio
     this.audioManager.StopLevelComplete();
     this.audioManager.PlayLevelStart();
   }
@@ -164,14 +179,14 @@ export class ObjectManagerService {
     }
   }
 
-  private dispose(): void {
-    // cascade dispose through all game pieces
-    if (this._axle.length) {
-      this._axle.forEach((a) => a.Dispose());
-    }
-    // reset array
-    this._axle = [];
-    // remove all objects
-    this._stack.clear();
-  }
+  // private dispose(): void {
+  //   // cascade dispose through all game pieces
+  //   if (this._axle.length) {
+  //     this._axle.forEach((a) => a.Dispose());
+  //   }
+  //   // reset array
+  //   this._axle = [];
+  //   // remove all objects
+  //   this._stack.clear();
+  // }
 }

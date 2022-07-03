@@ -1,14 +1,16 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { MathUtils, Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
+import { WheelMaterial } from '../services/material/material-models';
 import { GamePiece } from './game-piece/game-piece';
-import { GamePieceMaterialData } from './game-piece/game-piece-material-data';
 import { PiecePoints } from './piece-points';
 import { PowerMoveType } from './power-move-type';
 
 export class GameWheel extends Object3D {
   private _theta: number = 0;
   private _moveStartTheta: number = 0;
+
+  private _originalPositionY: number;
 
   // 'above' and 'below' are in reference to the y axis
   private _wheelAbove: GameWheel | undefined;
@@ -17,19 +19,14 @@ export class GameWheel extends Object3D {
   private _levelChangeTween: any;
   private _powerMoveTween: any;
 
-  constructor(y: number, meshPoints: PiecePoints[], materialData: GamePieceMaterialData[]) {
+  constructor(y: number, meshPoints: PiecePoints[]) {
     super();
+    this._originalPositionY = y;
     this.position.y = y;
 
     // add game pieces
     meshPoints.forEach((meshPoint) => {
-      const gamePiece = new GamePiece(
-        meshPoint.polarCoords.x,
-        0,
-        meshPoint.polarCoords.z,
-        meshPoint.rotationY,
-        materialData
-      );
+      const gamePiece = new GamePiece(meshPoint.polarCoords.x, 0, meshPoint.polarCoords.z, meshPoint.rotationY);
       this.add(gamePiece);
     });
 
@@ -65,10 +62,29 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public AnimateLevelStartTween(targetY: number, delay: number, start: boolean, spinDirection: number): void {
-    if (this._levelChangeTween) {
-      this._levelChangeTween.stop();
+  public Reset(): void {
+    this._levelChangeTween?.stop();
+    this._powerMoveTween?.stop();
+
+    this._theta = 0;
+    this.position.y = this._originalPositionY;
+    this.rotation.y = 0;
+
+    for (let i = 0; i < this.children.length; i++) {
+      const gamePiece = this.children[i] as GamePiece;
+      gamePiece.Reset();
     }
+  }
+
+  public UpdateMaterials(wheelMaterials: WheelMaterial): void {
+    for (let i = 0; i < this.children.length; i++) {
+      const gamePiece = this.children[i] as GamePiece;
+      gamePiece.UpdateMaterials(wheelMaterials.pieceMaterials[i]);
+    }
+  }
+
+  public AnimateLevelStartTween(targetY: number, delay: number, start: boolean, spinDirection: number): void {
+    this._levelChangeTween?.stop();
 
     let introSpinRangeMin = -10;
     let introSpinRangeMax = 10;
@@ -101,15 +117,13 @@ export class GameWheel extends Object3D {
       .onUpdate(() => {
         this.position.y = delta.y;
         this.rotation.y = delta.theta;
-        this._theta = delta.theta;
+        // this._theta = delta.theta;
       })
       .start();
   }
 
   public AnimateRotation(moveType: PowerMoveType): void {
-    if (this._powerMoveTween) {
-      this._powerMoveTween.stop();
-    }
+    this._powerMoveTween?.stop();
 
     const delta = {
       theta: this._theta,
@@ -211,7 +225,8 @@ export class GameWheel extends Object3D {
       .start();
 
     // recalculate game piece theta (for matching algorithm)
-    for (const gamePiece of this.children as GamePiece[]) {
+    for (let i = 0; i < this.children.length; i++) {
+      const gamePiece = this.children[i] as GamePiece;
       gamePiece.ThetaOffset = this._theta;
     }
 
@@ -219,14 +234,9 @@ export class GameWheel extends Object3D {
   }
 
   public ResetIsMatch(): void {
-    for (const gamePiece of this.children as GamePiece[]) {
+    for (let i = 0; i < this.children.length; i++) {
+      const gamePiece = this.children[i] as GamePiece;
       gamePiece.IsMatch = false;
-    }
-  }
-
-  public Dispose(): void {
-    for (const gamePiece of this.children as GamePiece[]) {
-      gamePiece.Dispose();
     }
   }
 }
