@@ -97,18 +97,15 @@ export class AudioManagerService implements OnDestroy {
 
   public PlayLongMatch(matchLength: number): void {
     this.StartProgression();
-    let targetNote = 0;
     for (let i = 0; i < matchLength - MINIMUM_MATCH_COUNT; i++) {
-      targetNote = this.nextProgression;
+      this._progressionNext = this.nextProgression;
     }
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
 
   public StopAudio(audioType: AudioType): void {
     const target = AUDIO_LIST.find((a) => a.audioType === audioType);
-    if (target) {
-      target.howl?.stop();
-    }
+    target?.howl?.stop();
   }
 
   private playLoadedAudio(target: Howl, useNote: boolean, loop: boolean): void {
