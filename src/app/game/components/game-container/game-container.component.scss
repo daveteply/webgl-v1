@@ -50,6 +50,7 @@
   }
 
   .level-progress {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 0.25em;
@@ -60,6 +61,18 @@
     }
     .mat-progress-bar {
       height: 1em;
+    }
+    .remaining {
+      font-size: smaller;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      color: #0f0f0f;
+      transition: opacity 1s ease-in-out;
+      opacity: 1;
+      &.hide {
+        opacity: 0;
+      }
     }
   }
 }

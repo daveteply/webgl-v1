@@ -40,6 +40,11 @@ export class ScoringManagerService {
     return this._levelProgress;
   }
 
+  private _piecesRemaining: number = 0;
+  get PiecesRemaining(): number {
+    return this._piecesRemaining;
+  }
+
   private _playerMoves: number = 0;
   get PlayerMoves(): number {
     return this._playerMoves;
@@ -75,6 +80,14 @@ export class ScoringManagerService {
   public UpdateLevelProgress(): void {
     this._levelStats.pieceCount++;
     this._levelProgress = (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
+    if (this._levelProgress > 100) {
+      this._levelProgress = 100;
+    }
+
+    this._piecesRemaining = this._levelPieceTarget - this.LevelStats.pieceCount;
+    if (this._piecesRemaining < 0) {
+      this._piecesRemaining = 0;
+    }
   }
 
   public UpdateScore(pieceCount: number, skipText: boolean): void {
@@ -188,5 +201,7 @@ export class ScoringManagerService {
 
   private initLevelPieceTarget(): void {
     this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
+
+    this._piecesRemaining = this._levelPieceTarget;
   }
 }

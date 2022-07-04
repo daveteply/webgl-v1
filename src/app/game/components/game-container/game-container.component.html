@@ -17,7 +17,10 @@
   </div>
   <div class="level-progress" [class.show]="ShowScoreProgress">
     <div>{{ scoringManager.LevelProgress | number: "1.0-0" }}%&nbsp;</div>
-    <mat-progress-bar value="{{ scoringManager.LevelProgress }}"></mat-progress-bar>
+    <mat-progress-bar value="{{ scoringManager.LevelProgress }}"> </mat-progress-bar>
+    <div class="remaining" [class.hide]="scoringManager.PiecesRemaining === 0">
+      {{ scoringManager.PiecesRemaining }} remaining
+    </div>
   </div>
   <div class="copyright" [class.hide]="ShowScoreProgress">&copy; 2022 Turbogeekbear LLC, David Teply</div>
 </div>
