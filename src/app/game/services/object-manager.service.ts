@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
@@ -75,22 +75,27 @@ export class ObjectManagerService {
   }
 
   // called once in the beginning of the application load
-  public InitShapes(): void {
-    // create wheels, wheels will create game pieces
-    for (let i = 0; i < this._verticalTargets.length; i++) {
-      const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints);
-      this._axle.push(gameWheel);
-      this._stack.add(gameWheel);
-    }
+  public InitShapes(): Observable<void> {
+    return new Observable((o) => {
+      // create wheels, wheels will create game pieces
+      for (let i = 0; i < this._verticalTargets.length; i++) {
+        const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints);
+        this._axle.push(gameWheel);
+        this._stack.add(gameWheel);
+      }
 
-    // initialize materials
-    this.materialManager.InitMaterials(this._verticalTargets.length, this._piecePoints.length);
+      // initialize materials
+      this.materialManager.InitMaterials(this._verticalTargets.length, this._piecePoints.length);
 
-    // assign iteration values (wheels are built bottom-up)
-    this.assignIterationValues();
+      // assign iteration values (wheels are built bottom-up)
+      this.assignIterationValues();
+
+      o.next();
+      o.complete();
+    });
   }
 
-  public NextLevel(): void {
+  public UpdateLevelMaterials(): void {
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount);
 
@@ -103,6 +108,14 @@ export class ObjectManagerService {
 
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
+    }
+
+    console.log('update level materials, done');
+  }
+
+  public NextLevel(updateMaterials: boolean = true): void {
+    if (updateMaterials) {
+      this.UpdateLevelMaterials();
     }
 
     // trigger intro animations
@@ -178,15 +191,4 @@ export class ObjectManagerService {
       this._verticalTargets.push(axisInx * GRID_VERTICAL_OFFSET);
     }
   }
-
-  // private dispose(): void {
-  //   // cascade dispose through all game pieces
-  //   if (this._axle.length) {
-  //     this._axle.forEach((a) => a.Dispose());
-  //   }
-  //   // reset array
-  //   this._axle = [];
-  //   // remove all objects
-  //   this._stack.clear();
-  // }
 }

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { debounceTime, fromEvent, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { debounceTime, fromEvent, Observable, Subject, Subscription, takeUntil, take } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 
@@ -66,8 +66,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.objectManager.InitShapes();
-
     // set up window resizing event
     this.resize$ = fromEvent(window, 'resize');
     this.resizeSubscription = this.resize$
@@ -76,7 +74,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe(() => {
         this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
       });
+  }
 
+  ngOnInit(): void {
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntil(this.notifier)).subscribe((gameOver) => {
       this._isGameOver = gameOver;
@@ -94,11 +94,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       this.initTextures();
     });
 
-    // start loading fonts
-    this.textManager.InitFonts();
-  }
-
-  ngOnInit(): void {
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.pipe(takeUntil(this.notifier)).subscribe(() => {
       if (this._isGameOver) {
@@ -113,7 +108,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           }
           this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
           this.updateDifficultyColor();
-          this.objectManager.NextLevel(/*this.gameEngine.PlayableTextureCount*/);
+          this.objectManager.NextLevel();
         });
       } else {
         if (this._showWelcome) {
@@ -136,8 +131,24 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     });
 
-    // start loading initial level texture(s)
-    this.initTextures();
+    // update level materials for start of game
+    this.textureManager.LevelTexturesLoaded.pipe(take(1)).subscribe(() => {
+      console.log('textured loaded, updating level materials');
+
+      this.objectManager.UpdateLevelMaterials();
+    });
+
+    // initialize objects and materials
+    this.objectManager
+      .InitShapes()
+      .pipe(take(1))
+      .subscribe(() => {
+        // start loading initial level texture(s)
+        this.initTextures();
+      });
+
+    // start loading fonts
+    this.textManager.InitFonts();
   }
 
   ngAfterViewInit(): void {
@@ -192,7 +203,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-      this.objectManager.NextLevel();
+      this.objectManager.NextLevel(false);
     } else {
       this.scoringManager.NextLevel();
       this.objectManager.NextLevel();
