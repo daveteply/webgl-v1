@@ -164,7 +164,7 @@ export class GamePiece extends Object3D {
       const target = lock ? final : origin;
 
       // init tween
-      this._lockTween = new Tween(delta).to(target, 750).onUpdate(() => {
+      this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
         this._mesh.scale.set(delta.x, delta.y, delta.z);
         this._pieceMaterials.forEach((m) => {
           if (m.useBasic) {
