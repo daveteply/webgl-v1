@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@capacitor/storage';
 import { Observable } from 'rxjs';
+import { STORAGE_HIGH_SCORES } from 'src/app/game/game-constants';
 
 export interface HighScore {
   occurred: Date;
@@ -11,13 +12,9 @@ export interface HighScore {
   providedIn: 'root',
 })
 export class HighScoreManagerService {
-  _highScoresKey = 'HIGH_SCORES';
-
-  constructor() {}
-
   public UpdateHighScores(gameOverScore: number): void {
     if (gameOverScore) {
-      Storage.get({ key: this._highScoresKey }).then((data) => {
+      Storage.get({ key: STORAGE_HIGH_SCORES }).then((data) => {
         if (data.value) {
           const scores: HighScore[] = JSON.parse(data.value);
           // add new element
@@ -37,7 +34,7 @@ export class HighScoreManagerService {
 
   public GetHighScores(): Observable<HighScore[]> {
     return new Observable((observer) => {
-      Storage.get({ key: this._highScoresKey }).then((data) => {
+      Storage.get({ key: STORAGE_HIGH_SCORES }).then((data) => {
         if (data.value) {
           observer.next(JSON.parse(data.value));
           observer.complete();
@@ -49,6 +46,6 @@ export class HighScoreManagerService {
   }
 
   private storeScores(scores: HighScore[]): void {
-    Storage.set({ key: this._highScoresKey, value: JSON.stringify(scores) });
+    Storage.set({ key: STORAGE_HIGH_SCORES, value: JSON.stringify(scores) });
   }
 }

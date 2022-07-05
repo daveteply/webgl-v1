@@ -41,6 +41,7 @@ export class ObjectManagerService {
   private _powerMoveTextureSubscription!: Subscription;
 
   // events
+  public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
@@ -55,6 +56,13 @@ export class ObjectManagerService {
     this.initCoords();
 
     this._starField = new StarField();
+
+    // need to re-broadcast from here to keep effects manager separate
+    this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
+      if (!locked) {
+        this.LevelChangeAnimationComplete.next();
+      }
+    });
   }
 
   get Axle(): GameWheel[] {
@@ -109,8 +117,6 @@ export class ObjectManagerService {
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
     }
-
-    console.log('update level materials, done');
   }
 
   public NextLevel(updateMaterials: boolean = true): void {

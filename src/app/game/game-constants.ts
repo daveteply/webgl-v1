@@ -39,5 +39,11 @@ export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x00
 export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00bfff, 0x8000ff, 0xff0080];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
 
+// Storage
+export const STORAGE_HIGH_SCORES = 'High.Scores';
+export const STORAGE_HINT_HOW_TO_PLAY = 'Hint.HowToPlay';
+export const STORAGE_HINT_MOVES_DECREASE = 'Hint.Moves.Decrease';
+export const STORAGE_HINT_MOVES_INCREASE = 'Hint.Moves.Increase';
+
 // Ads
 export const LEVEL_TO_START_ADS = 3;

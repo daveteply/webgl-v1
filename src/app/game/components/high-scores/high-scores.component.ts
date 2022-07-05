@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HighScore, HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
 
 @Component({

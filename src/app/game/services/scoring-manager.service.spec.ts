@@ -44,13 +44,5 @@ describe('ScoringManagerService', () => {
       service['initLevelPieceTarget']();
       expect(service.LevelPieceTarget).toBe(4);
     });
-
-    // it('should log the piece target curve', () => {
-    //   for (let i = 1; i < 100; i++) {
-    //     service['_level'] = i;
-    //     service['initLevelPieceTarget']();
-    //     console.log(service.Level, service.LevelPieceTarget);
-    //   }
-    // });
   });
 });

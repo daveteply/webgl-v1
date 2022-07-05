@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 
-import { TutorialDialogComponent } from '../tutorial-dialog/tutorial-dialog.component';
 import { AboutComponent } from 'src/app/shared/components/about/about.component';
 
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
@@ -47,10 +46,6 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
     this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
     this.dialogAnimation.CreateIntroDialogBoxes();
     this.dialogAnimation.Animate();
-  }
-
-  openTutorialDialog(): void {
-    this.dialog.open(TutorialDialogComponent);
   }
 
   openAbout(): void {

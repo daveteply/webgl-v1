@@ -12,17 +12,25 @@ import { TextManagerService } from '../../services/text/text-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
 import { NotifyService } from 'src/app/shared/services/notify.service';
 import { DialogNotifyService } from '../dialogs/dialog-notify.service';
+import { HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
+import { HintsManagerService } from '../../services/hints-manager.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverDialogComponent } from '../dialogs/game-over-dialog/game-over-dialog.component';
+import { HowToPlayComponent } from '../dialogs/hints/how-to-play/how-to-play.component';
+import { MovesRemainingInfoComponent } from '../dialogs/hints/moves-remaining-info/moves-remaining-info.component';
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
-import { LEVEL_TO_START_ADS } from '../../game-constants';
-import { HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
+import {
+  LEVEL_TO_START_ADS,
+  STORAGE_HINT_HOW_TO_PLAY,
+  STORAGE_HINT_MOVES_DECREASE,
+  STORAGE_HINT_MOVES_INCREASE,
+} from '../../game-constants';
 
 @Component({
   selector: 'wgl-game-container',
@@ -63,6 +71,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private gameEngine: GameEngineService,
     private admob: AdmobManagerService,
     private highScoreManager: HighScoreManagerService,
+    private hintsManager: HintsManagerService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -133,9 +142,50 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(take(1)).subscribe(() => {
-      console.log('textured loaded, updating level materials');
-
       this.objectManager.UpdateLevelMaterials();
+    });
+
+    // show the tutorial after the initial level loads
+    this.objectManager.LevelChangeAnimationComplete.pipe(take(1)).subscribe(() => {
+      this.hintsManager.GetHintViewed(STORAGE_HINT_HOW_TO_PLAY).then((result) => {
+        if (result.value !== 'true') {
+          const howToPlay = this.dialog.open(HowToPlayComponent, { panelClass: 'cdk-overlay-pane__show' });
+          howToPlay.afterClosed().subscribe(() => {
+            this.hintsManager.SetHintViewed(STORAGE_HINT_HOW_TO_PLAY);
+          });
+        }
+      });
+    });
+
+    // show tutorial for move changes
+    this.scoringManager.MovesChange.pipe(takeUntil(this.notifier)).subscribe((increase) => {
+      if (increase) {
+        this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_INCREASE).then((result) => {
+          if (!result.value) {
+            const dialog = this.dialog.open(MovesRemainingInfoComponent, {
+              panelClass: 'cdk-overlay-pane__show',
+              position: { top: '5em' },
+              data: true,
+            });
+            dialog.afterClosed().subscribe(() => {
+              this.hintsManager.SetHintViewed(STORAGE_HINT_MOVES_INCREASE);
+            });
+          }
+        });
+      } else {
+        this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_DECREASE).then((result) => {
+          if (!result.value) {
+            const dialog = this.dialog.open(MovesRemainingInfoComponent, {
+              panelClass: 'cdk-overlay-pane__show',
+              position: { top: '5em' },
+              data: false,
+            });
+            dialog.afterClosed().subscribe(() => {
+              this.hintsManager.SetHintViewed(STORAGE_HINT_MOVES_DECREASE);
+            });
+          }
+        });
+      }
     });
 
     // initialize objects and materials
@@ -185,6 +235,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     let config = {
       minWidth: '20em',
       disableClose: true,
+      panelClass: ['wgl-pane-bounce', 'cdk-overlay-pane__show'],
       data: {
         stats: this.scoringManager.LevelStats,
         level: this.scoringManager.Level,

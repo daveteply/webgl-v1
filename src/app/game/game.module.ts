@@ -6,12 +6,13 @@ import { GameRoutingModule } from './game-routing.module';
 import { GameContainerComponent } from './components/game-container/game-container.component';
 import { LevelDialogComponent } from './components/dialogs/level-dialog/level-dialog.component';
 import { IntroDialogComponent } from './components/dialogs/intro-dialog/intro-dialog.component';
-import { TutorialDialogComponent } from './components/dialogs/tutorial-dialog/tutorial-dialog.component';
 import { GameOverDialogComponent } from './components/dialogs/game-over-dialog/game-over-dialog.component';
 import { TextZoomComponent } from './components/text-zoom/text-zoom.component';
 import { ZoomCharComponent } from './components/text-zoom/zoom-char/zoom-char.component';
 import { MovesLeftComponent } from './components/moves-left/moves-left.component';
 import { HighScoresComponent } from './components/high-scores/high-scores.component';
+import { MovesRemainingInfoComponent } from './components/dialogs/hints/moves-remaining-info/moves-remaining-info.component';
+import { HowToPlayComponent } from './components/dialogs/hints/how-to-play/how-to-play.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -37,8 +38,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     TextZoomComponent,
     ZoomCharComponent,
     MovesLeftComponent,
-    TutorialDialogComponent,
     HighScoresComponent,
+    MovesRemainingInfoComponent,
+    HowToPlayComponent,
   ],
   imports: [
     CommonModule,

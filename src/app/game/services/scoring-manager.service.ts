@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import {
   LEVEL_ADDITIVE,
   LONG_MATCH_SCORE_MULTIPLIER,
@@ -14,6 +14,9 @@ export class ScoringManagerService {
   private _levelStats!: LevelStats;
   private _timeStart!: number;
   private _timeStop!: number;
+
+  // events
+  public MovesChange: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private textTextManager: TextManagerService) {
     this.ResetStats();
@@ -90,7 +93,7 @@ export class ScoringManagerService {
     }
   }
 
-  public UpdateScore(pieceCount: number, skipText: boolean): void {
+  public UpdateScore(pieceCount: number, endLevelSkip: boolean): void {
     // update since previous match
     const timeDiff = this._timeStop - this._timeStart;
     if (timeDiff < this._levelStats.fastestMatchTime) {
@@ -113,8 +116,9 @@ export class ScoringManagerService {
       this._playerMoves++;
 
       // splash text
-      if (!skipText) {
+      if (!endLevelSkip) {
         this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`]);
+        this.MovesChange.next(true);
       }
     }
 
@@ -123,7 +127,7 @@ export class ScoringManagerService {
 
     // long match multiplier
     if (pieceCount > MINIMUM_MATCH_COUNT) {
-      this.longMatchBonus(pieceCount, skipText);
+      this.longMatchBonus(pieceCount, endLevelSkip);
     }
 
     this.ResetTimer();
@@ -132,6 +136,7 @@ export class ScoringManagerService {
   public UpdateMoveCount(): void {
     this._levelStats.moveCount++;
     this._playerMoves--;
+    this.MovesChange.next(false);
   }
 
   public UpdatePowerMoveBonus(additionalMoveCount: number): void {
@@ -184,7 +189,7 @@ export class ScoringManagerService {
     return entryCount;
   }
 
-  private longMatchBonus(pieceCount: number, skipText: boolean) {
+  private longMatchBonus(pieceCount: number, endLevelSkip: boolean) {
     const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
     if (longMatchMovesEarned) {
       this._playerMoves += longMatchMovesEarned;
@@ -193,8 +198,9 @@ export class ScoringManagerService {
       const longMatchBonus = longMatchMovesEarned * this._level * LONG_MATCH_SCORE_MULTIPLIER;
       this._score += longMatchBonus;
 
-      if (!skipText) {
+      if (!endLevelSkip) {
         this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`]);
+        this.MovesChange.next(true);
       }
     }
   }
