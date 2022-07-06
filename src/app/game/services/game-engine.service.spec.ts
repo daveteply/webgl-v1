@@ -13,19 +13,21 @@ import { ScoringManagerService } from './scoring-manager.service';
 import { TextManagerService } from './text/text-manager.service';
 import { SceneManagerService } from './scene-manager.service';
 import { InteractionManagerService } from './interaction-manager.service';
+import { Observable } from 'rxjs';
 
-function createMockAxle(objectManager: ObjectManagerService): GameWheel[] {
-  const scene = new Scene();
-  objectManager.SetScene(scene);
-  objectManager.InitShapes();
-
-  objectManager.Axle.forEach((gameWheel: GameWheel) => {
-    for (const gamePiece of gameWheel.children as GamePiece[]) {
-      gamePiece['_matchKey'] = 0;
-    }
+function createMockAxle(objectManager: ObjectManagerService) {
+  return new Observable((o) => {
+    objectManager.SetScene(new Scene());
+    objectManager.InitShapes().subscribe(() => {
+      objectManager.Axle.forEach((gameWheel: GameWheel) => {
+        for (const gamePiece of gameWheel.children as GamePiece[]) {
+          gamePiece['_matchKey'] = 0;
+        }
+      });
+      o.next();
+      o.complete();
+    });
   });
-
-  return objectManager.Axle;
 }
 
 describe('GameEngineService', () => {
@@ -73,7 +75,9 @@ describe('GameEngineService', () => {
       audioManagerService,
       service
     );
-    mockAxle = createMockAxle(objectManagerService);
+    createMockAxle(objectManagerService).subscribe(() => {
+      mockAxle = objectManagerService.Axle;
+    });
   });
 
   it('should be created', () => {
