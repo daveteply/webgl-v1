@@ -27,7 +27,7 @@ export class AppComponent {
     this.notify.NotifyEvent.subscribe(() => {
       const aboutDialog = this.dialog.getDialogById(this.ABOUT_DIALOG_ID);
       if (!aboutDialog) {
-        this.dialog.open(AboutComponent, { id: this.ABOUT_DIALOG_ID });
+        this.dialog.open(AboutComponent, { id: this.ABOUT_DIALOG_ID, panelClass: 'cdk-overlay-pane__show' });
       } else {
         aboutDialog.close();
       }
