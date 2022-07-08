@@ -49,6 +49,6 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   openAbout(): void {
-    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true } });
+    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true }, panelClass: 'cdk-overlay-pane__show'  });
   }
 }
