@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
     "@capacitor-community/admob": "^3.2.0",
-    "@capacitor/android": "^3.5.1",
+    "@capacitor/android": "^3.6.0",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/core": "latest",
     "@capacitor/ios": "^3.6.0",
@@ -38,7 +38,7 @@
     "howler": "^2.2.3",
     "rxjs": "~7.5.0",
     "shuffle-array": "^1.0.1",
-    "three": "^0.140.0",
+    "three": "^0.142.0",
     "tslib": "^2.3.1",
     "tweenjs": "^1.0.2",
     "zone.js": "~0.11.4"
