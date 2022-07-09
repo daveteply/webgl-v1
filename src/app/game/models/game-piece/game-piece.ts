@@ -1,5 +1,15 @@
-import { BoxBufferGeometry, BufferAttribute, CylinderBufferGeometry, MathUtils, Mesh, Object3D, Texture } from 'three';
-import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
+import {
+  BoxBufferGeometry,
+  BufferAttribute,
+  Color,
+  CylinderBufferGeometry,
+  MathUtils,
+  Mesh,
+  MeshPhongMaterial,
+  Object3D,
+  Texture,
+} from 'three';
+import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY } from '../../game-constants';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
@@ -19,6 +29,8 @@ export class GamePiece extends Object3D {
 
   private _pieceMaterials!: PieceSideMaterial[];
   private _pieceGeometryType!: LevelGeometryType;
+
+  private _cylinderEndCapMaterials: MeshPhongMaterial[];
 
   // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
@@ -94,6 +106,13 @@ export class GamePiece extends Object3D {
     // interaction and matching values
     this._thetaStart = Math.abs(rotation);
     this._thetaOffset = this._thetaStart;
+
+    // initialize end cap (top,bottom) materials for cylinder
+    const endCapColor = DARK_RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, DARK_RAINBOW_COLOR_ARRAY.length - 1)];
+    this._cylinderEndCapMaterials = [
+      new MeshPhongMaterial({ color: new Color(endCapColor) }),
+      new MeshPhongMaterial({ color: new Color(endCapColor) }),
+    ];
   }
 
   set ThetaOffset(theta: number) {
@@ -156,7 +175,10 @@ export class GamePiece extends Object3D {
 
       case LevelGeometryType.Cylinder:
         const target = this._pieceMaterials[this._matchKeySequence[0]];
-        this._meshCylinder.material = target.useBasic ? target.materialBasic : target.materialPhong;
+        const targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+        // cylinder side, top, bottom
+        this._meshCylinder.material;
+        this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
         break;
     }
 
