@@ -98,7 +98,7 @@ export class AudioManagerService implements OnDestroy {
   public PlayLongMatch(matchLength: number): void {
     this.StartProgression();
     for (let i = 0; i < matchLength - MINIMUM_MATCH_COUNT; i++) {
-      this._progressionNext = this.nextProgression;
+      this.nextProgression;
     }
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
