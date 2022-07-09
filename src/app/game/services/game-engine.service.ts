@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { MathUtils } from 'three';
 import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT, DIFFICULT_LEVEL_COLOR } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
@@ -21,6 +20,11 @@ export class GameEngineService {
   private _playableTextureCount: number = DEFAULT_PLAYABLE_TEXTURE_COUNT;
   get PlayableTextureCount(): number {
     return this._playableTextureCount;
+  }
+
+  private _playableTextureCountColor: number = DIFFICULT_LEVEL_COLOR[0];
+  get PlayableTextureCountColor(): number {
+    return this._playableTextureCountColor;
   }
 
   public UpdatePlayableTextureCount(level: number): void {
@@ -44,9 +48,18 @@ export class GameEngineService {
     }
   }
 
-  private _playableTextureCountColor: number = DIFFICULT_LEVEL_COLOR[0];
-  get PlayableTextureCountColor(): number {
-    return this._playableTextureCountColor;
+  public PowerMoveSelection(): PowerMoveType {
+    const enumValues = Object.keys(PowerMoveType)
+      .map((po) => Number.parseInt(po))
+      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
+    const inx = Math.floor(Math.random() * enumValues.length - 1);
+    const moveType = enumValues[inx];
+
+    if (!environment.production) {
+      console.info('    Power Move Type: ', inx, PowerMoveType[moveType]);
+    }
+
+    return moveType;
   }
 
   public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): GamePiece[] {
@@ -66,20 +79,6 @@ export class GameEngineService {
 
     // all matches should be complete
     return this._matches;
-  }
-
-  public PowerMoveSelection(): PowerMoveType {
-    const enumValues = Object.keys(PowerMoveType)
-      .map((po) => Number.parseInt(po))
-      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
-    const inx = MathUtils.randInt(0, enumValues.length - 1);
-    const moveType = enumValues[inx];
-
-    if (!environment.production) {
-      console.info('    Power Move Type: ', inx, PowerMoveType[moveType]);
-    }
-
-    return moveType;
   }
 
   private directionalSearch(gamePiece: GamePiece): void {
