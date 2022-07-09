@@ -48,8 +48,7 @@ export class GameEngineService {
 
     // default geometry type
     this._levelGeometryType = LevelGeometryType.Cube;
-    // pick cylinder about 25% of the time
-    if (Math.floor(Math.random() * 3) % 3 === 0) {
+    if (Math.floor(Math.random() * 2) % 2 === 0) {
       this._levelGeometryType = LevelGeometryType.Cylinder;
     }
 
