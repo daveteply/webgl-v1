@@ -10,7 +10,7 @@ import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { GameMaterials, PieceMaterials, PieceSideMaterial, WheelMaterial } from './material-models';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
-import { LevelMaterialType } from '../../models/level-material-type';
+import { LevelMaterialType } from '../../level-material-type';
 import { COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
@@ -50,9 +50,9 @@ export class MaterialManagerService {
     }
   }
 
-  public UpdateMaterials(playableTextureCount: number): void {
+  public UpdateMaterials(playableTextureCount: number, levelMaterialType: LevelMaterialType): void {
     // initial game piece materials
-    const initialMaterials = this.getLevelMaterials(playableTextureCount);
+    const initialMaterials = this.getLevelMaterials(playableTextureCount, levelMaterialType);
 
     // update materials
     for (const wheel of this._gameMaterials.wheelMaterials) {
@@ -91,7 +91,10 @@ export class MaterialManagerService {
     return this.textureManager.GetPowerMoveTexture(moveType);
   }
 
-  private getLevelMaterials(playableTextureCount: number): GamePieceMaterialData[] {
+  private getLevelMaterials(
+    playableTextureCount: number,
+    levelMaterialType: LevelMaterialType
+  ): GamePieceMaterialData[] {
     // reset array
     const materials: GamePieceMaterialData[] = [];
 
@@ -101,7 +104,7 @@ export class MaterialManagerService {
     let selectedColors: string[] = [];
 
     // selected style for current level
-    switch (this.textureManager.LevelType) {
+    switch (levelMaterialType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:
         selectedColors = this.initColorScheme(playableTextureCount);

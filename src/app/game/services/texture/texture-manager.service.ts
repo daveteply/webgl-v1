@@ -6,13 +6,14 @@ import { environment } from 'src/environments/environment';
 
 import { StoreService } from 'src/app/app-store/services/store.service';
 
-import { LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
+import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
-import { LevelMaterialType } from '../../models/level-material-type';
+import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
 import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
 import * as shuffleArray from 'shuffle-array';
+import { LevelGeometryType } from '../../level-geometry-type';
 
 interface EmojiSequence {
   desc: string;
@@ -29,14 +30,11 @@ export class TextureManagerService {
   private _canvasElement!: HTMLCanvasElement;
   private _canvasContext!: CanvasRenderingContext2D | null;
 
+  private _levelGeometryType!: LevelGeometryType;
+
   private _textures: Texture[] = [];
   get Textures(): Texture[] {
     return this._textures;
-  }
-
-  private _levelType!: LevelMaterialType;
-  get LevelType(): LevelMaterialType {
-    return this._levelType;
   }
 
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
@@ -62,17 +60,20 @@ export class TextureManagerService {
     this._textureLoader = new TextureLoader(this._loaderManager);
   }
 
-  public InitLevelTextures(levelType: LevelMaterialType, playableTextureCount: number): void {
+  public InitLevelTextures(
+    playableTextureCount: number,
+    levelMaterialType: LevelMaterialType,
+    levelGeometryType: LevelGeometryType
+  ): void {
     this.LevelTextureLoadingStarted.next();
 
-    // set level type
-    this._levelType = levelType;
+    // level geometry type
+    this._levelGeometryType = levelGeometryType;
 
     // clear existing textures
-    this._textures.forEach((texture) => texture.dispose);
     this._textures = [];
 
-    switch (this._levelType) {
+    switch (levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
         this.loadBumpSymbolTextures();
         break;
@@ -87,6 +88,7 @@ export class TextureManagerService {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             texture.name = data.desc;
             texture.center = new Vector2(0.5, 0.5);
+            this.setTextureWrapping(texture);
             this._textures.push(texture);
           });
         });
@@ -130,6 +132,7 @@ export class TextureManagerService {
     if (bumpSymbolsLoaded) {
       BumpSymbolTextures.forEach((s) => {
         if (s.texture) {
+          this.setTextureWrapping(s.texture);
           this._textures.push(s.texture);
         }
       });
@@ -140,6 +143,7 @@ export class TextureManagerService {
         this._textureLoader.load(map.src, (data) => {
           data.name = map.src;
           map.texture = data;
+          this.setTextureWrapping(map.texture);
           this._textures.push(map.texture);
         });
       });
@@ -154,6 +158,7 @@ export class TextureManagerService {
       if (!environment.production) {
         console.info('Texture Manager: pulled from cache ', randBumpMaterialMap.src);
       }
+      this.setTextureWrapping(randBumpMaterialMap.texture);
       this._textures.push(randBumpMaterialMap.texture);
       this.LevelTexturesLoaded.next();
     } else {
@@ -164,6 +169,7 @@ export class TextureManagerService {
           console.info('Texture Manager: caching ', data.name);
         }
         randBumpMaterialMap.texture = data;
+        this.setTextureWrapping(randBumpMaterialMap.texture);
         this._textures.push(randBumpMaterialMap.texture);
       });
     }
@@ -255,6 +261,19 @@ export class TextureManagerService {
         const randColor = Math.floor(Math.random() * 16777215).toString(16);
         canvasContext.fillStyle = `#${randColor}`;
         canvasContext.fillRect(targetStart, targetStart, targetScale, targetScale);
+      }
+    }
+  }
+
+  private setTextureWrapping(texture: Texture): void {
+    if (texture) {
+      // reset default
+      texture.wrapS = ClampToEdgeWrapping;
+      texture.repeat.set(1, 1);
+
+      if (this._levelGeometryType === LevelGeometryType.Cylinder) {
+        texture.wrapS = RepeatWrapping;
+        texture.repeat.set(4, 1);
       }
     }
   }

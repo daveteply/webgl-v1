@@ -23,7 +23,6 @@ import { HowToPlayComponent } from '../dialogs/hints/how-to-play/how-to-play.com
 import { MovesRemainingInfoComponent } from '../dialogs/hints/moves-remaining-info/moves-remaining-info.component';
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
-import { LevelMaterialType } from '../../models/level-material-type';
 import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
 import {
   LEVEL_TO_START_ADS,
@@ -223,12 +222,15 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
     this.updateDifficultyColor();
 
-    // select next level type
-    const levelType = Math.floor(Math.random() * 3) + 1;
-    this.textureManager.InitLevelTextures(levelType, this.gameEngine.PlayableTextureCount);
-    if (!environment.production) {
-      console.info('Level Type: ', LevelMaterialType[levelType]);
-    }
+    // decide level materials and geometries
+    this.gameEngine.InitLevelTypes();
+
+    // select next level material type
+    this.textureManager.InitLevelTextures(
+      this.gameEngine.PlayableTextureCount,
+      this.gameEngine.LevelMaterialType,
+      this.gameEngine.LevelGeometryType
+    );
   }
 
   private dialogConfig(height: string = ``): MatDialogConfig {

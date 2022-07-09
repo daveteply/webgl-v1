@@ -1,18 +1,24 @@
-import { BoxBufferGeometry, BufferAttribute, MathUtils, Mesh, Object3D, Texture } from 'three';
+import { BoxBufferGeometry, BufferAttribute, CylinderBufferGeometry, MathUtils, Mesh, Object3D, Texture } from 'three';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS } from '../../game-constants';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
+import { LevelGeometryType } from '../../level-geometry-type';
 
 export class GamePiece extends Object3D {
-  private _geometry: BoxBufferGeometry;
-  private _mesh: Mesh;
+  private _geometryCube: BoxBufferGeometry;
+  private _meshCube: Mesh;
+  private _geometryCylinder: CylinderBufferGeometry;
+  private _meshCylinder: Mesh;
   private _powerMove!: PowerMove;
+
+  private _mesh!: Mesh;
 
   private _originalRotationY!: number;
 
   private _pieceMaterials!: PieceSideMaterial[];
+  private _pieceGeometryType!: LevelGeometryType;
 
   // Original theta (angle) where the piece was drawn.
   // Used to help calculate the offset as the Wheel is moved.
@@ -64,9 +70,8 @@ export class GamePiece extends Object3D {
     this.position.set(x, y, z);
     this.rotateY(rotation);
 
-    // set up visual piece
-    this._geometry = new BoxBufferGeometry();
-
+    // cube piece
+    this._geometryCube = new BoxBufferGeometry();
     // rotate uv so all vertical flipping displays correctly
     const sides = [
       [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
@@ -77,10 +82,14 @@ export class GamePiece extends Object3D {
       [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
     ];
     const uvs = new Float32Array(sides.flat());
-    this._geometry.setAttribute('uv', new BufferAttribute(uvs, 2));
+    this._geometryCube.setAttribute('uv', new BufferAttribute(uvs, 2));
+    this._meshCube = new Mesh(this._geometryCube);
+    this.add(this._meshCube);
 
-    this._mesh = new Mesh(this._geometry);
-    this.add(this._mesh);
+    // cylinder piece
+    this._geometryCylinder = new CylinderBufferGeometry(0.6, 0.6, 1, 16);
+    this._meshCylinder = new Mesh(this._geometryCylinder);
+    this.add(this._meshCylinder);
 
     // interaction and matching values
     this._thetaStart = Math.abs(rotation);
@@ -98,9 +107,24 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
-  public Reset(): void {
+  public Reset(levelGeometryType: LevelGeometryType): void {
     this._removeTween?.stop();
     this._isRemoved = false;
+
+    this._pieceGeometryType = levelGeometryType;
+    this._meshCube.visible = false;
+    this._meshCylinder.visible = false;
+    switch (this._pieceGeometryType) {
+      case LevelGeometryType.Cube:
+        this._meshCube.visible = true;
+        this._mesh = this._meshCube;
+        break;
+
+      case LevelGeometryType.Cylinder:
+        this._meshCylinder.visible = true;
+        this._mesh = this._meshCylinder;
+        break;
+    }
 
     // reset power move
     if (this._powerMove) {
@@ -123,9 +147,18 @@ export class GamePiece extends Object3D {
   public UpdateMaterials(pieceMaterials: PieceMaterials): void {
     this._pieceMaterials = pieceMaterials.materials;
 
-    this._mesh.material = this._pieceMaterials.map((m) => {
-      return m.useBasic ? m.materialBasic : m.materialPhong;
-    });
+    switch (this._pieceGeometryType) {
+      case LevelGeometryType.Cube:
+        this._meshCube.material = this._pieceMaterials.map((m) => {
+          return m.useBasic ? m.materialBasic : m.materialPhong;
+        });
+        break;
+
+      case LevelGeometryType.Cylinder:
+        const target = this._pieceMaterials[this._matchKeySequence[0]];
+        this._meshCylinder.material = target.useBasic ? target.materialBasic : target.materialPhong;
+        break;
+    }
 
     // 1 is the default (or "front"), will change when piece is flipped
     this._matchKey = this._pieceMaterials[this._matchKeySequence[0]]?.matchKey;

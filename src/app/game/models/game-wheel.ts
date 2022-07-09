@@ -1,6 +1,7 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { MathUtils, Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
+import { LevelGeometryType } from '../level-geometry-type';
 import { WheelMaterial } from '../services/material/material-models';
 import { GamePiece } from './game-piece/game-piece';
 import { PiecePoints } from './piece-points';
@@ -62,7 +63,7 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
-  public Reset(): void {
+  public Reset(levelGeometryType: LevelGeometryType): void {
     this._levelChangeTween?.stop();
     this._powerMoveTween?.stop();
 
@@ -72,7 +73,7 @@ export class GameWheel extends Object3D {
 
     for (let i = 0; i < this.children.length; i++) {
       const gamePiece = this.children[i] as GamePiece;
-      gamePiece.Reset();
+      gamePiece.Reset(levelGeometryType);
     }
   }
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT, DIFFICULT_LEVEL_COLOR } from '../game-constants';
+import { LevelGeometryType } from '../level-geometry-type';
+import { LevelMaterialType } from '../level-material-type';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
@@ -27,6 +29,35 @@ export class GameEngineService {
     return this._playableTextureCountColor;
   }
 
+  private _levelMaterialType!: LevelMaterialType;
+  get LevelMaterialType(): LevelMaterialType {
+    return this._levelMaterialType;
+  }
+
+  private _levelGeometryType: LevelGeometryType = LevelGeometryType.Cube;
+  get LevelGeometryType(): LevelGeometryType {
+    return this._levelGeometryType;
+  }
+
+  public InitLevelTypes(): void {
+    // set level material type
+    this._levelMaterialType = Math.floor(Math.random() * 3) + 1;
+    if (!environment.production) {
+      console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
+    }
+
+    // default geometry type
+    this._levelGeometryType = LevelGeometryType.Cube;
+    // pick cylinder about 25% of the time
+    if (Math.floor(Math.random() * 3) % 3 === 0) {
+      this._levelGeometryType = LevelGeometryType.Cylinder;
+    }
+
+    if (!environment.production) {
+      console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
+    }
+  }
+
   public UpdatePlayableTextureCount(level: number): void {
     let target = DEFAULT_PLAYABLE_TEXTURE_COUNT;
     if (level <= 10) {
@@ -49,14 +80,25 @@ export class GameEngineService {
   }
 
   public PowerMoveSelection(): PowerMoveType {
-    const enumValues = Object.keys(PowerMoveType)
-      .map((po) => Number.parseInt(po))
-      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
-    const inx = Math.floor(Math.random() * enumValues.length - 1);
-    const moveType = enumValues[inx];
+    let moveType = PowerMoveType.None;
+    if (this.LevelGeometryType === LevelGeometryType.Cube) {
+      const enumValues = Object.keys(PowerMoveType)
+        .map((po) => Number.parseInt(po))
+        .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
+      const inx = Math.floor(Math.random() * enumValues.length - 1);
+      moveType = enumValues[inx];
+    } else {
+      const horizontalPowerMoves = [
+        PowerMoveType.None,
+        PowerMoveType.HorizontalLeft,
+        PowerMoveType.HorizontalMix,
+        PowerMoveType.HorizontalRight,
+      ];
+      moveType = horizontalPowerMoves[Math.floor(Math.random() * horizontalPowerMoves.length - 1)];
+    }
 
     if (!environment.production) {
-      console.info('    Power Move Type: ', inx, PowerMoveType[moveType]);
+      console.info('    Power Move Type: ', PowerMoveType[moveType]);
     }
 
     return moveType;

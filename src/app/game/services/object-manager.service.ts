@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
-import { Observable, Subscription } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
@@ -37,8 +37,6 @@ export class ObjectManagerService {
   private _perspectiveCamera!: PerspectiveCamera;
 
   private _starField: StarField;
-
-  private _powerMoveTextureSubscription!: Subscription;
 
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
@@ -105,14 +103,14 @@ export class ObjectManagerService {
 
   public UpdateLevelMaterials(): void {
     // update materials in the material manager service
-    this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount);
+    this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
 
     // update the properties and materials for the grid
     for (let i = 0; i < this._axle.length; i++) {
       const wheel = this._axle[i] as GameWheel;
 
       // reset properties for wheel and wheel's pieces
-      wheel.Reset();
+      wheel.Reset(this.gameEngine.LevelGeometryType);
 
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
@@ -149,13 +147,11 @@ export class ObjectManagerService {
   }
 
   public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType): void {
-    this._powerMoveTextureSubscription = this.materialManager
+    this.materialManager
       .GetPowerMovePieceTexture(moveType)
+      .pipe(take(1))
       .subscribe((textureData) => {
         gamePiece.PowerMoveAdd(moveType, textureData);
-        if (this._powerMoveTextureSubscription) {
-          this._powerMoveTextureSubscription.unsubscribe();
-        }
       });
   }
 
