@@ -12,7 +12,7 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { DialogNotifyService } from '../dialog-notify.service';
 import { DialogAnimationService } from '../dialog-animation.service';
 
-enum LevelElementType {
+enum LevelStatisticType {
   fastMatchBonusTotal = 1,
   fastestMatchMs,
   moveCount,
@@ -21,7 +21,7 @@ enum LevelElementType {
 }
 
 interface LevelStat {
-  statType: LevelElementType;
+  statType: LevelStatisticType;
   statValue: number;
 }
 
@@ -80,12 +80,12 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
     this.timerEvent.pipe(delay(550)).subscribe((stat: LevelStat) => {
       switch (stat.statType) {
-        case LevelElementType.fastMatchBonusTotal:
+        case LevelStatisticType.fastMatchBonusTotal:
           this.fastMatchBonusTotal = stat.statValue;
           this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
-        case LevelElementType.fastestMatchMs:
+        case LevelStatisticType.fastestMatchMs:
           if (this.fastMatchBonusTotal) {
             // only show if there was a bonus involved
             const roundedTime = Math.round((stat.statValue / 1000) * 100) / 100;
@@ -94,17 +94,17 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
           }
           break;
 
-        case LevelElementType.moveCount:
+        case LevelStatisticType.moveCount:
           this.moveCount = stat.statValue;
           this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
-        case LevelElementType.moveCountEarned:
+        case LevelStatisticType.moveCountEarned:
           this.moveCountEarned = stat.statValue;
           this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
 
-        case LevelElementType.pieceCount:
+        case LevelStatisticType.pieceCount:
           this.pieceCount = stat.statValue;
           this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
           break;
@@ -146,35 +146,35 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
     if (levelData.stats.fastMatchBonusTotal) {
       this._timerQueue.push({
-        statType: LevelElementType.fastMatchBonusTotal,
+        statType: LevelStatisticType.fastMatchBonusTotal,
         statValue: levelData.stats.fastMatchBonusTotal,
       });
     }
 
     if (levelData.stats.fastestMatchTime) {
       this._timerQueue.push({
-        statType: LevelElementType.fastestMatchMs,
+        statType: LevelStatisticType.fastestMatchMs,
         statValue: levelData.stats.fastestMatchTime,
       });
     }
 
     if (levelData.stats.moveCount) {
       this._timerQueue.push({
-        statType: LevelElementType.moveCount,
+        statType: LevelStatisticType.moveCount,
         statValue: levelData.stats.moveCount,
       });
     }
 
     if (levelData.stats.moveCountEarned) {
       this._timerQueue.push({
-        statType: LevelElementType.moveCountEarned,
+        statType: LevelStatisticType.moveCountEarned,
         statValue: levelData.stats.moveCountEarned,
       });
     }
 
     if (levelData.stats.pieceCount) {
       this._timerQueue.push({
-        statType: LevelElementType.pieceCount,
+        statType: LevelStatisticType.pieceCount,
         statValue: levelData.stats.pieceCount,
       });
     }
