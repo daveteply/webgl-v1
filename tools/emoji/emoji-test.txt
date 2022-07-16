@@ -100,7 +100,7 @@
 1F924                                                  ; fully-qualified     # 🤤 E3.0 drooling face
 1F634                                                  ; fully-qualified     # 😴 E1.0 sleeping face
 
-# subgroup: face-unwell
+# subgroup: face
 1F637                                                  ; fully-qualified     # 😷 E0.6 face with medical mask
 1F912                                                  ; fully-qualified     # 🤒 E1.0 face with thermometer
 1F915                                                  ; fully-qualified     # 🤕 E1.0 face with head-bandage
@@ -113,13 +113,9 @@
 1F635                                                  ; fully-qualified     # 😵 E0.6 face with crossed-out eyes
 1F635 200D 1F4AB                                       ; fully-qualified     # 😵‍💫 E13.1 face with spiral eyes
 1F92F                                                  ; fully-qualified     # 🤯 E5.0 exploding head
-
-# subgroup: face-hat
 1F920                                                  ; fully-qualified     # 🤠 E3.0 cowboy hat face
 1F973                                                  ; fully-qualified     # 🥳 E11.0 partying face
 1F978                                                  ; fully-qualified     # 🥸 E13.0 disguised face
-
-# subgroup: face-glasses
 1F60E                                                  ; fully-qualified     # 😎 E1.0 smiling face with sunglasses
 1F913                                                  ; fully-qualified     # 🤓 E1.0 nerd face
 1F9D0                                                  ; fully-qualified     # 🧐 E5.0 face with monocle
@@ -153,7 +149,7 @@
 1F62B                                                  ; fully-qualified     # 😫 E0.6 tired face
 1F971                                                  ; fully-qualified     # 🥱 E12.0 yawning face
 
-# subgroup: face-negative
+# subgroup: face-negative, costume
 1F624                                                  ; fully-qualified     # 😤 E0.6 face with steam from nose
 1F621                                                  ; fully-qualified     # 😡 E0.6 pouting face
 1F620                                                  ; fully-qualified     # 😠 E0.6 angry face
@@ -163,8 +159,6 @@
 1F480                                                  ; fully-qualified     # 💀 E0.6 skull
 2620 FE0F                                              ; fully-qualified     # ☠️ E1.0 skull and crossbones
 2620                                                   ; unqualified         # ☠ E1.0 skull and crossbones
-
-# subgroup: face-costume
 1F4A9                                                  ; fully-qualified     # 💩 E0.6 pile of poo
 1F921                                                  ; fully-qualified     # 🤡 E3.0 clown face
 1F479                                                  ; fully-qualified     # 👹 E0.6 ogre
@@ -174,7 +168,7 @@
 1F47E                                                  ; fully-qualified     # 👾 E0.6 alien monster
 1F916                                                  ; fully-qualified     # 🤖 E1.0 robot
 
-# subgroup: cat-face
+# subgroup: cat-face, monkey-face
 1F63A                                                  ; fully-qualified     # 😺 E0.6 grinning cat
 1F638                                                  ; fully-qualified     # 😸 E0.6 grinning cat with smiling eyes
 1F639                                                  ; fully-qualified     # 😹 E0.6 cat with tears of joy
@@ -184,8 +178,6 @@
 1F640                                                  ; fully-qualified     # 🙀 E0.6 weary cat
 1F63F                                                  ; fully-qualified     # 😿 E0.6 crying cat
 1F63E                                                  ; fully-qualified     # 😾 E0.6 pouting cat
-
-# subgroup: monkey-face
 1F648                                                  ; fully-qualified     # 🙈 E0.6 see-no-evil monkey
 1F649                                                  ; fully-qualified     # 🙉 E0.6 hear-no-evil monkey
 1F64A                                                  ; fully-qualified     # 🙊 E0.6 speak-no-evil monkey
@@ -526,7 +518,7 @@
 1F933 1F3FE                                            ; fully-qualified     # 🤳🏾 E3.0 selfie: medium-dark skin tone
 1F933 1F3FF                                            ; fully-qualified     # 🤳🏿 E3.0 selfie: dark skin tone
 
-# subgroup: body-parts
+# subgroup: body-parts, person-symbol
 1F4AA                                                  ; fully-qualified     # 💪 E0.6 flexed biceps
 1F4AA 1F3FB                                            ; fully-qualified     # 💪🏻 E1.0 flexed biceps: light skin tone
 1F4AA 1F3FC                                            ; fully-qualified     # 💪🏼 E1.0 flexed biceps: medium-light skin tone
@@ -576,6 +568,12 @@
 1F445                                                  ; fully-qualified     # 👅 E0.6 tongue
 1F444                                                  ; fully-qualified     # 👄 E0.6 mouth
 1FAE6                                                  ; fully-qualified     # 🫦 E14.0 biting lip
+1F5E3 FE0F                                             ; fully-qualified     # 🗣️ E0.7 speaking head
+1F5E3                                                  ; unqualified         # 🗣 E0.7 speaking head
+1F464                                                  ; fully-qualified     # 👤 E0.6 bust in silhouette
+1F465                                                  ; fully-qualified     # 👥 E1.0 busts in silhouette
+1FAC2                                                  ; fully-qualified     # 🫂 E13.0 people hugging
+1F463                                                  ; fully-qualified     # 👣 E0.6 footprints
 
 # subgroup: person
 1F476                                                  ; fully-qualified     # 👶 E0.6 baby
@@ -3254,14 +3252,6 @@
 1F469 200D 1F467 200D 1F466                            ; fully-qualified     # 👩‍👧‍👦 E4.0 family: woman, girl, boy
 1F469 200D 1F467 200D 1F467                            ; fully-qualified     # 👩‍👧‍👧 E4.0 family: woman, girl, girl
 
-# subgroup: person-symbol
-1F5E3 FE0F                                             ; fully-qualified     # 🗣️ E0.7 speaking head
-1F5E3                                                  ; unqualified         # 🗣 E0.7 speaking head
-1F464                                                  ; fully-qualified     # 👤 E0.6 bust in silhouette
-1F465                                                  ; fully-qualified     # 👥 E1.0 busts in silhouette
-1FAC2                                                  ; fully-qualified     # 🫂 E13.0 people hugging
-1F463                                                  ; fully-qualified     # 👣 E0.6 footprints
-
 # People & Body subtotal:		2986
 # People & Body subtotal:		506	w/o modifiers
 
@@ -3374,10 +3364,8 @@
 1F99A                                                  ; fully-qualified     # 🦚 E11.0 peacock
 1F99C                                                  ; fully-qualified     # 🦜 E11.0 parrot
 
-# subgroup: animal-amphibian
+# subgroup: animal-amphibian/reptile/marine
 1F438                                                  ; fully-qualified     # 🐸 E0.6 frog
-
-# subgroup: animal-reptile
 1F40A                                                  ; fully-qualified     # 🐊 E1.0 crocodile
 1F422                                                  ; fully-qualified     # 🐢 E0.6 turtle
 1F98E                                                  ; fully-qualified     # 🦎 E3.0 lizard
@@ -3386,8 +3374,6 @@
 1F409                                                  ; fully-qualified     # 🐉 E1.0 dragon
 1F995                                                  ; fully-qualified     # 🦕 E5.0 sauropod
 1F996                                                  ; fully-qualified     # 🦖 E5.0 T-Rex
-
-# subgroup: animal-marine
 1F433                                                  ; fully-qualified     # 🐳 E0.6 spouting whale
 1F40B                                                  ; fully-qualified     # 🐋 E1.0 whale
 1F42C                                                  ; fully-qualified     # 🐬 E0.6 dolphin
@@ -3533,7 +3519,7 @@
 1F9C2                                                  ; fully-qualified     # 🧂 E11.0 salt
 1F96B                                                  ; fully-qualified     # 🥫 E5.0 canned food
 
-# subgroup: food-asian
+# subgroup: food-asian/marine
 1F371                                                  ; fully-qualified     # 🍱 E0.6 bento box
 1F358                                                  ; fully-qualified     # 🍘 E0.6 rice cracker
 1F359                                                  ; fully-qualified     # 🍙 E0.6 rice ball
@@ -3551,8 +3537,6 @@
 1F95F                                                  ; fully-qualified     # 🥟 E5.0 dumpling
 1F960                                                  ; fully-qualified     # 🥠 E5.0 fortune cookie
 1F961                                                  ; fully-qualified     # 🥡 E5.0 takeout box
-
-# subgroup: food-marine
 1F980                                                  ; fully-qualified     # 🦀 E1.0 crab
 1F99E                                                  ; fully-qualified     # 🦞 E11.0 lobster
 1F990                                                  ; fully-qualified     # 🦐 E3.0 shrimp
@@ -3612,7 +3596,7 @@
 
 # group: Travel & Places
 
-# subgroup: place-map
+# subgroup: place-map/geographic
 1F30D                                                  ; fully-qualified     # 🌍 E0.7 globe showing Europe-Africa
 1F30E                                                  ; fully-qualified     # 🌎 E0.7 globe showing Americas
 1F30F                                                  ; fully-qualified     # 🌏 E0.6 globe showing Asia-Australia
@@ -3621,8 +3605,6 @@
 1F5FA                                                  ; unqualified         # 🗺 E0.7 world map
 1F5FE                                                  ; fully-qualified     # 🗾 E0.6 map of Japan
 1F9ED                                                  ; fully-qualified     # 🧭 E11.0 compass
-
-# subgroup: place-geographic
 1F3D4 FE0F                                             ; fully-qualified     # 🏔️ E0.7 snow-capped mountain
 1F3D4                                                  ; unqualified         # 🏔 E0.7 snow-capped mountain
 26F0 FE0F                                              ; fully-qualified     # ⛰️ E0.7 mountain
@@ -3674,7 +3656,7 @@
 1F5FC                                                  ; fully-qualified     # 🗼 E0.6 Tokyo tower
 1F5FD                                                  ; fully-qualified     # 🗽 E0.6 Statue of Liberty
 
-# subgroup: place-religious
+# subgroup: place-religious, other
 26EA                                                   ; fully-qualified     # ⛪ E0.6 church
 1F54C                                                  ; fully-qualified     # 🕌 E1.0 mosque
 1F6D5                                                  ; fully-qualified     # 🛕 E12.0 hindu temple
@@ -3682,8 +3664,6 @@
 26E9 FE0F                                              ; fully-qualified     # ⛩️ E0.7 shinto shrine
 26E9                                                   ; unqualified         # ⛩ E0.7 shinto shrine
 1F54B                                                  ; fully-qualified     # 🕋 E1.0 kaaba
-
-# subgroup: place-other
 26F2                                                   ; fully-qualified     # ⛲ E0.6 fountain
 26FA                                                   ; fully-qualified     # ⛺ E0.6 tent
 1F301                                                  ; fully-qualified     # 🌁 E0.6 foggy
@@ -3792,13 +3772,9 @@
 1F6F0                                                  ; unqualified         # 🛰 E0.7 satellite
 1F680                                                  ; fully-qualified     # 🚀 E0.6 rocket
 1F6F8                                                  ; fully-qualified     # 🛸 E5.0 flying saucer
-
-# subgroup: hotel
 1F6CE FE0F                                             ; fully-qualified     # 🛎️ E0.7 bellhop bell
 1F6CE                                                  ; unqualified         # 🛎 E0.7 bellhop bell
 1F9F3                                                  ; fully-qualified     # 🧳 E11.0 luggage
-
-# subgroup: time
 231B                                                   ; fully-qualified     # ⌛ E0.6 hourglass done
 23F3                                                   ; fully-qualified     # ⏳ E0.6 hourglass not done
 231A                                                   ; fully-qualified     # ⌚ E0.6 watch
@@ -3939,8 +3915,6 @@
 1F947                                                  ; fully-qualified     # 🥇 E3.0 1st place medal
 1F948                                                  ; fully-qualified     # 🥈 E3.0 2nd place medal
 1F949                                                  ; fully-qualified     # 🥉 E3.0 3rd place medal
-
-# subgroup: sport
 26BD                                                   ; fully-qualified     # ⚽ E0.6 soccer ball
 26BE                                                   ; fully-qualified     # ⚾ E0.6 baseball
 1F94E                                                  ; fully-qualified     # 🥎 E11.0 softball
@@ -4002,8 +3976,6 @@
 1F0CF                                                  ; fully-qualified     # 🃏 E0.6 joker
 1F004                                                  ; fully-qualified     # 🀄 E0.6 mahjong red dragon
 1F3B4                                                  ; fully-qualified     # 🎴 E0.6 flower playing cards
-
-# subgroup: arts & crafts
 1F3AD                                                  ; fully-qualified     # 🎭 E0.6 performing arts
 1F5BC FE0F                                             ; fully-qualified     # 🖼️ E0.7 framed picture
 1F5BC                                                  ; unqualified         # 🖼 E0.7 framed picture
@@ -4078,8 +4050,6 @@
 1F4EF                                                  ; fully-qualified     # 📯 E1.0 postal horn
 1F514                                                  ; fully-qualified     # 🔔 E0.6 bell
 1F515                                                  ; fully-qualified     # 🔕 E1.0 bell with slash
-
-# subgroup: music
 1F3BC                                                  ; fully-qualified     # 🎼 E0.6 musical score
 1F3B5                                                  ; fully-qualified     # 🎵 E0.6 musical note
 1F3B6                                                  ; fully-qualified     # 🎶 E0.6 musical notes
@@ -4092,8 +4062,6 @@
 1F3A4                                                  ; fully-qualified     # 🎤 E0.6 microphone
 1F3A7                                                  ; fully-qualified     # 🎧 E0.6 headphone
 1F4FB                                                  ; fully-qualified     # 📻 E0.6 radio
-
-# subgroup: musical-instrument
 1F3B7                                                  ; fully-qualified     # 🎷 E0.6 saxophone
 1FA97                                                  ; fully-qualified     # 🪗 E13.0 accordion
 1F3B8                                                  ; fully-qualified     # 🎸 E0.6 guitar
@@ -4104,7 +4072,7 @@
 1F941                                                  ; fully-qualified     # 🥁 E3.0 drum
 1FA98                                                  ; fully-qualified     # 🪘 E13.0 long drum
 
-# subgroup: phone
+# subgroup: tech
 1F4F1                                                  ; fully-qualified     # 📱 E0.6 mobile phone
 1F4F2                                                  ; fully-qualified     # 📲 E0.6 mobile phone with arrow
 260E FE0F                                              ; fully-qualified     # ☎️ E0.6 telephone
@@ -4112,8 +4080,6 @@
 1F4DE                                                  ; fully-qualified     # 📞 E0.6 telephone receiver
 1F4DF                                                  ; fully-qualified     # 📟 E0.6 pager
 1F4E0                                                  ; fully-qualified     # 📠 E0.6 fax machine
-
-# subgroup: computer
 1F50B                                                  ; fully-qualified     # 🔋 E0.6 battery
 1FAAB                                                  ; fully-qualified     # 🪫 E14.0 low battery
 1F50C                                                  ; fully-qualified     # 🔌 E0.6 electric plug
@@ -4155,7 +4121,7 @@
 1F3EE                                                  ; fully-qualified     # 🏮 E0.6 red paper lantern
 1FA94                                                  ; fully-qualified     # 🪔 E12.0 diya lamp
 
-# subgroup: book-paper
+# subgroup: book-paper, money
 1F4D4                                                  ; fully-qualified     # 📔 E0.6 notebook with decorative cover
 1F4D5                                                  ; fully-qualified     # 📕 E0.6 closed book
 1F4D6                                                  ; fully-qualified     # 📖 E0.6 open book
@@ -4175,8 +4141,6 @@
 1F516                                                  ; fully-qualified     # 🔖 E0.6 bookmark
 1F3F7 FE0F                                             ; fully-qualified     # 🏷️ E0.7 label
 1F3F7                                                  ; unqualified         # 🏷 E0.7 label
-
-# subgroup: money
 1F4B0                                                  ; fully-qualified     # 💰 E0.6 money bag
 1FA99                                                  ; fully-qualified     # 🪙 E13.0 coin
 1F4B4                                                  ; fully-qualified     # 💴 E0.6 yen banknote
@@ -4205,7 +4169,7 @@
 1F5F3 FE0F                                             ; fully-qualified     # 🗳️ E0.7 ballot box with ballot
 1F5F3                                                  ; unqualified         # 🗳 E0.7 ballot box with ballot
 
-# subgroup: writing
+# subgroup: writing, office
 270F FE0F                                              ; fully-qualified     # ✏️ E0.6 pencil
 270F                                                   ; unqualified         # ✏ E0.6 pencil
 2712 FE0F                                              ; fully-qualified     # ✒️ E0.6 black nib
@@ -4219,8 +4183,6 @@
 1F58D FE0F                                             ; fully-qualified     # 🖍️ E0.7 crayon
 1F58D                                                  ; unqualified         # 🖍 E0.7 crayon
 1F4DD                                                  ; fully-qualified     # 📝 E0.6 memo
-
-# subgroup: office
 1F4BC                                                  ; fully-qualified     # 💼 E0.6 briefcase
 1F4C1                                                  ; fully-qualified     # 📁 E0.6 file folder
 1F4C2                                                  ; fully-qualified     # 📂 E0.6 open file folder
@@ -4253,7 +4215,7 @@
 1F5D1 FE0F                                             ; fully-qualified     # 🗑️ E0.7 wastebasket
 1F5D1                                                  ; unqualified         # 🗑 E0.7 wastebasket
 
-# subgroup: lock
+# subgroup: lock, tool
 1F512                                                  ; fully-qualified     # 🔒 E0.6 locked
 1F513                                                  ; fully-qualified     # 🔓 E0.6 unlocked
 1F50F                                                  ; fully-qualified     # 🔏 E0.6 locked with pen
@@ -4261,8 +4223,6 @@
 1F511                                                  ; fully-qualified     # 🔑 E0.6 key
 1F5DD FE0F                                             ; fully-qualified     # 🗝️ E0.7 old key
 1F5DD                                                  ; unqualified         # 🗝 E0.7 old key
-
-# subgroup: tool
 1F528                                                  ; fully-qualified     # 🔨 E0.6 hammer
 1FA93                                                  ; fully-qualified     # 🪓 E12.0 axe
 26CF FE0F                                              ; fully-qualified     # ⛏️ E0.7 pick
@@ -4299,7 +4259,7 @@
 1F9F2                                                  ; fully-qualified     # 🧲 E11.0 magnet
 1FA9C                                                  ; fully-qualified     # 🪜 E13.0 ladder
 
-# subgroup: science
+# subgroup: science, medical
 2697 FE0F                                              ; fully-qualified     # ⚗️ E1.0 alembic
 2697                                                   ; unqualified         # ⚗ E1.0 alembic
 1F9EA                                                  ; fully-qualified     # 🧪 E11.0 test tube
@@ -4308,8 +4268,6 @@
 1F52C                                                  ; fully-qualified     # 🔬 E1.0 microscope
 1F52D                                                  ; fully-qualified     # 🔭 E1.0 telescope
 1F4E1                                                  ; fully-qualified     # 📡 E0.6 satellite antenna
-
-# subgroup: medical
 1F489                                                  ; fully-qualified     # 💉 E0.6 syringe
 1FA78                                                  ; fully-qualified     # 🩸 E12.0 drop of blood
 1F48A                                                  ; fully-qualified     # 💊 E0.6 pill
@@ -4318,7 +4276,7 @@
 1FA7A                                                  ; fully-qualified     # 🩺 E12.0 stethoscope
 1FA7B                                                  ; fully-qualified     # 🩻 E14.0 x-ray
 
-# subgroup: household
+# subgroup: household, other
 1F6AA                                                  ; fully-qualified     # 🚪 E0.6 door
 1F6D7                                                  ; fully-qualified     # 🛗 E13.0 elevator
 1FA9E                                                  ; fully-qualified     # 🪞 E13.0 mirror
@@ -4346,8 +4304,6 @@
 1F9FD                                                  ; fully-qualified     # 🧽 E11.0 sponge
 1F9EF                                                  ; fully-qualified     # 🧯 E11.0 fire extinguisher
 1F6D2                                                  ; fully-qualified     # 🛒 E3.0 shopping cart
-
-# subgroup: other-object
 1F6AC                                                  ; fully-qualified     # 🚬 E0.6 cigarette
 26B0 FE0F                                              ; fully-qualified     # ⚰️ E1.0 coffin
 26B0                                                   ; unqualified         # ⚰ E1.0 coffin
@@ -4363,7 +4319,7 @@
 
 # group: Symbols
 
-# subgroup: transport-sign
+# subgroup: Symbols
 1F3E7                                                  ; fully-qualified     # 🏧 E0.6 ATM sign
 1F6AE                                                  ; fully-qualified     # 🚮 E1.0 litter in bin sign
 1F6B0                                                  ; fully-qualified     # 🚰 E1.0 potable water
@@ -4377,8 +4333,6 @@
 1F6C3                                                  ; fully-qualified     # 🛃 E1.0 customs
 1F6C4                                                  ; fully-qualified     # 🛄 E1.0 baggage claim
 1F6C5                                                  ; fully-qualified     # 🛅 E1.0 left luggage
-
-# subgroup: warning
 26A0 FE0F                                              ; fully-qualified     # ⚠️ E0.6 warning
 26A0                                                   ; unqualified         # ⚠ E0.6 warning
 1F6B8                                                  ; fully-qualified     # 🚸 E1.0 children crossing
@@ -4395,8 +4349,6 @@
 2622                                                   ; unqualified         # ☢ E1.0 radioactive
 2623 FE0F                                              ; fully-qualified     # ☣️ E1.0 biohazard
 2623                                                   ; unqualified         # ☣ E1.0 biohazard
-
-# subgroup: arrow
 2B06 FE0F                                              ; fully-qualified     # ⬆️ E0.6 up arrow
 2B06                                                   ; unqualified         # ⬆ E0.6 up arrow
 2197 FE0F                                              ; fully-qualified     # ↗️ E0.6 up-right arrow
@@ -4432,8 +4384,6 @@
 1F51B                                                  ; fully-qualified     # 🔛 E0.6 ON! arrow
 1F51C                                                  ; fully-qualified     # 🔜 E0.6 SOON arrow
 1F51D                                                  ; fully-qualified     # 🔝 E0.6 TOP arrow
-
-# subgroup: religion
 1F6D0                                                  ; fully-qualified     # 🛐 E1.0 place of worship
 269B FE0F                                              ; fully-qualified     # ⚛️ E1.0 atom symbol
 269B                                                   ; unqualified         # ⚛ E1.0 atom symbol
@@ -4455,8 +4405,6 @@
 262E                                                   ; unqualified         # ☮ E1.0 peace symbol
 1F54E                                                  ; fully-qualified     # 🕎 E1.0 menorah
 1F52F                                                  ; fully-qualified     # 🔯 E0.6 dotted six-pointed star
-
-# subgroup: zodiac
 2648                                                   ; fully-qualified     # ♈ E0.6 Aries
 2649                                                   ; fully-qualified     # ♉ E0.6 Taurus
 264A                                                   ; fully-qualified     # ♊ E0.6 Gemini
@@ -4470,8 +4418,6 @@
 2652                                                   ; fully-qualified     # ♒ E0.6 Aquarius
 2653                                                   ; fully-qualified     # ♓ E0.6 Pisces
 26CE                                                   ; fully-qualified     # ⛎ E0.6 Ophiuchus
-
-# subgroup: av-symbol
 1F500                                                  ; fully-qualified     # 🔀 E1.0 shuffle tracks button
 1F501                                                  ; fully-qualified     # 🔁 E1.0 repeat button
 1F502                                                  ; fully-qualified     # 🔂 E1.0 repeat single button
@@ -4505,16 +4451,12 @@
 1F4F6                                                  ; fully-qualified     # 📶 E0.6 antenna bars
 1F4F3                                                  ; fully-qualified     # 📳 E0.6 vibration mode
 1F4F4                                                  ; fully-qualified     # 📴 E0.6 mobile phone off
-
-# subgroup: gender
 2640 FE0F                                              ; fully-qualified     # ♀️ E4.0 female sign
 2640                                                   ; unqualified         # ♀ E4.0 female sign
 2642 FE0F                                              ; fully-qualified     # ♂️ E4.0 male sign
 2642                                                   ; unqualified         # ♂ E4.0 male sign
 26A7 FE0F                                              ; fully-qualified     # ⚧️ E13.0 transgender symbol
 26A7                                                   ; unqualified         # ⚧ E13.0 transgender symbol
-
-# subgroup: math
 2716 FE0F                                              ; fully-qualified     # ✖️ E0.6 multiply
 2716                                                   ; unqualified         # ✖ E0.6 multiply
 2795                                                   ; fully-qualified     # ➕ E0.6 plus
@@ -4523,8 +4465,6 @@
 1F7F0                                                  ; fully-qualified     # 🟰 E14.0 heavy equals sign
 267E FE0F                                              ; fully-qualified     # ♾️ E11.0 infinity
 267E                                                   ; unqualified         # ♾ E11.0 infinity
-
-# subgroup: punctuation
 203C FE0F                                              ; fully-qualified     # ‼️ E0.6 double exclamation mark
 203C                                                   ; unqualified         # ‼ E0.6 double exclamation mark
 2049 FE0F                                              ; fully-qualified     # ⁉️ E0.6 exclamation question mark
@@ -4535,12 +4475,8 @@
 2757                                                   ; fully-qualified     # ❗ E0.6 red exclamation mark
 3030 FE0F                                              ; fully-qualified     # 〰️ E0.6 wavy dash
 3030                                                   ; unqualified         # 〰 E0.6 wavy dash
-
-# subgroup: currency
 1F4B1                                                  ; fully-qualified     # 💱 E0.6 currency exchange
 1F4B2                                                  ; fully-qualified     # 💲 E0.6 heavy dollar sign
-
-# subgroup: other-symbol
 2695 FE0F                                              ; fully-qualified     # ⚕️ E4.0 medical symbol
 2695                                                   ; unqualified         # ⚕ E4.0 medical symbol
 267B FE0F                                              ; fully-qualified     # ♻️ E0.6 recycling symbol
@@ -4574,8 +4510,6 @@
 00AE                                                   ; unqualified         # ® E0.6 registered
 2122 FE0F                                              ; fully-qualified     # ™️ E0.6 trade mark
 2122                                                   ; unqualified         # ™ E0.6 trade mark
-
-# subgroup: keycap
 0023 FE0F 20E3                                         ; fully-qualified     # #️⃣ E0.6 keycap: #
 0023 20E3                                              ; unqualified         # #⃣ E0.6 keycap: #
 002A FE0F 20E3                                         ; fully-qualified     # *️⃣ E2.0 keycap: *
@@ -4601,8 +4535,6 @@
 0039 FE0F 20E3                                         ; fully-qualified     # 9️⃣ E0.6 keycap: 9
 0039 20E3                                              ; unqualified         # 9⃣ E0.6 keycap: 9
 1F51F                                                  ; fully-qualified     # 🔟 E0.6 keycap: 10
-
-# subgroup: alphanum
 1F520                                                  ; fully-qualified     # 🔠 E0.6 input latin uppercase
 1F521                                                  ; fully-qualified     # 🔡 E0.6 input latin lowercase
 1F522                                                  ; fully-qualified     # 🔢 E0.6 input numbers
@@ -4652,8 +4584,6 @@
 3299                                                   ; unqualified         # ㊙ E0.6 Japanese “secret” button
 1F23A                                                  ; fully-qualified     # 🈺 E0.6 Japanese “open for business” button
 1F235                                                  ; fully-qualified     # 🈵 E0.6 Japanese “no vacancy” button
-
-# subgroup: geometric
 1F534                                                  ; fully-qualified     # 🔴 E0.6 red circle
 1F7E0                                                  ; fully-qualified     # 🟠 E12.0 orange circle
 1F7E1                                                  ; fully-qualified     # 🟡 E12.0 yellow circle
