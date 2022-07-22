@@ -86,3 +86,16 @@
     display: none;
   }
 }
+
+// safari overrides to show app within safe area
+@supports (padding: max(0px)) {
+  .game-layout {
+    box-sizing: border-box;
+    padding-top: max(0.5em, env(safe-area-inset-top));
+    padding-bottom: max(0.5em, env(safe-area-inset-bottom));
+  }
+
+  .copyright {
+    bottom: max(0.5em, env(safe-area-inset-bottom));
+  }
+}
