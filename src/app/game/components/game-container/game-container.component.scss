@@ -17,7 +17,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.1em;
     font-size: x-large;
     @include fader;
     &.show {
@@ -28,8 +27,9 @@
       align-items: center;
     }
     .game-logo {
-      height: 3em;
+      height: 100%;
       width: 5em;
+      margin-left: 0.5em;
       background-image: url("^assets/rikkle-final.webp");
       background-position: center center;
       background-repeat: no-repeat;
