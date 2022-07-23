@@ -20,6 +20,7 @@
   }
 
   .progress {
+    margin-top: 0.5em;
     opacity: 1;
     transition: opacity 500ms;
     &.fade-out {
