@@ -39,6 +39,8 @@ export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x00
 export const DARK_RAINBOW_COLOR_ARRAY = [0x510000, 0x401a00, 0x353600, 0x002f01, 0x000a3e];
 export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00d4cf, 0x8000ff, 0xff0080];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
+export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
+export const EMOJI_SKIN_TONE_COUNT = 6;
 
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';

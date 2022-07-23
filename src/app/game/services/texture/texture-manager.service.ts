@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
-import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
+import { CANVAS_TEXTURE_SCALE, EMOJI_GROUP_PEOPLE_BODY, EMOJI_SKIN_TONE_COUNT } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
@@ -236,8 +236,26 @@ export class TextureManagerService {
     // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
     const subGroups = shuffledSubGroups.slice(0, 3);
     this.store.UpdateEmojiSubGroups(subGroups.map((s) => s.id));
+
+    // create long list of codes
+    let shuffledSequences = [];
     const emojiSequences = subGroups.flatMap((s) => s.codes);
-    const shuffledSequences = shuffleArray(emojiSequences);
+
+    // for People & Body, shuffle may result in too many of the same
+    //  emoji; just with different tones (challenging to differentiate
+    //  on a phone)
+    if (emojiGroup.id === EMOJI_GROUP_PEOPLE_BODY) {
+      const maxStep = Math.floor(emojiSequences.length / playableTextureCount);
+      let step = MathUtils.randInt(EMOJI_SKIN_TONE_COUNT, maxStep);
+      if (step < EMOJI_SKIN_TONE_COUNT) {
+        step = EMOJI_SKIN_TONE_COUNT;
+      }
+      for (let i = 0; i < playableTextureCount; i++) {
+        shuffledSequences.push(emojiSequences[i * step]);
+      }
+    } else {
+      shuffledSequences = shuffleArray(emojiSequences);
+    }
 
     return shuffledSequences
       .map((s) => {
