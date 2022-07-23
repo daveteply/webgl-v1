@@ -21,8 +21,8 @@ export class HighScoreManagerService {
           scores.push({ occurred: new Date(), score: gameOverScore });
           // sort by highest score
           scores.sort((a, b) => (a.score > b.score ? -1 : 1));
-          // store only 3 highest scores
-          this.storeScores(scores.slice(0, 3));
+          // store only 5 highest scores
+          this.storeScores(scores.slice(0, 5));
         } else {
           const scores: HighScore[] = [];
           scores.push({ occurred: new Date(), score: gameOverScore });
