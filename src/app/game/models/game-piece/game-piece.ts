@@ -25,8 +25,6 @@ export class GamePiece extends Object3D {
 
   private _mesh!: Mesh;
 
-  private _originalRotationY!: number;
-
   private _pieceMaterials!: PieceSideMaterial[];
   private _pieceGeometryType!: LevelGeometryType;
 
@@ -75,8 +73,6 @@ export class GamePiece extends Object3D {
 
   constructor(x: number, y: number, z: number, rotation: number) {
     super();
-
-    this._originalRotationY = rotation;
 
     // position shell in grid
     this.position.set(x, y, z);
@@ -157,7 +153,6 @@ export class GamePiece extends Object3D {
     this._mesh.rotation.y = 0;
     this._mesh.rotation.z = 0;
 
-    this._thetaStart = Math.abs(this._originalRotationY);
     this._thetaOffset = this._thetaStart;
 
     this._matchKeySequence = [1, 2, 0, 3];
