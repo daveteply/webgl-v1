@@ -15,6 +15,7 @@ import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
 import { LevelGeometryType } from '../../level-geometry-type';
+import { GamePieceRemovalStyle } from './game-piece-removal-style';
 
 export class GamePiece extends Object3D {
   private _geometryCube: BoxBufferGeometry;
@@ -152,6 +153,7 @@ export class GamePiece extends Object3D {
     this._mesh.rotation.x = 0;
     this._mesh.rotation.y = 0;
     this._mesh.rotation.z = 0;
+    this._mesh.position.set(0, 0, 0);
 
     this._thetaOffset = this._thetaStart;
 
@@ -252,7 +254,7 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle): void {
     // update removed state
     this._isRemoved = true;
 
@@ -277,6 +279,9 @@ export class GamePiece extends Object3D {
         this._mesh.rotation.y = delta.y;
         this._mesh.rotation.z = delta.z;
         this._mesh.scale.set(delta.o, delta.o, delta.o);
+        if (style === GamePieceRemovalStyle.FadeTranslate) {
+          this._mesh.translateX(0.1);
+        }
         this._pieceMaterials.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
