@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { DECIMAL_COMPARISON_TOLERANCE, DEFAULT_PLAYABLE_TEXTURE_COUNT, DIFFICULT_LEVEL_COLOR } from '../game-constants';
+import {
+  DECIMAL_COMPARISON_TOLERANCE,
+  DEFAULT_PLAYABLE_TEXTURE_COUNT,
+  DIFFICULT_LEVEL_COLOR,
+  LEVEL_START_OTHER_GEOMETRIES,
+} from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
 import { GamePiece } from '../models/game-piece/game-piece';
@@ -39,7 +44,7 @@ export class GameEngineService {
     return this._levelGeometryType;
   }
 
-  public InitLevelTypes(): void {
+  public InitLevelTypes(level: number): void {
     // set level material type
     this._levelMaterialType = Math.floor(Math.random() * 3) + 1;
     if (!environment.production) {
@@ -48,7 +53,7 @@ export class GameEngineService {
 
     // default geometry type
     this._levelGeometryType = LevelGeometryType.Cube;
-    if (Math.floor(Math.random() * 2) % 2 === 0) {
+    if (level > LEVEL_START_OTHER_GEOMETRIES && Math.floor(Math.random() * 2) % 2 === 0) {
       this._levelGeometryType = LevelGeometryType.Cylinder;
     }
 

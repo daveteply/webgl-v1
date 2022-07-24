@@ -223,7 +223,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.updateDifficultyColor();
 
     // decide level materials and geometries
-    this.gameEngine.InitLevelTypes();
+    this.gameEngine.InitLevelTypes(this.scoringManager.Level);
 
     // select next level material type
     this.textureManager.InitLevelTextures(
