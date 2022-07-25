@@ -1,7 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
-import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Group, MathUtils, Object3D, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
@@ -35,6 +36,8 @@ export class ObjectManagerService {
 
   private _scene!: Scene;
   private _perspectiveCamera!: PerspectiveCamera;
+
+  private _outlinePass!: OutlinePass;
 
   private _starField: StarField;
 
@@ -78,6 +81,14 @@ export class ObjectManagerService {
 
     // initiate font download
     this.textManager.InitScene(this._scene);
+  }
+
+  public SetOutlinePass(outlinePass: OutlinePass): void {
+    this._outlinePass = outlinePass;
+  }
+
+  public UpdateOutlinePassObjects(selectedObjects: Object3D[]): void {
+    this._outlinePass.selectedObjects = selectedObjects;
   }
 
   // called once in the beginning of the application load

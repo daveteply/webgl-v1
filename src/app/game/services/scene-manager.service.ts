@@ -1,15 +1,25 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
+import { Color, PerspectiveCamera, PointLight, Scene, Vector2, WebGLRenderer } from 'three';
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
+
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
 @Injectable()
 export class SceneManagerService implements OnDestroy {
+  private _previousFrameRenderTime!: number;
+
   private _renderer!: WebGLRenderer;
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
+
+  private _composer!: EffectComposer;
+  private _renderPass!: RenderPass;
+  private _outlinePass!: OutlinePass;
 
   private _pointLight!: PointLight;
 
@@ -51,13 +61,28 @@ export class SceneManagerService implements OnDestroy {
     this._renderer = new WebGLRenderer({ canvas, antialias: true });
     this._renderer.setSize(width, height, false);
 
+    // composer
+    this._composer = new EffectComposer(this._renderer);
+    this._renderPass = new RenderPass(this._scene, this._camera);
+    this._composer.addPass(this._renderPass);
+
+    // outline pass
+    this._outlinePass = new OutlinePass(new Vector2(width, height), this._scene, this._camera);
+    this._outlinePass.edgeGlow = 1;
+    this._outlinePass.edgeThickness = 20;
+    this._outlinePass.edgeStrength = 60;
+    this._outlinePass.visibleEdgeColor = new Color('blue');
+    this._outlinePass.renderToScreen = true;
+    this._composer.addPass(this._outlinePass);
+    this.objectManager.SetOutlinePass(this._outlinePass);
+
     // DEBUG
     // setInterval(() => {
     //   console.log(this._renderer?.info);
     // }, 5000);
 
     // start rendering frames
-    this.animate();
+    this.animate(1);
   }
 
   public UpdateSize(pixelRatio: number): void {
@@ -65,7 +90,7 @@ export class SceneManagerService implements OnDestroy {
     const width = (canvas.clientWidth * pixelRatio) | 0;
     const height = (canvas.clientHeight * pixelRatio) | 0;
     if (canvas.width !== width || canvas.height !== height) {
-      this._renderer.setSize(width, height, false);
+      this._composer.setSize(width, height);
       this._camera.aspect = canvas.clientWidth / canvas.clientHeight;
       this._camera.updateProjectionMatrix();
     }
@@ -73,15 +98,19 @@ export class SceneManagerService implements OnDestroy {
     this.interactionManager.CanvasRect = canvas.getBoundingClientRect();
   }
 
-  private animate(): void {
+  private animate(now: number): void {
+    now *= 0.001; // convert to seconds
+    const deltaTime = now - this._previousFrameRenderTime;
+    this._previousFrameRenderTime = now;
+
     this.ngZone.runOutsideAngular(() => {
       TWEEN.update();
       this.objectManager.UpdateStarField();
-      this._renderer?.render(this._scene, this._camera);
+      this._composer.render(deltaTime);
     });
 
-    requestAnimationFrame(() => {
-      this.animate();
+    requestAnimationFrame((now) => {
+      this.animate(now);
     });
   }
 }

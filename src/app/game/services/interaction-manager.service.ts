@@ -86,6 +86,7 @@ export class InteractionManagerService {
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
+            this.objectManager.UpdateOutlinePassObjects([]);
             this.LockBoard(false);
 
             this.objectManager.LevelCompleted.next(false);
@@ -112,6 +113,7 @@ export class InteractionManagerService {
           // unselect
           this.effectsManager.AnimateLock(this.objectManager.Axle, false);
           this.effectsManager.AnimateSelected(this._matchingPieces, false);
+          this.objectManager.UpdateOutlinePassObjects([]);
         }
       } else {
         this.LockBoard(false);
@@ -199,6 +201,7 @@ export class InteractionManagerService {
         // launch animation sequence
         this.effectsManager.AnimateSelected(this._matchingPieces, true);
         this.effectsManager.AnimateLock(this.objectManager.Axle, true);
+        this.objectManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
       }
     } else {
       // unlock board if no pieces selected

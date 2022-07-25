@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
-import { MathUtils, PerspectiveCamera } from 'three';
+import { MathUtils, Object3D, PerspectiveCamera } from 'three';
 import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
@@ -14,6 +14,11 @@ export class EffectsManagerService {
   private _selectionTweens: any[] = [];
   private _levelChangeCameraTween1: any;
   private _levelChangeCameraTween2: any;
+
+  private _selectedPieces: Object3D[] = [];
+  get SelectedPieces(): Object3D[] {
+    return this._selectedPieces;
+  }
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
@@ -124,6 +129,9 @@ export class EffectsManagerService {
       this._selectionTweens.forEach((t) => t.stop());
       this._selectionTweens = [];
 
+      // reset selected
+      this._selectedPieces = [];
+
       // set direction
       const pieces = [...selectedPieces];
       if (!select) {
@@ -143,14 +151,15 @@ export class EffectsManagerService {
       }
       this._selectionTweens[0].delay(250);
 
-      // audio
+      // audio and selection
       this.audioManager.StartProgression();
-      this._selectionTweens.forEach((tween) => {
+      this._selectionTweens.forEach((tween, inx) => {
         tween.onStart(() => {
           if (isMinMatch) {
             this.scoringManager.UpdateLevelProgress();
+            this._selectedPieces.push(pieces[inx]);
           }
-          this.audioManager.PlayAudio(select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL, select ? true : false);
+          this.audioManager.PlayAudio(select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL, select);
         });
       });
 
