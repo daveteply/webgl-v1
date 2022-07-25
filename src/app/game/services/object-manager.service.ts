@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
-import { Group, MathUtils, Object3D, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Color, Group, MathUtils, Object3D, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { GameWheel } from '../models/game-wheel';
@@ -13,6 +13,7 @@ import {
   GRID_RADIUS,
   GRID_VERTICAL_OFFSET,
   WHEEL_START_POSITION,
+  RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
 import { PowerMoveType } from '../models/power-move-type';
 import { StarField } from '../models/star-field/star-field';
@@ -113,6 +114,11 @@ export class ObjectManagerService {
   }
 
   public UpdateLevelMaterials(): void {
+    // update highlight color
+    this._outlinePass.visibleEdgeColor = new Color(
+      RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
+    );
+
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
 

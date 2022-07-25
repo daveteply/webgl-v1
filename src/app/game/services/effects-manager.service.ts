@@ -31,8 +31,9 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     start: boolean
   ): void {
-    if (!camera) {
-      return;
+    // clear selected for highlighting
+    if (start) {
+      this._selectedPieces = [];
     }
 
     // lock board (interact manager)
@@ -129,9 +130,6 @@ export class EffectsManagerService {
       this._selectionTweens.forEach((t) => t.stop());
       this._selectionTweens = [];
 
-      // reset selected
-      this._selectedPieces = [];
-
       // set direction
       const pieces = [...selectedPieces];
       if (!select) {
@@ -155,9 +153,15 @@ export class EffectsManagerService {
       this.audioManager.StartProgression();
       this._selectionTweens.forEach((tween, inx) => {
         tween.onStart(() => {
+          // update selected for highlight
+          if (select) {
+            this._selectedPieces.push(pieces[inx]);
+          } else {
+            this._selectedPieces.pop();
+          }
+
           if (isMinMatch) {
             this.scoringManager.UpdateLevelProgress();
-            this._selectedPieces.push(pieces[inx]);
           }
           this.audioManager.PlayAudio(select ? AudioType.PIECE_SELECT : AudioType.MATCH_FAIL, select);
         });
@@ -168,6 +172,9 @@ export class EffectsManagerService {
 
       // complete
       this._selectionTweens[this._selectionTweens.length - 1].onComplete(() => {
+        if (!select) {
+          this._selectedPieces = [];
+        }
         this.SelectionAnimationComplete.next(select);
       });
     }

@@ -113,7 +113,6 @@ export class InteractionManagerService {
           // unselect
           this.effectsManager.AnimateLock(this.objectManager.Axle, false);
           this.effectsManager.AnimateSelected(this._matchingPieces, false);
-          this.objectManager.UpdateOutlinePassObjects([]);
         }
       } else {
         this.LockBoard(false);
