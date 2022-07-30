@@ -111,11 +111,14 @@ export class MaterialManagerService {
         this.store.UpdateLevelColors(selectedColors);
 
         selectedColors.forEach((c, inx) => {
+          const color = new Color(c);
+          color.convertLinearToSRGB();
+
           materials.push({
             matchKey: matchKey++,
             bumpTexture: this.textureManager.Textures[inx],
             colorStr: c,
-            color: new Color(c),
+            color,
           });
         });
         break;

@@ -81,6 +81,7 @@ export class StarField extends Object3D {
   public UpdateColor(starColor: number): void {
     if (this._material) {
       this._material.color = new Color(starColor);
+      this._material.color.convertSRGBToLinear();
     }
   }
 }

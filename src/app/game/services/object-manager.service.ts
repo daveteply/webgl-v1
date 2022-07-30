@@ -118,6 +118,7 @@ export class ObjectManagerService {
     this._outlinePass.visibleEdgeColor = new Color(
       RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
     );
+    this._outlinePass.visibleEdgeColor.convertSRGBToLinear();
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
