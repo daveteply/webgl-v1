@@ -41,7 +41,7 @@ export class StarField extends Object3D {
       // material
       this._material = new PointsMaterial({
         map: sprite,
-        size: 0.2,
+        size: 0.12,
         depthTest: true,
         depthWrite: false,
         transparent: true,
