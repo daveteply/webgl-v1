@@ -4,6 +4,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: 0 1fr 0;
+  overflow: hidden;
 
   @media screen and (min-width: $default-app-width) {
     background: linear-gradient(
