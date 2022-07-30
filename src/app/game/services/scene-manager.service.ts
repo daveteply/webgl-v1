@@ -109,7 +109,6 @@ export class SceneManagerService implements OnDestroy {
       this._camera.updateProjectionMatrix();
 
       // renderer
-      this._renderer.setPixelRatio(pixelRatio);
       this._renderer.setSize(width, height, false);
 
       // composer
