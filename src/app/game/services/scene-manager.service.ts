@@ -69,8 +69,8 @@ export class SceneManagerService implements OnDestroy {
     // outline pass
     this._outlinePass = new OutlinePass(new Vector2(width, height), this._scene, this._camera);
     this._outlinePass.edgeGlow = 1;
-    this._outlinePass.edgeThickness = 20;
-    this._outlinePass.edgeStrength = 60;
+    this._outlinePass.edgeThickness = 10;
+    this._outlinePass.edgeStrength = 10;
     this._outlinePass.renderToScreen = true;
     this._composer.addPass(this._outlinePass);
     this.objectManager.SetOutlinePass(this._outlinePass);
