@@ -64,7 +64,7 @@ export class SceneManagerService implements OnDestroy {
     this._scene.add(this._pointLight);
 
     // renderer
-    this._renderer = new WebGLRenderer({ canvas });
+    this._renderer = new WebGLRenderer({ canvas, powerPreference: 'high-performance', stencil: false, depth: false });
     this._renderer.autoClear = false;
     this._renderer.outputEncoding = sRGBEncoding;
     this._renderer.setSize(width, height, false);
