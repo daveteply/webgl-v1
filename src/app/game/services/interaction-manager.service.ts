@@ -86,7 +86,6 @@ export class InteractionManagerService {
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
             this.objectManager.AnimateLevelComplete();
-            this.objectManager.UpdateOutlinePassObjects([]);
             this.LockBoard(false);
 
             this.objectManager.LevelCompleted.next(false);

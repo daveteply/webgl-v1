@@ -99,6 +99,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         this.admob.ShowBanner();
       }
 
+      // clear highlighted pieces
+      this.objectManager.UpdateOutlinePassObjects([]);
+
       this.initTextures();
     });
 
