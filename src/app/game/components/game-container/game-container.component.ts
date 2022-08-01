@@ -2,8 +2,6 @@ import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewCh
 import { DOCUMENT } from '@angular/common';
 import { debounceTime, fromEvent, Observable, Subject, Subscription, takeUntil, take } from 'rxjs';
 
-import { environment } from 'src/environments/environment';
-
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
@@ -14,6 +12,8 @@ import { NotifyService } from 'src/app/shared/services/notify.service';
 import { DialogNotifyService } from '../dialogs/dialog-notify.service';
 import { HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
 import { HintsManagerService } from '../../services/hints-manager.service';
+import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
+import { PostProcessingManagerService } from '../../services/post-processing-manager.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
@@ -23,7 +23,7 @@ import { HowToPlayComponent } from '../dialogs/hints/how-to-play/how-to-play.com
 import { MovesRemainingInfoComponent } from '../dialogs/hints/moves-remaining-info/moves-remaining-info.component';
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
-import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
+
 import {
   LEVEL_TO_START_ADS,
   STORAGE_HINT_HOW_TO_PLAY,
@@ -71,6 +71,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private admob: AdmobManagerService,
     private highScoreManager: HighScoreManagerService,
     private hintsManager: HintsManagerService,
+    private postProcessingManager: PostProcessingManagerService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -100,7 +101,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
 
       // clear highlighted pieces
-      this.objectManager.UpdateOutlinePassObjects([]);
+      this.postProcessingManager.UpdateOutlinePassObjects([]);
 
       this.initTextures();
     });

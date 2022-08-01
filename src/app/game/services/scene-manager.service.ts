@@ -1,12 +1,9 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { Color, PerspectiveCamera, PointLight, Scene, sRGBEncoding, Vector2, WebGLRenderer } from 'three';
+import { Color, PerspectiveCamera, PointLight, Scene, sRGBEncoding, WebGLRenderer } from 'three';
+
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
-
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
-import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass';
+import { PostProcessingManagerService } from './post-processing-manager.service';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -18,11 +15,6 @@ export class SceneManagerService implements OnDestroy {
   private _scene!: Scene;
   private _camera!: PerspectiveCamera;
 
-  private _composer!: EffectComposer;
-  private _renderPass!: RenderPass;
-  private _outlinePass!: OutlinePass;
-  private _smaaPass!: SMAAPass;
-
   private _pointLight!: PointLight;
 
   private _animateRequestId!: number;
@@ -32,7 +24,8 @@ export class SceneManagerService implements OnDestroy {
   constructor(
     private ngZone: NgZone,
     private objectManager: ObjectManagerService,
-    private interactionManager: InteractionManagerService
+    private interactionManager: InteractionManagerService,
+    private postProcessingManager: PostProcessingManagerService
   ) {
     this._slightGrey = new Color(0xf0f0f0f);
 
@@ -69,27 +62,8 @@ export class SceneManagerService implements OnDestroy {
     this._renderer.outputEncoding = sRGBEncoding;
     this._renderer.setSize(width, height, false);
 
-    // render pass
-    this._renderPass = new RenderPass(this._scene, this._camera);
-    this._renderPass.clearColor = this._slightGrey;
-    this._renderPass.clearAlpha = 0;
-
-    // outline pass
-    this._outlinePass = new OutlinePass(new Vector2(width, height), this._scene, this._camera);
-    this._outlinePass.edgeGlow = 1;
-    this._outlinePass.edgeThickness = 10;
-    this._outlinePass.edgeStrength = 10;
-    this._outlinePass.renderToScreen = true;
-    this.objectManager.SetOutlinePass(this._outlinePass);
-
-    // smaa
-    this._smaaPass = new SMAAPass(width, height);
-
-    // composer
-    this._composer = new EffectComposer(this._renderer);
-    this._composer.addPass(this._renderPass);
-    this._composer.addPass(this._outlinePass);
-    this._composer.addPass(this._smaaPass);
+    // post processing
+    this.postProcessingManager.InitPostProcessing(this._scene, this._camera, this._renderer, width, height);
 
     // DEBUG
     // setInterval(() => {
@@ -113,10 +87,10 @@ export class SceneManagerService implements OnDestroy {
       this._renderer.setSize(width, height, false);
 
       // composer
-      this._composer.setSize(width, height);
+      this.postProcessingManager.Composer.setSize(width, height);
 
       // smaa
-      this._smaaPass.setSize(width, height);
+      this.postProcessingManager.SMAAPass.setSize(width, height);
     }
 
     this.interactionManager.CanvasRect = canvas.getBoundingClientRect();
@@ -130,7 +104,7 @@ export class SceneManagerService implements OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       TWEEN.update();
       this.objectManager.UpdateStarField();
-      this._composer.render(deltaTime);
+      this.postProcessingManager.Composer.render(deltaTime);
     });
 
     requestAnimationFrame((now) => {

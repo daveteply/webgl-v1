@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
+
+import 'hammerjs';
 
 import { MINIMUM_MATCH_COUNT, MOVES_REMAINING_COUNT_PANIC, ROTATIONAL_CONSTANT } from '../game-constants';
 
 import { GameWheel } from '../models/game-wheel';
-import { GameEngineService } from './game-engine.service';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { PowerMoveType } from '../models/power-move-type';
+import { AudioType } from 'src/app/shared/services/audio/audio-info';
 
+import { GameEngineService } from './game-engine.service';
 import { ObjectManagerService } from './object-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
 import { EffectsManagerService } from './effects-manager.service';
-import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
-
-import 'hammerjs';
-import { environment } from 'src/environments/environment';
+import { PostProcessingManagerService } from './post-processing-manager.service';
 
 enum HammerEvents {
   PAN = 'pan',
@@ -55,7 +56,8 @@ export class InteractionManagerService {
     private effectsManager: EffectsManagerService,
     private gameEngine: GameEngineService,
     private scoringManager: ScoringManagerService,
-    private audioManager: AudioManagerService
+    private audioManager: AudioManagerService,
+    private postProcessingManager: PostProcessingManagerService
   ) {
     this._rayCaster = new Raycaster();
     this._pointerPos = new Vector2();
@@ -199,7 +201,7 @@ export class InteractionManagerService {
         // launch animation sequence
         this.effectsManager.AnimateSelected(this._matchingPieces, true);
         this.effectsManager.AnimateLock(this.objectManager.Axle, true);
-        this.objectManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
+        this.postProcessingManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
       }
     } else {
       // unlock board if no pieces selected

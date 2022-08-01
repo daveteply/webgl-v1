@@ -23,6 +23,7 @@ import { EffectsManagerService } from './effects-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { TextManagerService } from './text/text-manager.service';
 import { GameEngineService } from './game-engine.service';
+import { PostProcessingManagerService } from './post-processing-manager.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -51,7 +52,8 @@ export class ObjectManagerService {
     private effectsManager: EffectsManagerService,
     private textManager: TextManagerService,
     private audioManager: AudioManagerService,
-    private gameEngine: GameEngineService
+    private gameEngine: GameEngineService,
+    private postProcessingManager: PostProcessingManagerService
   ) {
     this._stack = new Group();
     this._stack.name = 'gameWheelStack';
@@ -84,14 +86,6 @@ export class ObjectManagerService {
     this.textManager.InitScene(this._scene);
   }
 
-  public SetOutlinePass(outlinePass: OutlinePass): void {
-    this._outlinePass = outlinePass;
-  }
-
-  public UpdateOutlinePassObjects(selectedObjects: Object3D[]): void {
-    this._outlinePass.selectedObjects = selectedObjects;
-  }
-
   // called once in the beginning of the application load
   public InitShapes(): Observable<void> {
     return new Observable((o) => {
@@ -115,10 +109,9 @@ export class ObjectManagerService {
 
   public UpdateLevelMaterials(): void {
     // update highlight color
-    this._outlinePass.visibleEdgeColor = new Color(
+    this.postProcessingManager.UpdateOutlinePassColor(
       RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
     );
-    this._outlinePass.visibleEdgeColor.convertSRGBToLinear();
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
