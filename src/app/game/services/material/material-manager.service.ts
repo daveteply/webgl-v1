@@ -112,7 +112,7 @@ export class MaterialManagerService {
 
         selectedColors.forEach((c, inx) => {
           const color = new Color(c);
-          color.convertLinearToSRGB();
+          color.convertSRGBToLinear();
 
           materials.push({
             matchKey: matchKey++,
