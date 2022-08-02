@@ -112,8 +112,6 @@ export class MaterialManagerService {
 
         selectedColors.forEach((c, inx) => {
           const color = new Color(c);
-          color.convertSRGBToLinear();
-
           materials.push({
             matchKey: matchKey++,
             bumpTexture: this.textureManager.Textures[inx],

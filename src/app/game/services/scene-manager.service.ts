@@ -1,5 +1,5 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
-import { Color, PerspectiveCamera, PointLight, Scene, sRGBEncoding, WebGLRenderer } from 'three';
+import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
@@ -59,7 +59,6 @@ export class SceneManagerService implements OnDestroy {
     // renderer
     this._renderer = new WebGLRenderer({ canvas, powerPreference: 'high-performance', stencil: false, depth: false });
     this._renderer.autoClear = false;
-    this._renderer.outputEncoding = sRGBEncoding;
     this._renderer.setSize(width, height, false);
 
     // post processing
