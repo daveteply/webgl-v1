@@ -55,8 +55,6 @@ export class PostProcessingManagerService {
   }
 
   public UpdateOutlinePassColor(colorHex: number): void {
-    const color = new Color(colorHex);
-    color.convertSRGBToLinear();
-    this._outlinePass.visibleEdgeColor = color;
+    this._outlinePass.visibleEdgeColor = new Color(colorHex);
   }
 }
