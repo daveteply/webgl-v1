@@ -96,7 +96,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
 
       // ads
-      if (this.scoringManager.Level > LEVEL_TO_START_ADS) {
+      if (this.scoringManager.Level > LEVEL_TO_START_ADS && !gameOver) {
         this.admob.ShowBanner();
       }
 
