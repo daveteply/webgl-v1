@@ -11,6 +11,7 @@ import { LevelMaterialType } from '../level-material-type';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
+import { LevelTransitionType } from './level-transition-type';
 
 // forcing strings in enum
 enum SearchDirection {
@@ -44,6 +45,11 @@ export class GameEngineService {
     return this._levelGeometryType;
   }
 
+  private _levelTransitionType: LevelTransitionType = LevelTransitionType.Default;
+  get LevelTransitionType(): LevelTransitionType {
+    return this._levelTransitionType;
+  }
+
   public InitLevelTypes(level: number): void {
     // set level material type
     this._levelMaterialType = Math.floor(Math.random() * 3) + 1;
@@ -60,6 +66,10 @@ export class GameEngineService {
     if (!environment.production) {
       console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
     }
+  }
+
+  public InitLevelTransitionType(): void {
+    this._levelTransitionType = Math.floor(Math.random() * 2) + 1;
   }
 
   public UpdatePlayableTextureCount(level: number): void {

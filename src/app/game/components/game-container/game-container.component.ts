@@ -103,11 +103,15 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       // clear highlighted pieces
       this.postProcessingManager.UpdateOutlinePassObjects([]);
 
+      // initiate texture load for next level
       this.initTextures();
     });
 
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.pipe(takeUntil(this.notifier)).subscribe(() => {
+      // level transition
+      this.gameEngine.InitLevelTransitionType();
+
       if (this._isGameOver) {
         // game over
         this._dialogGameOverRef = this.dialog.open(GameOverDialogComponent, this.dialogConfig());
@@ -256,7 +260,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private handleLevelDialogCLosed(): void {
+    // remove banner
     this.admob.RemoveBanner();
+
+    // dismiss dialog and launch next level
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;

@@ -133,6 +133,9 @@ export class ObjectManagerService {
       this.UpdateLevelMaterials();
     }
 
+    // level transition
+    this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, true);
+
     // trigger intro animations
     this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, true);
 
@@ -142,6 +145,9 @@ export class ObjectManagerService {
   }
 
   public AnimateLevelComplete(): void {
+    // level transition
+    this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, false);
+
     this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, false);
   }
 
