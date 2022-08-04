@@ -1,7 +1,9 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
+import { TextZoomComponent } from '../../text-zoom/text-zoom.component';
 
 import { LevelDialogComponent } from './level-dialog.component';
 
@@ -12,8 +14,9 @@ describe('LevelDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatDialogModule, MatProgressBarModule],
-      declarations: [LevelDialogComponent],
+      declarations: [LevelDialogComponent, TextZoomComponent],
       providers: [
+        DecimalPipe,
         TextureManagerService,
         {
           provide: MAT_DIALOG_DATA,

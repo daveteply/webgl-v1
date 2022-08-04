@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -12,6 +13,7 @@ import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
+import { TextZoomComponent } from '../text-zoom/text-zoom.component';
 import { GameContainerComponent } from './game-container.component';
 
 describe('GameContainerComponent', () => {
@@ -21,8 +23,9 @@ describe('GameContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule, MatDialogModule, MatProgressBarModule, MatProgressSpinnerModule],
-      declarations: [GameContainerComponent],
+      declarations: [GameContainerComponent, TextZoomComponent],
       providers: [
+        DecimalPipe,
         SceneManagerService,
         ObjectManagerService,
         MaterialManagerService,

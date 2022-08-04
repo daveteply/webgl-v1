@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { GainControlComponent } from './gain-control.component';
 
@@ -9,6 +10,7 @@ describe('GainControlComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [GainControlComponent],
+      imports: [MatSliderModule],
     }).compileComponents();
   });
 
