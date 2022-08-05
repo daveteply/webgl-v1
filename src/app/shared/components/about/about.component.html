@@ -24,25 +24,6 @@
           </div>
         </div>
       </mat-tab>
-
-      <mat-tab label="Rikkle?" *ngIf="hideLevelInfoData">
-        <div class="rikkle-blur">
-          <p>Yup, 'Rikkle'!</p>
-          <p>Rikkle is a cylindrical puzzle game</p>
-          <p>"Rikkle" is a play on the word "cylindrical"</p>
-          <p>cylind-rical</p>
-          <p>Rikkle! :)</p>
-        </div>
-      </mat-tab>
-
-      <mat-tab label="Credits">
-        <div class="credits">
-          <div *ngFor="let credit of creditsData" class="credit-item">
-            <span>{{ credit.desc }}&NonBreakingSpace;</span>
-            <a target="_blank" [href]="credit.href">{{ credit.title }}</a>
-          </div>
-        </div>
-      </mat-tab>
     </mat-tab-group>
 
     <div mat-dialog-actions align="center">
