@@ -69,7 +69,7 @@ export class GameEngineService {
   }
 
   public InitLevelTransitionType(): void {
-    this._levelTransitionType = Math.floor(Math.random() * 2);
+    this._levelTransitionType = Math.floor(Math.random() * 3);
     if (!environment.production) {
       console.info('Level Transition', LevelTransitionType[this._levelTransitionType]);
     }

@@ -8,7 +8,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass';
-// import { HalftonePass } from 'three/examples/jsm/postprocessing/HalftonePass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +20,10 @@ export class PostProcessingManagerService {
 
   private _smaaPass!: SMAAPass;
   private _bokehPass!: BokehPass;
-  // private _halftonePass!: HalftonePass;
+  private _unrealBloomPass!: UnrealBloomPass;
 
   private _bokehTween!: any;
-  // private _halfToneTween!: any;
+  private _unrealBloomTween!: any;
 
   get Composer(): EffectComposer {
     return this._composer;
@@ -64,16 +64,16 @@ export class PostProcessingManagerService {
     });
     this._bokehPass.enabled = false;
 
-    // halftone
-    // this._halftonePass = new HalftonePass(width, height, { radius: 24, blending: 0.8, scatter: 0.5 });
-    // this._halftonePass.enabled = false;
+    // unreal bloom
+    this._unrealBloomPass = new UnrealBloomPass(new Vector2(width, height), 1, 0, 0);
+    this._unrealBloomPass.enabled = false;
 
     // composer
     this._composer = new EffectComposer(renderer);
     this._composer.addPass(this._renderPass);
     this._composer.addPass(this._outlinePass);
     this._composer.addPass(this._bokehPass);
-    // this._composer.addPass(this._halftonePass);
+    this._composer.addPass(this._unrealBloomPass);
     this._composer.addPass(this._smaaPass);
   }
 
@@ -90,7 +90,7 @@ export class PostProcessingManagerService {
       case LevelTransitionType.Bokeh:
         this._smaaPass.enabled = false;
         this._bokehPass.enabled = true;
-        // this._halftonePass.enabled = false;
+        this._unrealBloomPass.enabled = false;
 
         if (this._bokehTween) {
           this._bokehTween.stop();
@@ -98,16 +98,16 @@ export class PostProcessingManagerService {
         this.initBokehTween(start);
         break;
 
-      // case LevelTransitionType.Halftone:
-      //   this._smaaPass.enabled = true;
-      //   this._bokehPass.enabled = false;
-      //   this._halftonePass.enabled = true;
+      case LevelTransitionType.UnrealBloom:
+        this._smaaPass.enabled = false;
+        this._bokehPass.enabled = false;
+        this._unrealBloomPass.enabled = true;
 
-      //   if (this._halfToneTween) {
-      //     this._halfToneTween.stop();
-      //   }
-      //   this.initHalftoneTween(start);
-      //   break;
+        if (this._unrealBloomTween) {
+          this._unrealBloomTween.stop();
+        }
+        this.initUnrealBloomTween();
+        break;
 
       default:
         this.resetPasses();
@@ -131,26 +131,26 @@ export class PostProcessingManagerService {
       .start();
   }
 
-  // private initHalftoneTween(start: boolean) {
-  //   const delta = { blending: start ? 1.8 : 0 };
-  //   const target = { blending: start ? 0 : 1.8 };
-  //   this._halfToneTween = new Tween(delta)
-  //     .to(target, 2500)
-  //     .easing(Easing.Quadratic.Out)
-  //     .onUpdate(() => {
-  //       this._halftonePass.material.uniforms['blending'].value = delta.blending;
-  //     })
-  //     .onComplete(() => {
-  //       if (start) {
-  //         this.resetPasses();
-  //       }
-  //     })
-  //     .start();
-  // }
+  private initUnrealBloomTween() {
+    const delta = { strength: 0 };
+    const target = { strength: 1.5 };
+    this._unrealBloomTween = new Tween(delta)
+      .to(target, 1500)
+      .repeat(1)
+      .yoyo(true)
+      .easing(Easing.Quadratic.Out)
+      .onUpdate(() => {
+        this._unrealBloomPass.strength = delta.strength;
+      })
+      .onComplete(() => {
+        this.resetPasses();
+      })
+      .start();
+  }
 
   private resetPasses(): void {
     this._smaaPass.enabled = true;
     this._bokehPass.enabled = false;
-    // this._halftonePass.enabled = false;
+    this._unrealBloomPass.enabled = false;
   }
 }
