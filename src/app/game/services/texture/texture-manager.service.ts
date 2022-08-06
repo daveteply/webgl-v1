@@ -7,7 +7,12 @@ import { environment } from 'src/environments/environment';
 import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
-import { CANVAS_TEXTURE_SCALE, EMOJI_GROUP_PEOPLE_BODY, EMOJI_SKIN_TONE_COUNT } from '../../game-constants';
+import {
+  CANVAS_TEXTURE_SCALE,
+  EMOJI_GROUP_PEOPLE_BODY,
+  EMOJI_GROUP_SMILEYS_EMOTION,
+  EMOJI_SKIN_TONE_COUNT,
+} from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
@@ -244,7 +249,7 @@ export class TextureManagerService {
     // for People & Body, shuffle may result in too many of the same
     //  emoji; just with different tones (challenging to differentiate
     //  on a phone)
-    if (emojiGroup.id === EMOJI_GROUP_PEOPLE_BODY) {
+    if (emojiGroup.id === EMOJI_GROUP_PEOPLE_BODY || emojiGroup.id === EMOJI_GROUP_SMILEYS_EMOTION) {
       const maxStep = Math.floor(emojiSequences.length / playableTextureCount);
       let step = MathUtils.randInt(EMOJI_SKIN_TONE_COUNT, maxStep);
       if (step < EMOJI_SKIN_TONE_COUNT) {
