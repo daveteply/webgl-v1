@@ -147,6 +147,7 @@ export class TextureManagerService {
       BumpSymbolTextures.forEach((map) => {
         this._textureLoader.load(map.src, (data) => {
           data.name = map.src;
+          data.center = new Vector2(0.5, 0.5);
           map.texture = data;
           this.setTextureWrapping(map.texture);
           this._textures.push(map.texture);
