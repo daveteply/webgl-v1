@@ -46,6 +46,7 @@ export class ObjectManagerService {
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
+  public LevelMaterialsUpdated: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,
@@ -126,13 +127,14 @@ export class ObjectManagerService {
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
     }
+
+    this.LevelMaterialsUpdated.next();
   }
 
-  public NextLevel(updateMaterials: boolean = true): void {
+  public NextLevel(updateMaterials: boolean = false): void {
     if (updateMaterials) {
       this.UpdateLevelMaterials();
     }
-
     // level transition
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, true);
 

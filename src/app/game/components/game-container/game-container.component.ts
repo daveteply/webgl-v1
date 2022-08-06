@@ -124,7 +124,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           }
           this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
           this.updateDifficultyColor();
-          this.objectManager.NextLevel();
+          this.objectManager.NextLevel(true);
         });
       } else {
         if (this._showWelcome) {
@@ -204,7 +204,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         this.initTextures();
       });
 
-    // start loading fonts
+    // start loading fonts for splash text
     this.textManager.InitFonts();
   }
 
@@ -267,10 +267,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-      this.objectManager.NextLevel(false);
+      this.objectManager.NextLevel();
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.NextLevel();
+      this.objectManager.NextLevel(true);
     }
   }
 

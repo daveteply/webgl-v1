@@ -5,12 +5,12 @@
 
   <mat-dialog-content class="content">
     <wgl-high-scores></wgl-high-scores>
-    <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
+    <mat-progress-bar class="progress" [class.fade-out]="!materialsUpdating" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
 
   <mat-dialog-actions align="center">
     <div class="dialog-buttons">
-      <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="texturesStillLoading">
+      <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="materialsUpdating">
         <span>Play!</span>
       </button>
     </div>

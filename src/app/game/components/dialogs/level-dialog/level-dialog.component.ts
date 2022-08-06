@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } from '@angular/core';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { delay } from 'rxjs';
+import { delay, Subject, takeUntil } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
@@ -49,6 +49,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
+  private notifier = new Subject();
+
   constructor(
     private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
@@ -56,14 +58,14 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     private dialogAnimation: DialogAnimationService,
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
   ) {
-    this.textureManager.LevelTexturesLoaded.subscribe(() => {
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntil(this.notifier)).subscribe(() => {
       this.texturesStillLoading = false;
     });
-    this.textureManager.LevelTextureLoadProgress.subscribe((progress) => {
+    this.textureManager.LevelTextureLoadProgress.pipe(takeUntil(this.notifier)).subscribe((progress) => {
       this.progress = progress;
     });
 
-    this.dialogNotify.DialogNotifyEvent.subscribe(() => {
+    this.dialogNotify.DialogNotifyEvent.pipe(takeUntil(this.notifier)).subscribe(() => {
       const delta = { b: 1 };
       new Tween(delta)
         .to({ b: 30 }, 100)
@@ -78,43 +80,46 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
         .start();
     });
 
-    this.timerEvent.pipe(delay(550)).subscribe((stat: LevelStat) => {
-      switch (stat.statType) {
-        case LevelStatisticType.fastMatchBonusTotal:
-          this.fastMatchBonusTotal = stat.statValue;
-          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
-          break;
-
-        case LevelStatisticType.fastestMatchMs:
-          if (this.fastMatchBonusTotal) {
-            // only show if there was a bonus involved
-            const roundedTime = Math.round((stat.statValue / 1000) * 100) / 100;
-            this.fastestMatchTime = `${roundedTime}s`;
+    this.timerEvent
+      .pipe(delay(550))
+      .pipe(takeUntil(this.notifier))
+      .subscribe((stat: LevelStat) => {
+        switch (stat.statType) {
+          case LevelStatisticType.fastMatchBonusTotal:
+            this.fastMatchBonusTotal = stat.statValue;
             this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
-          }
-          break;
+            break;
 
-        case LevelStatisticType.moveCount:
-          this.moveCount = stat.statValue;
-          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
-          break;
+          case LevelStatisticType.fastestMatchMs:
+            if (this.fastMatchBonusTotal) {
+              // only show if there was a bonus involved
+              const roundedTime = Math.round((stat.statValue / 1000) * 100) / 100;
+              this.fastestMatchTime = `${roundedTime}s`;
+              this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            }
+            break;
 
-        case LevelStatisticType.moveCountEarned:
-          this.moveCountEarned = stat.statValue;
-          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
-          break;
+          case LevelStatisticType.moveCount:
+            this.moveCount = stat.statValue;
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            break;
 
-        case LevelStatisticType.pieceCount:
-          this.pieceCount = stat.statValue;
-          this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
-          break;
+          case LevelStatisticType.moveCountEarned:
+            this.moveCountEarned = stat.statValue;
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            break;
 
-        default:
-          break;
-      }
+          case LevelStatisticType.pieceCount:
+            this.pieceCount = stat.statValue;
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            break;
 
-      this.processQueue();
-    });
+          default:
+            break;
+        }
+
+        this.processQueue();
+      });
 
     this.setData(data);
   }
@@ -133,6 +138,9 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     this.timerEvent.unsubscribe();
 
     this.dialogAnimation.Dispose();
+
+    this.notifier.next(undefined);
+    this.notifier.complete();
   }
 
   private setData(levelData: LevelDialogData): void {

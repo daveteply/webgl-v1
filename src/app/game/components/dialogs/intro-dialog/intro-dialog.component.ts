@@ -4,9 +4,9 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { AboutComponent } from 'src/app/shared/components/about/about.component';
 
-import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogAnimationService } from '../dialog-animation.service';
+import { ObjectManagerService } from 'src/app/game/services/object-manager.service';
 
 @Component({
   selector: 'wgl-intro-dialog',
@@ -17,19 +17,19 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  texturesStillLoading: boolean = true;
+  materialsUpdating: boolean = true;
   progress: number = 100;
 
   private notifier = new Subject();
 
   constructor(
-    private textureManager: TextureManagerService,
+    private objectManager: ObjectManagerService,
     private audioManager: AudioManagerService,
     private dialogAnimation: DialogAnimationService,
     private dialog: MatDialog
   ) {
-    this.textureManager.LevelTexturesLoaded.pipe(takeUntil(this.notifier)).subscribe(() => {
-      this.texturesStillLoading = false;
+    this.objectManager.LevelMaterialsUpdated.pipe(takeUntil(this.notifier)).subscribe(() => {
+      this.materialsUpdating = false;
     });
 
     // start-up music
@@ -38,6 +38,7 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dialogAnimation.Dispose();
+
     this.notifier.next(undefined);
     this.notifier.complete();
   }
@@ -49,6 +50,6 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   openAbout(): void {
-    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true }, panelClass: 'cdk-overlay-pane__show'  });
+    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true }, panelClass: 'cdk-overlay-pane__show' });
   }
 }
