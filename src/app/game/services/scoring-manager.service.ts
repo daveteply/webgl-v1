@@ -160,7 +160,7 @@ export class ScoringManagerService {
   public ResetStats(restartLevel: boolean = false): void {
     if (this.PlayerMoves === 0) {
       // reset moves for level restart
-      this._playerMoves = LEVEL_ADDITIVE;
+      this._playerMoves = this._level < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this._level;
     }
 
     if (restartLevel) {
@@ -207,7 +207,6 @@ export class ScoringManagerService {
 
   private initLevelPieceTarget(): void {
     this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
-
     this._piecesRemaining = this._levelPieceTarget;
   }
 }
