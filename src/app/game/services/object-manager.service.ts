@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
-import { Color, Group, MathUtils, Object3D, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { GameWheel } from '../models/game-wheel';
@@ -46,7 +46,6 @@ export class ObjectManagerService {
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
-  public LevelMaterialsUpdated: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,
@@ -115,7 +114,11 @@ export class ObjectManagerService {
     );
 
     // update materials in the material manager service
-    this.materialManager.UpdateMaterials(level, this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
+    this.materialManager.UpdateMaterials(
+      level,
+      this.gameEngine.PlayableTextureCount,
+      this.gameEngine.LevelMaterialType
+    );
 
     // update the properties and materials for the grid
     for (let i = 0; i < this._axle.length; i++) {
@@ -127,11 +130,9 @@ export class ObjectManagerService {
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
     }
-
-    this.LevelMaterialsUpdated.next();
   }
 
-  public NextLevel(level: number, updateMaterials: boolean = false): void {
+  public NextLevel(level: number, updateMaterials: boolean = true): void {
     if (updateMaterials) {
       this.UpdateLevelMaterials(level);
     }

@@ -6,7 +6,7 @@ import { AboutComponent } from 'src/app/shared/components/about/about.component'
 
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogAnimationService } from '../dialog-animation.service';
-import { ObjectManagerService } from 'src/app/game/services/object-manager.service';
+import { TextureManagerService } from 'src/app/game/services/texture/texture-manager.service';
 
 @Component({
   selector: 'wgl-intro-dialog',
@@ -17,19 +17,19 @@ export class IntroDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  materialsUpdating: boolean = true;
+  texturesStillLoading: boolean = true;
   progress: number = 100;
 
   private notifier = new Subject();
 
   constructor(
-    private objectManager: ObjectManagerService,
+    private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
     private dialogAnimation: DialogAnimationService,
     private dialog: MatDialog
   ) {
-    this.objectManager.LevelMaterialsUpdated.pipe(takeUntil(this.notifier)).subscribe(() => {
-      this.materialsUpdating = false;
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntil(this.notifier)).subscribe(() => {
+      this.texturesStillLoading = false;
     });
 
     // start-up music
