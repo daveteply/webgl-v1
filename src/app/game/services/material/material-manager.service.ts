@@ -11,7 +11,7 @@ import { StoreService } from 'src/app/app-store/services/store.service';
 import { GameMaterials, PieceMaterials, PieceSideMaterial, WheelMaterial } from './material-models';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
 import { LevelMaterialType } from '../../level-material-type';
-import { COLOR_SCHEME_DATA } from './color-info';
+import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
 
@@ -50,9 +50,9 @@ export class MaterialManagerService {
     }
   }
 
-  public UpdateMaterials(playableTextureCount: number, levelMaterialType: LevelMaterialType): void {
+  public UpdateMaterials(level: number, playableTextureCount: number, levelMaterialType: LevelMaterialType): void {
     // initial game piece materials
-    const initialMaterials = this.getLevelMaterials(playableTextureCount, levelMaterialType);
+    const initialMaterials = this.getLevelMaterials(level, playableTextureCount, levelMaterialType);
 
     // update materials
     for (const wheel of this._gameMaterials.wheelMaterials) {
@@ -92,8 +92,9 @@ export class MaterialManagerService {
   }
 
   private getLevelMaterials(
+    level: number,
     playableTextureCount: number,
-    levelMaterialType: LevelMaterialType
+    levelMaterialType: LevelMaterialType,
   ): GamePieceMaterialData[] {
     // reset array
     const materials: GamePieceMaterialData[] = [];
@@ -107,7 +108,7 @@ export class MaterialManagerService {
     switch (levelMaterialType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape:
-        selectedColors = this.initColorScheme(playableTextureCount);
+        selectedColors = this.initColorScheme(level, playableTextureCount);
         this.store.UpdateLevelColors(selectedColors);
 
         selectedColors.forEach((c, inx) => {
@@ -123,7 +124,7 @@ export class MaterialManagerService {
 
       // colors and bump maps
       case LevelMaterialType.ColorBumpMaterial:
-        selectedColors = this.initColorScheme(playableTextureCount);
+        selectedColors = this.initColorScheme(level, playableTextureCount);
         this.store.UpdateLevelColors(selectedColors);
 
         const bumpTexture = this.textureManager.Textures[MathUtils.randInt(0, this.textureManager.Textures.length - 1)];
@@ -152,8 +153,14 @@ export class MaterialManagerService {
     return materials;
   }
 
-  private initColorScheme(playableTextureCount: number): string[] {
-    const scheme = COLOR_SCHEME_DATA[MathUtils.randInt(0, COLOR_SCHEME_DATA.length - 1)];
+  private initColorScheme(level: number, playableTextureCount: number): string[] {
+    let scheme: ColorSchemeData;
+    if (level === 1) {
+      scheme = COLOR_SCHEME_DATA.find(c => c.id === 2) || COLOR_SCHEME_DATA[0];
+    } else {
+      scheme = COLOR_SCHEME_DATA[MathUtils.randInt(0, COLOR_SCHEME_DATA.length - 1)];
+    }
+
     const sortedColors = scheme.colors.sort();
 
     if (!environment.production) {
@@ -168,6 +175,6 @@ export class MaterialManagerService {
       shuffledColors.forEach((c) => console.info(`      %c ${c}`, `color: ${c}`));
     }
 
-    return shuffledColors;
+    return level === 1 ? sortedColors.slice(-playableTextureCount) : shuffledColors;
   }
 }

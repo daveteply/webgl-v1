@@ -1,6 +1,10 @@
-export const INTRO_DIALOG_COLORS = ['#1919B3', '#E9E9FF', '#400099', '#7B7BFF', '#0F0F6B'];
+export interface ColorSchemeData {
+  id: number,
+  colors: string[]
+}
 
-export const COLOR_SCHEME_DATA = [
+export const INTRO_DIALOG_COLORS = ['#1919B3', '#E9E9FF', '#400099', '#7B7BFF', '#0F0F6B'];
+export const COLOR_SCHEME_DATA: ColorSchemeData[] = [
   {
     id: 1,
     colors: [

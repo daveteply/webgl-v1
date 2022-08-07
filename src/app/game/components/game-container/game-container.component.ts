@@ -124,7 +124,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           }
           this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
           this.updateDifficultyColor();
-          this.objectManager.NextLevel(true);
+          this.objectManager.NextLevel(this.scoringManager.Level, true);
         });
       } else {
         if (this._showWelcome) {
@@ -149,7 +149,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(take(1)).subscribe(() => {
-      this.objectManager.UpdateLevelMaterials();
+      this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
     });
 
     // show the tutorial after the initial level loads
@@ -267,10 +267,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this._showWelcome) {
       this._showWelcome = false;
       this.ShowScoreProgress = true;
-      this.objectManager.NextLevel();
+      this.objectManager.NextLevel(this.scoringManager.Level);
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.NextLevel(true);
+      this.objectManager.NextLevel(this.scoringManager.Level, true);
     }
   }
 

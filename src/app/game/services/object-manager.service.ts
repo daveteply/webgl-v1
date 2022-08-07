@@ -108,14 +108,14 @@ export class ObjectManagerService {
     });
   }
 
-  public UpdateLevelMaterials(): void {
+  public UpdateLevelMaterials(level: number): void {
     // update highlight color
     this.postProcessingManager.UpdateOutlinePassColor(
       RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
     );
 
     // update materials in the material manager service
-    this.materialManager.UpdateMaterials(this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
+    this.materialManager.UpdateMaterials(level, this.gameEngine.PlayableTextureCount, this.gameEngine.LevelMaterialType);
 
     // update the properties and materials for the grid
     for (let i = 0; i < this._axle.length; i++) {
@@ -131,9 +131,9 @@ export class ObjectManagerService {
     this.LevelMaterialsUpdated.next();
   }
 
-  public NextLevel(updateMaterials: boolean = false): void {
+  public NextLevel(level: number, updateMaterials: boolean = false): void {
     if (updateMaterials) {
-      this.UpdateLevelMaterials();
+      this.UpdateLevelMaterials(level);
     }
     // level transition
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, true);

@@ -52,7 +52,7 @@ export class GameEngineService {
 
   public InitLevelTypes(level: number): void {
     // set level material type
-    this._levelMaterialType = Math.floor(Math.random() * 3) + 1;
+    this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(Math.random() * 3) + 1;
     if (!environment.production) {
       console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
     }
