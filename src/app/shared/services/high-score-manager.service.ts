@@ -7,6 +7,7 @@ export interface HighScore {
   occurred: Date;
   score: number;
   highlight?: boolean;
+  hasBeenHighlighted?: boolean;
 }
 
 @Injectable({
@@ -14,23 +15,23 @@ export interface HighScore {
 })
 export class HighScoreManagerService {
   public UpdateHighScores(gameOverScore: number): void {
-    if (gameOverScore) {
-      Preferences.get({ key: STORAGE_HIGH_SCORES }).then((data) => {
-        if (data.value) {
-          const scores: HighScore[] = JSON.parse(data.value);
-          // add new element
-          scores.push({ occurred: new Date(), score: gameOverScore });
-          // sort by highest score
-          scores.sort((a, b) => (a.score > b.score ? -1 : 1));
-          // store only 5 highest scores
-          this.storeScores(scores.slice(0, 5));
-        } else {
-          const scores: HighScore[] = [];
-          scores.push({ occurred: new Date(), score: gameOverScore });
-          this.storeScores(scores);
-        }
-      });
-    }
+    Preferences.get({ key: STORAGE_HIGH_SCORES }).then((data) => {
+      if (data.value) {
+        const scores: HighScore[] = JSON.parse(data.value);
+        // clear highlights
+        scores.forEach((s) => (s.highlight = false));
+        // add new element
+        scores.push({ occurred: new Date(), score: gameOverScore, highlight: true });
+        // sort by highest score
+        scores.sort((a, b) => (a.score > b.score ? -1 : 1));
+        // store only 5 highest scores
+        this.storeScores(scores.slice(0, 5));
+      } else {
+        const scores: HighScore[] = [];
+        scores.push({ occurred: new Date(), score: gameOverScore });
+        this.storeScores(scores);
+      }
+    });
   }
 
   public GetHighScores(): Observable<HighScore[]> {
