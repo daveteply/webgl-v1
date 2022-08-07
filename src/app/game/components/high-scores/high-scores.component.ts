@@ -14,6 +14,15 @@ export class HighScoresComponent implements OnInit {
   ngOnInit(): void {
     this.highScoreManager.GetHighScores().subscribe((highScores) => {
       this.highScores = highScores;
+
+      // hight light newest entry
+      this.highScores.forEach((h) => (h.highlight = false));
+      if (this.highScores.length > 1) {
+        const newest = this.highScores.reduce((prev, current) => {
+          return prev.occurred > current.occurred ? prev : current;
+        });
+        newest.highlight = true;
+      }
     });
   }
 }

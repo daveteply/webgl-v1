@@ -6,6 +6,7 @@ import { STORAGE_HIGH_SCORES } from 'src/app/game/game-constants';
 export interface HighScore {
   occurred: Date;
   score: number;
+  highlight?: boolean;
 }
 
 @Injectable({
