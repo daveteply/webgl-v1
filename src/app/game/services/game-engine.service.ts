@@ -76,18 +76,17 @@ export class GameEngineService {
   }
 
   public UpdatePlayableTextureCount(level: number): void {
-    let target = DEFAULT_PLAYABLE_TEXTURE_COUNT;
     if (level <= 10) {
-      this._playableTextureCount = target;
+      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
-    } else if (level > 10 && level <= 20) {
-      this._playableTextureCount = target + 1;
+    } else if (level > 10 && level <= 30) {
+      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 1;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[1];
-    } else if (level > 20 && level <= 40) {
-      this._playableTextureCount = target + 2;
+    } else if (level > 30 && level <= 50) {
+      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 2;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[2];
-    } else if (level > 40) {
-      this._playableTextureCount = target + 3;
+    } else if (level > 50) {
+      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 3;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[3];
     }
 
