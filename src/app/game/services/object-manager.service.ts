@@ -39,13 +39,12 @@ export class ObjectManagerService {
   private _scene!: Scene;
   private _perspectiveCamera!: PerspectiveCamera;
 
-  private _outlinePass!: OutlinePass;
-
   private _starField: StarField;
 
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
+  public LevelMaterialsUpdated: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private materialManager: MaterialManagerService,
@@ -130,9 +129,11 @@ export class ObjectManagerService {
       // apply the updated materials
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
     }
+
+    this.LevelMaterialsUpdated.next();
   }
 
-  public NextLevel(level: number, updateMaterials: boolean = true): void {
+  public NextLevel(level: number, updateMaterials: boolean = false): void {
     if (updateMaterials) {
       this.UpdateLevelMaterials(level);
     }
