@@ -3,6 +3,9 @@ import { environment } from 'src/environments/environment';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
   DEFAULT_PLAYABLE_TEXTURE_COUNT,
+  DIFFICULTY_TIER_1,
+  DIFFICULTY_TIER_3,
+  DIFFICULTY_TIER_4,
   DIFFICULT_LEVEL_COLOR,
   LEVEL_START_OTHER_GEOMETRIES,
 } from '../game-constants';
@@ -76,16 +79,16 @@ export class GameEngineService {
   }
 
   public UpdatePlayableTextureCount(level: number): void {
-    if (level <= 10) {
+    if (level <= DIFFICULTY_TIER_1) {
       this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
-    } else if (level > 10 && level <= 30) {
+    } else if (level > DIFFICULTY_TIER_1 && level <= DIFFICULTY_TIER_3) {
       this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 1;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[1];
-    } else if (level > 30 && level <= 50) {
+    } else if (level > DIFFICULTY_TIER_3 && level <= DIFFICULTY_TIER_4) {
       this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 2;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[2];
-    } else if (level > 50) {
+    } else if (level > DIFFICULTY_TIER_4) {
       this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 3;
       this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[3];
     }
@@ -95,23 +98,25 @@ export class GameEngineService {
     }
   }
 
-  public PowerMoveSelection(): PowerMoveType {
-    let moveType = PowerMoveType.None;
-    if (this.LevelGeometryType === LevelGeometryType.Cube) {
-      const enumValues = Object.keys(PowerMoveType)
-        .map((po) => Number.parseInt(po))
-        .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
-      const inx = Math.floor(Math.random() * enumValues.length - 1);
-      moveType = enumValues[inx];
-    } else {
-      const horizontalPowerMoves = [
-        PowerMoveType.None,
-        PowerMoveType.HorizontalLeft,
-        PowerMoveType.HorizontalMix,
-        PowerMoveType.HorizontalRight,
-      ];
-      moveType = horizontalPowerMoves[Math.floor(Math.random() * horizontalPowerMoves.length - 1)];
+  public PowerMoveSelection(level: number): PowerMoveType {
+    // create array of power move options
+    const powerMoveTypes = Object.keys(PowerMoveType)
+      .map((po) => Number.parseInt(po))
+      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
+
+    // remove certain element types
+    if (this.LevelGeometryType === LevelGeometryType.Cylinder) {
+      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalDown), 1);
+      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalMix), 1);
+      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalUp), 1);
     }
+
+    // after a certain level, player is always rewarded a power move
+    if (level > DIFFICULTY_TIER_3) {
+      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.None), 1);
+    }
+
+    const moveType = powerMoveTypes[Math.floor(Math.random() * powerMoveTypes.length)];
 
     if (!environment.production) {
       console.info('    Power Move Type: ', PowerMoveType[moveType]);

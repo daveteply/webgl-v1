@@ -5,7 +5,12 @@ import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
 import 'hammerjs';
 
-import { MINIMUM_MATCH_COUNT, MOVES_REMAINING_COUNT_PANIC, ROTATIONAL_CONSTANT } from '../game-constants';
+import {
+  DIFFICULTY_TIER_2,
+  MINIMUM_MATCH_COUNT,
+  MOVES_REMAINING_COUNT_PANIC,
+  ROTATIONAL_CONSTANT,
+} from '../game-constants';
 
 import { GameWheel } from '../models/game-wheel';
 import { GamePiece } from '../models/game-piece/game-piece';
@@ -93,11 +98,13 @@ export class InteractionManagerService {
             this.objectManager.LevelCompleted.next(false);
           } else {
             // power move (must be higher number of matches)
-            if (this._matchingPieces.length > MINIMUM_MATCH_COUNT) {
+            let powerMoveTarget =
+              this.scoringManager.Level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
+            if (this._matchingPieces.length >= powerMoveTarget) {
               if (!environment.production) {
                 console.info('Power Move Candidate Match!');
               }
-              const moveType = this.gameEngine.PowerMoveSelection();
+              const moveType = this.gameEngine.PowerMoveSelection(this.scoringManager.Level);
               if (moveType !== PowerMoveType.None) {
                 if (!environment.production) {
                   console.info('  ', PowerMoveType[moveType]);

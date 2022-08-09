@@ -33,6 +33,10 @@ export const MOVES_REMAINING_COUNT_WARNING = 3;
 export const MOVES_REMAINING_COUNT_DANGER = 2;
 export const MOVES_REMAINING_COUNT_PANIC = 1;
 export const LEVEL_START_OTHER_GEOMETRIES = 3;
+export const DIFFICULTY_TIER_1 = 10;
+export const DIFFICULTY_TIER_2 = 20;
+export const DIFFICULTY_TIER_3 = 30;
+export const DIFFICULTY_TIER_4 = 50;
 
 // Misc
 export const CANVAS_TEXTURE_SCALE = 80;
