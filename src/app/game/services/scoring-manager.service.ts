@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import {
+  DIFFICULTY_TIER_3,
   LEVEL_ADDITIVE,
   LONG_MATCH_SCORE_MULTIPLIER,
   MINIMUM_MATCH_COUNT,
@@ -207,6 +208,10 @@ export class ScoringManagerService {
 
   private initLevelPieceTarget(): void {
     this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
+    // cap the number of pieces
+    if (this._levelPieceTarget > DIFFICULTY_TIER_3) {
+      this._levelPieceTarget = DIFFICULTY_TIER_3;
+    }
     this._piecesRemaining = this._levelPieceTarget;
   }
 }
