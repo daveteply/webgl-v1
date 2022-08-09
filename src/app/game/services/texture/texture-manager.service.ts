@@ -11,7 +11,7 @@ import {
   CANVAS_TEXTURE_SCALE,
   EMOJI_GROUP_PEOPLE_BODY,
   EMOJI_GROUP_SMILEYS_EMOTION,
-  EMOJI_SKIN_TONE_COUNT,
+  EMOJI_GROUP_STEP,
 } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
@@ -227,7 +227,8 @@ export class TextureManagerService {
     this.store.UpdateEmojiGroup(emojiGroup.id);
 
     // DEBUG
-    // const emojiGroup = EmojiData.find((e) => e.id === 'Symbols') || EmojiData[0];
+    // const targetGroupName = 'Smileys & Emotion';
+    // emojiGroup = EmojiData.find((e) => e.id === targetGroupName) || EmojiData[0];
     // DEBUG
 
     if (!environment.production) {
@@ -244,26 +245,24 @@ export class TextureManagerService {
     this.store.UpdateEmojiSubGroups(subGroups.map((s) => s.id));
 
     // create long list of codes
-    let shuffledSequences = [];
+    let targetSequences = [];
     const emojiSequences = subGroups.flatMap((s) => s.codes);
 
-    // for People & Body, shuffle may result in too many of the same
-    //  emoji; just with different tones (challenging to differentiate
-    //  on a phone)
+    // some groups are too similar to randomize, using stepped method instead
     if (emojiGroup.id === EMOJI_GROUP_PEOPLE_BODY || emojiGroup.id === EMOJI_GROUP_SMILEYS_EMOTION) {
-      const maxStep = Math.floor(emojiSequences.length / playableTextureCount);
-      let step = MathUtils.randInt(EMOJI_SKIN_TONE_COUNT, maxStep);
-      if (step < EMOJI_SKIN_TONE_COUNT) {
-        step = EMOJI_SKIN_TONE_COUNT;
-      }
+      let inx = MathUtils.randInt(0, emojiSequences.length - 1);
       for (let i = 0; i < playableTextureCount; i++) {
-        shuffledSequences.push(emojiSequences[i * step]);
+        targetSequences.push(emojiSequences[inx]);
+        inx += EMOJI_GROUP_STEP;
+        if (inx >= emojiSequences.length) {
+          inx = 0;
+        }
       }
     } else {
-      shuffledSequences = shuffleArray(emojiSequences);
+      targetSequences = shuffleArray(emojiSequences);
     }
 
-    return shuffledSequences
+    return targetSequences
       .map((s) => {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })

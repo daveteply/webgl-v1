@@ -46,7 +46,7 @@ export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00d4cf, 0x8000ff, 0xff0080];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
 export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
-export const EMOJI_SKIN_TONE_COUNT = 6;
+export const EMOJI_GROUP_STEP = 6;
 
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';
