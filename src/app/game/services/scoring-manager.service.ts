@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { MathUtils } from 'three';
 import {
   DIFFICULTY_TIER_3,
   LEVEL_ADDITIVE,
@@ -6,8 +7,11 @@ import {
   MINIMUM_MATCH_COUNT,
   MINIMUM_SPEED_BONUS,
   POWER_MOVE_USE_SCORE_MULTIPLIER,
+  RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
+import { LevelMaterialType } from '../level-material-type';
 import { LevelStats } from '../models/level-stats';
+import { GameEngineService } from './game-engine.service';
 import { TextManagerService } from './text/text-manager.service';
 
 @Injectable()
@@ -19,7 +23,7 @@ export class ScoringManagerService {
   // events
   public MovesChange: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private textTextManager: TextManagerService) {
+  constructor(private textTextManager: TextManagerService, private gameEngine: GameEngineService) {
     this.ResetStats();
     this.initLevelPieceTarget();
   }
@@ -118,7 +122,7 @@ export class ScoringManagerService {
 
       // splash text
       if (!endLevelSkip) {
-        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`]);
+        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`], this.textColor);
         this.MovesChange.next(true);
       }
     }
@@ -147,7 +151,7 @@ export class ScoringManagerService {
     }
     this._score += usePowerMoveBonus;
     const multiMove = additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
-    this.textTextManager.ShowText([`${multiMove}`, `+${usePowerMoveBonus} Points`]);
+    this.textTextManager.ShowText([`${multiMove}`, `+${usePowerMoveBonus} Points`], this.textColor);
   }
 
   public RestartGame(): void {
@@ -200,7 +204,7 @@ export class ScoringManagerService {
       this._score += longMatchBonus;
 
       if (!endLevelSkip) {
-        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`]);
+        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`], this.textColor);
         this.MovesChange.next(true);
       }
     }
@@ -213,5 +217,13 @@ export class ScoringManagerService {
       this._levelPieceTarget = DIFFICULTY_TIER_3;
     }
     this._piecesRemaining = this._levelPieceTarget;
+  }
+
+  private get textColor(): number | undefined {
+    let targetColor = undefined;
+    if (this.gameEngine.LevelMaterialType === LevelMaterialType.Emoji) {
+      targetColor = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    }
+    return targetColor;
   }
 }

@@ -53,14 +53,14 @@ export class TextManagerService {
     this._scene.add(this._textGroup);
   }
 
-  public ShowText(message: string[]): void {
+  public ShowText(message: string[], color?: number): void {
     if (!this._robotoRegular) {
       return;
     }
 
     if (message?.length) {
       message.forEach((msg) => {
-        this._queue.push(new SplashText(msg, this._robotoRegular));
+        this._queue.push(new SplashText(msg, this._robotoRegular, color));
       });
     }
 

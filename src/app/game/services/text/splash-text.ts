@@ -1,6 +1,6 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
-import { MathUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
+import { Color, MathUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { Font } from 'three/examples/jsm/loaders/FontLoader';
 import { TextSplashEventType } from './text-splash-event-type';
@@ -18,7 +18,7 @@ export class SplashText extends Object3D {
 
   private readonly _targetY: number = 3.0;
 
-  constructor(text: string, font: Font) {
+  constructor(text: string, font: Font, color?: number) {
     super();
     this._text = text;
     this._font = font;
@@ -39,6 +39,9 @@ export class SplashText extends Object3D {
       transparent: true,
       opacity: 0,
     });
+    if (color) {
+      this._material.color = new Color(color);
+    }
 
     // mesh
     this._mesh = new Mesh(this._textGeometry, this._material);
