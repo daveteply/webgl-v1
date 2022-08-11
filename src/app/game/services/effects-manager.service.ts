@@ -150,7 +150,7 @@ export class EffectsManagerService {
       this._selectionTweens[0].delay(250);
 
       // audio and selection
-      this.audioManager.StartProgression();
+      this.audioManager.SetMinNote();
       this._selectionTweens.forEach((tween, inx) => {
         tween.onStart(() => {
           // update selected for highlight

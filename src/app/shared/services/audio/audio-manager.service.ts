@@ -9,18 +9,18 @@ import { Subscription } from 'rxjs';
   providedIn: 'root',
 })
 export class AudioManagerService implements OnDestroy {
-  private readonly ProgressionMin = 48;
-  private readonly ProgressionMax = 71;
-  private _progressionNext: number = this.ProgressionMin;
+  private readonly NOTE_MIN = 48;
+  private readonly NOTE_MAX = 71;
+  private _noteNext: number = this.NOTE_MIN;
 
-  private _trackVolume: number = 0.5;
-  get Volume(): number {
-    return this._trackVolume;
-  }
-  set Volume(gainLevel: number) {
-    this._trackVolume = gainLevel;
-    Howler.volume(this._trackVolume);
-  }
+  // private _trackVolume: number = 0.5;
+  // get Volume(): number {
+  //   return this._trackVolume;
+  // }
+  // set Volume(gainLevel: number) {
+  //   this._trackVolume = gainLevel;
+  //   Howler.volume(this._trackVolume);
+  // }
 
   private _visiblySubscription!: Subscription;
 
@@ -75,8 +75,8 @@ export class AudioManagerService implements OnDestroy {
     }
   }
 
-  public StartProgression(): void {
-    this._progressionNext = this.ProgressionMin;
+  public SetMinNote(): void {
+    this._noteNext = this.NOTE_MIN;
   }
 
   public PlayAudio(audioType: AudioType, useNote: boolean = false, loop: boolean = false): void {
@@ -96,9 +96,9 @@ export class AudioManagerService implements OnDestroy {
   }
 
   public PlayLongMatch(matchLength: number): void {
-    this.StartProgression();
+    this.SetMinNote();
     for (let i = 0; i < matchLength - MINIMUM_MATCH_COUNT; i++) {
-      this.nextProgression;
+      this.nextNote;
     }
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
@@ -110,16 +110,16 @@ export class AudioManagerService implements OnDestroy {
 
   private playLoadedAudio(target: Howl, useNote: boolean, loop: boolean): void {
     target.loop(loop);
-    target.rate(useNote ? this.nextProgression : 1);
+    target.rate(useNote ? this.nextNote : 1);
     target.play();
   }
 
-  private get nextProgression(): number {
-    this._progressionNext++;
-    if (this._progressionNext > this.ProgressionMax) {
-      this._progressionNext = this.ProgressionMin;
+  private get nextNote(): number {
+    this._noteNext++;
+    if (this._noteNext > this.NOTE_MAX) {
+      this._noteNext = this.NOTE_MIN;
     }
-    return Math.pow(2, (this._progressionNext - 60) / 12);
+    return Math.pow(2, (this._noteNext - 60) / 12);
   }
 
   ngOnDestroy(): void {
