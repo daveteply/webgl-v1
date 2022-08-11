@@ -11,20 +11,20 @@ export class GainControlComponent {
   constructor(public audioManager: AudioManagerService) {}
 
   Muted: boolean = false;
-  private _currentVolume: number = this.audioManager.Volume;
+  // private _currentVolume: number = this.audioManager.Volume;
 
   volumeChanged(event: MatSliderChange): void {
     this.Muted = false;
-    this.audioManager.Volume = event.value || 0.0;
+    // this.audioManager.Volume = event.value || 0.0;
   }
 
   toggleMute(): void {
     this.Muted = !this.Muted;
     if (this.Muted) {
-      this._currentVolume = this.audioManager.Volume;
-      this.audioManager.Volume = 0.0;
+      // this._currentVolume = this.audioManager.Volume;
+      // this.audioManager.Volume = 0.0;
     } else {
-      this.audioManager.Volume = this._currentVolume;
+      // this.audioManager.Volume = this._currentVolume;
     }
   }
 }
