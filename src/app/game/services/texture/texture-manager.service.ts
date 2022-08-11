@@ -37,6 +37,10 @@ export class TextureManagerService {
 
   private _levelGeometryType!: LevelGeometryType;
 
+  private _bumpTextures = BumpTextures;
+  private _bumpSymbolTextures = BumpSymbolTextures;
+  private _powerMoveTextures = PowerMoveTextures;
+
   private _textures: Texture[] = [];
   get Textures(): Texture[] {
     return this._textures;
@@ -107,7 +111,7 @@ export class TextureManagerService {
 
   public GetPowerMoveTexture(moveType: PowerMoveType): Observable<Texture> {
     return new Observable((observer) => {
-      const moveTexture = PowerMoveTextures.find((pt) => pt.moveType === moveType);
+      const moveTexture = this._powerMoveTextures.find((pt) => pt.moveType === moveType);
       if (moveTexture) {
         if (moveTexture?.texture) {
           observer.next(moveTexture.texture);
@@ -133,9 +137,9 @@ export class TextureManagerService {
   }
 
   private loadBumpSymbolTextures(): void {
-    const bumpSymbolsLoaded = BumpSymbolTextures.every((b) => b.texture);
+    const bumpSymbolsLoaded = this._bumpSymbolTextures.every((b) => b.texture);
     if (bumpSymbolsLoaded) {
-      BumpSymbolTextures.forEach((s) => {
+      this._bumpSymbolTextures.forEach((s) => {
         if (s.texture) {
           this.setTextureWrapping(s.texture);
           this._textures.push(s.texture);
@@ -144,10 +148,13 @@ export class TextureManagerService {
       this.LevelTexturesLoaded.next();
     } else {
       // load and cache
-      BumpSymbolTextures.forEach((map) => {
+      this._bumpSymbolTextures.forEach((map) => {
         this._textureLoader.load(map.src, (data) => {
-          data.name = map.src;
           data.center = new Vector2(0.5, 0.5);
+          if (!environment.production) {
+            data.name = map.src;
+            console.info('Texture Manager: bump symbol texture caching ', data.name);
+          }
           map.texture = data;
           this.setTextureWrapping(map.texture);
           this._textures.push(map.texture);
@@ -157,22 +164,23 @@ export class TextureManagerService {
   }
 
   private loadBumpTextures(): void {
-    // select a bump map
-    const randBumpMaterialMap = BumpTextures[MathUtils.randInt(0, BumpTextures.length - 1)];
+    // select a random bump map
+    const randBumpMaterialMap = this._bumpTextures[MathUtils.randInt(0, this._bumpTextures.length - 1)];
     // check if loaded
     if (randBumpMaterialMap.texture) {
       if (!environment.production) {
-        console.info('Texture Manager: pulled from cache ', randBumpMaterialMap.src);
+        console.info('Texture Manager: pulled bump texture from cache ', randBumpMaterialMap.src);
       }
       this.setTextureWrapping(randBumpMaterialMap.texture);
       this._textures.push(randBumpMaterialMap.texture);
       this.LevelTexturesLoaded.next();
     } else {
+      // load and cache
       this._textureLoader.load(randBumpMaterialMap.src, (data) => {
         data.center = new Vector2(0.5, 0.5);
-        data.name = randBumpMaterialMap.src;
         if (!environment.production) {
-          console.info('Texture Manager: caching ', data.name);
+          data.name = randBumpMaterialMap.src;
+          console.info('Texture Manager: bump texture caching ', data.name);
         }
         randBumpMaterialMap.texture = data;
         this.setTextureWrapping(randBumpMaterialMap.texture);
@@ -298,6 +306,8 @@ export class TextureManagerService {
         texture.wrapS = RepeatWrapping;
         texture.repeat.set(4, 1);
       }
+
+      texture.needsUpdate = true;
     }
   }
 }
