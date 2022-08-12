@@ -18,7 +18,7 @@ export class SplashText extends Object3D {
 
   private readonly _targetY: number = 3.0;
 
-  constructor(text: string, font: Font, color?: number) {
+  constructor(text: string, font: Font, yOffset: number, color?: number) {
     super();
     this._text = text;
     this._font = font;
@@ -47,8 +47,8 @@ export class SplashText extends Object3D {
     this._mesh = new Mesh(this._textGeometry, this._material);
     this.add(this._mesh);
 
-    this.initIntroTween(this.xOffset(this._textGeometry));
-    this.initOutroTween();
+    this.initIntroTween(this.xOffset(this._textGeometry), yOffset);
+    this.initOutroTween(yOffset);
 
     this._introTween.chain(this._outroTween);
   }
@@ -80,7 +80,7 @@ export class SplashText extends Object3D {
     return 0;
   }
 
-  private initIntroTween(endX: number): void {
+  private initIntroTween(endX: number, yOffset: number): void {
     let delta = { o: 0, x: 0, y: 0 };
     let target = { o: 1.0, x: 0, y: 0 };
     switch (MathUtils.randInt(1, 3)) {
@@ -88,16 +88,16 @@ export class SplashText extends Object3D {
       case 1:
         delta.x = -5;
         target.x = endX;
-        delta.y = this._targetY;
-        target.y = this._targetY;
+        delta.y = this._targetY + yOffset;
+        target.y = this._targetY + yOffset;
         break;
 
       // from right
       case 2:
         delta.x = 5;
         target.x = endX;
-        delta.y = this._targetY;
-        target.y = this._targetY;
+        delta.y = this._targetY + yOffset;
+        target.y = this._targetY + yOffset;
         break;
 
       // from bottom
@@ -105,13 +105,13 @@ export class SplashText extends Object3D {
         delta.x = endX;
         target.x = endX;
         delta.y = -5;
-        target.y = this._targetY;
+        target.y = this._targetY + yOffset;
         break;
     }
 
     this._introTween = new Tween(delta)
       .to(target, 750)
-      .easing(Easing.Quintic.InOut)
+      .easing(Easing.Elastic.Out)
       .onUpdate(() => {
         this._material.opacity = delta.o;
         this._mesh.position.x = delta.x;
@@ -119,8 +119,8 @@ export class SplashText extends Object3D {
       });
   }
 
-  private initOutroTween(): void {
-    const delta = { o: 1.0, z: 0.0, y: this._targetY };
+  private initOutroTween(yOffset: number): void {
+    const delta = { o: 1.0, z: 0.0, y: this._targetY + yOffset };
     const target = { o: 0.0, z: 5.0, y: 2.0 };
     this._outroTween = new Tween(delta)
       .to(target, 1000)

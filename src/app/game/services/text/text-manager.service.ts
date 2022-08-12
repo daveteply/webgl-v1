@@ -59,8 +59,10 @@ export class TextManagerService {
     }
 
     if (message?.length) {
+      let yOffset = 0;
       message.forEach((msg) => {
-        this._queue.push(new SplashText(msg, this._robotoRegular, color));
+        this._queue.push(new SplashText(msg, this._robotoRegular, yOffset, color));
+        yOffset -= 0.75;
       });
     }
 
