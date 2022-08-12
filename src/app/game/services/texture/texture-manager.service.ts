@@ -248,29 +248,13 @@ export class TextureManagerService {
     // const shuffledSubGroups = emojiGroup.subGroup.filter((s) => s.id === 'arrow');
     // DEBUG
 
-    // grab first 3 shuffled subgroups (some subgroups have a small number of sequences)
-    const subGroups = shuffledSubGroups.slice(0, 3);
+    // grab first 5 shuffled subgroups (some subgroups have a small number of sequences)
+    const subGroups = shuffledSubGroups.slice(0, 5);
     this.store.UpdateEmojiSubGroups(subGroups.map((s) => s.id));
 
     // create long list of codes
-    let targetSequences = [];
     const emojiSequences = subGroups.flatMap((s) => s.codes);
-
-    // some groups are too similar to randomize, using stepped method instead
-    if (emojiGroup.id === EMOJI_GROUP_PEOPLE_BODY || emojiGroup.id === EMOJI_GROUP_SMILEYS_EMOTION) {
-      let inx = MathUtils.randInt(0, emojiSequences.length - 1);
-      for (let i = 0; i < playableTextureCount; i++) {
-        targetSequences.push(emojiSequences[inx]);
-        inx += EMOJI_GROUP_STEP;
-        if (inx >= emojiSequences.length) {
-          inx = 0;
-        }
-      }
-    } else {
-      targetSequences = shuffleArray(emojiSequences);
-    }
-
-    return targetSequences
+    return shuffleArray(emojiSequences)
       .map((s) => {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })
