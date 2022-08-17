@@ -19,15 +19,6 @@ export interface SaveWheelData {
   piecesData: SavePieceData[];
 }
 
-export interface SaveGameData {
-  levelMaterialType?: number;
-  levelGeometryType?: number;
-  wheelData: SaveWheelData[];
-  textureData: SaveMaterialData[];
-  gameMaterials?: number[][][];
-  scoring?: SaveGameScore;
-}
-
 export interface SaveGameScore {
   stats: LevelStats;
   moves: number;
@@ -36,4 +27,14 @@ export interface SaveGameScore {
   pieceTarget: number;
   score: number;
   level: number;
+}
+
+export interface SaveGameData {
+  levelMaterialType?: number;
+  levelGeometryType?: number;
+  wheelData: SaveWheelData[];
+  textureData: SaveMaterialData[];
+  gameMaterials?: number[][][];
+  scoring?: SaveGameScore;
+  outlineColor?: number;
 }

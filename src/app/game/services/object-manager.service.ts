@@ -41,6 +41,8 @@ export class ObjectManagerService {
 
   private _starField: StarField;
 
+  private _outlineColor!: number;
+
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
@@ -109,8 +111,8 @@ export class ObjectManagerService {
 
   public UpdateLevelMaterials(level: number): void {
     // update highlight color
-    const outlineColor = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
-    this.postProcessingManager.UpdateOutlinePassColor(outlineColor);
+    this._outlineColor = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    this.postProcessingManager.UpdateOutlinePassColor(this._outlineColor);
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(
@@ -140,7 +142,8 @@ export class ObjectManagerService {
       this.materialManager.GameMaterials,
       this.gameEngine.LevelMaterialType,
       this.gameEngine.LevelGeometryType,
-      this.effectsManager.SaveGameScoringData
+      this.effectsManager.SaveGameScoringData,
+      this._outlineColor
     );
   }
 

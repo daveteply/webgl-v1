@@ -44,7 +44,8 @@ export class SaveGameService {
     gameMaterials: GameMaterials,
     levelMaterialType: number,
     levelGeometryType: number,
-    score: SaveGameScore
+    score: SaveGameScore,
+    outlineColor: number
   ): void {
     this._savedGameData.wheelData = [];
     this._savedGameData.textureData = [];
@@ -85,6 +86,9 @@ export class SaveGameService {
     this._savedGameData.levelGeometryType = levelGeometryType;
     this._savedGameData.levelMaterialType = levelMaterialType;
     this._savedGameData.scoring = score;
+
+    // misc
+    this._savedGameData.outlineColor = outlineColor;
 
     console.log(this._savedGameData);
 
