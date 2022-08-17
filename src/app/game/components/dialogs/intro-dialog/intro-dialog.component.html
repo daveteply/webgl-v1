@@ -11,7 +11,16 @@
   <mat-dialog-actions align="center">
     <div class="dialog-buttons">
       <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="materialsUpdating">
-        <span>Play!</span>
+        <span>New Game</span>
+      </button>
+      <button
+        *ngIf="hasRestoreData"
+        (click)="restoreGame()"
+        mat-stroked-button
+        mat-dialog-close
+        [disabled]="materialsUpdating"
+      >
+        <span>Restore Game</span>
       </button>
     </div>
   </mat-dialog-actions>
