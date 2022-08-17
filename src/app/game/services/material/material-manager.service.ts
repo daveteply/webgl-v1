@@ -18,9 +18,13 @@ import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
 @Injectable()
 export class MaterialManagerService {
   private _gameMaterials!: GameMaterials;
-
-  public get GameMaterials(): GameMaterials {
+  get GameMaterials(): GameMaterials {
     return this._gameMaterials;
+  }
+
+  private _levelMaterials!: GamePieceMaterialData[];
+  get LevelMaterials(): GamePieceMaterialData[] {
+    return this._levelMaterials;
   }
 
   constructor(private textureManager: TextureManagerService, private store: StoreService) {}
@@ -51,14 +55,19 @@ export class MaterialManagerService {
   }
 
   public UpdateMaterials(level: number, playableTextureCount: number, levelMaterialType: LevelMaterialType): void {
-    // initial game piece materials
-    const initialMaterials = this.getLevelMaterials(level, playableTextureCount, levelMaterialType);
+    // game piece materials
+    this._levelMaterials = this.getLevelMaterials(
+      level,
+      playableTextureCount,
+      levelMaterialType,
+      this.textureManager.Textures
+    );
 
     // update materials
     for (const wheel of this._gameMaterials.wheelMaterials) {
       for (const piece of wheel.pieceMaterials) {
         // shuffle for each game piece
-        const shuffledMaterials = shuffleArray(initialMaterials);
+        const shuffledMaterials = shuffleArray(this._levelMaterials);
 
         // set up each side
         for (let i = 0; i < piece.materials.length; i++) {
@@ -95,6 +104,7 @@ export class MaterialManagerService {
     level: number,
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
+    textures: Texture[]
   ): GamePieceMaterialData[] {
     // reset array
     const materials: GamePieceMaterialData[] = [];
@@ -115,7 +125,7 @@ export class MaterialManagerService {
           const color = new Color(c);
           materials.push({
             matchKey: matchKey++,
-            bumpTexture: this.textureManager.Textures[inx],
+            bumpTexture: textures[inx],
             colorStr: c,
             color,
           });
@@ -127,7 +137,7 @@ export class MaterialManagerService {
         selectedColors = this.initColorScheme(level, playableTextureCount);
         this.store.UpdateLevelColors(selectedColors);
 
-        const bumpTexture = this.textureManager.Textures[MathUtils.randInt(0, this.textureManager.Textures.length - 1)];
+        const bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
 
         selectedColors.forEach((c) => {
           materials.push({
@@ -144,7 +154,7 @@ export class MaterialManagerService {
         for (let i = 0; i < playableTextureCount; i++) {
           materials.push({
             matchKey: matchKey++,
-            texture: this.textureManager.Textures[i],
+            texture: textures[i],
           });
         }
         break;
@@ -156,7 +166,7 @@ export class MaterialManagerService {
   private initColorScheme(level: number, playableTextureCount: number): string[] {
     let scheme: ColorSchemeData;
     if (level === 1) {
-      scheme = COLOR_SCHEME_DATA.find(c => c.id === 2) || COLOR_SCHEME_DATA[0];
+      scheme = COLOR_SCHEME_DATA.find((c) => c.id === 2) || COLOR_SCHEME_DATA[0];
     } else {
       scheme = COLOR_SCHEME_DATA[MathUtils.randInt(0, COLOR_SCHEME_DATA.length - 1)];
     }
