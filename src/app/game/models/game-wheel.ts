@@ -20,6 +20,11 @@ export class GameWheel extends Object3D {
   private _levelChangeTween: any;
   private _powerMoveTween: any;
 
+  // game save state
+  get Theta(): number {
+    return this._theta;
+  }
+
   constructor(y: number, meshPoints: PiecePoints[]) {
     super();
     this._originalPositionY = y;
@@ -118,7 +123,6 @@ export class GameWheel extends Object3D {
       .onUpdate(() => {
         this.position.y = delta.y;
         this.rotation.y = delta.theta;
-        // this._theta = delta.theta;
       })
       .start();
   }

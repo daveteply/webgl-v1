@@ -72,6 +72,16 @@ export class GamePiece extends Object3D {
     return this._powerMoveType;
   }
 
+  // for game save state
+  private _flipTurns: number;
+  get FlipTurns(): number {
+    return this._flipTurns;
+  }
+  private _flipUp: boolean;
+  get FlipUp(): boolean {
+    return this._flipUp;
+  }
+
   constructor(x: number, y: number, z: number, rotation: number) {
     super();
 
@@ -110,6 +120,10 @@ export class GamePiece extends Object3D {
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
     ];
+
+    // game save state
+    this._flipTurns = 0;
+    this._flipUp = false;
   }
 
   set ThetaOffset(theta: number) {
@@ -295,6 +309,10 @@ export class GamePiece extends Object3D {
 
   public AnimateFlipTween(turns: number, directionUp: boolean): void {
     if (!this._isPowerMove) {
+      // game save state
+      this._flipTurns = turns;
+      this._flipUp = directionUp;
+
       // set direction
       const delta = { theta: this._mesh.rotation.z };
       const final = {
