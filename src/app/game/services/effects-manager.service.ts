@@ -1,13 +1,17 @@
 import { EventEmitter, Injectable } from '@angular/core';
+
 import { Tween } from '@tweenjs/tween.js';
 import { MathUtils, Object3D, PerspectiveCamera } from 'three';
+
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
+
 import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
-import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
-import { ScoringManagerService } from './scoring-manager.service';
 import { PowerMoveType } from '../models/power-move-type';
+import { SaveGameScore } from './save-game/save-game-data';
 
 @Injectable()
 export class EffectsManagerService {
@@ -193,5 +197,17 @@ export class EffectsManagerService {
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
     gamePiece.AnimateFlipTween(Math.floor(velocity), directionUp);
+  }
+
+  get SaveGameScoringData(): SaveGameScore {
+    return {
+      stats: this.scoringManager.LevelStats,
+      moves: this.scoringManager.PlayerMoves,
+      remaining: this.scoringManager.PiecesRemaining,
+      progress: this.scoringManager.LevelProgress,
+      pieceTarget: this.scoringManager.LevelPieceTarget,
+      score: this.scoringManager.Score,
+      level: this.scoringManager.Level,
+    };
   }
 }
