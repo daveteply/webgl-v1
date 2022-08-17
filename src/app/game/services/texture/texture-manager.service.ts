@@ -7,12 +7,7 @@ import { environment } from 'src/environments/environment';
 import { StoreService } from 'src/app/app-store/services/store.service';
 
 import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
-import {
-  CANVAS_TEXTURE_SCALE,
-  EMOJI_GROUP_PEOPLE_BODY,
-  EMOJI_GROUP_SMILEYS_EMOTION,
-  EMOJI_GROUP_STEP,
-} from '../../game-constants';
+import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
@@ -96,6 +91,7 @@ export class TextureManagerService {
         emojiList.forEach((data) => {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             texture.name = data.desc;
+            texture.userData = { sequence: data.sequence };
             texture.center = new Vector2(0.5, 0.5);
             this.setTextureWrapping(texture);
             this._textures.push(texture);
