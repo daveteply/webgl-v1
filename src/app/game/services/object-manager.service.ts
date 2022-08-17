@@ -2,7 +2,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
@@ -24,6 +23,7 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { TextManagerService } from './text/text-manager.service';
 import { GameEngineService } from './game-engine.service';
 import { PostProcessingManagerService } from './post-processing-manager.service';
+import { SaveGameService } from './save-game/save-game.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -52,7 +52,8 @@ export class ObjectManagerService {
     private textManager: TextManagerService,
     private audioManager: AudioManagerService,
     private gameEngine: GameEngineService,
-    private postProcessingManager: PostProcessingManagerService
+    private postProcessingManager: PostProcessingManagerService,
+    private saveGame: SaveGameService
   ) {
     this._stack = new Group();
     this._stack.name = 'gameWheelStack';
@@ -108,9 +109,8 @@ export class ObjectManagerService {
 
   public UpdateLevelMaterials(level: number): void {
     // update highlight color
-    this.postProcessingManager.UpdateOutlinePassColor(
-      RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
-    );
+    const outlineColor = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    this.postProcessingManager.UpdateOutlinePassColor(outlineColor);
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(
@@ -131,6 +131,17 @@ export class ObjectManagerService {
     }
 
     this.LevelMaterialsUpdated.next();
+  }
+
+  public SaveGameState(): void {
+    this.saveGame.SaveState(
+      this.Axle,
+      this.materialManager.LevelMaterials,
+      this.materialManager.GameMaterials,
+      this.gameEngine.LevelMaterialType,
+      this.gameEngine.LevelGeometryType,
+      this.effectsManager.SaveGameScoringData
+    );
   }
 
   public NextLevel(level: number, updateMaterials: boolean = false): void {
