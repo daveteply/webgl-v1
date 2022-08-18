@@ -112,6 +112,9 @@ export class ObjectManagerService {
   public UpdateLevelMaterials(level: number): void {
     // update highlight color
     this._outlineColor = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    if (this.saveGame.IsRestoring) {
+      this._outlineColor = this.saveGame.SavedGameData.outlineColor as number;
+    }
     this.postProcessingManager.UpdateOutlinePassColor(this._outlineColor);
 
     // update materials in the material manager service
