@@ -62,10 +62,8 @@ export class ObjectManagerService {
     this._starField = new StarField();
 
     // need to re-broadcast from here to keep effects manager separate
-    this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
-      if (!locked) {
-        this.LevelChangeAnimationComplete.next();
-      }
+    this.effectsManager.LevelChangeAnimation.pipe(take(1)).subscribe(() => {
+      this.LevelChangeAnimationComplete.next();
     });
   }
 
