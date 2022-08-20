@@ -169,6 +169,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // textures restored (only emits while restoring)
     this.textureManager.LevelTexturesRestoredLoaded.pipe(take(1)).subscribe(() => {
+      this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
       this.handleLevelDialogCLosed();
     });
 
