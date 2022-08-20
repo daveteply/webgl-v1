@@ -163,12 +163,13 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     });
 
     // update level materials for start of game
-    // why take 2? 1 emit for initial load, 2 emit if restoring
-    this.textureManager.LevelTexturesLoaded.pipe(take(2)).subscribe(() => {
+    this.textureManager.LevelTexturesLoaded.pipe(take(1)).subscribe(() => {
       this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
-      if (this.saveGame.IsRestoring) {
-        this.handleLevelDialogCLosed();
-      }
+    });
+
+    // textures restored (only emits while restoring)
+    this.textureManager.LevelTexturesRestoredLoaded.pipe(take(1)).subscribe(() => {
+      this.handleLevelDialogCLosed();
     });
 
     // show the tutorial after the initial level loads

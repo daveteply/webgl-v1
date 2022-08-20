@@ -45,6 +45,7 @@ export class TextureManagerService {
 
   public LevelTextureLoadingStarted: EventEmitter<boolean> = new EventEmitter();
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
+  public LevelTexturesRestoredLoaded: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
   public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
 
@@ -73,7 +74,7 @@ export class TextureManagerService {
             this._textures = orderedTextures;
           }
         }
-        this.LevelTexturesLoaded.next();
+        this.emitCompletion();
       },
       // progress
       (url: string, itemsLoaded: number, itemsTotal: number) => {
@@ -175,7 +176,7 @@ export class TextureManagerService {
       this._textures.push(texture.texture as Texture);
     }
     if (targetTextures.every((t) => t.texture)) {
-      this.LevelTexturesLoaded.next();
+      this.emitCompletion();
     } else {
       // need to load
       const needLoadedTextures = targetTextures.filter((t) => !t.texture);
@@ -212,7 +213,7 @@ export class TextureManagerService {
       }
       this.setTextureWrapping(randBumpMaterialMap.texture);
       this._textures.push(randBumpMaterialMap.texture);
-      this.LevelTexturesLoaded.next();
+      this.emitCompletion();
     } else {
       // load and cache
       this._textureLoader.load(randBumpMaterialMap.src, (data) => {
@@ -337,6 +338,14 @@ export class TextureManagerService {
       }
 
       texture.needsUpdate = true;
+    }
+  }
+
+  private emitCompletion(): void {
+    if (this.saveGame.IsRestoring) {
+      this.LevelTexturesRestoredLoaded.next();
+    } else {
+      this.LevelTexturesLoaded.next();
     }
   }
 }
