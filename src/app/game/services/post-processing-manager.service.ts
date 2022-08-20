@@ -98,9 +98,7 @@ export class PostProcessingManagerService {
         this._bokehPass.enabled = true;
         this._unrealBloomPass.enabled = false;
 
-        if (this._bokehTween) {
-          this._bokehTween.stop();
-        }
+        this._bokehTween?.stop();
         this.initBokehTween(start);
         break;
 
@@ -109,9 +107,7 @@ export class PostProcessingManagerService {
         this._bokehPass.enabled = false;
         this._unrealBloomPass.enabled = true;
 
-        if (this._unrealBloomTween) {
-          this._unrealBloomTween.stop();
-        }
+        this._unrealBloomTween?.stop();
         this.initUnrealBloomTween();
         break;
 
