@@ -69,6 +69,6 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   restoreGame(): void {
     this.saveGame.RestoreState();
-    this.dialogRef.close();
+    this.dialogRef.close({ isRestoring: true });
   }
 }

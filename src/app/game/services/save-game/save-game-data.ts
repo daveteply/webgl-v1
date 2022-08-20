@@ -5,7 +5,7 @@ export interface SaveMaterialData {
   bumpSrc?: string;
   textureSrc?: string;
   colorStr?: string;
-  emojiSequence?: string;
+  emojiSequence?: number[];
 }
 
 export interface SavePieceData {

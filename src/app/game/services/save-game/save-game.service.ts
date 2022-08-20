@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { Observable } from 'rxjs';
+
 import { STORAGE_SAVE_STATE } from '../../game-constants';
 import { GamePiece } from '../../models/game-piece/game-piece';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
@@ -15,6 +17,11 @@ export class SaveGameService {
   private _savedGameData: SaveGameData;
   get SavedGameData(): SaveGameData {
     return this._savedGameData;
+  }
+
+  private _isRestoring!: boolean;
+  get IsRestoring(): boolean {
+    return this._isRestoring;
   }
 
   constructor() {
@@ -67,7 +74,7 @@ export class SaveGameService {
     }
 
     // materials data
-    for (const material of levelMaterials) {
+    for (const material of levelMaterials.sort((a, b) => a.matchKey - b.matchKey)) {
       this._savedGameData.textureData.push({
         matchKey: material.matchKey,
         bumpSrc: material.bumpTexture?.name,
@@ -97,8 +104,17 @@ export class SaveGameService {
 
   public RestoreState(): void {
     // restore game state
+    this._isRestoring = true;
+
+    if (!environment.production) {
+      console.info('-= RESTORING =-');
+    }
+  }
+
+  public RestoreComplete(): void {
+    this._isRestoring = false;
 
     // clear preference so next time
-    Preferences.remove({ key: STORAGE_SAVE_STATE });
+    // Preferences.remove({ key: STORAGE_SAVE_STATE });
   }
 }

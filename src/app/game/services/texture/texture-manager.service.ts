@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { StoreService } from 'src/app/app-store/services/store.service';
+import { SaveGameService } from '../save-game/save-game.service';
 
 import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
-import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
+import { BumpTextures, BumpSymbolTextures, PowerMoveTextures, BumpData } from './texture-info';
 import * as shuffleArray from 'shuffle-array';
 import { LevelGeometryType } from '../../level-geometry-type';
 
@@ -31,6 +32,7 @@ export class TextureManagerService {
   private _canvasContext!: CanvasRenderingContext2D | null;
 
   private _levelGeometryType!: LevelGeometryType;
+  private _levelMaterialType!: LevelMaterialType;
 
   private _bumpTextures = BumpTextures;
   private _bumpSymbolTextures = BumpSymbolTextures;
@@ -41,15 +43,36 @@ export class TextureManagerService {
     return this._textures;
   }
 
+  public LevelTextureLoadingStarted: EventEmitter<boolean> = new EventEmitter();
   public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
-  public LevelTextureLoadingStarted: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
   public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
 
-  constructor(@Inject(DOCUMENT) private document: Document, private store: StoreService) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private store: StoreService,
+    private saveGame: SaveGameService
+  ) {
     this._loaderManager = new LoadingManager(
       // all images loaded
       () => {
+        if (this.saveGame.IsRestoring) {
+          // when bump symbols are initially loaded, they complete when loaded
+          //  need to set order to saved order
+          if (
+            this._levelMaterialType === LevelMaterialType.ColorBumpMaterial ||
+            this._levelMaterialType === LevelMaterialType.ColorBumpShape
+          ) {
+            const orderedTextures = [];
+            for (const restoringTexture of this.saveGame.SavedGameData.textureData) {
+              const target = this._textures.find((t) => t.name === restoringTexture.bumpSrc);
+              if (target) {
+                orderedTextures.push(target);
+              }
+            }
+            this._textures = orderedTextures;
+          }
+        }
         this.LevelTexturesLoaded.next();
       },
       // progress
@@ -69,17 +92,20 @@ export class TextureManagerService {
     levelMaterialType: LevelMaterialType,
     levelGeometryType: LevelGeometryType
   ): void {
-    this.LevelTextureLoadingStarted.next();
+    this.LevelTextureLoadingStarted.next(this.saveGame.IsRestoring);
 
     // level geometry type
     this._levelGeometryType = levelGeometryType;
 
+    // material type
+    this._levelMaterialType = levelMaterialType;
+
     // clear existing textures
     this._textures = [];
 
-    switch (levelMaterialType) {
+    switch (this._levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
-        this.loadBumpSymbolTextures();
+        this.loadBumpSymbolTextures(playableTextureCount);
         break;
 
       case LevelMaterialType.ColorBumpMaterial:
@@ -132,36 +158,53 @@ export class TextureManagerService {
     });
   }
 
-  private loadBumpSymbolTextures(): void {
-    const bumpSymbolsLoaded = this._bumpSymbolTextures.every((b) => b.texture);
-    if (bumpSymbolsLoaded) {
-      this._bumpSymbolTextures.forEach((s) => {
-        if (s.texture) {
-          this.setTextureWrapping(s.texture);
-          this._textures.push(s.texture);
-        }
+  private loadBumpSymbolTextures(playableTextureCount: number): void {
+    let targetTextures = shuffleArray(this._bumpSymbolTextures).slice(0, playableTextureCount);
+    if (this.saveGame.IsRestoring) {
+      targetTextures = this._bumpSymbolTextures.filter((b) => {
+        return this.saveGame.SavedGameData.textureData.some((t) => t.bumpSrc === b.src);
       });
+    }
+
+    // loaded
+    const loadedTextures = targetTextures.filter((t) => t.texture);
+    for (const texture of loadedTextures) {
+      if (!environment.production) {
+        console.info('Texture Manager: pulled bump symbol texture from cache ', texture.src);
+      }
+      this._textures.push(texture.texture as Texture);
+    }
+    if (targetTextures.every((t) => t.texture)) {
       this.LevelTexturesLoaded.next();
     } else {
-      // load and cache
-      this._bumpSymbolTextures.forEach((map) => {
-        this._textureLoader.load(map.src, (data) => {
+      // need to load
+      const needLoadedTextures = targetTextures.filter((t) => !t.texture);
+      for (const texture of needLoadedTextures) {
+        this._textureLoader.load(texture.src, (data) => {
           data.center = new Vector2(0.5, 0.5);
           if (!environment.production) {
-            data.name = map.src;
+            data.name = texture.src;
             console.info('Texture Manager: bump symbol texture caching ', data.name);
           }
-          map.texture = data;
-          this.setTextureWrapping(map.texture);
-          this._textures.push(map.texture);
+          texture.texture = data;
+          this.setTextureWrapping(texture.texture);
+          this._textures.push(texture.texture);
         });
-      });
+      }
     }
   }
 
   private loadBumpTextures(): void {
-    // select a random bump map
-    const randBumpMaterialMap = this._bumpTextures[MathUtils.randInt(0, this._bumpTextures.length - 1)];
+    // select a random bump map or restore
+    let randBumpMaterialMap: BumpData;
+    if (this.saveGame.IsRestoring) {
+      randBumpMaterialMap = this._bumpTextures.find(
+        (b) => b.src === this.saveGame.SavedGameData.textureData[0].bumpSrc
+      ) as BumpData;
+    } else {
+      randBumpMaterialMap = this._bumpTextures[MathUtils.randInt(0, this._bumpTextures.length - 1)];
+    }
+
     // check if loaded
     if (randBumpMaterialMap.texture) {
       if (!environment.production) {
@@ -198,7 +241,13 @@ export class TextureManagerService {
     let emojiSequence: EmojiSequence[] = [];
 
     if (this._canvasContext) {
-      emojiSequence = this.randomEmojiCodeList(playableTextureCount);
+      if (this.saveGame.IsRestoring) {
+        for (const texture of this.saveGame.SavedGameData.textureData) {
+          emojiSequence.push({ ver: '', desc: texture.textureSrc || '', sequence: texture.emojiSequence as number[] });
+        }
+      } else {
+        emojiSequence = this.randomEmojiCodeList(playableTextureCount);
+      }
       this.store.UpdateEmojiList(emojiSequence);
 
       for (let i = 0; i < emojiSequence.length; i++) {

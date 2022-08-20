@@ -14,6 +14,7 @@ import { LevelMaterialType } from '../../level-material-type';
 import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
+import { SaveGameService } from '../save-game/save-game.service';
 
 @Injectable()
 export class MaterialManagerService {
@@ -27,7 +28,11 @@ export class MaterialManagerService {
     return this._levelMaterials;
   }
 
-  constructor(private textureManager: TextureManagerService, private store: StoreService) {}
+  constructor(
+    private textureManager: TextureManagerService,
+    private store: StoreService,
+    private saveGame: SaveGameService
+  ) {}
 
   public InitMaterials(wheelCount: number, pieceCount: number): void {
     this._gameMaterials = {
@@ -63,33 +68,80 @@ export class MaterialManagerService {
       this.textureManager.Textures
     );
 
-    // update materials
-    for (const wheel of this._gameMaterials.wheelMaterials) {
-      for (const piece of wheel.pieceMaterials) {
-        // shuffle for each game piece
-        const shuffledMaterials = shuffleArray(this._levelMaterials);
+    if (this.saveGame.IsRestoring) {
+      this.RestoreMaterials();
+    } else {
+      // update materials
+      for (const wheel of this._gameMaterials.wheelMaterials) {
+        for (const piece of wheel.pieceMaterials) {
+          // shuffle for each game piece
+          const pieceMaterials = this.saveGame.IsRestoring ? this._levelMaterials : shuffleArray(this._levelMaterials);
 
-        // set up each side
-        for (let i = 0; i < piece.materials.length; i++) {
-          const side = piece.materials[i];
-          const material = shuffledMaterials[i];
+          // set up each side
+          for (let i = 0; i < piece.materials.length; i++) {
+            const side = piece.materials[i];
+            const material = pieceMaterials[i];
 
-          // match key
-          side.matchKey = material?.matchKey;
+            // match key
+            side.matchKey = material?.matchKey;
 
-          // bump symbols and textures
-          if (material.bumpTexture && material.colorStr) {
-            side.materialPhong.color = material.color as Color;
-            side.materialPhong.bumpMap = material.bumpTexture;
-            side.materialPhong.opacity = 0;
-            side.useBasic = false;
+            // bump symbols and textures
+            if (material.bumpTexture && material.colorStr) {
+              side.materialPhong.color = material.color as Color;
+              side.materialPhong.bumpMap = material.bumpTexture;
+              side.materialPhong.opacity = 0;
+              side.useBasic = false;
+            }
+
+            // emojis
+            if (material.texture && !material.colorStr) {
+              side.materialBasic.map = material.texture;
+              side.materialBasic.opacity = 0;
+              side.useBasic = true;
+            }
           }
+        }
+      }
+    }
+  }
 
-          // emojis
-          if (material.texture && !material.colorStr) {
-            side.materialBasic.map = material.texture;
-            side.materialBasic.opacity = 0;
-            side.useBasic = true;
+  public RestoreMaterials(): void {
+    const restoredMaterials = this.saveGame.SavedGameData.gameMaterials;
+
+    for (let wheelInx = 0; wheelInx < this._gameMaterials.wheelMaterials.length; wheelInx++) {
+      const wheel = this._gameMaterials.wheelMaterials[wheelInx];
+      if (restoredMaterials) {
+        const restoreWheel = restoredMaterials[wheelInx];
+
+        for (let pieceInx = 0; pieceInx < wheel.pieceMaterials.length; pieceInx++) {
+          const piece = wheel.pieceMaterials[pieceInx];
+          const restorePiece = restoreWheel[pieceInx];
+
+          for (let sideInx = 0; sideInx < piece.materials.length; sideInx++) {
+            // matchKey for side
+            const restoreMatchKey = restorePiece[sideInx];
+
+            // fetch matching material
+            const restoreMaterial = this._levelMaterials.find((m) => m.matchKey === restoreMatchKey);
+
+            // set restored material properties
+            const side = piece.materials[sideInx];
+            side.matchKey = restoreMatchKey;
+
+            // bump symbols and textures
+            if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
+              side.materialPhong.color = restoreMaterial.color as Color;
+              side.materialPhong.bumpMap = restoreMaterial.bumpTexture;
+              side.materialPhong.opacity = 0;
+              side.useBasic = false;
+            }
+
+            // emojis
+            if (restoreMaterial?.texture && !restoreMaterial.colorStr) {
+              side.materialBasic.map = restoreMaterial.texture;
+              side.materialBasic.opacity = 0;
+              side.useBasic = true;
+            }
           }
         }
       }
@@ -106,7 +158,6 @@ export class MaterialManagerService {
     levelMaterialType: LevelMaterialType,
     textures: Texture[]
   ): GamePieceMaterialData[] {
-    // reset array
     const materials: GamePieceMaterialData[] = [];
 
     // match keys are numbered to ensure unique key per piece
@@ -126,6 +177,7 @@ export class MaterialManagerService {
           materials.push({
             matchKey: matchKey++,
             bumpTexture: textures[inx],
+            texture: undefined,
             colorStr: c,
             color,
           });
@@ -143,6 +195,7 @@ export class MaterialManagerService {
           materials.push({
             matchKey: matchKey++,
             bumpTexture: bumpTexture as Texture,
+            texture: undefined,
             colorStr: c,
             color: new Color(c),
           });
@@ -155,6 +208,7 @@ export class MaterialManagerService {
           materials.push({
             matchKey: matchKey++,
             texture: textures[i],
+            bumpTexture: undefined,
           });
         }
         break;
@@ -185,6 +239,11 @@ export class MaterialManagerService {
       shuffledColors.forEach((c) => console.info(`      %c ${c}`, `color: ${c}`));
     }
 
-    return level === 1 ? sortedColors.slice(-playableTextureCount) : shuffledColors;
+    let targetColors = level === 1 ? sortedColors.slice(-playableTextureCount) : shuffledColors;
+    if (this.saveGame.IsRestoring) {
+      targetColors = this.saveGame.SavedGameData.textureData.map((t) => t.colorStr) as string[];
+    }
+
+    return targetColors;
   }
 }

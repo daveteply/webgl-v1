@@ -13,13 +13,7 @@
       <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="materialsUpdating">
         <span>New Game</span>
       </button>
-      <button
-        *ngIf="hasRestoreData"
-        (click)="restoreGame()"
-        mat-stroked-button
-        mat-dialog-close
-        [disabled]="materialsUpdating"
-      >
+      <button *ngIf="hasRestoreData" (click)="restoreGame()" mat-stroked-button [disabled]="materialsUpdating">
         <span>Restore Game</span>
       </button>
     </div>
