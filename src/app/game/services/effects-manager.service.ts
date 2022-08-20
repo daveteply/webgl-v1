@@ -65,7 +65,7 @@ export class EffectsManagerService {
     const delta2 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
     const target2 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
     this._levelChangeCameraTween2 = new Tween(delta2)
-      .to(target2, start ? 2000 : 2000)
+      .to(target2, 2000)
       .delay(1250)
       .onUpdate(() => {
         camera.rotation.x = delta2.rotX;
