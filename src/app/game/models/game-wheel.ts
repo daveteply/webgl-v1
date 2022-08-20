@@ -125,6 +125,11 @@ export class GameWheel extends Object3D {
         this.rotation.y = delta.theta;
       })
       .start();
+
+    // opacity of each game piece
+    for (const gamePiece of this.children as GamePiece[]) {
+      gamePiece.AnimateLevelChangeTween(start);
+    }
   }
 
   public AnimateRotation(moveType: PowerMoveType): void {

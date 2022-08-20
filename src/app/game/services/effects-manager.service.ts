@@ -85,14 +85,6 @@ export class EffectsManagerService {
       wheel.AnimateLevelStartTween(vTargets[inx], delay, start, introSpinDirection);
     });
 
-    // opacity of each game piece
-    gameWheels.forEach((wheel) => {
-      for (let i = 0; i < wheel.children.length; i++) {
-        const gamePiece = wheel.children[i] as GamePiece;
-        gamePiece.AnimateLevelChangeTween(start);
-      }
-    });
-
     this._levelChangeCameraTween1.chain(this._levelChangeCameraTween2);
     this._levelChangeCameraTween1.start();
   }
