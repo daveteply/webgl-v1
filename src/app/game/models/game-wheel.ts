@@ -155,8 +155,8 @@ export class GameWheel extends Object3D {
     this.animateHorizontal(startTheta, targetTheta);
   }
 
-  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, restoring: boolean = false): void {
-    this.animateHorizontal(startTheta, targetTheta, restoring);
+  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, isRestoring: boolean = false): void {
+    this.animateHorizontal(startTheta, targetTheta, isRestoring);
   }
 
   public AnimateVerticalPowerMove(moveType: PowerMoveType): void {

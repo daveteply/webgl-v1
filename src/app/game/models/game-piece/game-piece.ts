@@ -268,7 +268,7 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(style: GamePieceRemovalStyle): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle, isRestoring: boolean = false): void {
     // update removed state
     this._isRemoved = true;
 
@@ -287,7 +287,7 @@ export class GamePiece extends Object3D {
     };
 
     this._removeTween = new Tween(delta)
-      .to(target, MathUtils.randInt(1000, 1500))
+      .to(target, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;

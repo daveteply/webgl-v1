@@ -162,6 +162,15 @@ export class ObjectManagerService {
       }
 
       // pieces
+      for (let j = 0; j < wheel.children.length; j++) {
+        const pieceData = wheelData.piecesData[j];
+        const gamePiece = wheel.children[j] as GamePiece;
+        // remove
+        if (pieceData.isRemoved) {
+          gamePiece.AnimateRemovalTween(0, true);
+        }
+      }
+
       // TODO
     }
 
