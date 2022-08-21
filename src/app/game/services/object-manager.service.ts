@@ -169,9 +169,11 @@ export class ObjectManagerService {
         if (pieceData.isRemoved) {
           gamePiece.AnimateRemovalTween(0, true);
         }
+        // flip
+        if (pieceData.flipTurns !== gamePiece.FlipTurns) {
+          gamePiece.AnimateFlipTween(pieceData.flipTurns, pieceData.flipUp, true);
+        }
       }
-
-      // TODO
     }
 
     // complete with restoration

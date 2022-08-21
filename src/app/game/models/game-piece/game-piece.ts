@@ -307,7 +307,7 @@ export class GamePiece extends Object3D {
       .start();
   }
 
-  public AnimateFlipTween(turns: number, directionUp: boolean): void {
+  public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring: boolean = false): void {
     if (!this._isPowerMove) {
       // game save state
       this._flipTurns = turns;
@@ -331,7 +331,7 @@ export class GamePiece extends Object3D {
 
       // tween
       new Tween(delta)
-        .to(final, 1500)
+        .to(final, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
         .onUpdate(() => {
