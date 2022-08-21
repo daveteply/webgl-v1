@@ -296,9 +296,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       this._showWelcome = false;
       this.ShowScoreProgress = true;
       this.objectManager.NextLevel(this.scoringManager.Level);
-      if (this.saveGame.IsRestoring) {
-        this.saveGame.RestoreComplete();
-      }
     } else {
       this.scoringManager.NextLevel();
       this.objectManager.NextLevel(this.scoringManager.Level, true);

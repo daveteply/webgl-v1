@@ -95,7 +95,7 @@ export class EffectsManagerService {
       case PowerMoveType.HorizontalRight:
       case PowerMoveType.HorizontalMix:
         gameWheels.forEach((wheel) => {
-          wheel.AnimateRotation(moveType);
+          wheel.AnimateHorizontalPowerMove(moveType);
         });
         break;
 
@@ -103,7 +103,7 @@ export class EffectsManagerService {
       case PowerMoveType.VerticalDown:
       case PowerMoveType.VerticalMix:
         gameWheels.forEach((wheel) => {
-          wheel.AnimateVerticalFlip(moveType);
+          wheel.AnimateVerticalPowerMove(moveType);
         });
         break;
     }

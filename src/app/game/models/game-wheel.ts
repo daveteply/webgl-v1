@@ -18,7 +18,7 @@ export class GameWheel extends Object3D {
   private _wheelBelow: GameWheel | undefined;
 
   private _levelChangeTween: any;
-  private _powerMoveTween: any;
+  private _horizontalMotionTween: any;
 
   // game save state
   get Theta(): number {
@@ -70,7 +70,7 @@ export class GameWheel extends Object3D {
 
   public Reset(levelGeometryType: LevelGeometryType): void {
     this._levelChangeTween?.stop();
-    this._powerMoveTween?.stop();
+    this._horizontalMotionTween?.stop();
 
     this._theta = 0;
     this.position.y = this._originalPositionY;
@@ -132,12 +132,10 @@ export class GameWheel extends Object3D {
     }
   }
 
-  public AnimateRotation(moveType: PowerMoveType): void {
-    this._powerMoveTween?.stop();
+  public AnimateHorizontalPowerMove(moveType: PowerMoveType): void {
+    this._horizontalMotionTween?.stop();
 
-    const delta = {
-      theta: this._theta,
-    };
+    const startTheta = this._theta;
 
     let targetTheta = 0;
     switch (moveType) {
@@ -154,24 +152,14 @@ export class GameWheel extends Object3D {
         break;
     }
 
-    const target = {
-      theta: targetTheta,
-    };
-
-    this._powerMoveTween = new Tween(delta)
-      .to(target, 2000)
-      .easing(Easing.Elastic.In)
-      .onUpdate(() => {
-        this._theta = delta.theta;
-        this.rotation.y = this._theta;
-      })
-      .onComplete(() => {
-        this.SnapToGrid();
-      })
-      .start();
+    this.animateHorizontal(startTheta, targetTheta);
   }
 
-  public AnimateVerticalFlip(moveType: PowerMoveType): void {
+  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, restoring: boolean = false): void {
+    this.animateHorizontal(startTheta, targetTheta, restoring);
+  }
+
+  public AnimateVerticalPowerMove(moveType: PowerMoveType): void {
     for (let i = 0; i < this.children.length; i++) {
       const gamePiece = this.children[i] as GamePiece;
 
@@ -248,5 +236,22 @@ export class GameWheel extends Object3D {
       const gamePiece = this.children[i] as GamePiece;
       gamePiece.IsMatch = false;
     }
+  }
+
+  private animateHorizontal(startTheta: number, stopTheta: number, isRestoring: boolean = false): void {
+    const delta = { theta: startTheta };
+    const target = { theta: stopTheta };
+
+    this._horizontalMotionTween = new Tween(delta)
+      .to(target, isRestoring ? 500 : 2000)
+      .easing(isRestoring ? Easing.Circular.Out : Easing.Elastic.In)
+      .onUpdate(() => {
+        this._theta = delta.theta;
+        this.rotation.y = this._theta;
+      })
+      .onComplete(() => {
+        this.SnapToGrid();
+      })
+      .start();
   }
 }

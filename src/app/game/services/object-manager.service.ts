@@ -62,10 +62,12 @@ export class ObjectManagerService {
     this._starField = new StarField();
 
     // need to re-broadcast from here to keep effects manager separate
-    const subscription = this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
+    this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
       if (!locked) {
         this.LevelChangeAnimationComplete.next();
-        subscription.unsubscribe();
+        if (this.saveGame.IsRestoring) {
+          this.RestorePositions();
+        }
       }
     });
   }
@@ -148,6 +150,23 @@ export class ObjectManagerService {
       this.effectsManager.SaveGameScoringData,
       this.postProcessingManager.OutlineColor
     );
+  }
+
+  public RestorePositions(): void {
+    // wheel positions
+    for (let i = 0; i < this.saveGame.SavedGameData.wheelData.length; i++) {
+      const wheelData = this.saveGame.SavedGameData.wheelData[i];
+      const wheel = this.Axle[i];
+      if (wheel.Theta !== wheelData.theta) {
+        wheel.AnimateHorizontalMotion(wheel.Theta, wheelData.theta, true);
+      }
+
+      // pieces
+      // TODO
+    }
+
+    // complete with restoration
+    this.saveGame.RestoreComplete();
   }
 
   public NextLevel(level: number, updateMaterials: boolean = false): void {
