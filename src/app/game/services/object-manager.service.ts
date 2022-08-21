@@ -173,6 +173,13 @@ export class ObjectManagerService {
         if (pieceData.flipTurns !== gamePiece.FlipTurns) {
           gamePiece.AnimateFlipTween(pieceData.flipTurns, pieceData.flipUp, true);
         }
+        // power move
+        if (pieceData.powerMove) {
+          // need to remove first
+          gamePiece.AnimateRemovalTween(0, true);
+          // restore power move
+          this.GamePiecePowerMove(gamePiece, pieceData.powerMove);
+        }
       }
     }
 

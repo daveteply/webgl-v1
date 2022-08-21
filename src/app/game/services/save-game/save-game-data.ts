@@ -1,4 +1,5 @@
 import { LevelStats } from '../../models/level-stats';
+import { PowerMoveType } from '../../models/power-move-type';
 
 export interface SaveMaterialData {
   matchKey: number;
@@ -10,6 +11,7 @@ export interface SaveMaterialData {
 
 export interface SavePieceData {
   isRemoved: boolean;
+  powerMove?: PowerMoveType;
   flipTurns: number;
   flipUp: boolean;
 }

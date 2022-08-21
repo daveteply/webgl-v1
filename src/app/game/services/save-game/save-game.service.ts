@@ -7,7 +7,7 @@ import { STORAGE_SAVE_STATE } from '../../game-constants';
 import { GamePiece } from '../../models/game-piece/game-piece';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
 import { GameWheel } from '../../models/game-wheel';
-import { SaveGameData, SaveGameScore, SaveWheelData } from './save-game-data';
+import { SaveGameData, SaveGameScore, SavePieceData, SaveWheelData } from './save-game-data';
 import { GameMaterials } from 'src/app/game/services/material/material-models';
 
 @Injectable({
@@ -63,11 +63,15 @@ export class SaveGameService {
 
       for (const gamePiece of gameWheel.children as GamePiece[]) {
         // piece data
-        wheelData.piecesData.push({
+        const pieceData: SavePieceData = {
           isRemoved: gamePiece.IsRemoved,
           flipTurns: gamePiece.FlipTurns,
           flipUp: gamePiece.FlipUp,
-        });
+        };
+        if (gamePiece.IsPowerMove) {
+          pieceData.powerMove = gamePiece.PowerMoveType;
+        }
+        wheelData.piecesData.push(pieceData);
       }
 
       this._savedGameData.wheelData.push(wheelData);
