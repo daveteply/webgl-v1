@@ -178,7 +178,7 @@ export class ObjectManagerService {
           // need to remove first
           gamePiece.AnimateRemovalTween(0, true);
           // restore power move
-          this.GamePiecePowerMove(gamePiece, pieceData.powerMove);
+          this.GamePiecePowerMove(gamePiece, pieceData.powerMove, pieceData.powerMoveColor);
         }
       }
     }
@@ -221,12 +221,12 @@ export class ObjectManagerService {
     this._starField.UpdateColor(color);
   }
 
-  public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType): void {
+  public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType, color?: number): void {
     this.materialManager
       .GetPowerMovePieceTexture(moveType)
       .pipe(take(1))
       .subscribe((textureData) => {
-        gamePiece.PowerMoveAdd(moveType, textureData);
+        gamePiece.PowerMoveAdd(moveType, textureData, color);
       });
   }
 

@@ -70,6 +70,7 @@ export class SaveGameService {
         };
         if (gamePiece.IsPowerMove) {
           pieceData.powerMove = gamePiece.PowerMoveType;
+          pieceData.powerMoveColor = gamePiece.PowerMove?.PowerMoveColor;
         }
         wheelData.piecesData.push(pieceData);
       }

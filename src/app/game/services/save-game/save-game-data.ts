@@ -12,6 +12,7 @@ export interface SaveMaterialData {
 export interface SavePieceData {
   isRemoved: boolean;
   powerMove?: PowerMoveType;
+  powerMoveColor?: number;
   flipTurns: number;
   flipUp: boolean;
 }

@@ -22,7 +22,6 @@ export class GamePiece extends Object3D {
   private _meshCube: Mesh;
   private _geometryCylinder: CylinderBufferGeometry;
   private _meshCylinder: Mesh;
-  private _powerMove!: PowerMove;
 
   private _mesh!: Mesh;
 
@@ -60,6 +59,11 @@ export class GamePiece extends Object3D {
   private _isRemoved: boolean = false;
   get IsRemoved(): boolean {
     return this._isRemoved;
+  }
+
+  private _powerMove!: PowerMove;
+  get PowerMove(): PowerMove {
+    return this._powerMove;
   }
 
   private _isPowerMove: boolean = false;
@@ -343,14 +347,14 @@ export class GamePiece extends Object3D {
 
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
-  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture): void {
+  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture, color?: number): void {
     // update states
     this._isPowerMove = true;
     this._isRemoved = false;
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
-    this._powerMove = new PowerMove(texture);
+    this._powerMove = new PowerMove(texture, color);
     this.add(this._powerMove.PowerMoveMesh);
     this._powerMove.AnimateIntro();
   }
