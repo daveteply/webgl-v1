@@ -184,6 +184,7 @@ export class ObjectManagerService {
     }
 
     // complete with restoration
+    this.textManager.ShowText(['Welcome back!']);
     this.saveGame.RestoreComplete();
   }
 
