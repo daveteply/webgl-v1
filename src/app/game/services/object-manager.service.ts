@@ -15,6 +15,8 @@ import {
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
 import { PowerMoveType } from '../models/power-move-type';
+import { LevelMaterialType } from '../level-material-type';
+
 import { StarField } from '../models/star-field/star-field';
 
 import { MaterialManagerService } from './material/material-manager.service';
@@ -183,8 +185,14 @@ export class ObjectManagerService {
       }
     }
 
+    // message player
+    let color = 0xffffff;
+    if (this.saveGame.SavedGameData.levelMaterialType === LevelMaterialType.Emoji) {
+      color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    }
+    this.textManager.ShowText(['Welcome back!'], color);
+
     // complete with restoration
-    this.textManager.ShowText(['Welcome back!']);
     this.saveGame.RestoreComplete();
   }
 
