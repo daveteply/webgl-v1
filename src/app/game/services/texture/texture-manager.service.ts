@@ -170,10 +170,13 @@ export class TextureManagerService {
     // loaded
     const loadedTextures = targetTextures.filter((t) => t.texture);
     for (const texture of loadedTextures) {
-      if (!environment.production) {
-        console.info('Texture Manager: pulled bump symbol texture from cache ', texture.src);
+      if (texture.texture) {
+        if (!environment.production) {
+          console.info('Texture Manager: pulled bump symbol texture from cache ', texture.src);
+        }
+        this.setTextureWrapping(texture.texture);
+        this._textures.push(texture.texture as Texture);
       }
-      this._textures.push(texture.texture as Texture);
     }
     if (targetTextures.every((t) => t.texture)) {
       this.emitCompletion();
