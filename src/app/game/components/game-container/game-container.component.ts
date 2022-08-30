@@ -248,7 +248,11 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private initTextures(): void {
     // game difficulty level (change in number of textures used)
-    this.gameEngine.UpdatePlayableTextureCount(this.saveGame.SavedGameData.scoring?.level || this.scoringManager.Level);
+    let targetLevel = this.scoringManager.Level;
+    if (this.saveGame.IsRestoring) {
+      targetLevel = this.saveGame.SavedGameData.scoring?.level || 1;
+    }
+    this.gameEngine.UpdatePlayableTextureCount(targetLevel);
     this.updateDifficultyColor();
 
     // decide level materials and geometries
