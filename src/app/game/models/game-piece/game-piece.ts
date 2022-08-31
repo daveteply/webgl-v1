@@ -308,7 +308,10 @@ export class GamePiece extends Object3D {
 
   public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring: boolean = false): void {
     if (!this._isPowerMove && turns > 0) {
-      // game save state
+      // Game Save State
+      //  by summing the overall number of turns; adding if "up" and subtracting of "down",
+      //  the restore will understand how many turns to make and which direction up/down
+      //  based on ending positive/negative number
       this._flipTurns += directionUp ? turns : turns * -1;
 
       // set direction
