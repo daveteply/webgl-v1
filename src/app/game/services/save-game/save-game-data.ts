@@ -14,7 +14,6 @@ export interface SavePieceData {
   powerMove?: PowerMoveType;
   powerMoveColor?: number;
   flipTurns: number;
-  flipUp: boolean;
 }
 
 export interface SaveWheelData {

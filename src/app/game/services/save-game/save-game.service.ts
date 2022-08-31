@@ -66,7 +66,6 @@ export class SaveGameService {
         const pieceData: SavePieceData = {
           isRemoved: gamePiece.IsRemoved,
           flipTurns: gamePiece.FlipTurns,
-          flipUp: gamePiece.FlipUp,
         };
         if (gamePiece.IsPowerMove) {
           pieceData.powerMove = gamePiece.PowerMoveType;

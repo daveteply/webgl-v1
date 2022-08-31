@@ -81,10 +81,6 @@ export class GamePiece extends Object3D {
   get FlipTurns(): number {
     return this._flipTurns;
   }
-  private _flipUp: boolean;
-  get FlipUp(): boolean {
-    return this._flipUp;
-  }
 
   constructor(x: number, y: number, z: number, rotation: number) {
     super();
@@ -127,7 +123,6 @@ export class GamePiece extends Object3D {
 
     // game save state
     this._flipTurns = 0;
-    this._flipUp = false;
   }
 
   set ThetaOffset(theta: number) {
@@ -312,10 +307,9 @@ export class GamePiece extends Object3D {
   }
 
   public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring: boolean = false): void {
-    if (!this._isPowerMove) {
+    if (!this._isPowerMove && turns > 0) {
       // game save state
-      this._flipTurns = turns;
-      this._flipUp = directionUp;
+      this._flipTurns += directionUp ? turns : turns * -1;
 
       // set direction
       const delta = { theta: this._mesh.rotation.z };

@@ -173,7 +173,7 @@ export class ObjectManagerService {
         }
         // flip
         if (pieceData.flipTurns !== gamePiece.FlipTurns) {
-          gamePiece.AnimateFlipTween(pieceData.flipTurns, pieceData.flipUp, true);
+          gamePiece.AnimateFlipTween(Math.abs(pieceData.flipTurns), pieceData.flipTurns > 0, true);
         }
         // power move
         if (pieceData.powerMove) {
