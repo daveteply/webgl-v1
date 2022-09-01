@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-
-import { AboutComponent } from 'src/app/shared/components/about/about.component';
 
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogAnimationService } from '../dialog-animation.service';
@@ -29,7 +27,6 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     private objectManager: ObjectManagerService,
     private audioManager: AudioManagerService,
     private dialogAnimation: DialogAnimationService,
-    private dialog: MatDialog,
     private saveGame: SaveGameService,
     public dialogRef: MatDialogRef<IntroDialogComponent>
   ) {
@@ -61,10 +58,6 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
     this.dialogAnimation.CreateIntroDialogBoxes();
     this.dialogAnimation.Animate();
-  }
-
-  openAbout(): void {
-    this.dialog.open(AboutComponent, { data: { hideLevelInfo: true }, panelClass: 'cdk-overlay-pane__show' });
   }
 
   restoreGame(): void {
