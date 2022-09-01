@@ -190,7 +190,7 @@ export class ObjectManagerService {
     if (this.saveGame.SavedGameData.levelMaterialType === LevelMaterialType.Emoji) {
       color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
     }
-    this.textManager.ShowText(['Welcome back!'], color);
+    this.textManager.ShowText(['Restored!'], color);
 
     // complete with restoration
     this.saveGame.RestoreComplete();
