@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,7 +23,13 @@ describe('GameContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, MatDialogModule, MatProgressBarModule, MatProgressSpinnerModule],
+      imports: [
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatMenuModule,
+      ],
       declarations: [GameContainerComponent, TextZoomComponent],
       providers: [
         DecimalPipe,

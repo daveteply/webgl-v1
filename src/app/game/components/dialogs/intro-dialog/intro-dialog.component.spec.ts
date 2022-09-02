@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { EffectsManagerService } from 'src/app/game/services/effects-manager.service';
 import { GameEngineService } from 'src/app/game/services/game-engine.service';
 import { MaterialManagerService } from 'src/app/game/services/material/material-manager.service';
@@ -24,6 +24,10 @@ describe('IntroDialogComponent', () => {
         EffectsManagerService,
         ScoringManagerService,
         GameEngineService,
+        {
+          provide: MatDialogRef,
+          useValue: {},
+        },
       ],
     }).compileComponents();
   });

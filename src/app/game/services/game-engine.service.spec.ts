@@ -15,6 +15,7 @@ import { SceneManagerService } from './scene-manager.service';
 import { InteractionManagerService } from './interaction-manager.service';
 import { Observable } from 'rxjs';
 import { PostProcessingManagerService } from './post-processing-manager.service';
+import { SaveGameService } from './save-game/save-game.service';
 
 function createMockAxle(objectManager: ObjectManagerService) {
   return new Observable((o) => {
@@ -41,6 +42,7 @@ describe('GameEngineService', () => {
   let textManagerService: TextManagerService;
   let sceneManagerService: SceneManagerService;
   let postProcessingManager: PostProcessingManagerService;
+  let saveGameService: SaveGameService;
 
   let mockAxle: GameWheel[];
 
@@ -71,6 +73,7 @@ describe('GameEngineService', () => {
     spyOn(audioManagerService, 'PlayAudio');
     textManagerService = TestBed.inject(TextManagerService);
     postProcessingManager = TestBed.inject(PostProcessingManagerService);
+    saveGameService = TestBed.inject(SaveGameService);
 
     objectManagerService = new ObjectManagerService(
       mockMaterialService,
@@ -78,7 +81,8 @@ describe('GameEngineService', () => {
       textManagerService,
       audioManagerService,
       service,
-      postProcessingManager
+      postProcessingManager,
+      saveGameService
     );
     createMockAxle(objectManagerService).subscribe(() => {
       mockAxle = objectManagerService.Axle;

@@ -16,7 +16,9 @@ describe('SplashText', () => {
             yMax: 1467,
             xMax: 1595,
           },
-        })
+        }),
+        0,
+        0
       )
     ).toBeTruthy();
   });
