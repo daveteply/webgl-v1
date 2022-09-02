@@ -162,6 +162,8 @@ export class GamePiece extends Object3D {
       this._powerMove?.Dispose();
     }
 
+    this._flipTurns = 0;
+
     this._mesh.scale.set(1, 1, 1);
     this._mesh.rotation.x = 0;
     this._mesh.rotation.y = 0;

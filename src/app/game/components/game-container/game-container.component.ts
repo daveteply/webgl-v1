@@ -30,6 +30,7 @@ import {
   STORAGE_HINT_MOVES_DECREASE,
   STORAGE_HINT_MOVES_INCREASE,
 } from '../../game-constants';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'wgl-game-container',
@@ -86,11 +87,12 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  // TEMP
   public SaveState(): void {
     this.objectManager.SaveGameState();
+    if (this.document.defaultView) {
+      this.document.defaultView.location.href = '/';
+    }
   }
-  // TEMP
 
   ngOnInit(): void {
     // level completed
@@ -177,7 +179,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.objectManager.LevelChangeAnimationComplete.pipe(take(1)).subscribe(() => {
       this.hintsManager.GetHintViewed(STORAGE_HINT_HOW_TO_PLAY).then((result) => {
         if (result.value !== 'true') {
-          const howToPlay = this.dialog.open(HowToPlayComponent, { panelClass: 'cdk-overlay-pane__show' });
+          const howToPlay = this.dialog.open(HowToPlayComponent);
           howToPlay.afterClosed().subscribe(() => {
             this.hintsManager.SetHintViewed(STORAGE_HINT_HOW_TO_PLAY);
           });
@@ -191,7 +193,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_INCREASE).then((result) => {
           if (!result.value) {
             const dialog = this.dialog.open(MovesRemainingInfoComponent, {
-              panelClass: 'cdk-overlay-pane__show',
               position: { top: '5em' },
               data: true,
             });
@@ -204,7 +205,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
         this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_DECREASE).then((result) => {
           if (!result.value) {
             const dialog = this.dialog.open(MovesRemainingInfoComponent, {
-              panelClass: 'cdk-overlay-pane__show',
               position: { top: '5em' },
               data: false,
             });
@@ -242,7 +242,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.notifier.complete();
   }
 
-  public aboutClick(): void {
+  public AboutClick(): void {
     this.notify.Notify();
   }
 
@@ -277,7 +277,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     let config = {
       minWidth: '20em',
       disableClose: true,
-      panelClass: ['wgl-pane-bounce', 'cdk-overlay-pane__show'],
+      panelClass: ['wgl-pane-bounce'],
       data: {
         stats: this.scoringManager.LevelStats,
         level: this.scoringManager.Level,

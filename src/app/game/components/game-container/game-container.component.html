@@ -8,8 +8,8 @@
       <span>&nbsp;</span>
       <div>{{ scoringManager.Level }}</div>
     </div>
-    <button color="primary" mat-icon-button (click)="aboutClick()">
-      <mat-icon>info</mat-icon>
+    <button color="primary" mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>settings</mat-icon>
     </button>
   </div>
   <div class="game">
@@ -24,5 +24,7 @@
   </div>
   <div class="copyright" [class.hide]="ShowScoreProgress">&copy; 2022 Turbogeekbear LLC</div>
 </div>
-<!-- TEMP -->
-<button (click)="SaveState()" style="position: absolute; bottom: 35px; left: 0; padding: 1em">Save</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="AboutClick()"><mat-icon>info</mat-icon>About this Level</button>
+  <button mat-menu-item (click)="SaveState()"><mat-icon>save</mat-icon>Save</button>
+</mat-menu>
