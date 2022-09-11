@@ -3,8 +3,8 @@ import { PowerMoveType } from '../../models/power-move-type';
 
 export interface SaveMaterialData {
   matchKey: number;
-  bumpSrc?: string;
-  textureSrc?: string;
+  bumpId?: string;
+  textureId?: string;
   colorStr?: string;
   emojiSequence?: number[];
 }

@@ -66,7 +66,7 @@ export class TextureManagerService {
           ) {
             const orderedTextures = [];
             for (const restoringTexture of this.saveGame.SavedGameData.textureData) {
-              const target = this._textures.find((t) => t.name === restoringTexture.bumpSrc);
+              const target = this._textures.find((t) => t.name === restoringTexture.bumpId);
               if (target) {
                 orderedTextures.push(target);
               }
@@ -163,7 +163,7 @@ export class TextureManagerService {
     let targetTextures = shuffleArray(this._bumpSymbolTextures).slice(0, playableTextureCount);
     if (this.saveGame.IsRestoring) {
       targetTextures = this._bumpSymbolTextures.filter((b) => {
-        return this.saveGame.SavedGameData.textureData.some((t) => t.bumpSrc === b.src);
+        return this.saveGame.SavedGameData.textureData.some((t) => t.bumpId === b.id);
       });
     }
 
@@ -187,8 +187,8 @@ export class TextureManagerService {
         this._textureLoader.load(texture.src, (data) => {
           data.center = new Vector2(0.5, 0.5);
           if (!environment.production) {
-            data.name = texture.src;
-            console.info('Texture Manager: bump symbol texture caching ', data.name);
+            data.name = texture.id;
+            console.info('Texture Manager: bump symbol texture caching ', data.id);
           }
           texture.texture = data;
           this.setTextureWrapping(texture.texture);
@@ -203,7 +203,7 @@ export class TextureManagerService {
     let randBumpMaterialMap: BumpData;
     if (this.saveGame.IsRestoring) {
       randBumpMaterialMap = this._bumpTextures.find(
-        (b) => b.src === this.saveGame.SavedGameData.textureData[0].bumpSrc
+        (b) => b.id === this.saveGame.SavedGameData.textureData[0].bumpId
       ) as BumpData;
     } else {
       randBumpMaterialMap = this._bumpTextures[MathUtils.randInt(0, this._bumpTextures.length - 1)];
@@ -222,8 +222,8 @@ export class TextureManagerService {
       this._textureLoader.load(randBumpMaterialMap.src, (data) => {
         data.center = new Vector2(0.5, 0.5);
         if (!environment.production) {
-          data.name = randBumpMaterialMap.src;
-          console.info('Texture Manager: bump texture caching ', data.name);
+          data.name = randBumpMaterialMap.id;
+          console.info('Texture Manager: bump texture caching ', data.id);
         }
         randBumpMaterialMap.texture = data;
         this.setTextureWrapping(randBumpMaterialMap.texture);
@@ -247,7 +247,7 @@ export class TextureManagerService {
     if (this._canvasContext) {
       if (this.saveGame.IsRestoring) {
         for (const texture of this.saveGame.SavedGameData.textureData) {
-          emojiSequence.push({ ver: '', desc: texture.textureSrc || '', sequence: texture.emojiSequence as number[] });
+          emojiSequence.push({ ver: '', desc: texture.textureId || '', sequence: texture.emojiSequence as number[] });
         }
       } else {
         emojiSequence = this.randomEmojiCodeList(playableTextureCount);
