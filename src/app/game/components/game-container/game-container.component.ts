@@ -30,7 +30,6 @@ import {
   STORAGE_HINT_MOVES_DECREASE,
   STORAGE_HINT_MOVES_INCREASE,
 } from '../../game-constants';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'wgl-game-container',
@@ -88,10 +87,14 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   public SaveState(): void {
-    this.objectManager.SaveGameState();
-    if (this.document.defaultView) {
-      this.document.defaultView.location.href = '/';
-    }
+    this.objectManager
+      .SaveGameState()
+      .pipe(takeUntil(this.notifier))
+      .subscribe(() => {
+        if (this.document.defaultView) {
+          this.document.defaultView.location.href = '/';
+        }
+      });
   }
 
   ngOnInit(): void {

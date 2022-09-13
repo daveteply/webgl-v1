@@ -142,8 +142,8 @@ export class ObjectManagerService {
     this.LevelMaterialsUpdated.next();
   }
 
-  public SaveGameState(): void {
-    this.saveGame.SaveState(
+  public SaveGameState(): Observable<void> {
+    return this.saveGame.SaveState(
       this.Axle,
       this.materialManager.LevelMaterials,
       this.materialManager.GameMaterials,

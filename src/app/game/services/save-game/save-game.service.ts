@@ -53,56 +53,61 @@ export class SaveGameService {
     levelGeometryType: number,
     score: SaveGameScore,
     outlineColor: number
-  ): void {
-    Preferences.remove({ key: STORAGE_SAVE_STATE }).then(() => {
-      this._savedGameData.wheelData = [];
-      this._savedGameData.textureData = [];
+  ): Observable<void> {
+    return new Observable((observer) => {
+      Preferences.remove({ key: STORAGE_SAVE_STATE }).then(() => {
+        this._savedGameData.wheelData = [];
+        this._savedGameData.textureData = [];
 
-      for (const gameWheel of gameWheels) {
-        // wheel data
-        const wheelData: SaveWheelData = { theta: gameWheel.Theta, piecesData: [] };
+        for (const gameWheel of gameWheels) {
+          // wheel data
+          const wheelData: SaveWheelData = { theta: gameWheel.Theta, piecesData: [] };
 
-        for (const gamePiece of gameWheel.children as GamePiece[]) {
-          // piece data
-          const pieceData: SavePieceData = {
-            isRemoved: gamePiece.IsRemoved,
-            flipTurns: gamePiece.FlipTurns,
-          };
-          if (gamePiece.IsPowerMove) {
-            pieceData.powerMove = gamePiece.PowerMoveType;
-            pieceData.powerMoveColor = gamePiece.PowerMove?.PowerMoveColor;
+          for (const gamePiece of gameWheel.children as GamePiece[]) {
+            // piece data
+            const pieceData: SavePieceData = {
+              isRemoved: gamePiece.IsRemoved,
+              flipTurns: gamePiece.FlipTurns,
+            };
+            if (gamePiece.IsPowerMove) {
+              pieceData.powerMove = gamePiece.PowerMoveType;
+              pieceData.powerMoveColor = gamePiece.PowerMove?.PowerMoveColor;
+            }
+            wheelData.piecesData.push(pieceData);
           }
-          wheelData.piecesData.push(pieceData);
+
+          this._savedGameData.wheelData.push(wheelData);
         }
 
-        this._savedGameData.wheelData.push(wheelData);
-      }
+        // materials data
+        for (const material of levelMaterials.sort((a, b) => a.matchKey - b.matchKey)) {
+          this._savedGameData.textureData.push({
+            matchKey: material.matchKey,
+            bumpId: material.bumpTexture?.name,
+            textureId: material.texture?.name,
+            colorStr: material.colorStr,
+            emojiSequence: material.texture?.userData?.sequence,
+          });
+        }
 
-      // materials data
-      for (const material of levelMaterials.sort((a, b) => a.matchKey - b.matchKey)) {
-        this._savedGameData.textureData.push({
-          matchKey: material.matchKey,
-          bumpId: material.bumpTexture?.name,
-          textureId: material.texture?.name,
-          colorStr: material.colorStr,
-          emojiSequence: material.texture?.userData?.sequence,
+        // piece material data
+        this._savedGameData.gameMaterials = gameMaterials.wheelMaterials.map((w) =>
+          w.pieceMaterials.map((p) => p.materials.map((m) => m.matchKey))
+        );
+
+        // level info
+        this._savedGameData.levelGeometryType = levelGeometryType;
+        this._savedGameData.levelMaterialType = levelMaterialType;
+        this._savedGameData.scoring = score;
+
+        // misc
+        this._savedGameData.outlineColor = outlineColor;
+
+        Preferences.set({ key: STORAGE_SAVE_STATE, value: JSON.stringify(this._savedGameData) }).then(() => {
+          observer.next();
+          observer.complete();
         });
-      }
-
-      // piece material data
-      this._savedGameData.gameMaterials = gameMaterials.wheelMaterials.map((w) =>
-        w.pieceMaterials.map((p) => p.materials.map((m) => m.matchKey))
-      );
-
-      // level info
-      this._savedGameData.levelGeometryType = levelGeometryType;
-      this._savedGameData.levelMaterialType = levelMaterialType;
-      this._savedGameData.scoring = score;
-
-      // misc
-      this._savedGameData.outlineColor = outlineColor;
-
-      Preferences.set({ key: STORAGE_SAVE_STATE, value: JSON.stringify(this._savedGameData) });
+      });
     });
   }
 
