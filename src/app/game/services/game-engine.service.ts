@@ -71,6 +71,11 @@ export class GameEngineService {
     }
   }
 
+  public RestoreLevelTypes(levelMaterialType: LevelMaterialType, levelGeometryType: LevelGeometryType): void {
+    this._levelMaterialType = levelMaterialType;
+    this._levelGeometryType = levelGeometryType;
+  }
+
   public InitLevelTransitionType(): void {
     this._levelTransitionType = Math.floor(Math.random() * 3);
     if (!environment.production) {

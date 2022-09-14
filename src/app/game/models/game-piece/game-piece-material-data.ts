@@ -1,9 +1,10 @@
-import { Color, Texture } from 'three';
+import { Color } from 'three';
+import { GameTexture } from '../../services/texture/game-texture';
 
 export interface GamePieceMaterialData {
   matchKey: number;
-  texture?: Texture;
-  bumpTexture?: Texture;
+  texture?: GameTexture;
+  bumpTexture?: GameTexture;
   colorStr?: string;
   color?: Color;
 }

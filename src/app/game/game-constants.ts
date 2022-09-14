@@ -53,6 +53,7 @@ export const STORAGE_HIGH_SCORES = 'High.Scores';
 export const STORAGE_HINT_HOW_TO_PLAY = 'Hint.HowToPlay';
 export const STORAGE_HINT_MOVES_DECREASE = 'Hint.Moves.Decrease';
 export const STORAGE_HINT_MOVES_INCREASE = 'Hint.Moves.Increase';
+export const STORAGE_SAVE_STATE = 'Save.State';
 
 // Ads
 export const LEVEL_TO_START_ADS = 3;

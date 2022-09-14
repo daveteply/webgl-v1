@@ -1,13 +1,17 @@
 import { EventEmitter, Injectable } from '@angular/core';
+
 import { Tween } from '@tweenjs/tween.js';
 import { MathUtils, Object3D, PerspectiveCamera } from 'three';
+
+import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
+import { ScoringManagerService } from './scoring-manager.service';
+
 import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { AudioType } from 'src/app/shared/services/audio/audio-info';
-import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
-import { ScoringManagerService } from './scoring-manager.service';
 import { PowerMoveType } from '../models/power-move-type';
+import { SaveGameScore } from './save-game/save-game-data';
 
 @Injectable()
 export class EffectsManagerService {
@@ -61,7 +65,7 @@ export class EffectsManagerService {
     const delta2 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
     const target2 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
     this._levelChangeCameraTween2 = new Tween(delta2)
-      .to(target2, start ? 2000 : 2000)
+      .to(target2, 2000)
       .delay(1250)
       .onUpdate(() => {
         camera.rotation.x = delta2.rotX;
@@ -81,14 +85,6 @@ export class EffectsManagerService {
       wheel.AnimateLevelStartTween(vTargets[inx], delay, start, introSpinDirection);
     });
 
-    // opacity of each game piece
-    gameWheels.forEach((wheel) => {
-      for (let i = 0; i < wheel.children.length; i++) {
-        const gamePiece = wheel.children[i] as GamePiece;
-        gamePiece.AnimateLevelChangeTween(start);
-      }
-    });
-
     this._levelChangeCameraTween1.chain(this._levelChangeCameraTween2);
     this._levelChangeCameraTween1.start();
   }
@@ -99,7 +95,7 @@ export class EffectsManagerService {
       case PowerMoveType.HorizontalRight:
       case PowerMoveType.HorizontalMix:
         gameWheels.forEach((wheel) => {
-          wheel.AnimateRotation(moveType);
+          wheel.AnimateHorizontalPowerMove(moveType);
         });
         break;
 
@@ -107,7 +103,7 @@ export class EffectsManagerService {
       case PowerMoveType.VerticalDown:
       case PowerMoveType.VerticalMix:
         gameWheels.forEach((wheel) => {
-          wheel.AnimateVerticalFlip(moveType);
+          wheel.AnimateVerticalPowerMove(moveType);
         });
         break;
     }
@@ -193,5 +189,17 @@ export class EffectsManagerService {
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
     gamePiece.AnimateFlipTween(Math.floor(velocity), directionUp);
+  }
+
+  get SaveGameScoringData(): SaveGameScore {
+    return {
+      stats: this.scoringManager.LevelStats,
+      moves: this.scoringManager.PlayerMoves,
+      remaining: this.scoringManager.PiecesRemaining,
+      progress: this.scoringManager.LevelProgress,
+      pieceTarget: this.scoringManager.LevelPieceTarget,
+      score: this.scoringManager.Score,
+      level: this.scoringManager.Level,
+    };
   }
 }

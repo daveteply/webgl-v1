@@ -25,6 +25,11 @@ export class PostProcessingManagerService {
   private _bokehTween!: any;
   private _unrealBloomTween!: any;
 
+  private _outlineColor!: number;
+  get OutlineColor(): number {
+    return this._outlineColor;
+  }
+
   get Composer(): EffectComposer {
     return this._composer;
   }
@@ -82,7 +87,8 @@ export class PostProcessingManagerService {
   }
 
   public UpdateOutlinePassColor(colorHex: number): void {
-    this._outlinePass.visibleEdgeColor = new Color(colorHex);
+    this._outlineColor = colorHex;
+    this._outlinePass.visibleEdgeColor = new Color(this._outlineColor);
   }
 
   public UpdateLevelTransitionPass(levelTransitionType: LevelTransitionType, start: boolean): void {
@@ -92,9 +98,7 @@ export class PostProcessingManagerService {
         this._bokehPass.enabled = true;
         this._unrealBloomPass.enabled = false;
 
-        if (this._bokehTween) {
-          this._bokehTween.stop();
-        }
+        this._bokehTween?.stop();
         this.initBokehTween(start);
         break;
 
@@ -103,9 +107,7 @@ export class PostProcessingManagerService {
         this._bokehPass.enabled = false;
         this._unrealBloomPass.enabled = true;
 
-        if (this._unrealBloomTween) {
-          this._unrealBloomTween.stop();
-        }
+        this._unrealBloomTween?.stop();
         this.initUnrealBloomTween();
         break;
 

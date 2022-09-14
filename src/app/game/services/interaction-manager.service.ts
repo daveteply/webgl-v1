@@ -97,7 +97,7 @@ export class InteractionManagerService {
 
             this.objectManager.LevelCompleted.next(false);
           } else {
-            // power move (must be higher number of matches)
+            // power move
             let powerMoveTarget =
               this.scoringManager.Level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
             if (this._matchingPieces.length >= powerMoveTarget) {

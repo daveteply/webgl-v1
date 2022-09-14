@@ -27,7 +27,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -49,7 +49,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    MatTabsModule,
+    MatMenuModule,
   ],
   providers: [
     SceneManagerService,

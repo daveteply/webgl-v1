@@ -2,7 +2,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
-import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
@@ -16,6 +15,8 @@ import {
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
 import { PowerMoveType } from '../models/power-move-type';
+import { LevelMaterialType } from '../level-material-type';
+
 import { StarField } from '../models/star-field/star-field';
 
 import { MaterialManagerService } from './material/material-manager.service';
@@ -24,6 +25,7 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { TextManagerService } from './text/text-manager.service';
 import { GameEngineService } from './game-engine.service';
 import { PostProcessingManagerService } from './post-processing-manager.service';
+import { SaveGameService } from './save-game/save-game.service';
 
 @Injectable()
 export class ObjectManagerService {
@@ -52,7 +54,8 @@ export class ObjectManagerService {
     private textManager: TextManagerService,
     private audioManager: AudioManagerService,
     private gameEngine: GameEngineService,
-    private postProcessingManager: PostProcessingManagerService
+    private postProcessingManager: PostProcessingManagerService,
+    private saveGame: SaveGameService
   ) {
     this._stack = new Group();
     this._stack.name = 'gameWheelStack';
@@ -64,6 +67,9 @@ export class ObjectManagerService {
     this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
       if (!locked) {
         this.LevelChangeAnimationComplete.next();
+        if (this.saveGame.IsRestoring) {
+          this.RestorePositions();
+        }
       }
     });
   }
@@ -111,10 +117,13 @@ export class ObjectManagerService {
     this.postProcessingManager.UpdateOutlinePassColor(
       RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]
     );
+    if (this.saveGame.IsRestoring) {
+      this.postProcessingManager.UpdateOutlinePassColor(this.saveGame.SavedGameData.outlineColor as number);
+    }
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(
-      level,
+      this.saveGame.IsRestoring ? (this.saveGame.SavedGameData.scoring?.level as number) : level,
       this.gameEngine.PlayableTextureCount,
       this.gameEngine.LevelMaterialType
     );
@@ -131,6 +140,60 @@ export class ObjectManagerService {
     }
 
     this.LevelMaterialsUpdated.next();
+  }
+
+  public SaveGameState(): Observable<void> {
+    return this.saveGame.SaveState(
+      this.Axle,
+      this.materialManager.LevelMaterials,
+      this.materialManager.GameMaterials,
+      this.gameEngine.LevelMaterialType,
+      this.gameEngine.LevelGeometryType,
+      this.effectsManager.SaveGameScoringData,
+      this.postProcessingManager.OutlineColor
+    );
+  }
+
+  public RestorePositions(): void {
+    // wheel positions
+    for (let i = 0; i < this.saveGame.SavedGameData.wheelData.length; i++) {
+      const wheelData = this.saveGame.SavedGameData.wheelData[i];
+      const wheel = this.Axle[i];
+      if (wheel.Theta !== wheelData.theta) {
+        wheel.AnimateHorizontalMotion(wheel.Theta, wheelData.theta, true);
+      }
+
+      // pieces
+      for (let j = 0; j < wheel.children.length; j++) {
+        const pieceData = wheelData.piecesData[j];
+        const gamePiece = wheel.children[j] as GamePiece;
+        // remove
+        if (pieceData.isRemoved) {
+          gamePiece.AnimateRemovalTween(0, true);
+        }
+        // flip
+        if (pieceData.flipTurns !== gamePiece.FlipTurns) {
+          gamePiece.AnimateFlipTween(Math.abs(pieceData.flipTurns), pieceData.flipTurns > 0, true);
+        }
+        // power move
+        if (pieceData.powerMove) {
+          // need to remove first
+          gamePiece.AnimateRemovalTween(0, true);
+          // restore power move
+          this.GamePiecePowerMove(gamePiece, pieceData.powerMove, pieceData.powerMoveColor);
+        }
+      }
+    }
+
+    // message player
+    let color = 0xffffff;
+    if (this.saveGame.SavedGameData.levelMaterialType === LevelMaterialType.Emoji) {
+      color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    }
+    this.textManager.ShowText(['Restored!'], color);
+
+    // complete with restoration
+    this.saveGame.RestoreComplete();
   }
 
   public NextLevel(level: number, updateMaterials: boolean = false): void {
@@ -167,12 +230,12 @@ export class ObjectManagerService {
     this._starField.UpdateColor(color);
   }
 
-  public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType): void {
+  public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType, color?: number): void {
     this.materialManager
       .GetPowerMovePieceTexture(moveType)
       .pipe(take(1))
       .subscribe((textureData) => {
-        gamePiece.PowerMoveAdd(moveType, textureData);
+        gamePiece.PowerMoveAdd(moveType, textureData, color);
       });
   }
 

@@ -12,6 +12,7 @@ import {
 import { LevelMaterialType } from '../level-material-type';
 import { LevelStats } from '../models/level-stats';
 import { GameEngineService } from './game-engine.service';
+import { SaveGameScore } from './save-game/save-game-data';
 import { TextManagerService } from './text/text-manager.service';
 
 @Injectable()
@@ -192,6 +193,18 @@ export class ScoringManagerService {
       }
     }
     return entryCount;
+  }
+
+  public Restore(restoreScore?: SaveGameScore): void {
+    if (restoreScore) {
+      this._level = restoreScore.level;
+      this._playerMoves = restoreScore.moves;
+      this._piecesRemaining = restoreScore.remaining;
+      this._levelProgress = restoreScore.progress;
+      this._levelPieceTarget = restoreScore.pieceTarget;
+      this._score = restoreScore.score;
+      this._levelStats = restoreScore.stats;
+    }
   }
 
   private longMatchBonus(pieceCount: number, endLevelSkip: boolean) {

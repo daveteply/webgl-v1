@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { GameEngineService } from './game-engine.service';
 
 import { ScoringManagerService } from './scoring-manager.service';
 
@@ -6,7 +7,7 @@ describe('ScoringManagerService', () => {
   let service: ScoringManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [ScoringManagerService] });
+    TestBed.configureTestingModule({ providers: [ScoringManagerService, GameEngineService] });
     service = TestBed.inject(ScoringManagerService);
   });
 

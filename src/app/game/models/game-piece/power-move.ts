@@ -10,28 +10,33 @@ export class PowerMove {
   private _spinTween!: any;
   private _bounceTween!: any;
 
+  private _powerMoveColor!: number;
+  get PowerMoveColor(): number {
+    return this._powerMoveColor;
+  }
+
   get PowerMoveMesh(): Mesh {
     return this._mesh;
   }
 
-  constructor(texture: Texture) {
+  constructor(texture: Texture, color?: number) {
     // create new geometry, material, mesh
     this._geometry = new CylinderBufferGeometry(1, 1, 1.5, 16);
     this._geometry.scale(0.01, 0.01, 0.01);
 
-    const color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+    this._powerMoveColor = color || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
 
     this._materials.push(
       new MeshPhongMaterial({
-        color: color,
+        color: this._powerMoveColor,
         transparent: true,
         opacity: 0.0,
         bumpMap: texture,
         bumpScale: 0.5,
       })
     );
-    this._materials.push(new MeshPhongMaterial({ color }));
-    this._materials.push(new MeshPhongMaterial({ color }));
+    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
+    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
 
     this._mesh = new Mesh(this._geometry, this._materials);
   }

@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatTabsModule } from '@angular/material/tabs';
-
 import { GainControlComponent } from './components/gain-control/gain-control.component';
 import { AboutComponent } from './components/about/about.component';
 
@@ -13,7 +11,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [GainControlComponent, AboutComponent],
-  imports: [CommonModule, MatSliderModule, MatButtonModule, MatIconModule, MatDialogModule, MatTabsModule],
+  imports: [CommonModule, MatSliderModule, MatButtonModule, MatIconModule, MatDialogModule],
   exports: [GainControlComponent, AboutComponent],
 })
 export class WglSharedModule {}

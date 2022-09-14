@@ -22,7 +22,6 @@ export class GamePiece extends Object3D {
   private _meshCube: Mesh;
   private _geometryCylinder: CylinderBufferGeometry;
   private _meshCylinder: Mesh;
-  private _powerMove!: PowerMove;
 
   private _mesh!: Mesh;
 
@@ -62,6 +61,11 @@ export class GamePiece extends Object3D {
     return this._isRemoved;
   }
 
+  private _powerMove!: PowerMove;
+  get PowerMove(): PowerMove {
+    return this._powerMove;
+  }
+
   private _isPowerMove: boolean = false;
   get IsPowerMove(): boolean {
     return this._isPowerMove;
@@ -70,6 +74,12 @@ export class GamePiece extends Object3D {
   private _powerMoveType!: PowerMoveType;
   get PowerMoveType(): PowerMoveType {
     return this._powerMoveType;
+  }
+
+  // for game save state
+  private _flipTurns: number;
+  get FlipTurns(): number {
+    return this._flipTurns;
   }
 
   constructor(x: number, y: number, z: number, rotation: number) {
@@ -110,6 +120,9 @@ export class GamePiece extends Object3D {
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
     ];
+
+    // game save state
+    this._flipTurns = 0;
   }
 
   set ThetaOffset(theta: number) {
@@ -148,6 +161,8 @@ export class GamePiece extends Object3D {
       this.remove(this._powerMove.PowerMoveMesh);
       this._powerMove?.Dispose();
     }
+
+    this._flipTurns = 0;
 
     this._mesh.scale.set(1, 1, 1);
     this._mesh.rotation.x = 0;
@@ -254,7 +269,7 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(style: GamePieceRemovalStyle): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle, isRestoring: boolean = false): void {
     // update removed state
     this._isRemoved = true;
 
@@ -273,7 +288,7 @@ export class GamePiece extends Object3D {
     };
 
     this._removeTween = new Tween(delta)
-      .to(target, MathUtils.randInt(1000, 1500))
+      .to(target, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
         this._mesh.rotation.y = delta.y;
@@ -293,8 +308,14 @@ export class GamePiece extends Object3D {
       .start();
   }
 
-  public AnimateFlipTween(turns: number, directionUp: boolean): void {
-    if (!this._isPowerMove) {
+  public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring: boolean = false): void {
+    if (!this._isPowerMove && turns > 0) {
+      // Game Save State
+      //  by summing the overall number of turns; adding if "up" and subtracting of "down",
+      //  the restore will understand how many turns to make and which direction up/down
+      //  based on ending positive/negative number
+      this._flipTurns += directionUp ? turns : turns * -1;
+
       // set direction
       const delta = { theta: this._mesh.rotation.z };
       const final = {
@@ -313,7 +334,7 @@ export class GamePiece extends Object3D {
 
       // tween
       new Tween(delta)
-        .to(final, 1500)
+        .to(final, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
         .onUpdate(() => {
@@ -325,14 +346,14 @@ export class GamePiece extends Object3D {
 
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
-  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture): void {
+  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture, color?: number): void {
     // update states
     this._isPowerMove = true;
     this._isRemoved = false;
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
-    this._powerMove = new PowerMove(texture);
+    this._powerMove = new PowerMove(texture, color);
     this.add(this._powerMove.PowerMoveMesh);
     this._powerMove.AnimateIntro();
   }
