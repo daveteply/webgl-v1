@@ -15,6 +15,7 @@ import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
 import { SaveGameService } from '../save-game/save-game.service';
+import { GameTexture } from '../texture/game-texture';
 
 @Injectable()
 export class MaterialManagerService {
@@ -88,14 +89,14 @@ export class MaterialManagerService {
             // bump symbols and textures
             if (material.bumpTexture && material.colorStr) {
               side.materialPhong.color = material.color as Color;
-              side.materialPhong.bumpMap = material.bumpTexture;
+              side.materialPhong.bumpMap = material.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
             }
 
             // emojis
             if (material.texture && !material.colorStr) {
-              side.materialBasic.map = material.texture;
+              side.materialBasic.map = material.texture.texture;
               side.materialBasic.opacity = 0;
               side.useBasic = true;
             }
@@ -131,14 +132,14 @@ export class MaterialManagerService {
             // bump symbols and textures
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
               side.materialPhong.color = restoreMaterial.color as Color;
-              side.materialPhong.bumpMap = restoreMaterial.bumpTexture;
+              side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
             }
 
             // emojis
             if (restoreMaterial?.texture && !restoreMaterial.colorStr) {
-              side.materialBasic.map = restoreMaterial.texture;
+              side.materialBasic.map = restoreMaterial.texture.texture;
               side.materialBasic.opacity = 0;
               side.useBasic = true;
             }
@@ -156,7 +157,7 @@ export class MaterialManagerService {
     level: number,
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
-    textures: Texture[]
+    textures: GameTexture[]
   ): GamePieceMaterialData[] {
     const materials: GamePieceMaterialData[] = [];
 
@@ -194,7 +195,7 @@ export class MaterialManagerService {
         selectedColors.forEach((c) => {
           materials.push({
             matchKey: matchKey++,
-            bumpTexture: bumpTexture as Texture,
+            bumpTexture: bumpTexture,
             texture: undefined,
             colorStr: c,
             color: new Color(c),

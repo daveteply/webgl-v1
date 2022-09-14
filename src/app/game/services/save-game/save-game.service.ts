@@ -83,10 +83,10 @@ export class SaveGameService {
         for (const material of levelMaterials.sort((a, b) => a.matchKey - b.matchKey)) {
           this._savedGameData.textureData.push({
             matchKey: material.matchKey,
-            bumpId: material.bumpTexture?.name,
-            textureId: material.texture?.name,
+            bumpId: material.bumpTexture?.id,
+            textureId: material.texture?.id,
             colorStr: material.colorStr,
-            emojiSequence: material.texture?.userData?.sequence,
+            emojiSequence: material.texture?.texture?.userData?.sequence,
           });
         }
 
