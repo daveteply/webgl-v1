@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, take } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { take } from 'rxjs';
 import { ShareManagerService } from '../../services/share-manager.service';
 
 @Component({
