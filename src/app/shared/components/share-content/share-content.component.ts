@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { take } from 'rxjs';
 import { ShareManagerService } from 'src/app/game/services/share-manager.service';
 
@@ -8,7 +9,7 @@ import { ShareManagerService } from 'src/app/game/services/share-manager.service
   styleUrls: ['./share-content.component.scss'],
 })
 export class ShareContentComponent implements OnInit {
-  constructor(public shareManager: ShareManagerService) {}
+  constructor(public shareManager: ShareManagerService, @Inject(DOCUMENT) private document: Document) {}
 
   ShowSelf: boolean = false;
 
@@ -22,6 +23,6 @@ export class ShareContentComponent implements OnInit {
   }
 
   Share(): void {
-    this.shareManager.RequestScreenShot();
+    this.shareManager.RequestScreenShot(this.document);
   }
 }
