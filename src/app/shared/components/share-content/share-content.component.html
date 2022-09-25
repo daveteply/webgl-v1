@@ -1,5 +1,5 @@
-<div id="share-content" *ngIf="CanShare">
-  <button mat-fab (click)="Share()" color="primary">
+<div id="share-content" *ngIf="ShowSelf">
+  <button mat-fab (click)="Share()" color="primary" class="share-cta" [class.show]="shareManager.InLevel">
     <mat-icon>share</mat-icon>
   </button>
 </div>

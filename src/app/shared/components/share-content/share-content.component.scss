@@ -1,6 +1,14 @@
 #share-content {
-  z-index: 1001;
   position: absolute;
   bottom: 0;
   left: 0;
+
+  .share-cta {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+  }
+
+  .show {
+    opacity: 1;
+  }
 }

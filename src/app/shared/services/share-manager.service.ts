@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs';
-import { Share, ShareResult } from '@capacitor/share';
+import { Observable } from 'rxjs';
+import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 
 @Injectable({
@@ -10,6 +10,15 @@ export class ShareManagerService {
   private _screenShotRequested: boolean = false;
   get ScreenShotRequested(): boolean {
     return this._screenShotRequested;
+  }
+
+  private _inLevel: boolean = false;
+  get InLevel(): boolean {
+    return this._inLevel;
+  }
+
+  UpdateInLevel(inLevel: boolean): void {
+    this._inLevel = inLevel;
   }
 
   CanShare(): Observable<boolean> {

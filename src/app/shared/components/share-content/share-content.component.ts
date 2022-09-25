@@ -8,16 +8,16 @@ import { ShareManagerService } from '../../services/share-manager.service';
   styleUrls: ['./share-content.component.scss'],
 })
 export class ShareContentComponent implements OnInit {
-  constructor(private shareManager: ShareManagerService) {}
+  constructor(public shareManager: ShareManagerService) {}
 
-  CanShare: boolean = false;
+  ShowSelf: boolean = false;
 
   ngOnInit(): void {
     this.shareManager
       .CanShare()
       .pipe(take(1))
       .subscribe((result) => {
-        this.CanShare = result;
+        this.ShowSelf = result;
       });
   }
 
