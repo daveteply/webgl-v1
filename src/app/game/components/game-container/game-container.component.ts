@@ -15,7 +15,7 @@ import { HintsManagerService } from '../../services/hints-manager.service';
 import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
 import { PostProcessingManagerService } from '../../services/post-processing-manager.service';
 import { SaveGameService } from '../../services/save-game/save-game.service';
-import { ShareManagerService } from 'src/app/shared/services/share-manager.service';
+import { ShareManagerService } from '../../services/share-manager.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';

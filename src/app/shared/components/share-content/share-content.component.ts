@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { take } from 'rxjs';
-import { ShareManagerService } from '../../services/share-manager.service';
+import { ShareManagerService } from 'src/app/game/services/share-manager.service';
 
 @Component({
   selector: 'wgl-share-content',

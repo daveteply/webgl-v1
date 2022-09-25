@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ShareManagerService } from './share-manager.service';
 
 describe('ShareManagerService', () => {

@@ -4,7 +4,7 @@ import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'thre
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 import { PostProcessingManagerService } from './post-processing-manager.service';
-import { ShareManagerService } from 'src/app/shared/services/share-manager.service';
+import { ShareManagerService } from 'src/app/game/services/share-manager.service';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
