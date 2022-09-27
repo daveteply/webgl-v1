@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { SHARE_FILE_NAME } from '../game-constants';
@@ -14,6 +14,7 @@ export class ShareManagerService {
   }
 
   private _document!: Document;
+  private _rikkleLogo!: HTMLImageElement;
 
   private _inLevel: boolean = false;
   get InLevel(): boolean {
@@ -42,29 +43,18 @@ export class ShareManagerService {
     this._screenShotRequested = false;
 
     if (screenShotDataUrl) {
-      // save screen shot as image
-      var image = new Image();
-      image.onload = (onLoadResult) => {
-        const img = onLoadResult.target as HTMLImageElement;
-        if (img) {
-          // use in-memory canvas to create new image
-          const canvas = this._document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            // draw existing screen shot
-            ctx.font = '130px Chau Philomene One';
-            ctx.drawImage(img, 0, 0);
-
-            // overlay text
-            ctx.fillText('TEST TEXT !!! OMG THIS IS SO COOL', 100, 100);
-
-            this.debugDownloadFile(canvas.toDataURL());
-          }
-        }
-      };
-      image.src = screenShotDataUrl;
+      // load rikkle logo
+      this.loadRikkleLogo()
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.createScreenShot(screenShotDataUrl);
+          },
+          error: () => {
+            console.error('Failure loading Rikkle logo');
+            this.createScreenShot(screenShotDataUrl, false);
+          },
+        });
 
       // const screenShotSegments = screenShotDataUrl.split(',');
       // if (screenShotSegments.length === 2) {
@@ -85,6 +75,70 @@ export class ShareManagerService {
       //     });
       // }
     }
+  }
+
+  private loadRikkleLogo(): Observable<void> {
+    return new Observable((observer) => {
+      if (!this._rikkleLogo) {
+        const rikkleLogoImage = new Image();
+        // set up events
+        rikkleLogoImage.onload = (onloadEvent: Event) => {
+          this._rikkleLogo = onloadEvent.target as HTMLImageElement;
+          observer.next();
+          observer.complete();
+        };
+        rikkleLogoImage.onerror = () => {
+          observer.error();
+          observer.complete();
+        };
+
+        // initiate download
+        rikkleLogoImage.src = '/assets/rikkle-logo.webp';
+      } else {
+        observer.next();
+        observer.complete();
+      }
+    });
+  }
+
+  private createScreenShot(screenShotDataUrl: string, useLogo: boolean = true): void {
+    // save screen shot as image
+    const screenShotImage = new Image();
+    screenShotImage.onload = (onLoadResult) => {
+      const img = onLoadResult.target as HTMLImageElement;
+      if (img) {
+        // use in-memory canvas to create new image
+        const canvas = this._document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          // draw existing screen shot
+          ctx.drawImage(img, 0, 0);
+
+          // add gradient
+          const height = img.height * 0.45;
+          const grad = ctx.createLinearGradient(0, 0, 0, height);
+          grad.addColorStop(0, 'black');
+          grad.addColorStop(1, 'transparent');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, img.width, height);
+
+          // draw Rikkle logo
+          if (useLogo) {
+            ctx.drawImage(this._rikkleLogo, img.width / 2 - this._rikkleLogo.width / 2, 100);
+          }
+
+          // overlay text
+          ctx.font = '10em "Chau Philomene One"';
+          ctx.fillStyle = 'white';
+          ctx.fillText('TEST TEXT !!! OMG THIS IS SO COOL', 100, 100);
+
+          this.debugDownloadFile(canvas.toDataURL());
+        }
+      }
+    };
+    screenShotImage.src = screenShotDataUrl;
   }
 
   private debugDownloadFile(data: string): void {
