@@ -3,6 +3,7 @@ import { Observable, take } from 'rxjs';
 import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { SHARE_FILE_NAME } from '../game-constants';
+import { formatNumber } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,9 @@ export class ShareManagerService {
   private _document!: Document;
   private _rikkleLogo!: HTMLImageElement;
 
+  private _score!: number;
+  private _level!: number;
+
   private _inLevel: boolean = false;
   get InLevel(): boolean {
     return this._inLevel;
@@ -23,6 +27,14 @@ export class ShareManagerService {
 
   UpdateInLevel(inLevel: boolean): void {
     this._inLevel = inLevel;
+  }
+
+  UpdateLevel(level: number): void {
+    this._level = level;
+  }
+
+  UpdateScore(score: number): void {
+    this._score = score;
   }
 
   CanShare(): Observable<boolean> {
@@ -130,9 +142,12 @@ export class ShareManagerService {
           }
 
           // overlay text
+          ctx.textAlign = 'center';
           ctx.font = '10em "Chau Philomene One"';
           ctx.fillStyle = 'white';
-          ctx.fillText('TEST TEXT !!! OMG THIS IS SO COOL', 100, 100);
+          const textX = this._rikkleLogo.height + 200;
+          ctx.fillText(`Level: ${this._level}`, img.width / 2, textX);
+          ctx.fillText(`Score: ${formatNumber(this._score, 'en-US')}`, img.width / 2, textX + 100);
 
           this.debugDownloadFile(canvas.toDataURL());
         }
