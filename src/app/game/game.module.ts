@@ -13,6 +13,7 @@ import { MovesLeftComponent } from './components/moves-left/moves-left.component
 import { HighScoresComponent } from './components/high-scores/high-scores.component';
 import { MovesRemainingInfoComponent } from './components/dialogs/hints/moves-remaining-info/moves-remaining-info.component';
 import { HowToPlayComponent } from './components/dialogs/hints/how-to-play/how-to-play.component';
+import { ShareContentComponent } from './components/share-content/share-content.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -22,6 +23,7 @@ import { ObjectManagerService } from './services/object-manager.service';
 import { ScoringManagerService } from './services/scoring-manager.service';
 import { EffectsManagerService } from './services/effects-manager.service';
 import { TextureManagerService } from './services/texture/texture-manager.service';
+import { ShareManagerService } from './services/share-manager.service';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -41,6 +43,7 @@ import { MatMenuModule } from '@angular/material/menu';
     HighScoresComponent,
     MovesRemainingInfoComponent,
     HowToPlayComponent,
+    ShareContentComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +64,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ScoringManagerService,
     EffectsManagerService,
     DecimalPipe,
+    ShareManagerService,
   ],
 })
 export class GameModule {}

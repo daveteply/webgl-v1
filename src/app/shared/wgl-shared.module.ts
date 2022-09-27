@@ -8,11 +8,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { GainControlComponent } from './components/gain-control/gain-control.component';
 import { AboutComponent } from './components/about/about.component';
-import { ShareContentComponent } from './components/share-content/share-content.component';
 
 @NgModule({
-  declarations: [GainControlComponent, AboutComponent, ShareContentComponent],
+  declarations: [GainControlComponent, AboutComponent],
   imports: [CommonModule, MatSliderModule, MatButtonModule, MatIconModule, MatDialogModule],
-  exports: [GainControlComponent, AboutComponent, ShareContentComponent],
+  exports: [GainControlComponent, AboutComponent],
 })
 export class WglSharedModule {}

@@ -4,10 +4,9 @@ import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { SHARE_FILE_NAME } from '../game-constants';
 import { formatNumber } from '@angular/common';
+import { ScoringManagerService } from './scoring-manager.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ShareManagerService {
   private _screenShotRequested: boolean = false;
   get ScreenShotRequested(): boolean {
@@ -17,24 +16,15 @@ export class ShareManagerService {
   private _document!: Document;
   private _rikkleLogo!: HTMLImageElement;
 
-  private _score!: number;
-  private _level!: number;
-
   private _inLevel: boolean = false;
   get InLevel(): boolean {
     return this._inLevel;
   }
 
+  constructor(private scoringManager: ScoringManagerService) {}
+
   UpdateInLevel(inLevel: boolean): void {
     this._inLevel = inLevel;
-  }
-
-  UpdateLevel(level: number): void {
-    this._level = level;
-  }
-
-  UpdateScore(score: number): void {
-    this._score = score;
   }
 
   CanShare(): Observable<boolean> {
@@ -146,8 +136,8 @@ export class ShareManagerService {
           ctx.font = '10em "Chau Philomene One"';
           ctx.fillStyle = 'white';
           const textX = this._rikkleLogo.height + 200;
-          ctx.fillText(`Level: ${this._level}`, img.width / 2, textX);
-          ctx.fillText(`Score: ${formatNumber(this._score, 'en-US')}`, img.width / 2, textX + 100);
+          ctx.fillText(`Level: ${this.scoringManager.Level}`, img.width / 2, textX);
+          ctx.fillText(`Score: ${formatNumber(this.scoringManager.Score, 'en-US')}`, img.width / 2, textX + 100);
 
           this.debugDownloadFile(canvas.toDataURL());
         }
