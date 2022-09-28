@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, take } from 'rxjs';
 import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
-import { QUARTER_CIRCLE_RADIANS, SHARE_FILE_NAME } from '../game-constants';
+import { QUARTER_CIRCLE_RADIANS, SHARE_FILE_NAME, SHARE_WEBSITE } from '../game-constants';
 import { formatNumber } from '@angular/common';
 import { ScoringManagerService } from './scoring-manager.service';
 
@@ -146,7 +146,7 @@ export class ShareManagerService {
           // draw lower gradient
           const lowerGrad = ctx.createLinearGradient(0, img.height - 300, 0, img.height);
           lowerGrad.addColorStop(0, 'transparent');
-          lowerGrad.addColorStop(0.6, 'white');
+          lowerGrad.addColorStop(0.4, 'white');
           lowerGrad.addColorStop(1, 'white');
           ctx.fillStyle = lowerGrad;
           ctx.fillRect(0, img.height - 300, img.width, img.height);
@@ -174,7 +174,11 @@ export class ShareManagerService {
 
       Filesystem.writeFile({ path: SHARE_FILE_NAME, data: imageData, directory: Directory.Cache })
         .then((writeResult) => {
-          Share.share({ title: 'example title', text: 'example text', url: writeResult.uri })
+          Share.share({
+            title: 'Rikkle, a game by Turbogeekbear',
+            text: `Have you seen Rikkle?! ${SHARE_WEBSITE}`,
+            url: writeResult.uri,
+          })
             .then((result) => {
               console.log('share complete', JSON.stringify(result));
             })

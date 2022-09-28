@@ -40,6 +40,7 @@ export const DIFFICULTY_TIER_4 = 50;
 
 // sharing
 export const SHARE_FILE_NAME = 'rikkle-screen-shot.png';
+export const SHARE_WEBSITE = 'https://turbogeekbear.com/projects/rikkle/story';
 
 // Misc
 export const CANVAS_TEXTURE_SCALE = 80;
