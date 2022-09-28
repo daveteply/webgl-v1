@@ -4,6 +4,7 @@ import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'thre
 import { InteractionManagerService } from './interaction-manager.service';
 import { ObjectManagerService } from './object-manager.service';
 import { PostProcessingManagerService } from './post-processing-manager.service';
+import { ShareManagerService } from 'src/app/game/services/share-manager.service';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -25,7 +26,8 @@ export class SceneManagerService implements OnDestroy {
     private ngZone: NgZone,
     private objectManager: ObjectManagerService,
     private interactionManager: InteractionManagerService,
-    private postProcessingManager: PostProcessingManagerService
+    private postProcessingManager: PostProcessingManagerService,
+    private shareManager: ShareManagerService
   ) {
     this._slightGrey = new Color(0xf0f0f0f);
 
@@ -57,7 +59,7 @@ export class SceneManagerService implements OnDestroy {
     this._scene.add(this._pointLight);
 
     // renderer
-    this._renderer = new WebGLRenderer({ canvas, powerPreference: 'high-performance', stencil: false, depth: false });
+    this._renderer = new WebGLRenderer({ canvas, stencil: false, depth: false });
     this._renderer.autoClear = false;
     this._renderer.setSize(width, height, false);
 
@@ -104,6 +106,10 @@ export class SceneManagerService implements OnDestroy {
       TWEEN.update();
       this.objectManager.UpdateStarField();
       this.postProcessingManager.Composer.render(deltaTime);
+
+      if (this.shareManager.ScreenShotRequested) {
+        this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
+      }
     });
 
     requestAnimationFrame((now) => {

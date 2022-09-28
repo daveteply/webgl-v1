@@ -15,6 +15,7 @@ import { HintsManagerService } from '../../services/hints-manager.service';
 import { AdmobManagerService } from 'src/app/shared/services/admob-manager.service';
 import { PostProcessingManagerService } from '../../services/post-processing-manager.service';
 import { SaveGameService } from '../../services/save-game/save-game.service';
+import { ShareManagerService } from '../../services/share-manager.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
@@ -73,6 +74,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private hintsManager: HintsManagerService,
     private postProcessingManager: PostProcessingManagerService,
     private saveGame: SaveGameService,
+    private shareManager: ShareManagerService,
     public scoringManager: ScoringManagerService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -100,6 +102,10 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit(): void {
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntil(this.notifier)).subscribe((gameOver) => {
+      // hide share
+      this.shareManager.UpdateInLevel(false);
+
+      // game state
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
@@ -297,6 +303,9 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private handleLevelDialogCLosed(): void {
     // remove banner
     this.admob.RemoveBanner();
+
+    // show share
+    this.shareManager.UpdateInLevel(true);
 
     // dismiss dialog and launch next level
     if (this._showWelcome) {

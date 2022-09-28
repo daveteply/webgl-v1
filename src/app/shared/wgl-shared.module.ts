@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GainControlComponent } from './components/gain-control/gain-control.component';
-import { AboutComponent } from './components/about/about.component';
-
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+
+import { GainControlComponent } from './components/gain-control/gain-control.component';
+import { AboutComponent } from './components/about/about.component';
 
 @NgModule({
   declarations: [GainControlComponent, AboutComponent],
