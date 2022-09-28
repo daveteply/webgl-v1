@@ -55,25 +55,6 @@ export class ShareManagerService {
           this.createScreenShot(screenShotDataUrl, false);
         },
       });
-
-      // const screenShotSegments = screenShotDataUrl.split(',');
-      // if (screenShotSegments.length === 2) {
-      //   const imageData = screenShotSegments[1];
-
-      //   Filesystem.writeFile({ path: SHARE_FILE_NAME, data: imageData, directory: Directory.Cache })
-      //     .then((writeResult) => {
-      //       Share.share({ title: 'example title', text: 'example text', url: writeResult.uri })
-      //         .then((result) => {
-      //           console.log('share complete', JSON.stringify(result));
-      //         })
-      //         .catch((error) => {
-      //           console.error('share error', JSON.stringify(error));
-      //         });
-      //     })
-      //     .catch((fileWriteError) => {
-      //       console.error('file write error', fileWriteError);
-      //     });
-      // }
     }
   }
 
@@ -179,21 +160,42 @@ export class ShareManagerService {
             );
           }
 
-          this.debugDownloadFile(canvas.toDataURL());
+          this.startShare(canvas.toDataURL());
         }
       }
     };
     screenShotImage.src = screenShotDataUrl;
   }
 
-  private debugDownloadFile(data: string): void {
-    const a = document.createElement('a');
-    a.download = 'foo.png';
-    a.href = data;
-    document.body.appendChild(a);
-    a.click();
+  private startShare(screenShotDataUrl: string): void {
+    const screenShotSegments = screenShotDataUrl.split(',');
+    if (screenShotSegments.length === 2) {
+      const imageData = screenShotSegments[1];
 
-    // clean up
-    document.body.removeChild(a);
+      Filesystem.writeFile({ path: SHARE_FILE_NAME, data: imageData, directory: Directory.Cache })
+        .then((writeResult) => {
+          Share.share({ title: 'example title', text: 'example text', url: writeResult.uri })
+            .then((result) => {
+              console.log('share complete', JSON.stringify(result));
+            })
+            .catch((error) => {
+              console.error('share error', JSON.stringify(error));
+            });
+        })
+        .catch((fileWriteError) => {
+          console.error('file write error', fileWriteError);
+        });
+    }
   }
+
+  // private debugDownloadFile(data: string): void {
+  //   const a = document.createElement('a');
+  //   a.download = 'foo.png';
+  //   a.href = data;
+  //   document.body.appendChild(a);
+  //   a.click();
+
+  //   // clean up
+  //   document.body.removeChild(a);
+  // }
 }
