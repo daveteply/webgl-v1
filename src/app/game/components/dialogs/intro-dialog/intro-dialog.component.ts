@@ -35,7 +35,7 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     // start-up music
-    this.audioManager.PlayLevelComplete();
+    this.audioManager.PlayLevelComplete(true);
   }
 
   ngOnInit(): void {

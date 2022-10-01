@@ -7,6 +7,7 @@ export enum AudioType {
   LEVEL_START_4,
   LEVEL_START_5,
   LEVEL_STAT,
+  LEVEL_ENABLE_CTA,
   PIECE_MOVE,
   PIECE_MOVE_REMAINING_PANIC,
   PIECE_NON_MOVE,
@@ -22,6 +23,9 @@ export enum AudioType {
   LEVEL_END_2,
   LEVEL_END_3,
   LEVEL_END_4,
+  LEVEL_END_5,
+  LEVEL_END_6,
+  LEVEL_END_7,
 }
 
 export interface AudioInfo {
@@ -55,6 +59,10 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-dialog-stat.mp3',
     audioType: AudioType.LEVEL_STAT,
+  },
+  {
+    url: 'assets/audio/mixkit-arcade-player-select-2036.mp3',
+    audioType: AudioType.LEVEL_ENABLE_CTA,
   },
 
   {
@@ -118,5 +126,17 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-complete/l4.mp3',
     audioType: AudioType.LEVEL_END_4,
+  },
+  {
+    url: 'assets/audio/level-complete/l5.mp3',
+    audioType: AudioType.LEVEL_END_5,
+  },
+  {
+    url: 'assets/audio/level-complete/l6.mp3',
+    audioType: AudioType.LEVEL_END_6,
+  },
+  {
+    url: 'assets/audio/level-complete/l7.mp3',
+    audioType: AudioType.LEVEL_END_7,
   },
 ];

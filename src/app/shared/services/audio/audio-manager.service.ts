@@ -4,6 +4,7 @@ import { Howl, Howler } from 'howler';
 import { MINIMUM_MATCH_COUNT } from 'src/app/game/game-constants';
 import { AppVisibilityService } from '../app-visibility.service';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,8 @@ export class AudioManagerService implements OnDestroy {
   private readonly NOTE_MIN = 48;
   private readonly NOTE_MAX = 71;
   private _noteNext: number = this.NOTE_MIN;
+
+  private _currentLevelCompleteInx: number = 0;
 
   // private _trackVolume: number = 0.5;
   // get Volume(): number {
@@ -30,8 +33,17 @@ export class AudioManagerService implements OnDestroy {
     });
   }
 
-  public PlayLevelComplete(): void {
-    switch (Math.floor(Math.random() * 4) + 1) {
+  public PlayLevelComplete(initialLevel: boolean = false): void {
+    this._currentLevelCompleteInx = 1;
+    if (!initialLevel) {
+      this._currentLevelCompleteInx = Math.floor(Math.random() * 7) + 1;
+    }
+
+    if (!environment.production) {
+      console.info('Level Complete Sound Index: ', this._currentLevelCompleteInx);
+    }
+
+    switch (this._currentLevelCompleteInx) {
       case 1:
         this.PlayAudio(AudioType.LEVEL_END_1);
         break;
@@ -44,16 +56,47 @@ export class AudioManagerService implements OnDestroy {
         this.PlayAudio(AudioType.LEVEL_END_3);
         break;
 
-      default:
+      case 4:
         this.PlayAudio(AudioType.LEVEL_END_4);
+        break;
+
+      case 5:
+        this.PlayAudio(AudioType.LEVEL_END_5);
+        break;
+
+      case 6:
+        this.PlayAudio(AudioType.LEVEL_END_6);
+        break;
+
+      case 7:
+        this.PlayAudio(AudioType.LEVEL_END_7);
     }
   }
 
   public StopLevelComplete(): void {
-    this.StopAudio(AudioType.LEVEL_END_1);
-    this.StopAudio(AudioType.LEVEL_END_2);
-    this.StopAudio(AudioType.LEVEL_END_3);
-    this.StopAudio(AudioType.LEVEL_END_4);
+    switch (this._currentLevelCompleteInx) {
+      case 1:
+        this.StopAudio(AudioType.LEVEL_END_1);
+        break;
+      case 2:
+        this.StopAudio(AudioType.LEVEL_END_2);
+        break;
+      case 3:
+        this.StopAudio(AudioType.LEVEL_END_3);
+        break;
+      case 4:
+        this.StopAudio(AudioType.LEVEL_END_4);
+        break;
+      case 5:
+        this.StopAudio(AudioType.LEVEL_END_5);
+        break;
+      case 6:
+        this.StopAudio(AudioType.LEVEL_END_6);
+        break;
+      case 7:
+        this.StopAudio(AudioType.LEVEL_END_7);
+        break;
+    }
   }
 
   public PlayLevelStart(): void {
