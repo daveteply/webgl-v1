@@ -13,7 +13,8 @@ import { DialogNotifyService } from '../dialog-notify.service';
 import { DialogAnimationService } from '../dialog-animation.service';
 
 enum LevelStatisticType {
-  fastMatchBonusTotal = 1,
+  infoComplete = 1,
+  fastMatchBonusTotal,
   fastestMatchMs,
   moveCount,
   moveCountEarned,
@@ -32,6 +33,7 @@ interface LevelStat {
 })
 export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   texturesStillLoading: boolean = true;
+  levelInfoProcessing: boolean = true;
   progress: number = 100;
 
   // target values (for sequential binding)
@@ -42,7 +44,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
   pieceCount: number = 0;
 
   private _timerQueue: LevelStat[] = [];
-  timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();
+  private _timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();
 
   borderStyle!: string;
 
@@ -80,7 +82,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
         .start();
     });
 
-    this.timerEvent
+    this._timerEvent
       .pipe(delay(550))
       .pipe(takeUntil(this.notifier))
       .subscribe((stat: LevelStat) => {
@@ -114,6 +116,11 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
             this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
             break;
 
+          case LevelStatisticType.infoComplete:
+            this.audioManager.PlayAudio(AudioType.LEVEL_ENABLE_CTA);
+            this.levelInfoProcessing = false;
+            break;
+
           default:
             break;
         }
@@ -134,8 +141,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     if (this._timerQueue.length) {
       this._timerQueue = [];
     }
-    this.timerEvent.complete();
-    this.timerEvent.unsubscribe();
+    this._timerEvent.complete();
+    this._timerEvent.unsubscribe();
 
     this.dialogAnimation.Dispose();
 
@@ -151,6 +158,8 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     this.moveCount = 0;
     this.moveCountEarned = 0;
     this.pieceCount = 0;
+
+    this.levelInfoProcessing = true;
 
     if (levelData.stats.fastMatchBonusTotal) {
       this._timerQueue.push({
@@ -187,6 +196,9 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
       });
     }
 
+    // this signals the end of of the data report
+    this._timerQueue.push({ statType: LevelStatisticType.infoComplete, statValue: 0 });
+
     this.processQueue();
   }
 
@@ -194,7 +206,7 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     if (this._timerQueue.length) {
       const nextElement = this._timerQueue.shift();
       if (nextElement) {
-        this.timerEvent.next(nextElement);
+        this._timerEvent.next(nextElement);
       }
     }
   }

@@ -26,9 +26,8 @@
     </div>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
-
   <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading">
+    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading || levelInfoProcessing">
       <span>Next Level, <i>let's go!</i></span>
     </button>
   </mat-dialog-actions>
