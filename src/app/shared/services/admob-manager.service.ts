@@ -9,6 +9,7 @@ import {
   InterstitialAdPluginEvents,
   MaxAdContentRating,
 } from '@capacitor-community/admob';
+import { Device } from '@capacitor/device';
 import { environment } from 'src/environments/environment';
 
 enum AdType {
@@ -24,6 +25,8 @@ export class AdmobManagerService {
   private readonly TESTING: boolean = false;
 
   private _currentAdType!: AdType;
+
+  private _isWeb: boolean = false;
 
   get IsInterstitial(): boolean {
     return this._currentAdType === AdType.Intersticial;
@@ -47,6 +50,10 @@ export class AdmobManagerService {
   public InterstitialDismissed: EventEmitter<void> = new EventEmitter();
 
   constructor() {
+    Device.getInfo().then((info) => {
+      this._isWeb = info.platform === 'web';
+    });
+
     AdMob.initialize({
       requestTrackingAuthorization: true,
       initializeForTesting: true,
@@ -96,7 +103,7 @@ export class AdmobManagerService {
     let adType = AdType.None;
 
     // 33% chance that ad will be interstitial
-    if (Math.floor(Math.random() * 3) === 0) {
+    if (!this._isWeb && Math.floor(Math.random() * 3) === 0) {
       adType = AdType.Intersticial;
     }
 

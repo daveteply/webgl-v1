@@ -224,7 +224,7 @@ export class ScoringManagerService {
   }
 
   private initLevelPieceTarget(): void {
-    this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
+    this._levelPieceTarget = 3; // Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
     // cap the number of pieces
     if (this._levelPieceTarget > DIFFICULTY_TIER_3) {
       this._levelPieceTarget = DIFFICULTY_TIER_3;
