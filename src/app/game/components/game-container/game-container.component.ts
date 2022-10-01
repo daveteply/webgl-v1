@@ -69,7 +69,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private notify: NotifyService,
     private dialogNotify: DialogNotifyService,
     private gameEngine: GameEngineService,
-    private admob: AdmobManagerService,
+    private admobManager: AdmobManagerService,
     private highScoreManager: HighScoreManagerService,
     private hintsManager: HintsManagerService,
     private postProcessingManager: PostProcessingManagerService,
@@ -115,7 +115,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
 
       // ads
       if (this.scoringManager.Level > LEVEL_TO_START_ADS && !gameOver) {
-        this.admob.ShowBanner();
+        this.admobManager.NextAd();
       }
 
       // clear highlighted pieces
@@ -166,7 +166,12 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
               this.dialogNotify.Notify();
             });
             this._dialogRefLevel.afterClosed().subscribe(() => {
-              this.handleLevelDialogCLosed();
+              // interstitial ad
+              if (this.admobManager.IsInterstitial) {
+                this.admobManager.NextInterstitialAd();
+              } else {
+                this.handleLevelDialogCLosed();
+              }
             });
           }
         }
@@ -223,6 +228,16 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
           }
         });
       }
+    });
+
+    // interstitial events
+    this.admobManager.InterstitialFailed.pipe(takeUntil(this.notifier)).subscribe(() => {
+      // the interstitial has failed to load or failed to show, start next level
+      this.handleLevelDialogCLosed();
+    });
+    this.admobManager.InterstitialDismissed.pipe(takeUntil(this.notifier)).subscribe(() => {
+      // player has dismissed interstitial ad, start next level
+      this.handleLevelDialogCLosed();
     });
 
     // initialize objects and materials
@@ -301,8 +316,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private handleLevelDialogCLosed(): void {
-    // remove banner
-    this.admob.RemoveBanner();
+    // remove ad
+    this.admobManager.CloseBanner();
 
     // show share
     this.shareManager.UpdateInLevel(true);
