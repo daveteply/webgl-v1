@@ -95,14 +95,9 @@ export class AdmobManagerService {
   private nextAdType(): AdType {
     let adType = AdType.None;
 
-    // 50% chance that an ad will be shown
-    if (Math.floor(Math.random() * 2) === 0) {
-      adType = AdType.Banner;
-
-      // 25% chance that ad will be interstitial
-      if (Math.floor(Math.random() * 4) === 0) {
-        adType = AdType.Intersticial;
-      }
+    // 33% chance that ad will be interstitial
+    if (Math.floor(Math.random() * 3) === 0) {
+      adType = AdType.Intersticial;
     }
 
     return adType;
