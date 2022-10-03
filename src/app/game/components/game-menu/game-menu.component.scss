@@ -1,0 +1,14 @@
+#game-menu {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .menu-cta {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+  }
+
+  .show {
+    opacity: 1;
+  }
+}

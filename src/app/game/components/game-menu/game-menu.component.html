@@ -1,0 +1,10 @@
+<div id="game-menu">
+  <button mat-fab color="primary" class="menu-cta" [class.show]="shareManager.InLevel" [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="AboutClick()"><mat-icon>info</mat-icon>About this Level</button>
+    <button mat-menu-item (click)="SaveState()"><mat-icon>save</mat-icon>Save</button>
+  </mat-menu>
+</div>

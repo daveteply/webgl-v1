@@ -14,6 +14,7 @@ import { HighScoresComponent } from './components/high-scores/high-scores.compon
 import { MovesRemainingInfoComponent } from './components/dialogs/hints/moves-remaining-info/moves-remaining-info.component';
 import { HowToPlayComponent } from './components/dialogs/hints/how-to-play/how-to-play.component';
 import { ShareContentComponent } from './components/share-content/share-content.component';
+import { GameMenuComponent } from './components/game-menu/game-menu.component';
 
 import { GameEngineService } from './services/game-engine.service';
 import { InteractionManagerService } from './services/interaction-manager.service';
@@ -44,6 +45,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MovesRemainingInfoComponent,
     HowToPlayComponent,
     ShareContentComponent,
+    GameMenuComponent,
   ],
   imports: [
     CommonModule,

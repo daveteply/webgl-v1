@@ -14,10 +14,12 @@
   flex-direction: column;
 
   .game-scoring {
+    height: 1.5em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: x-large;
+    margin: 0 0.5em;
     @include fader;
     &.show {
       opacity: 1;
@@ -29,7 +31,6 @@
     .game-logo {
       height: 100%;
       width: 5em;
-      margin-left: 0.5em;
       background-image: url("^assets/rikkle-logo.webp");
       background-position: center center;
       background-repeat: no-repeat;

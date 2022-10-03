@@ -8,7 +8,6 @@ import { ScoringManagerService } from '../../services/scoring-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
 import { TextManagerService } from '../../services/text/text-manager.service';
 import { GameEngineService } from '../../services/game-engine.service';
-import { NotifyService } from 'src/app/shared/services/notify.service';
 import { DialogNotifyService } from '../dialogs/dialog-notify.service';
 import { HighScoreManagerService } from 'src/app/shared/services/high-score-manager.service';
 import { HintsManagerService } from '../../services/hints-manager.service';
@@ -66,7 +65,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     private objectManager: ObjectManagerService,
     private textureManager: TextureManagerService,
     private textManager: TextManagerService,
-    private notify: NotifyService,
     private dialogNotify: DialogNotifyService,
     private gameEngine: GameEngineService,
     private admobManager: AdmobManagerService,
@@ -85,17 +83,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       .pipe(takeUntil(this.notifier))
       .subscribe(() => {
         this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
-      });
-  }
-
-  public SaveState(): void {
-    this.objectManager
-      .SaveGameState()
-      .pipe(takeUntil(this.notifier))
-      .subscribe(() => {
-        if (this.document.defaultView) {
-          this.document.defaultView.location.href = '/';
-        }
       });
   }
 
@@ -264,10 +251,6 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     this.resizeSubscription.unsubscribe();
     this.notifier.next(undefined);
     this.notifier.complete();
-  }
-
-  public AboutClick(): void {
-    this.notify.Notify();
   }
 
   private initTextures(): void {
