@@ -20,8 +20,6 @@ export class SceneManagerService implements OnDestroy {
 
   private _animateRequestId!: number;
 
-  private _slightGrey!: Color;
-
   constructor(
     private ngZone: NgZone,
     private objectManager: ObjectManagerService,
@@ -29,10 +27,8 @@ export class SceneManagerService implements OnDestroy {
     private postProcessingManager: PostProcessingManagerService,
     private shareManager: ShareManagerService
   ) {
-    this._slightGrey = new Color(0xf0f0f0f);
-
     this._scene = new Scene();
-    this._scene.background = this._slightGrey;
+    this._scene.background = new Color(0xf0f0f0f);
   }
 
   ngOnDestroy(): void {

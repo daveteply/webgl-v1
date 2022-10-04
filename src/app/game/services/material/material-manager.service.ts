@@ -192,7 +192,7 @@ export class MaterialManagerService {
 
         const bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
 
-        selectedColors.forEach((c) => {
+        selectedColors.forEach((c: string) => {
           materials.push({
             matchKey: matchKey++,
             bumpTexture: bumpTexture,

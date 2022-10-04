@@ -40,7 +40,7 @@ export class SplashText extends Object3D {
       opacity: 0,
     });
     if (color) {
-      this._material.color = new Color(color);
+      this._material.color.set(color);
     }
 
     // mesh

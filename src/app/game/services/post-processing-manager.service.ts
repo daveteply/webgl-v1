@@ -88,7 +88,7 @@ export class PostProcessingManagerService {
 
   public UpdateOutlinePassColor(colorHex: number): void {
     this._outlineColor = colorHex;
-    this._outlinePass.visibleEdgeColor = new Color(this._outlineColor);
+    this._outlinePass.visibleEdgeColor.set(this._outlineColor);
   }
 
   public UpdateLevelTransitionPass(levelTransitionType: LevelTransitionType, start: boolean): void {
