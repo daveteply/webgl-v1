@@ -13,6 +13,7 @@ import { MaterialManagerService } from '../../services/material/material-manager
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { SceneManagerService } from '../../services/scene-manager.service';
 import { ScoringManagerService } from '../../services/scoring-manager.service';
+import { ShareManagerService } from '../../services/share-manager.service';
 import { TextureManagerService } from '../../services/texture/texture-manager.service';
 import { TextZoomComponent } from '../text-zoom/text-zoom.component';
 import { GameContainerComponent } from './game-container.component';
@@ -42,6 +43,7 @@ describe('GameContainerComponent', () => {
         EffectsManagerService,
         TextureManagerService,
         AudioManagerService,
+        ShareManagerService,
       ],
     }).compileComponents();
   });

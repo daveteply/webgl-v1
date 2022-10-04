@@ -16,6 +16,7 @@ import { InteractionManagerService } from './interaction-manager.service';
 import { Observable } from 'rxjs';
 import { PostProcessingManagerService } from './post-processing-manager.service';
 import { SaveGameService } from './save-game/save-game.service';
+import { ShareManagerService } from './share-manager.service';
 
 function createMockAxle(objectManager: ObjectManagerService) {
   return new Observable((o) => {
@@ -59,6 +60,7 @@ describe('GameEngineService', () => {
         SceneManagerService,
         InteractionManagerService,
         PostProcessingManagerService,
+        ShareManagerService,
       ],
     });
 
