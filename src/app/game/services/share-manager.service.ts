@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable, take } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
-import { QUARTER_CIRCLE_RADIANS, SHARE_FILE_NAME, SHARE_WEBSITE } from '../game-constants';
+import { SHARE_FILE_NAME, SHARE_WEBSITE } from '../game-constants';
 import { formatNumber } from '@angular/common';
 import { ScoringManagerService } from './scoring-manager.service';
 
