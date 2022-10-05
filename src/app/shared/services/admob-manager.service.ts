@@ -10,6 +10,7 @@ import {
   MaxAdContentRating,
 } from '@capacitor-community/admob';
 import { Device } from '@capacitor/device';
+import { LEVEL_START_FULL_ADS } from 'src/app/game/game-constants';
 import { environment } from 'src/environments/environment';
 
 enum AdType {
@@ -22,9 +23,10 @@ enum AdType {
   providedIn: 'root',
 })
 export class AdmobManagerService {
-  private readonly TESTING: boolean = false;
+  private readonly TESTING: boolean = true;
 
   private _currentAdType!: AdType;
+  private _interstitialPrepared: boolean = false;
 
   private _isWeb: boolean = false;
 
@@ -74,8 +76,8 @@ export class AdmobManagerService {
     });
   }
 
-  public NextAd(): void {
-    this._currentAdType = this.nextAdType();
+  public NextAd(level: number): void {
+    this._currentAdType = this.nextAdType(level);
     if (!environment.production) {
       console.info('Ad Type:', AdType[this._currentAdType]);
     }
@@ -83,13 +85,24 @@ export class AdmobManagerService {
     if (this._currentAdType === AdType.Banner) {
       AdMob.showBanner(this._bannerOptions);
     }
+
+    // prep interstitial
+    if (this._currentAdType === AdType.Intersticial) {
+      this._interstitialPrepared = false;
+      AdMob.prepareInterstitial(this._interstitialOptions).then(() => {
+        this._interstitialPrepared = true;
+      });
+    }
   }
 
   public NextInterstitialAd() {
     if (this._currentAdType === AdType.Intersticial) {
-      AdMob.prepareInterstitial(this._interstitialOptions).then(() => {
+      if (this._interstitialPrepared) {
         AdMob.showInterstitial();
-      });
+      } else {
+        // something went wrong, fire event to load next level
+        this.InterstitialFailed.next();
+      }
     }
   }
 
@@ -99,12 +112,15 @@ export class AdmobManagerService {
     }
   }
 
-  private nextAdType(): AdType {
+  private nextAdType(level: number): AdType {
     let adType = AdType.None;
 
-    // 33% chance that ad will be interstitial
-    if (!this._isWeb && Math.floor(Math.random() * 3) === 0) {
-      adType = AdType.Intersticial;
+    if (level >= LEVEL_START_FULL_ADS || Math.floor(Math.random() * 4) >= 1) {
+      adType = AdType.Banner;
+
+      if (!this._isWeb && Math.floor(Math.random() * 3) === 0) {
+        adType = AdType.Intersticial;
+      }
     }
 
     return adType;

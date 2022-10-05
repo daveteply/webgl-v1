@@ -25,7 +25,7 @@ import { MovesRemainingInfoComponent } from '../dialogs/hints/moves-remaining-in
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import {
-  LEVEL_TO_START_ADS,
+  LEVEL_START_POSSIBLE_ADS,
   STORAGE_HINT_HOW_TO_PLAY,
   STORAGE_HINT_MOVES_DECREASE,
   STORAGE_HINT_MOVES_INCREASE,
@@ -101,8 +101,8 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
 
       // ads
-      if (this.scoringManager.Level > LEVEL_TO_START_ADS && !gameOver) {
-        this.admobManager.NextAd();
+      if (this.scoringManager.Level > LEVEL_START_POSSIBLE_ADS && !gameOver) {
+        this.admobManager.NextAd(this.scoringManager.Level);
       }
 
       // clear highlighted pieces

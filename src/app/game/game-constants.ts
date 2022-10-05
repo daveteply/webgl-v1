@@ -60,4 +60,5 @@ export const STORAGE_HINT_MOVES_INCREASE = 'Hint.Moves.Increase';
 export const STORAGE_SAVE_STATE = 'Save.State';
 
 // Ads
-export const LEVEL_TO_START_ADS = 3;
+export const LEVEL_START_POSSIBLE_ADS = 3;
+export const LEVEL_START_FULL_ADS = 8;
