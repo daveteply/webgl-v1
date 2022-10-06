@@ -7,6 +7,7 @@ export class PowerMove {
   private _mesh!: Mesh;
   private _materials: MeshPhongMaterial[] = [];
 
+  private _appearTween!: any;
   private _spinTween!: any;
   private _bounceTween!: any;
 
@@ -44,7 +45,8 @@ export class PowerMove {
   public AnimateIntro(): void {
     const delta = { s: 0.1, o: 0.0 };
     const target = { s: 40.0, o: 0.8 };
-    new Tween(delta)
+
+    this._appearTween = new Tween(delta)
       .to(target, 750)
       .easing(Easing.Bounce.InOut)
       .onUpdate(() => {
@@ -92,6 +94,7 @@ export class PowerMove {
   }
 
   public Dispose(): void {
+    this._appearTween?.stop();
     this._spinTween?.stop();
     this._bounceTween?.stop();
     this._geometry?.dispose();
