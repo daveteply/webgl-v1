@@ -23,7 +23,7 @@ enum AdType {
   providedIn: 'root',
 })
 export class AdmobManagerService {
-  private readonly TESTING: boolean = true;
+  private readonly TESTING: boolean = false;
 
   private _currentAdType!: AdType;
   private _interstitialPrepared: boolean = false;
