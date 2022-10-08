@@ -208,8 +208,8 @@ export class InteractionManagerService {
         // launch animation sequence
         this.effectsManager.AnimateSelected(this._matchingPieces, true);
         this.effectsManager.AnimateLock(this.objectManager.Axle, true);
-        this.postProcessingManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
       }
+      this.postProcessingManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
     } else {
       // unlock board if no pieces selected
       this.LockBoard(false);
@@ -230,6 +230,8 @@ export class InteractionManagerService {
     // execute power move
     this.scoringManager.UpdateMoveCount();
     targetGamePiece.PowerMoveRemove();
+
+    // power move could have been the player's last move
     if (this.scoringManager.GameOver) {
       this.audioManager.PlayAudio(AudioType.GAME_OVER);
       this.objectManager.LevelCompleted.next(true);
@@ -237,7 +239,12 @@ export class InteractionManagerService {
     } else {
       this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length);
       this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
-      this.objectManager.AnimatePowerMove(targetGamePiece.PowerMoveType);
+      if (targetGamePiece.PowerMoveType === PowerMoveType.Additive) {
+        // additive power move
+        this.objectManager.AdditivePowerMove();
+      } else {
+        this.objectManager.AnimatePowerMove(targetGamePiece.PowerMoveType);
+      }
       // panic
       if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
         this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
@@ -253,7 +260,7 @@ export class InteractionManagerService {
       gamePiece.PowerMoveRemove();
     });
 
-    // unlock the game board
+    // unlock the game board (while animation is in progress)
     this.LockBoard(false);
   }
 

@@ -51,4 +51,5 @@ export const PowerMoveTextures: PowerMoveBumpData[] = [
   { id: 'PM04', src: 'assets/maps/power-move/up.webp', moveType: PowerMoveType.VerticalUp },
   { id: 'PM05', src: 'assets/maps/power-move/down.webp', moveType: PowerMoveType.VerticalDown },
   { id: 'PM06', src: 'assets/maps/power-move/up-down.webp', moveType: PowerMoveType.VerticalMix },
+  { id: 'PM0A', src: 'assets/maps/power-move/additive.webp', moveType: PowerMoveType.Additive },
 ];

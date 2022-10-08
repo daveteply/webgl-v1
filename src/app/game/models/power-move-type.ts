@@ -6,4 +6,5 @@ export enum PowerMoveType {
   VerticalUp,
   VerticalDown,
   VerticalMix,
+  Additive,
 }

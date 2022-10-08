@@ -187,6 +187,18 @@ export class EffectsManagerService {
     }
   }
 
+  public AnimateAdditive(axle: GameWheel[]): void {
+    this._selectedPieces = [];
+    for (const gameWheel of axle) {
+      for (const gamePiece of gameWheel.children as GamePiece[]) {
+        // power moves get a matchKey of 0 set; don't restore power moves
+        if (gamePiece.IsRemoved && gamePiece.MatchKey !== 0) {
+          gamePiece.AnimateAdditive();
+        }
+      }
+    }
+  }
+
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
     gamePiece.AnimateFlipTween(Math.floor(velocity), directionUp);
   }

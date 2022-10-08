@@ -243,6 +243,10 @@ export class ObjectManagerService {
     this.effectsManager.AnimatePowerMove(this._axle, moveType);
   }
 
+  public AdditivePowerMove(): void {
+    this.effectsManager.AnimateAdditive(this._axle);
+  }
+
   private assignIterationValues(): void {
     for (let i = 0; i < this._axle.length; i++) {
       if (i === 0) {
