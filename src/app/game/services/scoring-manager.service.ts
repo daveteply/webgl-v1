@@ -158,7 +158,6 @@ export class ScoringManagerService {
   public RestartGame(): void {
     this._level = 1;
     this._score = 0;
-    this._playerMoves = 0;
     this.initLevelPieceTarget();
     this.ResetStats();
   }
