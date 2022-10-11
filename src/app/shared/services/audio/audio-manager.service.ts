@@ -34,7 +34,7 @@ export class AudioManagerService implements OnDestroy {
   }
 
   public PlayLevelComplete(initialLevel: boolean = false): void {
-    this._currentLevelCompleteInx = 1;
+    this._currentLevelCompleteInx = 2;
     if (!initialLevel) {
       this._currentLevelCompleteInx = Math.floor(Math.random() * 7) + 1;
     }
