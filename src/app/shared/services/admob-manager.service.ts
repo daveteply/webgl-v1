@@ -24,6 +24,7 @@ enum AdType {
 })
 export class AdmobManagerService {
   private readonly TESTING: boolean = false;
+  private readonly ADS_ENABLED: boolean = true;
 
   private _currentAdType!: AdType;
   private _interstitialPrepared: boolean = false;
@@ -83,11 +84,13 @@ export class AdmobManagerService {
     }
 
     if (this._currentAdType === AdType.Banner) {
-      AdMob.showBanner(this._bannerOptions);
+      if (this.ADS_ENABLED) {
+        AdMob.showBanner(this._bannerOptions);
+      }
     }
 
     // prep interstitial
-    if (this._currentAdType === AdType.Intersticial) {
+    if (this.ADS_ENABLED && this._currentAdType === AdType.Intersticial) {
       this._interstitialPrepared = false;
       AdMob.prepareInterstitial(this._interstitialOptions).then(() => {
         this._interstitialPrepared = true;
@@ -97,10 +100,15 @@ export class AdmobManagerService {
 
   public NextInterstitialAd() {
     if (this._currentAdType === AdType.Intersticial) {
-      if (this._interstitialPrepared) {
-        AdMob.showInterstitial();
+      if (this.ADS_ENABLED) {
+        if (this._interstitialPrepared) {
+          AdMob.showInterstitial();
+        } else {
+          // something went wrong, fire event to load next level
+          this.InterstitialFailed.next();
+        }
       } else {
-        // something went wrong, fire event to load next level
+        // ads are disabled, fire event
         this.InterstitialFailed.next();
       }
     }
