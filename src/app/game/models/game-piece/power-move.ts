@@ -1,4 +1,5 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
+import { Observable } from 'rxjs';
 import { CylinderBufferGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
 import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
@@ -42,37 +43,43 @@ export class PowerMove {
     this._mesh = new Mesh(this._geometry, this._materials);
   }
 
-  public AnimateIntro(): void {
-    const delta = { s: 0.1, o: 0.0 };
-    const target = { s: 40.0, o: 0.8 };
+  public AnimateIntro(): Observable<void> {
+    return new Observable((observer) => {
+      const delta = { s: 0.1, o: 0.0 };
+      const target = { s: 40.0, o: 0.8 };
 
-    this._appearTween = new Tween(delta)
-      .to(target, 750)
-      .easing(Easing.Bounce.InOut)
-      .onUpdate(() => {
-        this._mesh.scale.setScalar(delta.s);
-        this._materials.forEach((m) => (m.opacity = delta.o));
-      })
-      .start();
+      this._appearTween = new Tween(delta)
+        .to(target, 1500)
+        .easing(Easing.Bounce.Out)
+        .onUpdate(() => {
+          this._mesh.scale.setScalar(delta.s);
+          this._materials.forEach((m) => (m.opacity = delta.o));
+        })
+        .onComplete(() => {
+          observer.next();
+          observer.complete();
+        })
+        .start();
 
-    this._spinTween = new Tween({})
-      .repeat(Infinity)
-      .onUpdate(() => {
-        this._mesh.rotateY(0.005);
-      })
-      .start();
+      this._spinTween = new Tween({})
+        .repeat(Infinity)
+        .onUpdate(() => {
+          this._mesh.rotateY(0.005);
+        })
+        .start();
 
-    const deltaB = { y: -0.05 };
-    const targetB = { y: 0.05 };
-    this._bounceTween = new Tween(deltaB)
-      .to(targetB, 750)
-      .repeat(Infinity)
-      .easing(Easing.Quadratic.InOut)
-      .yoyo(true)
-      .onUpdate(() => {
-        this._mesh.position.y = deltaB.y;
-      })
-      .start();
+      const deltaB = { y: -0.05 };
+      const targetB = { y: 0.05 };
+      this._bounceTween = new Tween(deltaB)
+        .to(targetB, 750)
+        .repeat(Infinity)
+        .easing(Easing.Quadratic.InOut)
+        .yoyo(true)
+        .onUpdate(() => {
+          this._mesh.position.y = deltaB.y;
+        })
+        .start();
+    });
   }
 
   public Remove(): void {

@@ -9,6 +9,7 @@ import {
   Object3D,
   Texture,
 } from 'three';
+import { take } from 'rxjs';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY } from '../../game-constants';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { PowerMoveType } from '../power-move-type';
@@ -391,15 +392,21 @@ export class GamePiece extends Object3D {
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
   public PowerMoveAdd(moveType: PowerMoveType, texture: Texture, color?: number): void {
-    // update states
-    this._isPowerMove = true;
-    this._isRemoved = false;
+    // prevent interaction with power move until animation is complete
+    this._isRemoved = true;
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
     this._powerMove = new PowerMove(texture, color);
     this.add(this._powerMove.PowerMoveMesh);
-    this._powerMove.AnimateIntro();
+    this._powerMove
+      .AnimateIntro()
+      .pipe(take(1))
+      .subscribe(() => {
+        // animation is complete
+        this._isRemoved = false;
+        this._isPowerMove = true;
+      });
   }
 
   public PowerMoveRemove(): void {
