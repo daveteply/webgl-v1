@@ -6,6 +6,7 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { DialogAnimationService } from '../dialog-animation.service';
 import { ObjectManagerService } from 'src/app/game/services/object-manager.service';
 import { SaveGameService } from 'src/app/game/services/save-game/save-game.service';
+import { AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
 
 @Component({
   selector: 'wgl-intro-dialog',
@@ -28,6 +29,7 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     private audioManager: AudioManagerService,
     private dialogAnimation: DialogAnimationService,
     private saveGame: SaveGameService,
+    private analyticsManager: AnalyticsManagerService,
     public dialogRef: MatDialogRef<IntroDialogComponent>
   ) {
     this.objectManager.LevelMaterialsUpdated.pipe(takeUntil(this.notifier)).subscribe(() => {
@@ -61,6 +63,7 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   restoreGame(): void {
+    this.analyticsManager.LogRestoreCTA();
     this.saveGame.RestoreState();
     this.dialogRef.close({ isRestoring: true });
   }

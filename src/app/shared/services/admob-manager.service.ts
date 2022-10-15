@@ -9,9 +9,9 @@ import {
   InterstitialAdPluginEvents,
   MaxAdContentRating,
 } from '@capacitor-community/admob';
-import { Device } from '@capacitor/device';
 import { LEVEL_START_FULL_ADS } from 'src/app/game/game-constants';
 import { environment } from 'src/environments/environment';
+import { DeviceManagerService } from './device-manager.service';
 
 enum AdType {
   None = 1,
@@ -28,8 +28,6 @@ export class AdmobManagerService {
 
   private _currentAdType!: AdType;
   private _interstitialPrepared: boolean = false;
-
-  private _isWeb: boolean = false;
 
   get IsInterstitial(): boolean {
     return this._currentAdType === AdType.Intersticial;
@@ -52,11 +50,7 @@ export class AdmobManagerService {
   public InterstitialFailed: EventEmitter<void> = new EventEmitter();
   public InterstitialDismissed: EventEmitter<void> = new EventEmitter();
 
-  constructor() {
-    Device.getInfo().then((info) => {
-      this._isWeb = info.platform === 'web';
-    });
-
+  constructor(private deviceManagerService: DeviceManagerService) {
     AdMob.initialize({
       requestTrackingAuthorization: true,
       initializeForTesting: true,
@@ -126,7 +120,7 @@ export class AdmobManagerService {
     if (level >= LEVEL_START_FULL_ADS || Math.floor(Math.random() * 4) >= 1) {
       adType = AdType.Banner;
 
-      if (!this._isWeb && Math.floor(Math.random() * 3) === 0) {
+      if (!this.deviceManagerService.IsWeb && Math.floor(Math.random() * 3) === 0) {
         adType = AdType.Intersticial;
       }
     }

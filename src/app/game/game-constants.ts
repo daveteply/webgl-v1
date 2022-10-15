@@ -62,3 +62,10 @@ export const STORAGE_SAVE_STATE = 'Save.State';
 // Ads
 export const LEVEL_START_POSSIBLE_ADS = 3;
 export const LEVEL_START_FULL_ADS = 8;
+
+// Analytics
+export const ANALYTICS_SHARE_CTA_ID = 'S001';
+export const ANALYTICS_GAME_MENU_CTA_ID = 'GM001';
+export const ANALYTICS_GAME_MENU_ABOUT_CTA_ID = 'GM002';
+export const ANALYTICS_GAME_MENU_SAVE_CTA_ID = 'GM003';
+export const ANALYTICS_RESTORE_CTA_ID = 'RM001';
