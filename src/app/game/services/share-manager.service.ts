@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { Share } from '@capacitor/share';
 import { Directory, Filesystem } from '@capacitor/filesystem';
@@ -21,6 +21,9 @@ export class ShareManagerService {
   get InLevel(): boolean {
     return this._inLevel;
   }
+
+  public ShareInitiated: EventEmitter<void> = new EventEmitter();
+  public ShareFailed: EventEmitter<void> = new EventEmitter();
 
   constructor(private scoringManager: ScoringManagerService) {}
 
@@ -174,6 +177,7 @@ export class ShareManagerService {
 
       Filesystem.writeFile({ path: SHARE_FILE_NAME, data: imageData, directory: Directory.Cache })
         .then((writeResult) => {
+          this.ShareInitiated.next();
           Share.share({
             title: 'Rikkle, a game by Turbogeekbear',
             text: `Have you seen Rikkle?! ${SHARE_WEBSITE}`,
@@ -183,13 +187,16 @@ export class ShareManagerService {
               console.log('share complete', JSON.stringify(result));
             })
             .catch((error) => {
+              this.ShareFailed.next();
               console.error('share error', JSON.stringify(error));
             });
         })
         .catch((fileWriteError) => {
+          this.ShareFailed.next();
           console.error('file write error', fileWriteError);
         });
     }
+    this.ShareFailed.next();
   }
 
   // private debugDownloadFile(data: string): void {
