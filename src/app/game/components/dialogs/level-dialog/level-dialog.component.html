@@ -1,7 +1,7 @@
 <canvas #dialogCanvas class="canvas-backer"></canvas>
 
 <div id="level-dialog" [style]="borderStyle">
-  <h1 class="dialog-header">Level Complete!</h1>
+  <h1 class="dialog-header">{{ LevelHeadingPhrase }}</h1>
 
   <mat-dialog-content class="content">
     <div class="level-info-line" [class.show]="fastMatchBonusTotal">
@@ -26,9 +26,17 @@
     </div>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" mat-dialog-close [disabled]="texturesStillLoading || levelInfoProcessing">
-      <span>Next Level, <i>let's go!</i></span>
+  <mat-dialog-actions align="center" class="dialog-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="NextLevel()"
+      [disabled]="texturesStillLoading || levelInfoProcessing"
+    >
+      <span>Next Level</span>
+    </button>
+    <button mat-stroked-button (click)="SaveGame()" [disabled]="texturesStillLoading || levelInfoProcessing">
+      <span>Save Game</span>
     </button>
   </mat-dialog-actions>
 </div>

@@ -8,7 +8,7 @@ export const GRID_VERTICAL_OFFSET = 1.05;
 export const ROTATIONAL_CONSTANT = 75;
 export const WHEEL_START_POSITION = 50;
 
-// establish single "step" around the radian circle
+// Establish single "step" around the radian circle
 export const GRID_INC = MathUtils.degToRad(GRID_STEP_DEGREES);
 // rotation
 const QUARTER_CIRCLE_DEGREES = 90;
@@ -51,6 +51,7 @@ export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
 export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
 export const EMOJI_GROUP_STEP = 6;
+export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
 
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';
@@ -62,10 +63,3 @@ export const STORAGE_SAVE_STATE = 'Save.State';
 // Ads
 export const LEVEL_START_POSSIBLE_ADS = 3;
 export const LEVEL_START_FULL_ADS = 8;
-
-// Analytics
-export const ANALYTICS_SHARE_CTA_ID = 'S001';
-export const ANALYTICS_GAME_MENU_CTA_ID = 'GM001';
-export const ANALYTICS_GAME_MENU_ABOUT_CTA_ID = 'GM002';
-export const ANALYTICS_GAME_MENU_SAVE_CTA_ID = 'GM003';
-export const ANALYTICS_RESTORE_CTA_ID = 'RM001';

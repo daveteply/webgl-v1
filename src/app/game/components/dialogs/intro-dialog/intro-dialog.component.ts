@@ -6,7 +6,7 @@ import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager
 import { DialogAnimationService } from '../dialog-animation.service';
 import { ObjectManagerService } from 'src/app/game/services/object-manager.service';
 import { SaveGameService } from 'src/app/game/services/save-game/save-game.service';
-import { AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
+import { AnalyticsEventType, AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
 
 @Component({
   selector: 'wgl-intro-dialog',
@@ -62,8 +62,8 @@ export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogAnimation.Animate();
   }
 
-  restoreGame(): void {
-    this.analyticsManager.LogRestoreCTA();
+  RestoreGame(): void {
+    this.analyticsManager.Log(AnalyticsEventType.IntroDialogRestoreCTA);
     this.saveGame.RestoreState();
     this.dialogRef.close({ isRestoring: true });
   }

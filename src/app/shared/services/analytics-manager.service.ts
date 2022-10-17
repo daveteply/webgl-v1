@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { FirebaseAnalytics } from '@capacitor-community/firebase-analytics';
-import {
-  ANALYTICS_GAME_MENU_ABOUT_CTA_ID,
-  ANALYTICS_GAME_MENU_CTA_ID,
-  ANALYTICS_GAME_MENU_SAVE_CTA_ID,
-  ANALYTICS_RESTORE_CTA_ID,
-  ANALYTICS_SHARE_CTA_ID,
-} from 'src/app/game/game-constants';
 import { DeviceManagerService } from './device-manager.service';
+
+export enum AnalyticsEventType {
+  ShareCTA = 1000,
+  GameMenu = 2000,
+  GameMenuAboutCTA = 2001,
+  GameMenuSaveCTA = 2002,
+  LevelDialogNextCTA = 3000,
+  LevelDialogSaveCTA = 3001,
+  IntroDialogRestoreCTA = 4000,
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,22 +18,12 @@ import { DeviceManagerService } from './device-manager.service';
 export class AnalyticsManagerService {
   constructor(private deviceManagerService: DeviceManagerService) {}
 
-  public LogShareCTA(): void {
-    this.logEvent('share_cta', ANALYTICS_SHARE_CTA_ID);
-  }
-
-  public LogGameMenuCTA(): void {
-    this.logEvent('game_menu_cta', ANALYTICS_GAME_MENU_CTA_ID);
-  }
-  public LogGameMenuAboutCTA(): void {
-    this.logEvent('game_menu_about_cta', ANALYTICS_GAME_MENU_ABOUT_CTA_ID);
-  }
-  public LogGameMenuSaveCTA(): void {
-    this.logEvent('game_menu_save_cta', ANALYTICS_GAME_MENU_SAVE_CTA_ID);
-  }
-
-  public LogRestoreCTA(): void {
-    this.logEvent('restore_cta', ANALYTICS_RESTORE_CTA_ID);
+  public Log(logType: AnalyticsEventType): void {
+    switch (logType) {
+      case AnalyticsEventType.ShareCTA:
+        this.logEvent('share_cta', AnalyticsEventType.ShareCTA + '');
+        break;
+    }
   }
 
   private logEvent(name: string, id: string): void {

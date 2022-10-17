@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } from '@angular/core';
 
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { delay, Subject, takeUntil } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 
@@ -11,6 +11,8 @@ import { TextureManagerService } from 'src/app/game/services/texture/texture-man
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogNotifyService } from '../dialog-notify.service';
 import { DialogAnimationService } from '../dialog-animation.service';
+import { LEVEL_COMPLETE_HEADINGS } from 'src/app/game/game-constants';
+import { AnalyticsEventType, AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
 
 enum LevelStatisticType {
   infoComplete = 1,
@@ -53,11 +55,15 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
 
   private notifier = new Subject();
 
+  LevelHeadingPhrase!: string;
+
   constructor(
     private textureManager: TextureManagerService,
     private audioManager: AudioManagerService,
     private dialogNotify: DialogNotifyService,
     private dialogAnimation: DialogAnimationService,
+    private analyticsManager: AnalyticsManagerService,
+    public dialogRef: MatDialogRef<LevelDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: LevelDialogData
   ) {
     this.textureManager.LevelTexturesLoaded.pipe(takeUntil(this.notifier)).subscribe(() => {
@@ -129,6 +135,18 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
       });
 
     this.setData(data);
+
+    this.LevelHeadingPhrase = LEVEL_COMPLETE_HEADINGS[Math.floor(Math.random() * LEVEL_COMPLETE_HEADINGS.length)];
+  }
+
+  NextLevel(): void {
+    this.analyticsManager.Log(AnalyticsEventType.LevelDialogNextCTA);
+    this.dialogRef.close();
+  }
+
+  SaveGame(): void {
+    this.analyticsManager.Log(AnalyticsEventType.LevelDialogSaveCTA);
+    this.dialogRef.close(1);
   }
 
   ngAfterViewInit(): void {
