@@ -8,7 +8,6 @@ export enum AnalyticsEventType {
   GameMenuAboutCTA = 2001,
   GameMenuSaveCTA = 2002,
   LevelDialogNextCTA = 3000,
-  LevelDialogSaveCTA = 3001,
   IntroDialogRestoreCTA = 4000,
 }
 

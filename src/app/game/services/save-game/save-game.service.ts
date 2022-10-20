@@ -122,8 +122,5 @@ export class SaveGameService {
 
   public RestoreComplete(): void {
     this._isRestoring = false;
-
-    // clear preference so next time
-    // Preferences.remove({ key: STORAGE_SAVE_STATE });
   }
 }

@@ -147,29 +147,17 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             });
           } else {
             // level complete
-            const height = `${this.scoringManager.StatsEntries() * 4.2 + 7.5}em`;
+            const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
             this._dialogRefLevel = this.dialog.open(LevelDialogComponent, this.dialogConfig(height));
             this._dialogRefLevel.backdropClick().subscribe(() => {
               this.dialogNotify.Notify();
             });
             this._dialogRefLevel.afterClosed().subscribe((dialogResult) => {
-              // save
-              if (dialogResult === 1) {
-                this.objectManager
-                  .SaveGameState()
-                  .pipe(takeUntil(this.notifier))
-                  .subscribe(() => {
-                    if (this.document.defaultView) {
-                      this.document.defaultView.location.href = '/';
-                    }
-                  });
+              // interstitial ad
+              if (this.admobManager.IsInterstitial) {
+                this.admobManager.NextInterstitialAd();
               } else {
-                // interstitial ad
-                if (this.admobManager.IsInterstitial) {
-                  this.admobManager.NextInterstitialAd();
-                } else {
-                  this.handleLevelDialogCLosed();
-                }
+                this.handleLevelDialogCLosed();
               }
             });
           }

@@ -36,18 +36,9 @@
     }
   }
 
-  .dialog-actions {
-    display: flex;
-    flex-direction: column;
-
-    .mat-raised-button {
-      font-size: x-large;
-      margin-bottom: 0.75em;
-    }
-    .mat-stroked-button {
-      font-size: x-large;
-      background-color: #ffffff;
-    }
+  .mat-raised-button {
+    font-size: x-large;
+    margin-bottom: 0.75em;
   }
 }
 

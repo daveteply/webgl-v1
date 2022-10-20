@@ -144,11 +144,6 @@ export class LevelDialogComponent implements OnDestroy, AfterViewInit {
     this.dialogRef.close();
   }
 
-  SaveGame(): void {
-    this.analyticsManager.Log(AnalyticsEventType.LevelDialogSaveCTA);
-    this.dialogRef.close(1);
-  }
-
   ngAfterViewInit(): void {
     this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
     this.dialogAnimation.CreateLevelDialogBoxes();

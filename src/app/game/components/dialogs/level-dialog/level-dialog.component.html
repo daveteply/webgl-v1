@@ -26,7 +26,7 @@
     </div>
     <mat-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></mat-progress-bar>
   </mat-dialog-content>
-  <mat-dialog-actions align="center" class="dialog-actions">
+  <mat-dialog-actions align="center">
     <button
       mat-raised-button
       color="primary"
@@ -34,9 +34,6 @@
       [disabled]="texturesStillLoading || levelInfoProcessing"
     >
       <span>Next Level</span>
-    </button>
-    <button mat-stroked-button (click)="SaveGame()" [disabled]="texturesStillLoading || levelInfoProcessing">
-      <span>Save Game</span>
     </button>
   </mat-dialog-actions>
 </div>
