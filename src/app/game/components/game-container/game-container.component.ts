@@ -138,7 +138,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
             this._dialogRefIntro = this.dialog.open(IntroDialogComponent, this.dialogConfig());
             this._dialogRefIntro.afterClosed().subscribe((result) => {
               // restore game
-              if (result.isRestoring) {
+              if (result?.isRestoring) {
                 this.initTextures();
                 this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
               } else {
