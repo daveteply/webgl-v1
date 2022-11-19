@@ -13,7 +13,7 @@ import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
 import { BumpTextures, BumpSymbolTextures, PowerMoveTextures, BumpData } from './texture-info';
-import * as shuffleArray from 'shuffle-array';
+import arrayShuffle from 'array-shuffle';
 import { LevelGeometryType } from '../../level-geometry-type';
 import { GameTexture } from './game-texture';
 
@@ -161,7 +161,7 @@ export class TextureManagerService {
   }
 
   private loadBumpSymbolTextures(playableTextureCount: number): void {
-    let targetTextures = shuffleArray(this._bumpSymbolTextures).slice(0, playableTextureCount);
+    let targetTextures = arrayShuffle(this._bumpSymbolTextures).slice(0, playableTextureCount);
     if (this.saveGame.IsRestoring) {
       targetTextures = this._bumpSymbolTextures.filter((b) => {
         return this.saveGame.SavedGameData.textureData.some((t) => t.bumpId === b.id);
@@ -283,7 +283,7 @@ export class TextureManagerService {
       console.info('emoji group: ', emojiGroup.id);
     }
 
-    const shuffledSubGroups = shuffleArray(emojiGroup.subGroup);
+    const shuffledSubGroups = arrayShuffle(emojiGroup.subGroup);
     // DEBUG
     // const shuffledSubGroups = emojiGroup.subGroup.filter((s) => s.id === 'arrow');
     // DEBUG
@@ -294,7 +294,7 @@ export class TextureManagerService {
 
     // create long list of codes
     const emojiSequences = subGroups.flatMap((s) => s.codes);
-    return shuffleArray(emojiSequences)
+    return arrayShuffle(emojiSequences)
       .map((s) => {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })

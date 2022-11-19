@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 
 import { Observable } from 'rxjs';
 import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
-import * as shuffleArray from 'shuffle-array';
+import arrayShuffle from 'array-shuffle';
 
 import { TextureManagerService } from '../texture/texture-manager.service';
 import { StoreService } from 'src/app/app-store/services/store.service';
@@ -76,7 +76,7 @@ export class MaterialManagerService {
       for (const wheel of this._gameMaterials.wheelMaterials) {
         for (const piece of wheel.pieceMaterials) {
           // shuffle for each game piece
-          const pieceMaterials = this.saveGame.IsRestoring ? this._levelMaterials : shuffleArray(this._levelMaterials);
+          const pieceMaterials = this.saveGame.IsRestoring ? this._levelMaterials : arrayShuffle(this._levelMaterials);
 
           // set up each side
           for (let i = 0; i < piece.materials.length; i++) {
@@ -233,7 +233,7 @@ export class MaterialManagerService {
       sortedColors.sort().forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
     }
 
-    const shuffledColors = shuffleArray(sortedColors).slice(0, playableTextureCount);
+    const shuffledColors = arrayShuffle(sortedColors).slice(0, playableTextureCount);
 
     if (!environment.production) {
       console.info('    game piece colors:', scheme);
