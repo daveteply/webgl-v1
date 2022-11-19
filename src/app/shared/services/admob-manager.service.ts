@@ -23,11 +23,17 @@ enum AdType {
   providedIn: 'root',
 })
 export class AdmobManagerService {
-  private readonly TESTING: boolean = false;
+  private readonly TESTING: boolean = true;
   private readonly ADS_ENABLED: boolean = true;
 
   private _currentAdType!: AdType;
   private _interstitialPrepared: boolean = false;
+
+  // Feedback is that the Interstitial occurs too often.
+  // This will be the target count of ad occurrences
+  private _nextInterstitialTarget: number = 0;
+  private readonly INTERSTITIAL_TARGET_MIN: number = 3;
+  private readonly INTERSTITIAL_TARGET_MAX: number = 5;
 
   get IsInterstitial(): boolean {
     return this._currentAdType === AdType.Intersticial;
@@ -53,7 +59,7 @@ export class AdmobManagerService {
   constructor(private deviceManagerService: DeviceManagerService) {
     AdMob.initialize({
       requestTrackingAuthorization: true,
-      initializeForTesting: true,
+      initializeForTesting: false,
       maxAdContentRating: MaxAdContentRating.ParentalGuidance,
     });
 
@@ -69,12 +75,19 @@ export class AdmobManagerService {
     AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
       this.InterstitialDismissed.next();
     });
+
+    this._nextInterstitialTarget = this.nextInterstitialTarget();
   }
 
   public NextAd(level: number): void {
     this._currentAdType = this.nextAdType(level);
-    if (!environment.production) {
-      console.info('Ad Type:', AdType[this._currentAdType]);
+
+    // disable ads for web
+    if (this.deviceManagerService.IsWeb) {
+      this._currentAdType = AdType.None;
+      if (!environment.production) {
+        console.info('  Ads - override none (device is web)');
+      }
     }
 
     if (this._currentAdType === AdType.Banner) {
@@ -117,14 +130,28 @@ export class AdmobManagerService {
   private nextAdType(level: number): AdType {
     let adType = AdType.None;
 
+    // value is set to > 0 upon construction
+    this._nextInterstitialTarget--;
+
     if (level >= LEVEL_START_FULL_ADS || Math.floor(Math.random() * 4) >= 1) {
       adType = AdType.Banner;
 
-      if (!this.deviceManagerService.IsWeb && Math.floor(Math.random() * 3) === 0) {
+      if (this._nextInterstitialTarget === 0) {
         adType = AdType.Intersticial;
+        this._nextInterstitialTarget = this.nextInterstitialTarget();
       }
     }
 
+    if (!environment.production) {
+      console.info('Ad Type:', AdType[adType]);
+    }
+
     return adType;
+  }
+
+  private nextInterstitialTarget(): number {
+    return Math.floor(
+      Math.random() * (this.INTERSTITIAL_TARGET_MAX - this.INTERSTITIAL_TARGET_MIN) + this.INTERSTITIAL_TARGET_MIN
+    );
   }
 }
