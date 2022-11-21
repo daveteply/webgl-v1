@@ -1,10 +1,10 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
-import { CylinderBufferGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
+import { CylinderGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
 import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class PowerMove {
-  private _geometry!: CylinderBufferGeometry;
+  private _geometry!: CylinderGeometry;
   private _mesh!: Mesh;
   private _materials: MeshPhongMaterial[] = [];
 
@@ -23,7 +23,7 @@ export class PowerMove {
 
   constructor(texture: Texture, color?: number) {
     // create new geometry, material, mesh
-    this._geometry = new CylinderBufferGeometry(1, 1, 1.5, 16);
+    this._geometry = new CylinderGeometry(1, 1, 1.5, 16);
     this._geometry.scale(0.01, 0.01, 0.01);
 
     this._powerMoveColor = color || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];

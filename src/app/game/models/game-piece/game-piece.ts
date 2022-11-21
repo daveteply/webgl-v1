@@ -1,8 +1,8 @@
 import {
-  BoxBufferGeometry,
+  BoxGeometry,
   BufferAttribute,
   Color,
-  CylinderBufferGeometry,
+  CylinderGeometry,
   MathUtils,
   Mesh,
   MeshPhongMaterial,
@@ -19,9 +19,9 @@ import { LevelGeometryType } from '../../level-geometry-type';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';
 
 export class GamePiece extends Object3D {
-  private _geometryCube: BoxBufferGeometry;
+  private _geometryCube: BoxGeometry;
   private _meshCube: Mesh;
-  private _geometryCylinder: CylinderBufferGeometry;
+  private _geometryCylinder: CylinderGeometry;
   private _meshCylinder: Mesh;
 
   private _mesh!: Mesh;
@@ -92,7 +92,7 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // cube piece
-    this._geometryCube = new BoxBufferGeometry();
+    this._geometryCube = new BoxGeometry();
     // rotate uv so all vertical flipping displays correctly
     const sides = [
       [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
@@ -108,7 +108,7 @@ export class GamePiece extends Object3D {
     this.add(this._meshCube);
 
     // cylinder piece
-    this._geometryCylinder = new CylinderBufferGeometry(0.6, 0.6, 1, 16);
+    this._geometryCylinder = new CylinderGeometry(0.6, 0.6, 1, 16);
     this._meshCylinder = new Mesh(this._geometryCylinder);
     this.add(this._meshCylinder);
 

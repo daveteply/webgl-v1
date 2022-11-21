@@ -64,8 +64,6 @@ export class PostProcessingManagerService {
       focus: 1.0,
       aperture: 1.0,
       maxblur: 0.1,
-      width: width,
-      height: height,
     });
     this._bokehPass.enabled = false;
 
