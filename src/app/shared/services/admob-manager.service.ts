@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import {
   AdMob,
   AdMobError,
@@ -23,7 +23,7 @@ enum AdType {
   providedIn: 'root',
 })
 export class AdmobManagerService {
-  private readonly TESTING: boolean = true;
+  private readonly TESTING: boolean = false;
   private readonly ADS_ENABLED: boolean = true;
 
   private _currentAdType!: AdType;
@@ -56,7 +56,7 @@ export class AdmobManagerService {
   public InterstitialFailed: EventEmitter<void> = new EventEmitter();
   public InterstitialDismissed: EventEmitter<void> = new EventEmitter();
 
-  constructor(private deviceManagerService: DeviceManagerService) {
+  constructor(private ngZone: NgZone, private deviceManagerService: DeviceManagerService) {
     AdMob.initialize({
       requestTrackingAuthorization: true,
       initializeForTesting: false,
@@ -65,15 +65,21 @@ export class AdmobManagerService {
 
     // events
     AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, (error: AdMobError) => {
-      console.info(error);
-      this.InterstitialFailed.next();
+      this.ngZone.run(() => {
+        console.error(error);
+        this.InterstitialFailed.next();
+      });
     });
     AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, (error: AdMobError) => {
-      console.info(error);
-      this.InterstitialFailed.next();
+      this.ngZone.run(() => {
+        console.error(error);
+        this.InterstitialFailed.next();
+      });
     });
     AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
-      this.InterstitialDismissed.next();
+      this.ngZone.run(() => {
+        this.InterstitialDismissed.next();
+      });
     });
 
     this._nextInterstitialTarget = this.nextInterstitialTarget();
