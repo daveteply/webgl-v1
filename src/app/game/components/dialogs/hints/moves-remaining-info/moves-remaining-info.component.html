@@ -1,0 +1,16 @@
+<div id="moves-tutorial">
+  <p class="up-finger">{{ indexFingerPointingUp }}</p>
+  <h1>Hint: Moves</h1>
+  <div mat-dialog-content>
+    <div *ngIf="showIncrease; else decrease">
+      <p>Nice job!</p>
+      <p>Moves are earned with <b>faster</b> and <b>longer</b> matches</p>
+    </div>
+    <ng-template #decrease>
+      <p>Moves are limited; be strategic!</p>
+    </ng-template>
+  </div>
+  <div mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>

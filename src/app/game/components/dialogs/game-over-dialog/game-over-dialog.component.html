@@ -1,0 +1,24 @@
+<div id="game-over">
+  <h1 class="text-center">No More Moves</h1>
+  <mat-dialog-content>
+    <p class="game-over-emoji">{{ gameOverEmoji }}</p>
+    <p class="text-center">You have exhausted your supply of moves!</p>
+    <wgl-progress-bar class="progress" [class.fade-out]="!texturesStillLoading" [value]="progress"></wgl-progress-bar>
+    <wgl-high-scores></wgl-high-scores>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button
+      *ngIf="!isLevelOne"
+      mat-stroked-button
+      color="primary"
+      [disabled]="texturesStillLoading"
+      (click)="onCloseRestartLevel()"
+    >
+      Start Level {{ data.level }} again
+    </button>
+    <button mat-raised-button color="primary" [disabled]="texturesStillLoading" (click)="onCloseGameOver()">
+      <span *ngIf="!isLevelOne; else playAgain">Start Over</span>
+      <ng-template #playAgain><span>Play again!</span></ng-template>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rikkle</string>
+    <string name="title_activity_main">Rikkle</string>
+    <string name="package_name">com.turbogeekbear.rikkle1</string>
+    <string name="custom_url_scheme">com.turbogeekbear.rikkle1</string>
+    <string name="admob_app_id">ca-app-pub-1853036438410639~9037123821</string>
+</resources>

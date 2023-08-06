@@ -1,0 +1,21 @@
+<canvas #dialogCanvas class="canvas-backer"></canvas>
+
+<div id="intro-dialog">
+  <div class="logo"></div>
+
+  <mat-dialog-content class="content">
+    <wgl-high-scores [showHighligh]="false"></wgl-high-scores>
+    <wgl-progress-bar class="progress" [class.fade-out]="!materialsUpdating" [value]="progress"></wgl-progress-bar>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="center">
+    <div class="dialog-buttons">
+      <button mat-raised-button color="primary" cdkFocusInitial mat-dialog-close [disabled]="materialsUpdating">
+        <span>New Game</span>
+      </button>
+      <button *ngIf="hasRestoreData" (click)="RestoreGame()" mat-stroked-button [disabled]="materialsUpdating">
+        <span>Continue</span>
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

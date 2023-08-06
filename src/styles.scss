@@ -1,0 +1,28 @@
+@import "./style-values";
+@import "./style-fonts";
+@import "./style-material.scss";
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+@keyframes dialog-slide-up {
+  0% {
+  }
+  30% {
+    transform: translateY(-5%);
+  }
+  50% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.wgl-pane-bounce {
+  transform: translateY(100%);
+  animation: dialog-slide-up 0.5s forwards 0s ease-in-out;
+}

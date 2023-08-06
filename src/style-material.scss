@@ -1,0 +1,22 @@
+@use "@angular/material" as mat;
+
+$wgl-typography: mat.define-typography-config(
+  $font-family: "Changa",
+);
+
+@include mat.all-component-typographies($wgl-typography);
+
+.mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    padding: 24px;
+  }
+}
+
+.mdc-dialog .mdc-dialog__content {
+  padding: 0 !important;
+}
+
+.mat-mdc-dialog-container,
+.mdc-dialog .mdc-dialog__content {
+  color: black !important;
+}
