@@ -9,7 +9,7 @@ describe('MovesRemainingInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MovesRemainingInfoComponent],
+      imports: [MovesRemainingInfoComponent],
       providers: [
         {
           provide: MAT_DIALOG_DATA,

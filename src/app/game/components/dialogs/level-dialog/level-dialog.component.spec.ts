@@ -13,8 +13,7 @@ describe('LevelDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatProgressBarModule],
-      declarations: [LevelDialogComponent, TextZoomComponent],
+      imports: [MatDialogModule, MatProgressBarModule, LevelDialogComponent, TextZoomComponent],
       providers: [
         DecimalPipe,
         TextureManagerService,

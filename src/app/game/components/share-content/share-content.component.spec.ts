@@ -11,7 +11,7 @@ describe('ShareContentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ShareContentComponent],
+      imports: [ShareContentComponent],
       providers: [ShareManagerService, ScoringManagerService, GameEngineService],
     }).compileComponents();
 

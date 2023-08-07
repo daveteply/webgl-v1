@@ -23,8 +23,14 @@ describe('GameContainerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, MatDialogModule, MatProgressBarModule, MatMenuModule],
-      declarations: [GameContainerComponent, TextZoomComponent],
+      imports: [
+        BrowserAnimationsModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatMenuModule,
+        GameContainerComponent,
+        TextZoomComponent,
+      ],
       providers: [
         DecimalPipe,
         SceneManagerService,

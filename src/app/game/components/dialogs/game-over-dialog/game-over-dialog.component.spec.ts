@@ -10,8 +10,7 @@ describe('GameOverDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GameOverDialogComponent],
-      imports: [MatDialogModule],
+      imports: [MatDialogModule, GameOverDialogComponent],
       providers: [
         TextureManagerService,
         {

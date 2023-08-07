@@ -16,8 +16,7 @@ describe('GameMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatMenuModule],
-      declarations: [GameMenuComponent],
+      imports: [MatMenuModule, GameMenuComponent],
       providers: [
         ShareManagerService,
         ScoringManagerService,
