@@ -14,7 +14,7 @@ export class AudioManagerService implements OnDestroy {
   private readonly NOTE_MAX = 71;
   private _noteNext: number = this.NOTE_MIN;
 
-  private _currentLevelCompleteInx: number = 0;
+  private _currentLevelCompleteInx = 0;
 
   // private _trackVolume: number = 0.5;
   // get Volume(): number {

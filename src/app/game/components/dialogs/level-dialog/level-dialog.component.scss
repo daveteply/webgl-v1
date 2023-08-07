@@ -20,6 +20,7 @@
   }
 
   .level-info-line {
+    font-size: large;
     padding-bottom: 0.5em;
     display: none;
     &.show {
@@ -36,7 +37,7 @@
     }
   }
 
-  .mat-raised-button {
+  .mat-mdc-raised-button {
     font-size: x-large;
     margin-bottom: 0.75em;
   }

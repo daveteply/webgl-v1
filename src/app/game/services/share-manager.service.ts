@@ -6,9 +6,11 @@ import { SHARE_FILE_NAME, SHARE_WEBSITE } from '../game-constants';
 import { formatNumber } from '@angular/common';
 import { ScoringManagerService } from './scoring-manager.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ShareManagerService {
-  private _screenShotRequested: boolean = false;
+  private _screenShotRequested = false;
   get ScreenShotRequested(): boolean {
     return this._screenShotRequested;
   }
@@ -17,7 +19,7 @@ export class ShareManagerService {
   private _rikkleLogo!: HTMLImageElement;
   private _turbogeekbearLogo!: HTMLImageElement;
 
-  private _inLevel: boolean = false;
+  private _inLevel = false;
   get InLevel(): boolean {
     return this._inLevel;
   }
@@ -109,7 +111,7 @@ export class ShareManagerService {
     });
   }
 
-  private createScreenShot(screenShotDataUrl: string, useLogo: boolean = true): void {
+  private createScreenShot(screenShotDataUrl: string, useLogo = true): void {
     // save screen shot as image
     const screenShotImage = new Image();
     screenShotImage.onload = (onLoadResult) => {

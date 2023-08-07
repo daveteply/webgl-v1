@@ -3,11 +3,12 @@ import { Tween } from '@tweenjs/tween.js';
 
 @Component({
   selector: 'wgl-zoom-char',
+  standalone: true,
   templateUrl: './zoom-char.component.html',
   styleUrls: ['./zoom-char.component.scss'],
 })
 export class ZoomCharComponent implements AfterViewInit, OnDestroy {
-  char: string = '';
+  char = '';
 
   private _zoomTween: any;
 

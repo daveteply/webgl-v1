@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class DeviceManagerService {
-  private _isWeb: boolean = false;
+  private _isWeb = false;
   get IsWeb(): boolean {
     return this._isWeb;
   }

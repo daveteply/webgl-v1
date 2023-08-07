@@ -13,7 +13,9 @@ import { AudioType } from 'src/app/shared/services/audio/audio-info';
 import { PowerMoveType } from '../models/power-move-type';
 import { SaveGameScore } from './save-game/save-game-data';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class EffectsManagerService {
   private _selectionTweens: any[] = [];
   private _levelChangeCameraTween1: any;

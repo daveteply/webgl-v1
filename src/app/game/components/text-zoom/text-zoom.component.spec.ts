@@ -9,7 +9,7 @@ describe('TextZoomComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TextZoomComponent],
+      imports: [TextZoomComponent],
       providers: [DecimalPipe],
     }).compileComponents();
   });

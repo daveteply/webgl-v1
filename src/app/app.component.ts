@@ -1,12 +1,15 @@
-import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AboutComponent } from './shared/components/about/about.component';
+import { DOCUMENT } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AppVisibilityService } from './shared/services/app-visibility.service';
 import { NotifyService } from './shared/services/notify.service';
+import { AboutDialogComponent } from './shared/components/about-dialog/about-dialog.component';
 
 @Component({
   selector: 'wgl-root',
+  standalone: true,
+  imports: [RouterOutlet, MatDialogModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -27,7 +30,7 @@ export class AppComponent {
     this.notify.NotifyEvent.subscribe(() => {
       const aboutDialog = this.dialog.getDialogById(this.ABOUT_DIALOG_ID);
       if (!aboutDialog) {
-        this.dialog.open(AboutComponent, { id: this.ABOUT_DIALOG_ID });
+        this.dialog.open(AboutDialogComponent, { id: this.ABOUT_DIALOG_ID });
       } else {
         aboutDialog.close();
       }

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, DecimalPipe } from '@angular/common';
 import { debounceTime, fromEvent, Observable, Subject, Subscription, takeUntil, take } from 'rxjs';
 
 import { ObjectManagerService } from '../../services/object-manager.service';
@@ -17,11 +17,18 @@ import { SaveGameService } from '../../services/save-game/save-game.service';
 import { ShareManagerService } from '../../services/share-manager.service';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
 import { IntroDialogComponent } from '../dialogs/intro-dialog/intro-dialog.component';
 import { LevelDialogComponent } from '../dialogs/level-dialog/level-dialog.component';
 import { GameOverDialogComponent } from '../dialogs/game-over-dialog/game-over-dialog.component';
 import { HowToPlayComponent } from '../dialogs/hints/how-to-play/how-to-play.component';
 import { MovesRemainingInfoComponent } from '../dialogs/hints/moves-remaining-info/moves-remaining-info.component';
+import { TextZoomComponent } from '../text-zoom/text-zoom.component';
+import { MovesLeftComponent } from '../moves-left/moves-left.component';
+import { ShareContentComponent } from '../share-content/share-content.component';
+import { GameMenuComponent } from '../game-menu/game-menu.component';
+import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
 
 import { GameOverData } from '../dialogs/game-over-dialog/game-over-data';
 import {
@@ -33,8 +40,19 @@ import {
 
 @Component({
   selector: 'wgl-game-container',
+  standalone: true,
+  providers: [DecimalPipe],
   templateUrl: './game-container.component.html',
   styleUrls: ['./game-container.component.scss'],
+  imports: [
+    CommonModule,
+    MatProgressBarModule,
+    TextZoomComponent,
+    MovesLeftComponent,
+    ShareContentComponent,
+    GameMenuComponent,
+    ProgressBarComponent,
+  ],
 })
 export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gameCanvas')
@@ -45,19 +63,19 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   private resize$: Observable<Event>;
   private resizeSubscription: Subscription;
 
-  private _showWelcome: boolean = true;
+  private _showWelcome = true;
 
   private _dialogRefLevel!: MatDialogRef<LevelDialogComponent>;
   private _dialogRefIntro!: MatDialogRef<IntroDialogComponent>;
   private _dialogGameOverRef!: MatDialogRef<GameOverDialogComponent>;
 
-  private _isGameOver: boolean = false;
+  private _isGameOver = false;
 
-  ShowScoreProgress: boolean = false;
+  ShowScoreProgress = false;
   LevelLabelColor!: string;
 
-  public GridTemplateColumns: string = '';
-  public GridTemplateRows: string = '';
+  public GridTemplateColumns = '';
+  public GridTemplateRows = '';
 
   constructor(
     private dialog: MatDialog,
@@ -280,7 +298,7 @@ export class GameContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     );
   }
 
-  private dialogConfig(height: string = ``): MatDialogConfig {
+  private dialogConfig(height = ``): MatDialogConfig {
     let config = {
       minWidth: '20em',
       disableClose: true,

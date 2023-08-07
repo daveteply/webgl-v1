@@ -12,14 +12,14 @@ export class TextManagerService {
   private _loadingManager: LoadingManager;
   private _fontLoader: FontLoader;
 
-  private _robotoRegular!: Font;
+  private _changaRegular!: Font;
 
   private _scene!: Scene;
 
   private _queue: SplashText[] = [];
   private _textGroup!: Group;
 
-  private _isPresenting: boolean = false;
+  private _isPresenting = false;
 
   constructor() {
     this._loadingManager = new LoadingManager(
@@ -38,8 +38,8 @@ export class TextManagerService {
   }
 
   public InitFonts(): void {
-    this._fontLoader.load('assets/fonts/typeface/Roboto_Regular.json', (response) => {
-      this._robotoRegular = response;
+    this._fontLoader.load('./assets/fonts/typeface/Changa_Regular.json', (response) => {
+      this._changaRegular = response;
     });
   }
 
@@ -54,14 +54,14 @@ export class TextManagerService {
   }
 
   public ShowText(message: string[], color?: number): void {
-    if (!this._robotoRegular) {
+    if (!this._changaRegular) {
       return;
     }
 
     if (message?.length) {
       let yOffset = 0;
       message.forEach((msg) => {
-        this._queue.push(new SplashText(msg, this._robotoRegular, yOffset, color));
+        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, color));
         yOffset -= 0.75;
       });
     }

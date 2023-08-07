@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+
 import { Subject, takeUntil } from 'rxjs';
 
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
@@ -7,18 +11,22 @@ import { DialogAnimationService } from '../dialog-animation.service';
 import { ObjectManagerService } from 'src/app/game/services/object-manager.service';
 import { SaveGameService } from 'src/app/game/services/save-game/save-game.service';
 import { AnalyticsEventType, AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
+import { HighScoresComponent } from '../../high-scores/high-scores.component';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'wgl-intro-dialog',
+  standalone: true,
   templateUrl: './intro-dialog.component.html',
   styleUrls: ['./intro-dialog.component.scss'],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, HighScoresComponent, ProgressBarComponent],
 })
 export class IntroDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
-  materialsUpdating: boolean = true;
-  progress: number = 100;
+  materialsUpdating = true;
+  progress = 100;
 
   hasRestoreData!: boolean;
 

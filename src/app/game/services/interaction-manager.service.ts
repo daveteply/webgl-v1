@@ -31,7 +31,9 @@ enum HammerEvents {
   PRESS = 'press',
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class InteractionManagerService {
   private _hammer!: HammerManager;
 
@@ -42,8 +44,8 @@ export class InteractionManagerService {
 
   private _pointerPos: Vector2;
 
-  private _x: number = 0;
-  private _panning: boolean = false;
+  private _x = 0;
+  private _panning = false;
   private _activeWheel: GameWheel | undefined;
 
   private _rayCaster!: Raycaster;
@@ -98,7 +100,7 @@ export class InteractionManagerService {
             this.objectManager.LevelCompleted.next(false);
           } else {
             // power move
-            let powerMoveTarget =
+            const powerMoveTarget =
               this.scoringManager.Level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
             if (this._matchingPieces.length >= powerMoveTarget) {
               if (!environment.production) {

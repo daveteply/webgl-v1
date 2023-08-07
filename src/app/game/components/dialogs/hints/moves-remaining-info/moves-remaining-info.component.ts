@@ -1,8 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'wgl-moves-remaining-info',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatDialogModule],
   templateUrl: './moves-remaining-info.component.html',
   styleUrls: ['./moves-remaining-info.component.scss'],
 })

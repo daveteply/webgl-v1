@@ -8,7 +8,7 @@ describe('MovesLeftComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MovesLeftComponent],
+      imports: [MovesLeftComponent],
     }).compileComponents();
   });
 

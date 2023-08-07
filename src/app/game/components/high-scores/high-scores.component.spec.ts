@@ -8,7 +8,7 @@ describe('HighScoresComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HighScoresComponent],
+      imports: [HighScoresComponent],
     }).compileComponents();
   });
 

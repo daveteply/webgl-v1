@@ -4,7 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.turbogeekbear.rikkle1',
   appName: 'webgl-v1',
   webDir: 'dist/webgl-v1',
-  bundledWebRuntime: false
+  server: {
+    androidScheme: 'https',
+  },
 };
 
 export default config;

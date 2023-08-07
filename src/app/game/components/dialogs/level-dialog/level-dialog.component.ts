@@ -1,6 +1,9 @@
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, ViewChild } from '@angular/core';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+
 import { delay, Subject, takeUntil } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 
@@ -11,8 +14,11 @@ import { TextureManagerService } from 'src/app/game/services/texture/texture-man
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { DialogNotifyService } from '../dialog-notify.service';
 import { DialogAnimationService } from '../dialog-animation.service';
-import { LEVEL_COMPLETE_HEADINGS } from 'src/app/game/game-constants';
 import { AnalyticsEventType, AnalyticsManagerService } from 'src/app/shared/services/analytics-manager.service';
+
+import { LEVEL_COMPLETE_HEADINGS } from 'src/app/game/game-constants';
+import { TextZoomComponent } from '../../text-zoom/text-zoom.component';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
 
 enum LevelStatisticType {
   infoComplete = 1,
@@ -30,20 +36,23 @@ interface LevelStat {
 
 @Component({
   selector: 'wgl-level-dialog',
+  standalone: true,
+  providers: [DecimalPipe],
   templateUrl: './level-dialog.component.html',
   styleUrls: ['./level-dialog.component.scss'],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, TextZoomComponent, ProgressBarComponent],
 })
 export class LevelDialogComponent implements OnDestroy, AfterViewInit {
-  texturesStillLoading: boolean = true;
-  levelInfoProcessing: boolean = true;
-  progress: number = 100;
+  texturesStillLoading = true;
+  levelInfoProcessing = true;
+  progress = 100;
 
   // target values (for sequential binding)
-  fastMatchBonusTotal: number = 0;
+  fastMatchBonusTotal = 0;
   fastestMatchTime!: string;
-  moveCount: number = 0;
-  moveCountEarned: number = 0;
-  pieceCount: number = 0;
+  moveCount = 0;
+  moveCountEarned = 0;
+  pieceCount = 0;
 
   private _timerQueue: LevelStat[] = [];
   private _timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();

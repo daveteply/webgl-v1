@@ -17,7 +17,9 @@ import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
 import { SaveGameService } from '../save-game/save-game.service';
 import { GameTexture } from '../texture/game-texture';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class MaterialManagerService {
   private _gameMaterials!: GameMaterials;
   get GameMaterials(): GameMaterials {
@@ -165,6 +167,7 @@ export class MaterialManagerService {
     let matchKey = 1;
 
     let selectedColors: string[] = [];
+    let bumpTexture: GameTexture;
 
     // selected style for current level
     switch (levelMaterialType) {
@@ -190,7 +193,7 @@ export class MaterialManagerService {
         selectedColors = this.initColorScheme(level, playableTextureCount);
         this.store.UpdateLevelColors(selectedColors);
 
-        const bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
+        bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
 
         selectedColors.forEach((c: string) => {
           materials.push({

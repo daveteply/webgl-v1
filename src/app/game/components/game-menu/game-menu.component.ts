@@ -5,9 +5,14 @@ import { AnalyticsEventType, AnalyticsManagerService } from 'src/app/shared/serv
 import { NotifyService } from 'src/app/shared/services/notify.service';
 import { ObjectManagerService } from '../../services/object-manager.service';
 import { ShareManagerService } from '../../services/share-manager.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'wgl-game-menu',
+  standalone: true,
+  imports: [MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './game-menu.component.html',
   styleUrls: ['./game-menu.component.scss'],
 })

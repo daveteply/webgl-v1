@@ -24,7 +24,9 @@ interface EmojiSequence {
   dataUrl?: string;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class TextureManagerService {
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
@@ -104,6 +106,7 @@ export class TextureManagerService {
 
     // clear existing textures
     this._textures = [];
+    let emojiList: EmojiSequence[] = [];
 
     switch (this._levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
@@ -115,7 +118,7 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.Emoji:
-        const emojiList = this.initEmojiData(playableTextureCount);
+        emojiList = this.initEmojiData(playableTextureCount);
         emojiList.forEach((data) => {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             const gameTexture: GameTexture = { id: data.desc, texture: texture };
@@ -150,7 +153,9 @@ export class TextureManagerService {
               observer.next(moveTexture.texture);
               observer.complete();
             },
-            () => {},
+            () => {
+              // no op
+            },
             (error) => {
               observer.error(error);
             }

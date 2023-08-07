@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'wgl-how-to-play',
+  standalone: true,
+  imports: [MatButtonModule, MatDialogModule],
   templateUrl: './how-to-play.component.html',
   styleUrls: ['./how-to-play.component.scss'],
 })

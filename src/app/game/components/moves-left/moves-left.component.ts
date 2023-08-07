@@ -7,11 +7,12 @@ import {
 
 @Component({
   selector: 'wgl-moves-left',
+  standalone: true,
   templateUrl: './moves-left.component.html',
   styleUrls: ['./moves-left.component.scss'],
 })
 export class MovesLeftComponent {
-  moves: number = 0;
+  moves = 0;
 
   get IsWarn(): boolean {
     return this.moves === MOVES_REMAINING_COUNT_WARNING;

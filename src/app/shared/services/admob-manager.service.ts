@@ -27,11 +27,11 @@ export class AdmobManagerService {
   private readonly ADS_ENABLED: boolean = true;
 
   private _currentAdType!: AdType;
-  private _interstitialPrepared: boolean = false;
+  private _interstitialPrepared = false;
 
   // Feedback is that the Interstitial occurs too often.
   // This will be the target count of ad occurrences
-  private _nextInterstitialTarget: number = 0;
+  private _nextInterstitialTarget = 0;
   private readonly INTERSTITIAL_TARGET_MIN: number = 3;
   private readonly INTERSTITIAL_TARGET_MAX: number = 5;
 

@@ -27,7 +27,9 @@ import { GameEngineService } from './game-engine.service';
 import { PostProcessingManagerService } from './post-processing-manager.service';
 import { SaveGameService } from './save-game/save-game.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ObjectManagerService {
   // create and store polar coordinates to draw game pieces
   private _piecePoints: PiecePoints[] = [];
@@ -196,7 +198,7 @@ export class ObjectManagerService {
     this.saveGame.RestoreComplete();
   }
 
-  public NextLevel(level: number, updateMaterials: boolean = false): void {
+  public NextLevel(level: number, updateMaterials = false): void {
     if (updateMaterials) {
       this.UpdateLevelMaterials(level);
     }

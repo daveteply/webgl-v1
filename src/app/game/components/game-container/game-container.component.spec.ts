@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { EffectsManagerService } from '../../services/effects-manager.service';
@@ -28,10 +27,10 @@ describe('GameContainerComponent', () => {
         BrowserAnimationsModule,
         MatDialogModule,
         MatProgressBarModule,
-        MatProgressSpinnerModule,
         MatMenuModule,
+        GameContainerComponent,
+        TextZoomComponent,
       ],
-      declarations: [GameContainerComponent, TextZoomComponent],
       providers: [
         DecimalPipe,
         SceneManagerService,

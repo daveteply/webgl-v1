@@ -24,7 +24,9 @@ enum SearchDirection {
   Prev = 'Prev',
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class GameEngineService {
   private _matches: GamePiece[] = [];
 

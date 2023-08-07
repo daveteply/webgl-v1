@@ -15,7 +15,9 @@ import { GameEngineService } from './game-engine.service';
 import { SaveGameScore } from './save-game/save-game-data';
 import { TextManagerService } from './text/text-manager.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ScoringManagerService {
   private _levelStats!: LevelStats;
   private _timeStart!: number;
@@ -29,32 +31,32 @@ export class ScoringManagerService {
     this.initLevelPieceTarget();
   }
 
-  private _level: number = 1;
+  private _level = 1;
   get Level(): number {
     return this._level;
   }
 
-  private _score: number = 0;
+  private _score = 0;
   get Score(): number {
     return this._score;
   }
 
-  private _levelPieceTarget: number = 0;
+  private _levelPieceTarget = 0;
   get LevelPieceTarget(): number {
     return this._levelPieceTarget;
   }
 
-  private _levelProgress: number = 0;
+  private _levelProgress = 0;
   get LevelProgress(): number {
     return this._levelProgress;
   }
 
-  private _piecesRemaining: number = 0;
+  private _piecesRemaining = 0;
   get PiecesRemaining(): number {
     return this._piecesRemaining;
   }
 
-  private _playerMoves: number = 0;
+  private _playerMoves = 0;
   get PlayerMoves(): number {
     return this._playerMoves;
   }
@@ -162,7 +164,7 @@ export class ScoringManagerService {
     this.ResetStats();
   }
 
-  public ResetStats(restartLevel: boolean = false): void {
+  public ResetStats(restartLevel = false): void {
     if (this.PlayerMoves === 0) {
       // reset moves for level restart
       this._playerMoves = this._level < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this._level;

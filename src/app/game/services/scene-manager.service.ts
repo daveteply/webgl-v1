@@ -8,7 +8,9 @@ import { ShareManagerService } from 'src/app/game/services/share-manager.service
 
 import * as TWEEN from '@tweenjs/tween.js';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class SceneManagerService implements OnDestroy {
   private _previousFrameRenderTime!: number;
 

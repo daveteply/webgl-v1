@@ -8,7 +8,7 @@
   .game-over-emoji {
     text-align: center;
     font-size: 3em;
-    line-height: 1em;
+    line-height: 1.25em;
   }
 
   .progress {
@@ -19,12 +19,12 @@
     }
   }
 
-  .mat-stroked-button {
+  .mat-mdc-outlined-button {
     font-size: initial;
     margin-bottom: 0.5em;
   }
 
-  .mat-raised-button {
+  .mat-mdc-raised-button {
     font-size: x-large;
     margin-bottom: 0.5em;
   }

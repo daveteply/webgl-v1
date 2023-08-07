@@ -15,8 +15,7 @@ describe('IntroDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule],
-      declarations: [IntroDialogComponent],
+      imports: [MatDialogModule, IntroDialogComponent],
       providers: [
         ObjectManagerService,
         MaterialManagerService,
