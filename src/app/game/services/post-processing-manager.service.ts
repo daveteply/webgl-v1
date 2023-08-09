@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Color, Object3D, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three';
+import { Object3D, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three';
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { LevelTransitionType } from './level-transition-type';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
@@ -68,7 +68,7 @@ export class PostProcessingManagerService {
     this._bokehPass.enabled = false;
 
     // unreal bloom
-    this._unrealBloomPass = new UnrealBloomPass(new Vector2(width, height), 1, 0, 0);
+    this._unrealBloomPass = new UnrealBloomPass(new Vector2(width, height), 1.6, 0.1, 0.1);
     this._unrealBloomPass.enabled = false;
 
     // composer
@@ -90,6 +90,10 @@ export class PostProcessingManagerService {
   }
 
   public UpdateLevelTransitionPass(levelTransitionType: LevelTransitionType, start: boolean): void {
+    this._smaaPass.enabled = true;
+    this._bokehPass.enabled = false;
+    this._unrealBloomPass.enabled = false;
+
     switch (levelTransitionType) {
       case LevelTransitionType.Bokeh:
         this._smaaPass.enabled = false;
@@ -108,9 +112,6 @@ export class PostProcessingManagerService {
         this._unrealBloomTween?.stop();
         this.initUnrealBloomTween();
         break;
-
-      default:
-        this.resetPasses();
     }
   }
 
@@ -123,17 +124,12 @@ export class PostProcessingManagerService {
       .onUpdate(() => {
         this._bokehPass.materialBokeh.uniforms['maxblur'].value = delta.maxblur;
       })
-      .onComplete(() => {
-        if (start) {
-          this.resetPasses();
-        }
-      })
       .start();
   }
 
   private initUnrealBloomTween() {
-    const delta = { strength: 0 };
-    const target = { strength: 1.5 };
+    const delta = { strength: 0.0 };
+    const target = { strength: 1.6 };
     this._unrealBloomTween = new Tween(delta)
       .to(target, 1500)
       .repeat(1)
@@ -142,15 +138,6 @@ export class PostProcessingManagerService {
       .onUpdate(() => {
         this._unrealBloomPass.strength = delta.strength;
       })
-      .onComplete(() => {
-        this.resetPasses();
-      })
       .start();
-  }
-
-  private resetPasses(): void {
-    this._smaaPass.enabled = true;
-    this._bokehPass.enabled = false;
-    this._unrealBloomPass.enabled = false;
   }
 }

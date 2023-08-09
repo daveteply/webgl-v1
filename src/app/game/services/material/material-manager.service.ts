@@ -90,7 +90,7 @@ export class MaterialManagerService {
 
             // bump symbols and textures
             if (material.bumpTexture && material.colorStr) {
-              side.materialPhong.color = material.color as Color;
+              side.materialPhong.color.setHex(material.color?.getHex() || 0x0).convertLinearToSRGB();
               side.materialPhong.bumpMap = material.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
@@ -133,7 +133,7 @@ export class MaterialManagerService {
 
             // bump symbols and textures
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
-              side.materialPhong.color = restoreMaterial.color as Color;
+              side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0).convertLinearToSRGB();
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
