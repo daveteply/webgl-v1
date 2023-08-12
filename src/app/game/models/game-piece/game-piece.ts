@@ -11,7 +11,7 @@ import {
   Texture,
 } from 'three';
 import { take } from 'rxjs';
-import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY } from '../../game-constants';
+import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY, UV_SIDES } from '../../game-constants';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
@@ -95,15 +95,7 @@ export class GamePiece extends Object3D {
     // cube piece
     this._geometryCube = new BoxGeometry();
     // rotate uv so all vertical flipping displays correctly
-    const sides = [
-      [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
-      [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)
-      [0, 0, 0, 1, 1, 0, 1, 1], // top (rotate PI/2)
-      [1, 1, 1, 0, 0, 1, 0, 0], // bottom (rotate -PI/2)
-      [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
-      [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
-    ];
-    const uvs = new Float32Array(sides.flat());
+    const uvs = new Float32Array(UV_SIDES.flat());
     this._geometryCube.setAttribute('uv', new BufferAttribute(uvs, 2));
     this._meshCube = new Mesh(this._geometryCube);
     this.add(this._meshCube);

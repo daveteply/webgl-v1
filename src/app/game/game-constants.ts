@@ -42,17 +42,6 @@ export const DIFFICULTY_TIER_4 = 50;
 export const SHARE_FILE_NAME = 'rikkle-screen-shot.png';
 export const SHARE_WEBSITE = 'https://turbogeekbear.com/projects/rikkle/story';
 
-// Misc
-export const CANVAS_TEXTURE_SCALE = 80;
-export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
-export const DARK_RAINBOW_COLOR_ARRAY = [0x510000, 0x401a00, 0x353600, 0x002f01, 0x000a3e];
-export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00d4cf, 0x8000ff, 0xff0080];
-export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
-export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
-export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
-export const EMOJI_GROUP_STEP = 6;
-export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
-
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';
 export const STORAGE_HINT_HOW_TO_PLAY = 'Hint.HowToPlay';
@@ -63,3 +52,22 @@ export const STORAGE_SAVE_STATE = 'Save.State';
 // Ads
 export const LEVEL_START_POSSIBLE_ADS = 3;
 export const LEVEL_START_FULL_ADS = 8;
+
+// Misc
+export const CANVAS_TEXTURE_SCALE = 80;
+export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
+export const DARK_RAINBOW_COLOR_ARRAY = [0x510000, 0x401a00, 0x353600, 0x002f01, 0x000a3e];
+export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00d4cf, 0x8000ff, 0xff0080];
+export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
+export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
+export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
+export const EMOJI_GROUP_STEP = 6;
+export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
+export const UV_SIDES = [
+  [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
+  [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)
+  [0, 0, 0, 1, 1, 0, 1, 1], // top (rotate PI/2)
+  [1, 1, 1, 0, 0, 1, 0, 0], // bottom (rotate -PI/2)
+  [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
+  [0, 1, 1, 1, 0, 0, 1, 0], // side (keep original)
+];
