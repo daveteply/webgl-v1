@@ -3,6 +3,7 @@ import {
   BufferAttribute,
   Color,
   CylinderGeometry,
+  Material,
   MathUtils,
   Mesh,
   MeshPhongMaterial,
@@ -56,9 +57,9 @@ export class GamePiece extends Object3D {
   public Next!: GamePiece;
   public Prev!: GamePiece;
 
-  public IsMatch: boolean = false;
+  public IsMatch = false;
 
-  private _isRemoved: boolean = false;
+  private _isRemoved = false;
   get IsRemoved(): boolean {
     return this._isRemoved;
   }
@@ -68,7 +69,7 @@ export class GamePiece extends Object3D {
     return this._powerMove;
   }
 
-  private _isPowerMove: boolean = false;
+  private _isPowerMove = false;
   get IsPowerMove(): boolean {
     return this._isPowerMove;
   }
@@ -180,6 +181,9 @@ export class GamePiece extends Object3D {
   public UpdateMaterials(pieceMaterials: PieceMaterials): void {
     this._pieceMaterials = pieceMaterials.materials;
 
+    let target: PieceSideMaterial;
+    let targetMaterial: Material;
+
     switch (this._pieceGeometryType) {
       case LevelGeometryType.Cube:
         this._meshCube.material = this._pieceMaterials.map((m) => {
@@ -188,8 +192,8 @@ export class GamePiece extends Object3D {
         break;
 
       case LevelGeometryType.Cylinder:
-        const target = this._pieceMaterials[this._matchKeySequence[0]];
-        const targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+        target = this._pieceMaterials[this._matchKeySequence[0]];
+        targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
         // cylinder side, top, bottom
         this._meshCylinder.material;
         this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
@@ -271,7 +275,7 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(style: GamePieceRemovalStyle, isRestoring: boolean = false): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle, isRestoring = false): void {
     // update removed state
     this._isRemoved = true;
 
@@ -310,7 +314,7 @@ export class GamePiece extends Object3D {
       .start();
   }
 
-  public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring: boolean = false): void {
+  public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring = false): void {
     if (!this._isPowerMove && turns > 0) {
       // Game Save State
       //  by summing the overall number of turns; adding if "up" and subtracting of "down",
