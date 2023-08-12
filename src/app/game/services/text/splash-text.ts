@@ -1,6 +1,6 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
-import { Color, MathUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
+import { MathUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { Font } from 'three/examples/jsm/loaders/FontLoader';
 import { TextSplashEventType } from './text-splash-event-type';
@@ -81,8 +81,8 @@ export class SplashText extends Object3D {
   }
 
   private initIntroTween(endX: number, yOffset: number): void {
-    let delta = { o: 0, x: 0, y: 0 };
-    let target = { o: 1.0, x: 0, y: 0 };
+    const delta = { o: 0, x: 0, y: 0 };
+    const target = { o: 1.0, x: 0, y: 0 };
     switch (MathUtils.randInt(1, 3)) {
       // from left
       case 1:

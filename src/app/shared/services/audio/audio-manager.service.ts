@@ -33,7 +33,7 @@ export class AudioManagerService implements OnDestroy {
     });
   }
 
-  public PlayLevelComplete(initialLevel: boolean = false): void {
+  public PlayLevelComplete(initialLevel = false): void {
     this._currentLevelCompleteInx = 2;
     if (!initialLevel) {
       this._currentLevelCompleteInx = Math.floor(Math.random() * 7) + 1;
@@ -122,7 +122,7 @@ export class AudioManagerService implements OnDestroy {
     this._noteNext = this.NOTE_MIN;
   }
 
-  public PlayAudio(audioType: AudioType, useNote: boolean = false, loop: boolean = false): void {
+  public PlayAudio(audioType: AudioType, useNote = false, loop = false): void {
     const target = AUDIO_LIST.find((audioTrack) => audioTrack.audioType === audioType);
     if (target) {
       if (target.howl) {

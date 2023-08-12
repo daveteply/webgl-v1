@@ -8,8 +8,8 @@ import { PiecePoints } from './piece-points';
 import { PowerMoveType } from './power-move-type';
 
 export class GameWheel extends Object3D {
-  private _theta: number = 0;
-  private _moveStartTheta: number = 0;
+  private _theta = 0;
+  private _moveStartTheta = 0;
 
   private _originalPositionY: number;
 
@@ -155,7 +155,7 @@ export class GameWheel extends Object3D {
     this.animateHorizontal(startTheta, targetTheta);
   }
 
-  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, isRestoring: boolean = false): void {
+  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, isRestoring = false): void {
     this.animateHorizontal(startTheta, targetTheta, isRestoring);
   }
 
@@ -238,7 +238,7 @@ export class GameWheel extends Object3D {
     }
   }
 
-  private animateHorizontal(startTheta: number, stopTheta: number, isRestoring: boolean = false): void {
+  private animateHorizontal(startTheta: number, stopTheta: number, isRestoring = false): void {
     const delta = { theta: startTheta };
     const target = { theta: stopTheta };
 

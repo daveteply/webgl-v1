@@ -39,7 +39,7 @@ export class DialogAnimationService implements OnDestroy {
 
   private _introBoxRows!: introRows;
   private _introTween!: any;
-  private _introAnimateRight: boolean = true;
+  private _introAnimateRight = true;
 
   private _canvas!: HTMLCanvasElement;
   private _ctx!: CanvasRenderingContext2D | null;
@@ -102,9 +102,9 @@ export class DialogAnimationService implements OnDestroy {
   public CreateIntroDialogBoxes(): void {
     this._animationType = DialogAnimationType.Intro;
 
-    const size: number = 44;
-    const offset: number = 5;
-    const rowCount: number = 4;
+    const size = 44;
+    const offset = 5;
+    const rowCount = 4;
 
     if (this._ctx) {
       const rows = [];
@@ -176,7 +176,7 @@ export class DialogAnimationService implements OnDestroy {
     }
   }
 
-  private createLevelDialogBox(isBottom: boolean = false): boxParticle {
+  private createLevelDialogBox(isBottom = false): boxParticle {
     const size = MathUtils.randInt(20, 50);
     const x = MathUtils.randInt(0, this._canvas.width);
     const velocity = MathUtils.randFloat(0.13, 0.27);
