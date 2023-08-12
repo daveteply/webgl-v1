@@ -41,20 +41,21 @@ export class SceneManagerService implements OnDestroy {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
 
+    // light
+    this._pointLight = new PointLight(0xffffff, 400);
+    this._pointLight.position.z = 5;
+    this._scene.add(this._pointLight);
+
     // camera
     this._camera = new PerspectiveCamera(45, width / height, 1, 50);
     this._camera.position.z = 5;
     // connect object manager
     this.objectManager.SetCamera(this._camera);
+    this.objectManager.SetLight(this._pointLight);
     this.objectManager.SetScene(this._scene);
     // connect interaction manager
     this.interactionManager.SetCamera(this._camera);
     this.interactionManager.InitInteractions(canvas);
-
-    // light
-    this._pointLight = new PointLight();
-    this._pointLight.position.z = 5;
-    this._scene.add(this._pointLight);
 
     // renderer
     this._renderer = new WebGLRenderer({ canvas, stencil: false, depth: false });

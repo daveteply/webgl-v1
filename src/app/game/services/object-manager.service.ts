@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Observable, take } from 'rxjs';
-import { Group, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Group, MathUtils, PerspectiveCamera, PointLight, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
 import { PiecePoints } from '../models/piece-points';
@@ -42,6 +42,7 @@ export class ObjectManagerService {
 
   private _scene!: Scene;
   private _perspectiveCamera!: PerspectiveCamera;
+  private _pointLight!: PointLight;
 
   private _starField: StarField;
 
@@ -82,6 +83,10 @@ export class ObjectManagerService {
 
   public SetCamera(camera: PerspectiveCamera): void {
     this._perspectiveCamera = camera;
+  }
+
+  public SetLight(light: PointLight): void {
+    this._pointLight = light;
   }
 
   public SetScene(scene: Scene): void {
@@ -206,7 +211,13 @@ export class ObjectManagerService {
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, true);
 
     // trigger intro animations
-    this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, true);
+    this.effectsManager.AnimateLevelChangeAnimation(
+      this._axle,
+      this._verticalTargets,
+      this._perspectiveCamera,
+      this._pointLight,
+      true
+    );
 
     // change audio
     this.audioManager.StopLevelComplete();
@@ -217,7 +228,13 @@ export class ObjectManagerService {
     // level transition
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, false);
 
-    this.effectsManager.AnimateLevelChangeAnimation(this._axle, this._verticalTargets, this._perspectiveCamera, false);
+    this.effectsManager.AnimateLevelChangeAnimation(
+      this._axle,
+      this._verticalTargets,
+      this._perspectiveCamera,
+      this._pointLight,
+      false
+    );
   }
 
   public InitStarField(): void {

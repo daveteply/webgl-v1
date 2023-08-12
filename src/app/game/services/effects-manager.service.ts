@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Tween } from '@tweenjs/tween.js';
-import { MathUtils, Object3D, PerspectiveCamera } from 'three';
+import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 
 import { AudioManagerService } from 'src/app/shared/services/audio/audio-manager.service';
 import { ScoringManagerService } from './scoring-manager.service';
@@ -35,6 +35,7 @@ export class EffectsManagerService {
     gameWheels: GameWheel[],
     verticalTargets: number[],
     camera: PerspectiveCamera,
+    light: PointLight,
     start: boolean
   ): void {
     // clear selected for highlighting
@@ -57,21 +58,23 @@ export class EffectsManagerService {
     }
 
     // animate camera
-    const delta1 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
-    const target1 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
+    const delta1 = start ? { z: 5.0, rotX: 0, l: 400 } : { z: 5.0, rotX: 0, l: 400 };
+    const target1 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
     this._levelChangeCameraTween1 = new Tween(delta1).to(target1, start ? 750 : 3000).onUpdate(() => {
       camera.rotation.x = delta1.rotX;
       camera.position.z = delta1.z;
+      light.intensity = delta1.l;
     });
 
-    const delta2 = start ? { z: 0, rotX: HALF_PI } : { z: 0, rotX: -HALF_PI };
-    const target2 = start ? { z: 5.0, rotX: 0 } : { z: 5.0, rotX: 0 };
+    const delta2 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
+    const target2 = start ? { z: 5.0, rotX: 0, l: 400 } : { z: 5.0, rotX: 0, l: 400 };
     this._levelChangeCameraTween2 = new Tween(delta2)
       .to(target2, 2000)
       .delay(1250)
       .onUpdate(() => {
         camera.rotation.x = delta2.rotX;
         camera.position.z = delta2.z;
+        light.intensity = delta2.l;
       })
       .onComplete(() => {
         // unlock board (interact manager)
