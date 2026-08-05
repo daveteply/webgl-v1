@@ -41,11 +41,28 @@ export class AudioManagerService implements OnDestroy {
       this._audioCtx = new AudioCtxClass();
       this._masterGain = this._audioCtx.createGain();
       this._masterGain.connect(this._audioCtx.destination);
+      this.attachUserGestureResume();
     }
     if (this._audioCtx.state === 'suspended') {
-      this._audioCtx.resume();
+      this._audioCtx.resume().catch(() => {
+        // Suppress browser autoplay policy warning until initial user interaction
+      });
     }
     return this._audioCtx;
+  }
+
+  private attachUserGestureResume(): void {
+    const resume = () => {
+      if (this._audioCtx && this._audioCtx.state === 'suspended') {
+        this._audioCtx.resume().catch(() => {});
+      }
+      window.removeEventListener('pointerdown', resume);
+      window.removeEventListener('keydown', resume);
+      window.removeEventListener('click', resume);
+    };
+    window.addEventListener('pointerdown', resume, { once: true });
+    window.addEventListener('keydown', resume, { once: true });
+    window.addEventListener('click', resume, { once: true });
   }
 
   public PlayLevelComplete(initialLevel = false): void {
