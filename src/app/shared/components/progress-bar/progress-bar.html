@@ -1,0 +1,4 @@
+<div class="progress-bar">
+  <div class="progress" [style.width]="value / 100 | percent"></div>
+  <div class="remaining" [class.show]="remaining !== 0">{{ remaining }} remaining</div>
+</div>
