@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, DestroyRef, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule, DOCUMENT, DecimalPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, fromEvent, Observable, take } from 'rxjs';
@@ -83,7 +83,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   private _isGameOver = false;
 
-  ShowScoreProgress = false;
+  showScoreProgress = signal<boolean>(false);
   LevelLabelColor!: string;
 
   public GridTemplateColumns = '';
@@ -166,8 +166,10 @@ export class GameContainer implements OnInit, AfterViewInit {
     });
 
     // update level materials for start of game
-    this.textureManager.LevelTexturesLoaded.pipe(take(1)).subscribe(() => {
-      this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
+      if (loaded) {
+        this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
+      }
     });
 
     // textures restored (only emits while restoring)
@@ -289,7 +291,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     // dismiss dialog and launch next level
     if (this._showWelcome) {
       this._showWelcome = false;
-      this.ShowScoreProgress = true;
+      this.showScoreProgress.set(true);
       this.objectManager.NextLevel(this.scoringManager.Level);
     } else {
       this.scoringManager.NextLevel();

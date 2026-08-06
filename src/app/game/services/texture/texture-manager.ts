@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { EventEmitter, Injectable, inject, isDevMode } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { StoreService } from '../../../app-store/services/store.service';
 import { SaveGameService } from '../save-game/save-game';
@@ -49,7 +49,7 @@ export class TextureManagerService {
   }
 
   public LevelTextureLoadingStarted: EventEmitter<boolean> = new EventEmitter();
-  public LevelTexturesLoaded: EventEmitter<void> = new EventEmitter();
+  public LevelTexturesLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public LevelTexturesRestoredLoaded: EventEmitter<void> = new EventEmitter();
   public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
   public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
@@ -94,6 +94,7 @@ export class TextureManagerService {
     levelMaterialType: LevelMaterialType,
     levelGeometryType: LevelGeometryType,
   ): void {
+    this.LevelTexturesLoaded.next(false);
     this.LevelTextureLoadingStarted.next(this.saveGame.IsRestoring);
 
     // level geometry type
@@ -334,7 +335,7 @@ export class TextureManagerService {
     if (this.saveGame.IsRestoring) {
       this.LevelTexturesRestoredLoaded.next();
     } else {
-      this.LevelTexturesLoaded.next();
+      this.LevelTexturesLoaded.next(true);
     }
   }
 }

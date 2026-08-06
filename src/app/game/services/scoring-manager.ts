@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, inject, signal } from '@angular/core';
 import { MathUtils } from 'three';
 import {
   DIFFICULTY_TIER_3,
@@ -29,46 +29,48 @@ export class ScoringManagerService {
   // events
   public MovesChange: EventEmitter<boolean> = new EventEmitter();
 
+  // Signals for template reactivity
+  readonly level = signal<number>(1);
+  get Level(): number {
+    return this.level();
+  }
+
+  readonly score = signal<number>(0);
+  get Score(): number {
+    return this.score();
+  }
+
+  readonly levelPieceTarget = signal<number>(0);
+  get LevelPieceTarget(): number {
+    return this.levelPieceTarget();
+  }
+
+  readonly levelProgress = signal<number>(0);
+  get LevelProgress(): number {
+    return this.levelProgress();
+  }
+
+  readonly piecesRemaining = signal<number>(0);
+  get PiecesRemaining(): number {
+    return this.piecesRemaining();
+  }
+
+  readonly playerMoves = signal<number>(0);
+  get PlayerMoves(): number {
+    return this.playerMoves();
+  }
+
   constructor() {
     this.ResetStats();
     this.initLevelPieceTarget();
   }
 
-  private _level = 1;
-  get Level(): number {
-    return this._level;
-  }
-
-  private _score = 0;
-  get Score(): number {
-    return this._score;
-  }
-
-  private _levelPieceTarget = 0;
-  get LevelPieceTarget(): number {
-    return this._levelPieceTarget;
-  }
-
-  private _levelProgress = 0;
-  get LevelProgress(): number {
-    return this._levelProgress;
-  }
-
-  private _piecesRemaining = 0;
-  get PiecesRemaining(): number {
-    return this._piecesRemaining;
-  }
-
-  private _playerMoves = 0;
-  get PlayerMoves(): number {
-    return this._playerMoves;
-  }
   get GameOver(): boolean {
-    return this._playerMoves === 0;
+    return this.playerMoves() === 0;
   }
 
   get LevelComplete(): boolean {
-    return this.LevelProgress >= 100;
+    return this.levelProgress() >= 100;
   }
 
   get LevelStats(): LevelStats {
@@ -83,7 +85,7 @@ export class ScoringManagerService {
   }
 
   public IncLevel(): void {
-    this._level++;
+    this.level.update((l) => l + 1);
   }
 
   public NextLevel(): void {
@@ -93,15 +95,11 @@ export class ScoringManagerService {
 
   public UpdateLevelProgress(): void {
     this._levelStats.pieceCount++;
-    this._levelProgress = (this.LevelStats.pieceCount / this._levelPieceTarget) * 100;
-    if (this._levelProgress > 100) {
-      this._levelProgress = 100;
-    }
+    const progress = Math.min((this.LevelStats.pieceCount / this.levelPieceTarget()) * 100, 100);
+    this.levelProgress.set(progress);
 
-    this._piecesRemaining = this._levelPieceTarget - this.LevelStats.pieceCount;
-    if (this._piecesRemaining < 0) {
-      this._piecesRemaining = 0;
-    }
+    const remaining = Math.max(this.levelPieceTarget() - this.LevelStats.pieceCount, 0);
+    this.piecesRemaining.set(remaining);
   }
 
   public UpdateScore(pieceCount: number, endLevelSkip: boolean): void {
@@ -114,7 +112,7 @@ export class ScoringManagerService {
     let scoreDelta = 0;
 
     // level multiplier
-    scoreDelta = pieceCount * this._level;
+    scoreDelta = pieceCount * this.level();
 
     // match speed multiplier
     const speedBonus = Math.ceil((1000 / timeDiff) * 1000);
@@ -124,7 +122,7 @@ export class ScoringManagerService {
 
       // also earn move
       this._levelStats.moveCountEarned++;
-      this._playerMoves++;
+      this.playerMoves.update((m) => m + 1);
 
       // splash text
       if (!endLevelSkip) {
@@ -134,7 +132,7 @@ export class ScoringManagerService {
     }
 
     // update score
-    this._score += scoreDelta;
+    this.score.update((s) => s + scoreDelta);
 
     // long match multiplier
     if (pieceCount > MINIMUM_MATCH_COUNT) {
@@ -146,38 +144,39 @@ export class ScoringManagerService {
 
   public UpdateMoveCount(): void {
     this._levelStats.moveCount++;
-    this._playerMoves--;
+    this.playerMoves.update((m) => m - 1);
     this.MovesChange.next(false);
   }
 
   public UpdatePowerMoveBonus(additionalMoveCount: number): void {
-    let usePowerMoveBonus = this._level * POWER_MOVE_USE_SCORE_MULTIPLIER;
+    let usePowerMoveBonus = this.level() * POWER_MOVE_USE_SCORE_MULTIPLIER;
     if (additionalMoveCount) {
       usePowerMoveBonus *= additionalMoveCount + 1;
     }
-    this._score += usePowerMoveBonus;
+    this.score.update((s) => s + usePowerMoveBonus);
     const multiMove = additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
     this.textTextManager.ShowText([`${multiMove}`, `+${usePowerMoveBonus} Points`], this.textColor);
   }
 
   public RestartGame(): void {
-    this._level = 1;
-    this._score = 0;
+    this.level.set(1);
+    this.score.set(0);
     this.initLevelPieceTarget();
     this.ResetStats();
   }
 
   public ResetStats(restartLevel = false): void {
-    if (this.PlayerMoves === 0) {
+    if (this.playerMoves() === 0) {
       // reset moves for level restart
-      this._playerMoves = this._level < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this._level;
+      const newMoves = this.level() < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this.level();
+      this.playerMoves.set(newMoves);
     }
 
     if (restartLevel) {
-      this._score = 0;
+      this.score.set(0);
     }
 
-    this._levelProgress = 0;
+    this.levelProgress.set(0);
     this._levelStats = {
       fastestMatchTime: Number.MAX_SAFE_INTEGER,
       fastMatchBonusTotal: 0,
@@ -201,12 +200,12 @@ export class ScoringManagerService {
 
   public Restore(restoreScore?: SaveGameScore): void {
     if (restoreScore) {
-      this._level = restoreScore.level;
-      this._playerMoves = restoreScore.moves;
-      this._piecesRemaining = restoreScore.remaining;
-      this._levelProgress = restoreScore.progress;
-      this._levelPieceTarget = restoreScore.pieceTarget;
-      this._score = restoreScore.score;
+      this.level.set(restoreScore.level);
+      this.playerMoves.set(restoreScore.moves);
+      this.piecesRemaining.set(restoreScore.remaining);
+      this.levelProgress.set(restoreScore.progress);
+      this.levelPieceTarget.set(restoreScore.pieceTarget);
+      this.score.set(restoreScore.score);
       this._levelStats = restoreScore.stats;
     }
   }
@@ -214,11 +213,11 @@ export class ScoringManagerService {
   private longMatchBonus(pieceCount: number, endLevelSkip: boolean) {
     const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
     if (longMatchMovesEarned) {
-      this._playerMoves += longMatchMovesEarned;
+      this.playerMoves.update((m) => m + longMatchMovesEarned);
       this._levelStats.moveCountEarned += longMatchMovesEarned;
 
-      const longMatchBonus = longMatchMovesEarned * this._level * LONG_MATCH_SCORE_MULTIPLIER;
-      this._score += longMatchBonus;
+      const longMatchBonus = longMatchMovesEarned * this.level() * LONG_MATCH_SCORE_MULTIPLIER;
+      this.score.update((s) => s + longMatchBonus);
 
       if (!endLevelSkip) {
         this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`], this.textColor);
@@ -228,12 +227,13 @@ export class ScoringManagerService {
   }
 
   private initLevelPieceTarget(): void {
-    this._levelPieceTarget = Math.ceil(Math.log2(this._level)) + this._level + LEVEL_ADDITIVE;
+    let target = Math.ceil(Math.log2(this.level())) + this.level() + LEVEL_ADDITIVE;
     // cap the number of pieces
-    if (this._levelPieceTarget > DIFFICULTY_TIER_3) {
-      this._levelPieceTarget = DIFFICULTY_TIER_3;
+    if (target > DIFFICULTY_TIER_3) {
+      target = DIFFICULTY_TIER_3;
     }
-    this._piecesRemaining = this._levelPieceTarget;
+    this.levelPieceTarget.set(target);
+    this.piecesRemaining.set(target);
   }
 
   private get textColor(): number | undefined {

@@ -1,5 +1,5 @@
 <div class="game-layout">
-  <div class="game-scoring" [class.show]="ShowScoreProgress">
+  <div class="game-scoring" [class.show]="showScoreProgress()">
     <div class="game-logo"></div>
     <wgl-text-zoom class="game-score" [text]="scoringManager.Score"></wgl-text-zoom>
     <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
@@ -12,12 +12,12 @@
   <div class="game">
     <canvas class="game-canvas" #gameCanvas></canvas>
   </div>
-  <div class="level-progress" [class.show]="ShowScoreProgress">
+  <div class="level-progress" [class.show]="showScoreProgress()">
     <div class="level-progress--percent">{{ scoringManager.LevelProgress | number: '1.0-0' }}%</div>
     <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
     </wgl-progress-bar>
   </div>
-  <div class="copyright" [class.hide]="ShowScoreProgress">&copy; 2022 Turbogeekbear LLC</div>
+  <div class="copyright" [class.hide]="showScoreProgress()">&copy; 2022 Turbogeekbear LLC</div>
   <!-- <wgl-share-content></wgl-share-content> -->
-  <wgl-game-menu>></wgl-game-menu>
+  <wgl-game-menu [inLevel]="showScoreProgress()"></wgl-game-menu>
 </div>

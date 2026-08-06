@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, ViewChild, DestroyRef, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, ViewChild, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -65,15 +65,21 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   public dialogRef = inject(MatDialogRef<LevelComplete>);
   public data = inject(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
 
   LevelHeadingPhrase!: string;
 
   constructor() {
-    this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.texturesStillLoading = false;
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
+      if (loaded) {
+        this.texturesStillLoading = false;
+        this.progress = 100;
+        this.cdr.markForCheck();
+      }
     });
     this.textureManager.LevelTextureLoadProgress.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((progress) => {
       this.progress = progress;
+      this.cdr.markForCheck();
     });
 
     this.dialogNotify.DialogNotifyEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -131,6 +137,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
         }
 
         this.processQueue();
+        this.cdr.markForCheck();
       });
 
     if (this.data) {

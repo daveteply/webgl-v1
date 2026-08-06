@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -29,13 +29,19 @@ export class GameOver {
   private dialogRef = inject(MatDialogRef<GameOver>);
   public data: GameOverData = inject(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
 
   constructor() {
-    this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.texturesStillLoading = false;
+    this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
+      if (loaded) {
+        this.texturesStillLoading = false;
+        this.progress = 100;
+        this.cdr.markForCheck();
+      }
     });
     this.textureManager.LevelTextureLoadProgress.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((progress) => {
       this.progress = progress;
+      this.cdr.markForCheck();
     });
 
     this.isLevelOne = this.data?.level === 1;

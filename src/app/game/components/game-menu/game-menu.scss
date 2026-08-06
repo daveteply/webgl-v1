@@ -1,0 +1,19 @@
+#game-menu {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  .mat-mdc-fab {
+    border-radius: 0.5em;
+    margin: 0.25em;
+  }
+
+  .menu-cta {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+  }
+
+  .show {
+    opacity: 1;
+  }
+}
