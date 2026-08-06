@@ -1,5 +1,10 @@
 #intro-dialog {
-  background: linear-gradient(135deg, rgba(67, 24, 114, 0.55) 0%, rgba(109, 40, 217, 0.35) 50%, rgba(147, 51, 234, 0.25) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(67, 24, 114, 0.55) 0%,
+    rgba(109, 40, 217, 0.35) 50%,
+    rgba(147, 51, 234, 0.25) 100%
+  );
   border-radius: 20px;
   box-shadow:
     0 12px 40px 0 rgba(46, 16, 101, 0.5),
@@ -55,7 +60,6 @@
       transition: all 250ms ease-in-out;
     }
   }
-
 }
 
 .about-icon {

@@ -86,15 +86,20 @@ export class PostProcessingManagerService {
   }
 
   public UpdateOutlinePassObjects(selectedObjects: Object3D[]): void {
-    this._outlinePass.selectedObjects = selectedObjects;
+    if (this._outlinePass) {
+      this._outlinePass.selectedObjects = selectedObjects;
+    }
   }
 
   public UpdateOutlinePassColor(colorHex: number): void {
     this._outlineColor = colorHex;
-    this._outlinePass.visibleEdgeColor.set(this._outlineColor);
+    if (this._outlinePass) {
+      this._outlinePass.visibleEdgeColor.set(this._outlineColor);
+    }
   }
 
   public UpdateLevelTransitionPass(levelTransitionType: LevelTransitionType, start: boolean): void {
+    if (!this._smaaPass || !this._bokehPass || !this._unrealBloomPass) return;
     switch (levelTransitionType) {
       case LevelTransitionType.Bokeh:
         this._smaaPass.enabled = false;
@@ -159,3 +164,5 @@ export class PostProcessingManagerService {
     this._unrealBloomPass.enabled = false;
   }
 }
+
+export { PostProcessingManagerService as PostProcessingManager };

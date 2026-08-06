@@ -13,4 +13,3 @@ export class ProgressBar {
 }
 
 export { ProgressBar as ProgressBarComponent };
-

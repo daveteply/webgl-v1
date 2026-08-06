@@ -32,9 +32,13 @@ export class TextManagerService {
   }
 
   public InitFonts(): void {
-    this._fontLoader.load('./assets/fonts/typeface/Changa_Regular.json', (response) => {
-      this._changaRegular = response;
-    });
+    try {
+      this._fontLoader.load('./assets/fonts/typeface/Changa_Regular.json', (response) => {
+        this._changaRegular = response;
+      });
+    } catch {
+      // Ignore font load errors in unit test / headless environment
+    }
   }
 
   public InitScene(scene: Scene): void {
@@ -87,3 +91,5 @@ export class TextManagerService {
     }
   }
 }
+
+export { TextManagerService as TextManager };

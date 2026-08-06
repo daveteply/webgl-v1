@@ -43,4 +43,3 @@ export class StoreService {
     this.levelColors.set([]);
   }
 }
-

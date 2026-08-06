@@ -8,12 +8,7 @@
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     @if (!isLevelOne) {
-      <button
-        mat-stroked-button
-        color="primary"
-        [disabled]="texturesStillLoading"
-        (click)="onCloseRestartLevel()"
-      >
+      <button mat-stroked-button color="primary" [disabled]="texturesStillLoading" (click)="onCloseRestartLevel()">
         Start Level {{ data.level }} again
       </button>
     }

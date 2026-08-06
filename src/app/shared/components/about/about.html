@@ -20,7 +20,7 @@
       <div>
         <h2>Emojis</h2>
         <p>Group: {{ levelEmojis.group }}</p>
-        <p>Subgroups: {{ levelEmojis.subGroups?.join(", ") }}</p>
+        <p>Subgroups: {{ levelEmojis.subGroups?.join(', ') }}</p>
         <div>
           @for (emoji of levelEmojis.emojiList; track $index) {
             <div>

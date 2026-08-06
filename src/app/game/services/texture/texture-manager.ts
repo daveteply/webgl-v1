@@ -5,7 +5,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { StoreService } from '../../../app-store/services/store.service';
 import { SaveGameService } from '../save-game/save-game';
 
-import { ClampToEdgeWrapping, LoadingManager, MathUtils, NoColorSpace, RepeatWrapping, SRGBColorSpace, Texture, TextureLoader, Vector2 } from 'three';
+import {
+  ClampToEdgeWrapping,
+  LoadingManager,
+  MathUtils,
+  NoColorSpace,
+  RepeatWrapping,
+  SRGBColorSpace,
+  Texture,
+  TextureLoader,
+  Vector2,
+} from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
@@ -346,3 +356,5 @@ export class TextureManagerService {
     }
   }
 }
+
+export { TextureManagerService as TextureManager };

@@ -323,7 +323,7 @@ export class GamePiece extends Object3D {
       // update match key by shifting array number of rotations
       for (let i = 0; i < turns; i++) {
         this._matchKeySequence = this._matchKeySequence.concat(
-          this._matchKeySequence.splice(0, directionUp ? this._matchKeySequence.length - 1 : 1)
+          this._matchKeySequence.splice(0, directionUp ? this._matchKeySequence.length - 1 : 1),
         );
       }
 

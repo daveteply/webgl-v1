@@ -51,3 +51,5 @@ export class HighScoreManagerService {
     localStorage.setItem(STORAGE_HIGH_SCORES, JSON.stringify(scores));
   }
 }
+
+export { HighScoreManagerService as HighScoreManager };

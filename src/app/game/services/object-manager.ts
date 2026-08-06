@@ -301,3 +301,5 @@ export class ObjectManagerService {
     }
   }
 }
+
+export { ObjectManagerService as ObjectManager };

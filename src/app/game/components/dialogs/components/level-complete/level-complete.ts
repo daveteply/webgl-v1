@@ -1,5 +1,15 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, ViewChild, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  ViewChild,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

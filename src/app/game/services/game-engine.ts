@@ -236,3 +236,5 @@ export class GameEngineService {
     );
   }
 }
+
+export { GameEngineService as GameEngine };

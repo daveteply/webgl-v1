@@ -1,5 +1,5 @@
 <div id="game-menu">
-  <button mat-fab color="primary" class="menu-cta" [class.show]="inLevel()" [matMenuTriggerFor]="menu">
+  <button mat-fab color="primary" class="menu-cta" [class.show]="shareManager.InLevel" [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu">

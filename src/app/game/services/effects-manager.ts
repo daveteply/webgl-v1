@@ -37,7 +37,7 @@ export class EffectsManagerService {
     verticalTargets: number[],
     camera: PerspectiveCamera,
     light: PointLight,
-    start: boolean
+    start: boolean,
   ): void {
     // clear selected for highlighting
     if (start) {

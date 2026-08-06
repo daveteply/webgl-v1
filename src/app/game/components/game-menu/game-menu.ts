@@ -1,4 +1,4 @@
-import { Component, DestroyRef, DOCUMENT, inject, input } from '@angular/core';
+import { Component, DestroyRef, DOCUMENT, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
 import { NotifyService } from '../../../shared/services/notify';
 import { ObjectManagerService } from '../../services/object-manager';
+import { ShareManagerService } from '../../services/share-manager';
 
 @Component({
   selector: 'wgl-game-menu',
@@ -15,7 +16,7 @@ import { ObjectManagerService } from '../../services/object-manager';
   styleUrl: './game-menu.scss',
 })
 export class GameMenu {
-  inLevel = input<boolean>(false);
+  public shareManager = inject(ShareManagerService);
 
   private notify = inject(NotifyService);
   private objectManager = inject(ObjectManagerService);

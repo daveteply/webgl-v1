@@ -29,19 +29,19 @@ body {
 }
 
 @font-face {
-  font-family: "Changa";
-  src: url("/assets/fonts/Changa-VariableFont_wght.ttf") format("truetype");
+  font-family: 'Changa';
+  src: url('/assets/fonts/Changa-VariableFont_wght.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "Material Icons";
+  font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url("/assets/fonts/material-icons.woff2") format("woff2");
+  src: url('/assets/fonts/material-icons.woff2') format('woff2');
 }
 
 .material-icons {
-  font-family: "Material Icons";
+  font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -52,8 +52,8 @@ body {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  font-feature-settings: "liga";
-  -webkit-font-feature-settings: "liga";
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
 
@@ -82,7 +82,12 @@ body {
 .glass-dialog {
   position: relative;
   overflow: hidden !important;
-  background: linear-gradient(135deg, rgba(67, 24, 114, 0.65) 0%, rgba(109, 40, 217, 0.4) 50%, rgba(147, 51, 234, 0.3) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(67, 24, 114, 0.65) 0%,
+    rgba(109, 40, 217, 0.4) 50%,
+    rgba(147, 51, 234, 0.3) 100%
+  ) !important;
   border-radius: 20px !important;
   box-shadow:
     0 12px 40px 0 rgba(46, 16, 101, 0.5),
@@ -113,12 +118,22 @@ body {
   }
 
   &.has-canvas-animation {
-    background: linear-gradient(135deg, rgba(48, 16, 85, 0.45) 0%, rgba(76, 29, 149, 0.3) 50%, rgba(124, 58, 237, 0.2) 100%) !important;
+    background: linear-gradient(
+      135deg,
+      rgba(48, 16, 85, 0.45) 0%,
+      rgba(76, 29, 149, 0.3) 50%,
+      rgba(124, 58, 237, 0.2) 100%
+    ) !important;
     backdrop-filter: blur(4px) saturate(140%) !important;
     -webkit-backdrop-filter: blur(4px) saturate(140%) !important;
   }
 
-  h1, h2, h3, .dialog-header, .title, [mat-dialog-title] {
+  h1,
+  h2,
+  h3,
+  .dialog-header,
+  .title,
+  [mat-dialog-title] {
     color: #ffffff !important;
     text-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
   }

@@ -244,3 +244,5 @@ export class ScoringManagerService {
     return targetColor;
   }
 }
+
+export { ScoringManagerService as ScoringManager };

@@ -35,15 +35,17 @@ export class AudioManagerService implements OnDestroy {
     });
   }
 
-  private initAudioContext(): AudioContext {
+  private initAudioContext(): AudioContext | undefined {
     if (!this._audioCtx) {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-      this._audioCtx = new AudioCtxClass();
-      this._masterGain = this._audioCtx.createGain();
-      this._masterGain.connect(this._audioCtx.destination);
-      this.attachUserGestureResume();
+      if (AudioCtxClass) {
+        this._audioCtx = new AudioCtxClass();
+        this._masterGain = this._audioCtx.createGain();
+        this._masterGain.connect(this._audioCtx.destination);
+        this.attachUserGestureResume();
+      }
     }
-    if (this._audioCtx.state === 'suspended') {
+    if (this._audioCtx && this._audioCtx.state === 'suspended') {
       this._audioCtx.resume().catch(() => {
         // Suppress browser autoplay policy warning until initial user interaction
       });
@@ -154,6 +156,7 @@ export class AudioManagerService implements OnDestroy {
     if (!target) return;
 
     const ctx = this.initAudioContext();
+    if (!ctx) return;
     const rate = useNote ? this.nextNote : 1;
 
     const cachedBuffer = this._bufferCache.get(audioType);

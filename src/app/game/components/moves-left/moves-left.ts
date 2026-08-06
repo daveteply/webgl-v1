@@ -20,4 +20,3 @@ export class MovesLeft {
 }
 
 export { MovesLeft as MovesLeftComponent };
-

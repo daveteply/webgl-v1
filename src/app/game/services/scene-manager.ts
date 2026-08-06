@@ -57,17 +57,21 @@ export class SceneManagerService implements OnDestroy {
     this.interactionManager.InitInteractions(canvas);
 
     // renderer
-    this._renderer = new WebGLRenderer({ canvas, stencil: false, depth: false });
-    this._renderer.autoClear = false;
-    this._renderer.setSize(width, height, false);
+    try {
+      this._renderer = new WebGLRenderer({ canvas, stencil: false, depth: false });
+      this._renderer.autoClear = false;
+      this._renderer.setSize(width, height, false);
 
-    // post processing
-    this.postProcessingManager.InitPostProcessing(this._scene, this._camera, this._renderer, width, height);
+      // post processing
+      this.postProcessingManager.InitPostProcessing(this._scene, this._camera, this._renderer, width, height);
 
-    // start rendering frames
-    const initialNow = performance.now();
-    this._previousFrameRenderTime = initialNow * 0.001;
-    this.animate(initialNow);
+      // start rendering frames
+      const initialNow = performance.now();
+      this._previousFrameRenderTime = initialNow * 0.001;
+      this.animate(initialNow);
+    } catch {
+      // Handle WebGL unavailable in headless environments gracefully
+    }
   }
 
   public UpdateSize(pixelRatio: number): void {
@@ -118,3 +122,5 @@ export class SceneManagerService implements OnDestroy {
     });
   }
 }
+
+export { SceneManagerService as SceneManager };
