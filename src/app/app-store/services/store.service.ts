@@ -1,44 +1,46 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { EmojiInfo, EmojiInfoSequence } from '../models/emoji-info';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService {
-  private _levelColors!: string[];
+  readonly levelColors = signal<string[]>([]);
+  readonly emojiInfo = signal<EmojiInfo>({});
+
   get LevelColors(): string[] {
-    return this._levelColors;
-  }
-  public UpdateLevelColors(colorList: string[]): void {
-    this.resetAll();
-    this._levelColors = colorList;
+    return this.levelColors();
   }
 
-  private _emojiInfo: EmojiInfo;
+  public UpdateLevelColors(colorList: string[]): void {
+    this.resetAll();
+    this.levelColors.set(colorList);
+  }
+
   get EmojiInfo(): EmojiInfo {
-    return this._emojiInfo;
+    return this.emojiInfo();
   }
 
   public UpdateEmojiGroup(group: string): void {
     this.resetAll();
-    this._emojiInfo.group = group;
+    this.emojiInfo.update((info) => ({ ...info, group }));
   }
 
   public UpdateEmojiSubGroups(groups: string[]): void {
-    this._emojiInfo.subGroups = groups;
+    this.emojiInfo.update((info) => ({ ...info, subGroups: groups }));
   }
 
   public UpdateEmojiList(list: EmojiInfoSequence[]): void {
-    this._emojiInfo.emojiList = list;
-    this._emojiInfo.emojiList.forEach((e) => (e.emojiCode = String.fromCodePoint(...e.sequence)));
-  }
-
-  constructor() {
-    this._emojiInfo = {};
+    const updatedList = list.map((e) => ({
+      ...e,
+      emojiCode: String.fromCodePoint(...e.sequence),
+    }));
+    this.emojiInfo.update((info) => ({ ...info, emojiList: updatedList }));
   }
 
   private resetAll(): void {
-    this._emojiInfo = {};
-    this._levelColors = [];
+    this.emojiInfo.set({});
+    this.levelColors.set([]);
   }
 }
+

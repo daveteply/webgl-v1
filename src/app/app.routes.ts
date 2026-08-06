@@ -5,6 +5,6 @@ export const routes: Routes = [
   {
     path: 'game',
     loadComponent: () =>
-      import('./game/components/game-container/game-container.component').then((c) => c.GameContainerComponent),
+      import('./game/components/game-container/game-container').then((c) => c.GameContainer),
   },
 ];

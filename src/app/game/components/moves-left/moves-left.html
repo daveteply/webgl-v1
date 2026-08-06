@@ -1,0 +1,12 @@
+<div class="moves-remaining-container">
+  <div
+    class="move-count"
+    [class.warn]="isWarn()"
+    [class.danger]="isDanger()"
+    [class.panic]="isPanic()"
+    [class.zero]="amount() === 0"
+  >
+    {{ amount() }}
+  </div>
+</div>
+

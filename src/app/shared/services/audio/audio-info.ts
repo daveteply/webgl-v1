@@ -1,5 +1,3 @@
-import { Howl } from 'howler';
-
 export enum AudioType {
   LEVEL_START_1 = 1,
   LEVEL_START_2,
@@ -31,7 +29,6 @@ export enum AudioType {
 export interface AudioInfo {
   url: string;
   audioType: AudioType;
-  howl?: Howl;
 }
 
 export const AUDIO_LIST: AudioInfo[] = [

@@ -1,7 +1,7 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
 import { CylinderGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
-import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
+import { BUMP_DEPTH, RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class PowerMove {
   private _geometry!: CylinderGeometry;
@@ -31,14 +31,28 @@ export class PowerMove {
     this._materials.push(
       new MeshPhongMaterial({
         color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
         transparent: true,
         opacity: 0.0,
         bumpMap: texture,
-        bumpScale: 0.5,
-      })
+        bumpScale: BUMP_DEPTH,
+      }),
     );
-    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
-    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
+    this._materials.push(
+      new MeshPhongMaterial({
+        color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
+      }),
+    );
+    this._materials.push(
+      new MeshPhongMaterial({
+        color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
+      }),
+    );
 
     this._mesh = new Mesh(this._geometry, this._materials);
   }
@@ -48,7 +62,7 @@ export class PowerMove {
       const delta = { s: 0.1, o: 0.0 };
       const target = { s: 40.0, o: 0.8 };
 
-      this._appearTween = new Tween(delta)
+      this._appearTween = new Tween(delta, true)
         .to(target, 1500)
         .easing(Easing.Bounce.Out)
         .onUpdate(() => {
@@ -61,22 +75,13 @@ export class PowerMove {
         })
         .start();
 
-      this._spinTween = new Tween({})
+      let animTime = 0;
+      this._bounceTween = new Tween({}, true)
         .repeat(Infinity)
         .onUpdate(() => {
-          this._mesh.rotateY(0.005);
-        })
-        .start();
-
-      const deltaB = { y: -0.05 };
-      const targetB = { y: 0.05 };
-      this._bounceTween = new Tween(deltaB)
-        .to(targetB, 750)
-        .repeat(Infinity)
-        .easing(Easing.Quadratic.InOut)
-        .yoyo(true)
-        .onUpdate(() => {
-          this._mesh.position.y = deltaB.y;
+          animTime += 0.05;
+          this._mesh.rotation.y += 0.006;
+          this._mesh.position.y = Math.sin(animTime) * 0.2;
         })
         .start();
     });
@@ -85,7 +90,7 @@ export class PowerMove {
   public Remove(): void {
     const delta = { s: this._mesh.scale.x, o: 0.8 };
     const target = { s: 300.0, o: 0.0 };
-    new Tween(delta)
+    new Tween(delta, true)
       .to(target, 500)
       .easing(Easing.Sinusoidal.InOut)
       .onUpdate(() => {

@@ -1,0 +1,46 @@
+#level-dialog {
+  font-size: x-large;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .dialog-header {
+    color: black !important;
+    text-align: center;
+    font-size: xx-large;
+    z-index: 1;
+    border-radius: 1em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+
+  .content {
+    color: black !important;
+    overflow: hidden;
+    flex: 1;
+    z-index: 1;
+  }
+
+  .level-info-line {
+    font-size: large;
+    padding-bottom: 0.5em;
+    display: none;
+    &.show {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .progress {
+    opacity: 1;
+    transition: opacity 500ms;
+    &.fade-out {
+      opacity: 0;
+    }
+  }
+
+  .mat-mdc-raised-button {
+    font-size: x-large;
+    margin-bottom: 0.75em;
+  }
+}

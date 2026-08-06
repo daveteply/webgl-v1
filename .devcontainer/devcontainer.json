@@ -1,0 +1,30 @@
+{
+  "name": "WebGL-V1A Dev Container",
+  "dockerFile": "Dockerfile",
+  "appPort": [4200],
+  "forwardPorts": [4200],
+  "portsAttributes": {
+    "4200": {
+      "label": "Angular Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "explorer.fileNesting.enabled": true,
+        "explorer.fileNesting.expand": false,
+        "explorer.fileNesting.patterns": {
+          "*.ts": "$(capture).spec.ts, $(capture).html, $(capture).scss, $(capture).css"
+        }
+      }
+    }
+  },
+  "postCreateCommand": "npm install"
+}

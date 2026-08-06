@@ -1,0 +1,26 @@
+#highScores {
+  text-align: center;
+  font-size: large;
+  background-color: #ffffff;
+  color: black;
+  padding: 1em;
+  border-radius: 0.5em;
+  border: 1px solid darkgray;
+
+  .title {
+    color: black !important;
+    font-size: larger;
+    font-weight: bold;
+    padding-bottom: 0.5em;
+  }
+
+  .score-entry {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .new-entry {
+    font-weight: bold;
+    font-size: larger;
+  }
+}
