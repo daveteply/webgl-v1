@@ -13,6 +13,7 @@ import { LevelMaterialType } from '../../level-material-type';
 import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
 import { GameTexture } from '../texture/game-texture';
+import { BUMP_DEPTH as BUMP_SCALE } from '../../game-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +50,7 @@ export class MaterialManagerService {
         for (let textureInx = 0; textureInx < maxMaterials; textureInx++) {
           this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx].materials[textureInx] = {
             matchKey: 0,
-            materialPhong: new MeshPhongMaterial({ bumpScale: 5, transparent: true }),
+            materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
             materialBasic: new MeshBasicMaterial({ transparent: true }),
             useBasic: false,
           };
@@ -91,7 +92,7 @@ export class MaterialManagerService {
                 side.materialPhong.specular.setHex(0x333333);
                 side.materialPhong.shininess = 15;
                 side.materialPhong.bumpMap = material.bumpTexture.texture;
-                side.materialPhong.bumpScale = 5;
+                side.materialPhong.bumpScale = BUMP_SCALE;
                 side.materialPhong.needsUpdate = true;
                 side.materialPhong.opacity = 0;
                 side.useBasic = false;
@@ -140,7 +141,7 @@ export class MaterialManagerService {
               side.materialPhong.specular.setHex(0x333333);
               side.materialPhong.shininess = 15;
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
-              side.materialPhong.bumpScale = 5;
+              side.materialPhong.bumpScale = BUMP_SCALE;
               side.materialPhong.needsUpdate = true;
               side.materialPhong.opacity = 0;
               side.useBasic = false;

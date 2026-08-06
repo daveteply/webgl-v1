@@ -9,6 +9,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class PostProcessingManagerService {
   private _smaaPass!: SMAAPass;
   private _bokehPass!: BokehPass;
   private _unrealBloomPass!: UnrealBloomPass;
+  private _outputPass!: OutputPass;
 
   private _bokehTween!: any;
   private _unrealBloomTween!: any;
@@ -54,7 +56,6 @@ export class PostProcessingManagerService {
     this._outlinePass.edgeGlow = 1;
     this._outlinePass.edgeThickness = 10;
     this._outlinePass.edgeStrength = 20;
-    this._outlinePass.renderToScreen = true;
 
     // smaa
     this._smaaPass = new (SMAAPass as any)(width, height);
@@ -71,6 +72,9 @@ export class PostProcessingManagerService {
     this._unrealBloomPass = new UnrealBloomPass(new Vector2(width, height), 1, 0, 0);
     this._unrealBloomPass.enabled = false;
 
+    // output pass for tone mapping and sRGB color space conversion
+    this._outputPass = new OutputPass();
+
     // composer
     this._composer = new EffectComposer(renderer);
     this._composer.addPass(this._renderPass);
@@ -78,6 +82,7 @@ export class PostProcessingManagerService {
     this._composer.addPass(this._bokehPass);
     this._composer.addPass(this._unrealBloomPass);
     this._composer.addPass(this._smaaPass);
+    this._composer.addPass(this._outputPass);
   }
 
   public UpdateOutlinePassObjects(selectedObjects: Object3D[]): void {

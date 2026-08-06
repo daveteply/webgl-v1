@@ -1,7 +1,7 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
 import { CylinderGeometry, MathUtils, Mesh, MeshPhongMaterial, Texture } from 'three';
-import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
+import { BUMP_DEPTH, RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class PowerMove {
   private _geometry!: CylinderGeometry;
@@ -36,7 +36,7 @@ export class PowerMove {
         transparent: true,
         opacity: 0.0,
         bumpMap: texture,
-        bumpScale: 1.5,
+        bumpScale: BUMP_DEPTH,
       }),
     );
     this._materials.push(

@@ -39,8 +39,8 @@ export const DIFFICULTY_TIER_3 = 30;
 export const DIFFICULTY_TIER_4 = 50;
 
 // sharing
-export const SHARE_FILE_NAME = 'rikkle-screen-shot.png';
-export const SHARE_WEBSITE = 'https://turbogeekbear.com/projects/rikkle/story';
+// export const SHARE_FILE_NAME = 'rikkle-screen-shot.png';
+// export const SHARE_WEBSITE = 'https://turbogeekbear.com/projects/rikkle/story';
 
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';
@@ -63,6 +63,7 @@ export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
 export const EMOJI_GROUP_STEP = 6;
 export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
+export const BUMP_DEPTH = 5;
 export const UV_SIDES = [
   [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
   [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)

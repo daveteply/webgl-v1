@@ -1,11 +1,11 @@
 import {
   BufferGeometry,
-  Color,
   Float32BufferAttribute,
   MathUtils,
   Object3D,
   Points,
   PointsMaterial,
+  SRGBColorSpace,
   TextureLoader,
   Vector3,
 } from 'three';
@@ -37,6 +37,7 @@ export class StarField extends Object3D {
     loader.load('assets/particle.webp', (sprite) => {
       sprite.name = 'sprite';
       sprite.center.set(0.5, 0.5);
+      sprite.colorSpace = SRGBColorSpace;
 
       // material
       this._material = new PointsMaterial({
