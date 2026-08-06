@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,7 +19,7 @@ import { ProgressBar } from '../../../../../shared/components/progress-bar/progr
   templateUrl: './intro.html',
   styleUrl: './intro.scss',
 })
-export class Intro implements OnInit, AfterViewInit, OnDestroy {
+export class Intro implements OnInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -65,11 +65,11 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
     this.dialogAnimation.Dispose();
   }
 
-  ngAfterViewInit(): void {
-    this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
-    this.dialogAnimation.CreateIntroDialogBoxes();
-    this.dialogAnimation.Animate();
-  }
+  // ngAfterViewInit(): void {
+  //   this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
+  //   this.dialogAnimation.CreateIntroDialogBoxes();
+  //   this.dialogAnimation.Animate();
+  // }
 
   RestoreGame(): void {
     this.analyticsManager.Log(AnalyticsEventType.IntroDialogRestoreCTA);
@@ -79,4 +79,3 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
 }
 
 export { Intro as IntroDialogComponent, Intro as IntroDialog };
-

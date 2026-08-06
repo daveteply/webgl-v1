@@ -4,7 +4,7 @@ import { AmbientLight, Color, PerspectiveCamera, PointLight, Scene, WebGLRendere
 import { InteractionManagerService } from './interaction-manager';
 import { ObjectManagerService } from './object-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
-// import { ShareManagerService } from './share-manager';
+import { ShareManagerService } from './share-manager';
 
 import * as TWEEN from '@tweenjs/tween.js';
 
@@ -16,7 +16,7 @@ export class SceneManagerService implements OnDestroy {
   private objectManager = inject(ObjectManagerService);
   private interactionManager = inject(InteractionManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
-  // private shareManager = inject(ShareManagerService);
+  private shareManager = inject(ShareManagerService);
 
   private _previousFrameRenderTime!: number;
 
@@ -107,6 +107,10 @@ export class SceneManagerService implements OnDestroy {
 
       this.objectManager.UpdateStarField();
       this.postProcessingManager.Composer.render(deltaTime);
+
+      if (this.shareManager.ScreenShotRequested && this._renderer?.domElement) {
+        this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
+      }
     });
 
     this._animateRequestId = requestAnimationFrame((now) => {

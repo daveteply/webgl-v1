@@ -1,17 +1,31 @@
 #intro-dialog {
+  background: linear-gradient(135deg, rgba(67, 24, 114, 0.55) 0%, rgba(109, 40, 217, 0.35) 50%, rgba(147, 51, 234, 0.25) 100%);
+  border-radius: 20px;
+  box-shadow:
+    0 12px 40px 0 rgba(46, 16, 101, 0.5),
+    0 0 25px 0 rgba(168, 85, 247, 0.25),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(216, 180, 254, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+
   text-align: center;
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 1.25em 1em;
+  box-sizing: border-box;
 
   .logo {
     height: 10em;
     width: 18em;
-    background-image: url("/assets/rikkle-logo.webp");
+    margin: 0 auto;
+    background-image: url('/assets/rikkle-logo-2026.webp');
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
-    filter: drop-shadow(0 0 1em rgba(200, 200, 200, 0.8));
+    filter: drop-shadow(0 0 1.2em rgba(192, 132, 252, 0.6));
   }
 
   .content {
@@ -32,16 +46,39 @@
   .dialog-buttons {
     display: flex;
     flex-direction: column;
+    gap: 0.5em;
+    padding: 0.5em 1em;
+
     button {
-      margin: 0.25em;
+      margin: 0;
+      border-radius: 12px;
+      transition: all 250ms ease-in-out;
     }
   }
 
   .mat-mdc-raised-button {
     font-size: x-large;
+    background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4) !important;
+
+    &:hover:not([disabled]) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6) !important;
+    }
   }
-  .mat-mdc-outlined-button {
+
+  .mat-mdc-outlined-button,
+  .mat-mdc-stroked-button {
     font-size: large;
+    border-color: rgba(216, 180, 254, 0.5) !important;
+    color: #f3e8ff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+
+    &:hover:not([disabled]) {
+      background: rgba(255, 255, 255, 0.18) !important;
+      border-color: rgba(233, 213, 255, 0.8) !important;
+    }
   }
 }
 

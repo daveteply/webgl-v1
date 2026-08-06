@@ -1,17 +1,24 @@
-<div id="how-to-play">
+<div id="how-to-play" class="glass-dialog">
   <div mat-dialog-title>
-    <span class="title">Hint: Matches</span>
+    <span class="title">How to Play</span>
   </div>
   <div class="content" mat-dialog-content>
-    <p>
-      <span class="arrow">{{ leftArrow }}</span>
-      Move rows left or right
-      <span class="arrow">{{ rightArrow }}</span>
-    </p>
-    <p>Match at least 3 like piece</p>
-    <p>Tap to make a match!</p>
+    <div class="instructions-list">
+      <div class="instruction-item">
+        <span class="step-icon"><span class="arrow">{{ leftArrow }}</span> <span class="arrow">{{ rightArrow }}</span></span>
+        <span>Rotate rows left or right to line up matching colors or symbols.</span>
+      </div>
+      <div class="instruction-item">
+        <span class="step-icon">✨</span>
+        <span>Connect 3 or more matching pieces vertically, horizontally, or in L-shapes.</span>
+      </div>
+      <div class="instruction-item">
+        <span class="step-icon">👆</span>
+        <span>Tap connected matching pieces to clear them, score points, and earn bonus moves!</span>
+      </div>
+    </div>
   </div>
   <div mat-dialog-actions align="center">
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button color="primary" mat-dialog-close>Got It!</button>
   </div>
 </div>

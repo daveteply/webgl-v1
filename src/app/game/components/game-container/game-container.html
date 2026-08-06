@@ -17,7 +17,7 @@
     <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
     </wgl-progress-bar>
   </div>
-  <div class="copyright" [class.hide]="showScoreProgress()">&copy; 2022 Turbogeekbear LLC</div>
-  <!-- <wgl-share-content></wgl-share-content> -->
+  <div class="copyright" [class.hide]="showScoreProgress()">&copy; {{ copyrightYear }} David Teply</div>
+  <wgl-share-content></wgl-share-content>
   <wgl-game-menu [inLevel]="showScoreProgress()"></wgl-game-menu>
 </div>

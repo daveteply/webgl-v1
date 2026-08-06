@@ -14,7 +14,7 @@ import { HighScoreManagerService } from '../../../shared/services/high-score-man
 import { HintsManagerService } from '../../services/hints-manager';
 import { PostProcessingManagerService } from '../../services/post-processing-manager';
 import { SaveGameService } from '../../services/save-game/save-game';
-// import { ShareManagerService } from '../../services/share-manager';
+import { ShareManagerService } from '../../services/share-manager';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -26,7 +26,7 @@ import { HowToPlay } from '../dialogs/components/how-to-play/how-to-play';
 import { MovesRemaining } from '../dialogs/components/moves-remaining/moves-remaining';
 import { TextZoom } from '../../text/components/text-zoom/text-zoom';
 import { MovesLeft } from '../moves-left/moves-left';
-//import { ShareContentComponent } from '../share-content/share-content';
+import { ShareContentComponent } from '../share-content/share-content';
 import { GameMenu } from '../game-menu/game-menu';
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
 
@@ -40,15 +40,7 @@ import {
 @Component({
   selector: 'wgl-game-container',
   providers: [DecimalPipe],
-  imports: [
-    CommonModule,
-    MatProgressBarModule,
-    TextZoom,
-    MovesLeft,
-    // ShareContentComponent,
-    GameMenu,
-    ProgressBar,
-  ],
+  imports: [CommonModule, MatProgressBarModule, TextZoom, MovesLeft, ShareContentComponent, GameMenu, ProgressBar],
   templateUrl: './game-container.html',
   styleUrl: './game-container.scss',
 })
@@ -68,7 +60,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private hintsManager = inject(HintsManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
   private saveGame = inject(SaveGameService);
-  // private shareManager = inject(ShareManagerService);
+  private shareManager = inject(ShareManagerService);
   public scoringManager = inject(ScoringManagerService);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
@@ -89,6 +81,8 @@ export class GameContainer implements OnInit, AfterViewInit {
   public GridTemplateColumns = '';
   public GridTemplateRows = '';
 
+  copyrightYear = new Date().getFullYear();
+
   constructor() {
     // set up window resizing event with automatic cleanup
     this.resize$.pipe(debounceTime(10), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -100,7 +94,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameOver) => {
       // hide share
-      // this.shareManager.UpdateInLevel(false);
+      this.shareManager.UpdateInLevel(false);
 
       // game state
       this._isGameOver = gameOver;
@@ -118,52 +112,54 @@ export class GameContainer implements OnInit, AfterViewInit {
     });
 
     // texture load started
-    this.textureManager.LevelTextureLoadingStarted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isRestoring) => {
-      if (!isRestoring) {
-        // level transition
-        this.gameEngine.InitLevelTransitionType();
+    this.textureManager.LevelTextureLoadingStarted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+      (isRestoring) => {
+        if (!isRestoring) {
+          // level transition
+          this.gameEngine.InitLevelTransitionType();
 
-        if (this._isGameOver) {
-          // game over
-          this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
-          this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
-            if (data.startOver) {
-              this.scoringManager.RestartGame();
-            } else {
-              // reset stats will take care of move count based on level
-              this.scoringManager.ResetStats(!data.startOver);
-            }
-            this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
-            this.updateDifficultyColor();
-            this.objectManager.NextLevel(this.scoringManager.Level, true);
-          });
-        } else {
-          if (this._showWelcome) {
-            // intro
-            this._dialogRefIntro = this.dialog.open(Intro, this.dialogConfig());
-            this._dialogRefIntro.afterClosed().subscribe((result) => {
-              // restore game
-              if (result?.isRestoring) {
-                this.initTextures();
-                this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
+          if (this._isGameOver) {
+            // game over
+            this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
+            this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
+              if (data.startOver) {
+                this.scoringManager.RestartGame();
               } else {
-                this.handleLevelDialogCLosed();
+                // reset stats will take care of move count based on level
+                this.scoringManager.ResetStats(!data.startOver);
               }
+              this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
+              this.updateDifficultyColor();
+              this.objectManager.NextLevel(this.scoringManager.Level, true);
             });
           } else {
-            // level complete
-            const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
-            this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
-            this._dialogRefLevel.backdropClick().subscribe(() => {
-              this.dialogNotify.Notify();
-            });
-            this._dialogRefLevel.afterClosed().subscribe(() => {
-              this.handleLevelDialogCLosed();
-            });
+            if (this._showWelcome) {
+              // intro
+              this._dialogRefIntro = this.dialog.open(Intro, this.dialogConfig());
+              this._dialogRefIntro.afterClosed().subscribe((result) => {
+                // restore game
+                if (result?.isRestoring) {
+                  this.initTextures();
+                  this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
+                } else {
+                  this.handleLevelDialogCLosed();
+                }
+              });
+            } else {
+              // level complete
+              const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
+              this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
+              this._dialogRefLevel.backdropClick().subscribe(() => {
+                this.dialogNotify.Notify();
+              });
+              this._dialogRefLevel.afterClosed().subscribe(() => {
+                this.handleLevelDialogCLosed();
+              });
+            }
           }
         }
-      }
-    });
+      },
+    );
 
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
@@ -196,7 +192,7 @@ export class GameContainer implements OnInit, AfterViewInit {
         this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_INCREASE).then((result) => {
           if (!result.value) {
             const dialog = this.dialog.open(MovesRemaining, {
-              position: { top: '5em' },
+              position: { top: '3.5em' },
               data: true,
             });
             dialog.afterClosed().subscribe(() => {
@@ -208,7 +204,7 @@ export class GameContainer implements OnInit, AfterViewInit {
         this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_DECREASE).then((result) => {
           if (!result.value) {
             const dialog = this.dialog.open(MovesRemaining, {
-              position: { top: '5em' },
+              position: { top: '3.5em' },
               data: false,
             });
             dialog.afterClosed().subscribe(() => {
@@ -286,7 +282,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   private handleLevelDialogCLosed(): void {
     // show share
-    // this.shareManager.UpdateInLevel(true);
+    this.shareManager.UpdateInLevel(true);
 
     // dismiss dialog and launch next level
     if (this._showWelcome) {

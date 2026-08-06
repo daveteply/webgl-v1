@@ -1,8 +1,51 @@
 #moves-tutorial {
   text-align: center;
-  font-size: larger;
+  position: relative;
+  min-width: 18em;
+
+  .up-finger-wrapper {
+    position: absolute;
+    top: -1.2em;
+    right: 3.5em;
+    z-index: 10;
+  }
 
   .up-finger {
-    font-size: xx-large;
+    font-size: 2.5em;
+    display: inline-block;
+    filter: drop-shadow(0 2px 8px rgba(168, 85, 247, 0.6));
+    animation: bounce-up 1.5s infinite ease-in-out;
+  }
+
+  @keyframes bounce-up {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  .dialog-title {
+    margin-top: 0.5em;
+    margin-bottom: 0.25em;
+    font-size: 1.5em;
+  }
+
+  .content-body {
+    overflow: hidden !important;
+    padding: 0.5em 0;
+    margin: 0;
+
+    p {
+      margin: 0.4em 0;
+      font-size: 1.05em;
+      line-height: 1.4;
+
+      b {
+        color: #e9d5ff;
+        text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+      }
+    }
   }
 }
