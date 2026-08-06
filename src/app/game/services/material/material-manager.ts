@@ -12,7 +12,6 @@ import { GamePieceMaterialData } from '../../models/game-piece/game-piece-materi
 import { LevelMaterialType } from '../../level-material-type';
 import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';
-import { DEFAULT_PLAYABLE_TEXTURE_COUNT } from '../../game-constants';
 import { GameTexture } from '../texture/game-texture';
 
 @Injectable({
@@ -50,7 +49,7 @@ export class MaterialManagerService {
         for (let textureInx = 0; textureInx < maxMaterials; textureInx++) {
           this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx].materials[textureInx] = {
             matchKey: 0,
-            materialPhong: new MeshPhongMaterial({ bumpScale: 0.05, transparent: true }),
+            materialPhong: new MeshPhongMaterial({ bumpScale: 5, transparent: true }),
             materialBasic: new MeshBasicMaterial({ transparent: true }),
             useBasic: false,
           };
@@ -89,8 +88,10 @@ export class MaterialManagerService {
               // bump symbols and textures
               if (material.bumpTexture && material.colorStr) {
                 side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
+                side.materialPhong.specular.setHex(0x333333);
+                side.materialPhong.shininess = 15;
                 side.materialPhong.bumpMap = material.bumpTexture.texture;
-                side.materialPhong.bumpScale = 0.03;
+                side.materialPhong.bumpScale = 5;
                 side.materialPhong.needsUpdate = true;
                 side.materialPhong.opacity = 0;
                 side.useBasic = false;
@@ -136,8 +137,10 @@ export class MaterialManagerService {
             // bump symbols and textures
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
               side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0);
+              side.materialPhong.specular.setHex(0x333333);
+              side.materialPhong.shininess = 15;
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
-              side.materialPhong.bumpScale = 0.03;
+              side.materialPhong.bumpScale = 5;
               side.materialPhong.needsUpdate = true;
               side.materialPhong.opacity = 0;
               side.useBasic = false;

@@ -42,8 +42,11 @@ export class SceneManagerService implements OnDestroy {
     const height = canvas.clientHeight || window.innerHeight || 150;
 
     this._pointLight = new PointLight(0xffffff, 400);
-    this._pointLight.position.z = 5;
+    this._pointLight.position.set(1.5, 2.5, 5);
     this._scene.add(this._pointLight);
+
+    const ambientLight = new AmbientLight(0xffffff, 0.4);
+    this._scene.add(ambientLight);
 
     // camera
     this._camera = new PerspectiveCamera(45, width / height, 1, 50);

@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { StoreService } from '../../../app-store/services/store.service';
 import { SaveGameService } from '../save-game/save-game';
 
-import { ClampToEdgeWrapping, LoadingManager, MathUtils, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
+import { ClampToEdgeWrapping, LoadingManager, MathUtils, NoColorSpace, RepeatWrapping, Texture, TextureLoader, Vector2 } from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
 import { LevelMaterialType } from '../../level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
@@ -177,7 +177,7 @@ export class TextureManagerService {
     for (const texture of loadedTextures) {
       if (texture.texture) {
         const gameTexture: GameTexture = { id: texture.id, texture: texture.texture };
-        this.setTextureWrapping(gameTexture.texture);
+        this.setTextureWrapping(gameTexture.texture, true);
         this._textures.push(gameTexture);
       }
     }
@@ -190,7 +190,7 @@ export class TextureManagerService {
         this._textureLoader.load(texture.src, (data) => {
           const gameTexture: GameTexture = { id: texture.id, texture: data };
           gameTexture.texture.center = new Vector2(0.5, 0.5);
-          this.setTextureWrapping(gameTexture.texture);
+          this.setTextureWrapping(gameTexture.texture, true);
           this._textures.push(gameTexture);
 
           // cache
@@ -213,7 +213,7 @@ export class TextureManagerService {
 
     // check if loaded
     if (randBumpMaterialMap.texture) {
-      this.setTextureWrapping(randBumpMaterialMap.texture);
+      this.setTextureWrapping(randBumpMaterialMap.texture, true);
       this._textures.push({ id: randBumpMaterialMap.id, texture: randBumpMaterialMap.texture });
       this.emitCompletion();
     } else {
@@ -221,7 +221,7 @@ export class TextureManagerService {
       this._textureLoader.load(randBumpMaterialMap.src, (data) => {
         data.center = new Vector2(0.5, 0.5);
         randBumpMaterialMap.texture = data;
-        this.setTextureWrapping(randBumpMaterialMap.texture);
+        this.setTextureWrapping(randBumpMaterialMap.texture, true);
         this._textures.push({ id: randBumpMaterialMap.id, texture: randBumpMaterialMap.texture });
       });
     }
@@ -316,11 +316,15 @@ export class TextureManagerService {
     }
   }
 
-  private setTextureWrapping(texture: Texture): void {
+  private setTextureWrapping(texture: Texture, isBumpMap = false): void {
     if (texture) {
       // reset default
       texture.wrapS = ClampToEdgeWrapping;
       texture.repeat.set(1, 1);
+
+      if (isBumpMap) {
+        texture.colorSpace = NoColorSpace;
+      }
 
       if (this._levelGeometryType === LevelGeometryType.Cylinder) {
         texture.wrapS = RepeatWrapping;

@@ -31,14 +31,28 @@ export class PowerMove {
     this._materials.push(
       new MeshPhongMaterial({
         color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
         transparent: true,
         opacity: 0.0,
         bumpMap: texture,
-        bumpScale: 0.5,
-      })
+        bumpScale: 1.5,
+      }),
     );
-    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
-    this._materials.push(new MeshPhongMaterial({ color: this._powerMoveColor }));
+    this._materials.push(
+      new MeshPhongMaterial({
+        color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
+      }),
+    );
+    this._materials.push(
+      new MeshPhongMaterial({
+        color: this._powerMoveColor,
+        emissive: this._powerMoveColor,
+        emissiveIntensity: 0.35,
+      }),
+    );
 
     this._mesh = new Mesh(this._geometry, this._materials);
   }
@@ -61,22 +75,13 @@ export class PowerMove {
         })
         .start();
 
-      this._spinTween = new Tween({}, true)
+      let animTime = 0;
+      this._bounceTween = new Tween({}, true)
         .repeat(Infinity)
         .onUpdate(() => {
-          this._mesh.rotateY(0.005);
-        })
-        .start();
-
-      const deltaB = { y: -0.05 };
-      const targetB = { y: 0.05 };
-      this._bounceTween = new Tween(deltaB, true)
-        .to(targetB, 750)
-        .repeat(Infinity)
-        .easing(Easing.Quadratic.InOut)
-        .yoyo(true)
-        .onUpdate(() => {
-          this._mesh.position.y = deltaB.y;
+          animTime += 0.05;
+          this._mesh.rotation.y += 0.006;
+          this._mesh.position.y = Math.sin(animTime) * 0.2;
         })
         .start();
     });
