@@ -1,0 +1,32 @@
+#save-game-confirm {
+  text-align: center;
+  position: relative;
+  min-width: 18em;
+  width: 60%;
+  margin: auto;
+
+  .dialog-title {
+    margin-top: 0.5em;
+    margin-bottom: 0.25em;
+    font-size: 1.5em;
+  }
+
+  .content-body {
+    overflow: hidden !important;
+    padding: 0.5em 0;
+    margin: 0;
+
+    p {
+      margin: 0.4em 0;
+      font-size: 1.05em;
+      line-height: 1.4;
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75em;
+    padding-top: 0.75em;
+  }
+}
