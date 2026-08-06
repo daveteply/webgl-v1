@@ -90,7 +90,7 @@ export class MaterialManagerService {
               if (material.bumpTexture && material.colorStr) {
                 side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
                 side.materialPhong.bumpMap = material.bumpTexture.texture;
-                side.materialPhong.bumpScale = 0.05;
+                side.materialPhong.bumpScale = 0.03;
                 side.materialPhong.needsUpdate = true;
                 side.materialPhong.opacity = 0;
                 side.useBasic = false;
@@ -137,7 +137,7 @@ export class MaterialManagerService {
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
               side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0);
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
-              side.materialPhong.bumpScale = 0.05;
+              side.materialPhong.bumpScale = 0.03;
               side.materialPhong.needsUpdate = true;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
@@ -238,14 +238,14 @@ export class MaterialManagerService {
 
     if (isDevMode()) {
       console.info('  color scheme:', scheme.id);
-      sortedColors.sort().forEach((c) => console.info(`    %c ${c}`, `color: ${c}`));
+      console.info('    ' + sortedColors.map((c) => `%c ${c}`).join(''), ...sortedColors.map((c) => `color: ${c}`));
     }
 
     const shuffledColors = arrayShuffle(sortedColors).slice(0, playableTextureCount);
 
     if (isDevMode()) {
       console.info('    game piece colors:', scheme);
-      shuffledColors.forEach((c) => console.info(`      %c ${c}`, `color: ${c}`));
+      console.info('    ' + shuffledColors.map((c) => `%c ${c}`).join(''), ...shuffledColors.map((c) => `color: ${c}`));
     }
 
     let targetColors = level === 1 ? sortedColors.slice(-playableTextureCount) : shuffledColors;

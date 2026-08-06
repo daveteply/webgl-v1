@@ -41,10 +41,6 @@ export class SceneManagerService implements OnDestroy {
     const width = canvas.clientWidth || window.innerWidth || 300;
     const height = canvas.clientHeight || window.innerHeight || 150;
 
-    // light
-    const ambientLight = new AmbientLight(0xffffff, 0.8);
-    this._scene.add(ambientLight);
-
     this._pointLight = new PointLight(0xffffff, 400);
     this._pointLight.position.z = 5;
     this._scene.add(this._pointLight);
@@ -118,4 +114,3 @@ export class SceneManagerService implements OnDestroy {
     });
   }
 }
-

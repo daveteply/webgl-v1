@@ -100,6 +100,7 @@ export class GameEngineService {
     }
 
     if (isDevMode()) {
+      console.info('------------------');
       console.info('Playable Texture Count: ', this._playableTextureCount, 'for level:', level);
     }
   }
