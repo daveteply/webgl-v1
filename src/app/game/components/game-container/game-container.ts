@@ -122,6 +122,7 @@ export class GameContainer implements OnInit, AfterViewInit {
             // game over
             this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
             this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
+              this.shareManager.UpdateInLevel(true);
               if (data.startOver) {
                 this.scoringManager.RestartGame();
               } else {
