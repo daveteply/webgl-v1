@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { DialogAnimationService } from '../../services/dialog-animation';
 import { ObjectManagerService } from '../../../../services/object-manager';
+import { TextureManagerService } from '../../../../services/texture/texture-manager';
 import { SaveGameService } from '../../../../services/save-game/save-game';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 import { HighScores } from '../../../high-scores/high-scores';
@@ -23,6 +24,7 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
 
   private objectManager = inject(ObjectManagerService);
+  private textureManager = inject(TextureManagerService);
   private audioManager = inject(AudioManagerService);
   private dialogAnimation = inject(DialogAnimationService);
   private saveGame = inject(SaveGameService);
@@ -30,13 +32,20 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
   public dialogRef = inject(MatDialogRef<Intro>);
   private destroyRef = inject(DestroyRef);
 
-  materialsUpdating = true;
-  progress = 100;
-  hasRestoreData!: boolean;
+  materialsUpdating = signal<boolean>(true);
+  progress = signal<number>(0);
+  hasRestoreData = signal<boolean>(false);
 
   constructor() {
-    this.objectManager.LevelMaterialsUpdated.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.materialsUpdating = false;
+    this.textureManager.LevelTextureLoadProgress.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((progress) => {
+      this.progress.set(progress);
+    });
+
+    this.objectManager.LevelMaterialsUpdated.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((updated) => {
+      if (updated) {
+        this.materialsUpdating.set(false);
+        this.progress.set(100);
+      }
     });
 
     // start-up music
@@ -48,7 +57,7 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
       .HasSaveState()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((hasSaveData) => {
-        this.hasRestoreData = hasSaveData;
+        this.hasRestoreData.set(hasSaveData);
       });
   }
 
@@ -70,3 +79,4 @@ export class Intro implements OnInit, AfterViewInit, OnDestroy {
 }
 
 export { Intro as IntroDialogComponent, Intro as IntroDialog };
+

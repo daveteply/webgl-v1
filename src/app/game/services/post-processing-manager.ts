@@ -117,7 +117,7 @@ export class PostProcessingManagerService {
   private initBokehTween(start: boolean) {
     const delta = { maxblur: start ? 0.2 : 0 };
     const target = { maxblur: start ? 0 : 0.2 };
-    this._bokehTween = new Tween(delta)
+    this._bokehTween = new Tween(delta, true)
       .to(target, 2500)
       .easing(Easing.Quadratic.Out)
       .onUpdate(() => {
@@ -134,7 +134,7 @@ export class PostProcessingManagerService {
   private initUnrealBloomTween() {
     const delta = { strength: 0 };
     const target = { strength: 1.5 };
-    this._unrealBloomTween = new Tween(delta)
+    this._unrealBloomTween = new Tween(delta, true)
       .to(target, 1500)
       .repeat(1)
       .yoyo(true)

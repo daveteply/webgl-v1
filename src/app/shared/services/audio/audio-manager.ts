@@ -176,9 +176,7 @@ export class AudioManagerService implements OnDestroy {
   }
 
   private playBuffer(ctx: AudioContext, audioType: AudioType, buffer: AudioBuffer, rate: number, loop: boolean): void {
-    if (loop) {
-      this.StopAudio(audioType);
-    }
+    this.StopAudio(audioType);
 
     const source = ctx.createBufferSource();
     source.buffer = buffer;
@@ -192,10 +190,7 @@ export class AudioManagerService implements OnDestroy {
     }
 
     source.start(0);
-
-    if (loop) {
-      this._activeSources.set(audioType, source);
-    }
+    this._activeSources.set(audioType, source);
   }
 
   public PlayLongMatch(matchLength: number): void {

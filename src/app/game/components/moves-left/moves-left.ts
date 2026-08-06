@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import {
   MOVES_REMAINING_COUNT_DANGER,
   MOVES_REMAINING_COUNT_PANIC,
@@ -12,21 +12,12 @@ import {
   styleUrl: './moves-left.scss',
 })
 export class MovesLeft {
-  moves = 0;
+  amount = input<number>(0);
 
-  get IsWarn(): boolean {
-    return this.moves === MOVES_REMAINING_COUNT_WARNING;
-  }
-  get IsDanger(): boolean {
-    return this.moves === MOVES_REMAINING_COUNT_DANGER;
-  }
-  get IsPanic(): boolean {
-    return this.moves === MOVES_REMAINING_COUNT_PANIC;
-  }
-
-  @Input() set amount(movesLeft: number) {
-    this.moves = movesLeft;
-  }
+  isWarn = computed(() => this.amount() === MOVES_REMAINING_COUNT_WARNING);
+  isDanger = computed(() => this.amount() === MOVES_REMAINING_COUNT_DANGER);
+  isPanic = computed(() => this.amount() === MOVES_REMAINING_COUNT_PANIC);
 }
 
 export { MovesLeft as MovesLeftComponent };
+

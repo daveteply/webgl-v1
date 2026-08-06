@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
+import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
+import { AmbientLight, Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 
 import { InteractionManagerService } from './interaction-manager';
 import { ObjectManagerService } from './object-manager';
@@ -12,6 +12,7 @@ import * as TWEEN from '@tweenjs/tween.js';
   providedIn: 'root',
 })
 export class SceneManagerService implements OnDestroy {
+  private ngZone = inject(NgZone);
   private objectManager = inject(ObjectManagerService);
   private interactionManager = inject(InteractionManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
@@ -29,7 +30,7 @@ export class SceneManagerService implements OnDestroy {
 
   constructor() {
     this._scene = new Scene();
-    this._scene.background = new Color(0xf0f0f0f);
+    this._scene.background = new Color(0x0f0f0f);
   }
 
   ngOnDestroy(): void {
@@ -41,6 +42,9 @@ export class SceneManagerService implements OnDestroy {
     const height = canvas.clientHeight || window.innerHeight || 150;
 
     // light
+    const ambientLight = new AmbientLight(0xffffff, 0.8);
+    this._scene.add(ambientLight);
+
     this._pointLight = new PointLight(0xffffff, 400);
     this._pointLight.position.z = 5;
     this._scene.add(this._pointLight);
@@ -65,7 +69,9 @@ export class SceneManagerService implements OnDestroy {
     this.postProcessingManager.InitPostProcessing(this._scene, this._camera, this._renderer, width, height);
 
     // start rendering frames
-    this.animate(1);
+    const initialNow = performance.now();
+    this._previousFrameRenderTime = initialNow * 0.001;
+    this.animate(initialNow);
   }
 
   public UpdateSize(pixelRatio: number): void {
@@ -96,20 +102,20 @@ export class SceneManagerService implements OnDestroy {
   }
 
   private animate(now: number): void {
-    now *= 0.001; // convert to seconds
-    const deltaTime = now - this._previousFrameRenderTime;
-    this._previousFrameRenderTime = now;
+    this.ngZone.runOutsideAngular(() => {
+      TWEEN.update(now);
 
-    TWEEN.update();
-    this.objectManager.UpdateStarField();
-    this.postProcessingManager.Composer.render(deltaTime);
+      const nowSec = now * 0.001;
+      const deltaTime = nowSec - this._previousFrameRenderTime;
+      this._previousFrameRenderTime = nowSec;
 
-    // if (this.shareManager.ScreenShotRequested) {
-    //   this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
-    // }
+      this.objectManager.UpdateStarField();
+      this.postProcessingManager.Composer.render(deltaTime);
+    });
 
     this._animateRequestId = requestAnimationFrame((now) => {
       this.animate(now);
     });
   }
 }
+

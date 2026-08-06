@@ -1,0 +1,31 @@
+#game-over {
+  font-size: x-large;
+
+  .text-center {
+    text-align: center;
+  }
+
+  .game-over-emoji {
+    text-align: center;
+    font-size: 3em;
+    line-height: 1.25em;
+  }
+
+  .progress {
+    opacity: 1;
+    transition: opacity 500ms;
+    &.fade-out {
+      opacity: 0;
+    }
+  }
+
+  .mat-mdc-outlined-button {
+    font-size: initial;
+    margin-bottom: 0.5em;
+  }
+
+  .mat-mdc-raised-button {
+    font-size: x-large;
+    margin-bottom: 0.5em;
+  }
+}

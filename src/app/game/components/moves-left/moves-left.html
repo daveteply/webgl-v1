@@ -1,11 +1,12 @@
 <div class="moves-remaining-container">
   <div
     class="move-count"
-    [class.warn]="IsWarn"
-    [class.danger]="IsDanger"
-    [class.panic]="IsPanic"
-    [class.zero]="moves === 0"
+    [class.warn]="isWarn()"
+    [class.danger]="isDanger()"
+    [class.panic]="isPanic()"
+    [class.zero]="amount() === 0"
   >
-    {{ moves }}
+    {{ amount() }}
   </div>
 </div>
+

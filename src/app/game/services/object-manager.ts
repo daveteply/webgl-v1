@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
 
-import { Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, PointLight, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
@@ -57,7 +57,7 @@ export class ObjectManagerService {
   // events
   public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
   public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
-  public LevelMaterialsUpdated: EventEmitter<void> = new EventEmitter();
+  public LevelMaterialsUpdated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this._stack = new Group();
@@ -146,7 +146,7 @@ export class ObjectManagerService {
       wheel.UpdateMaterials(this.materialManager.GameMaterials.wheelMaterials[i]);
     }
 
-    this.LevelMaterialsUpdated.next();
+    this.LevelMaterialsUpdated.next(true);
   }
 
   public SaveGameState(): Observable<void> {

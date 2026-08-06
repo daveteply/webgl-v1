@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 
-import { Tween } from '@tweenjs/tween.js';
+import { Tween, update as updateTween } from '@tweenjs/tween.js';
 
 import { StoreService } from '../../../../app-store/services/store.service';
 import { EmojiInfo } from '../../../../app-store/models/emoji-info';
@@ -15,6 +15,7 @@ interface boxParticle {
   limit?: number;
   color?: string;
   emoji?: string;
+  baseX?: number;
 }
 
 interface introRows {
@@ -83,7 +84,8 @@ export class DialogAnimationService implements OnDestroy {
   public Animate(): void {
     switch (this._animationType) {
       case DialogAnimationType.Intro:
-        // this.drawIntroDialogBoxes();
+        this.drawIntroDialogBoxes();
+        updateTween();
         break;
 
       case DialogAnimationType.Level:
@@ -116,22 +118,28 @@ export class DialogAnimationService implements OnDestroy {
       const delta = { x: 0.0 };
       const target = { x: 4.0 };
 
-      this._introTween = new Tween(delta)
+      this._introTween = new Tween(delta, true)
         .to(target, 900)
         .delay(1000)
         .repeat(Infinity)
         .onUpdate(() => {
-          for (let i = 0; i < this._introBoxRows.rows[targetRowIndex].length; i++) {
-            const box = this._introBoxRows.rows[targetRowIndex][i];
+          const row = this._introBoxRows.rows[targetRowIndex];
+          for (let i = 0; i < row.length; i++) {
+            const box = row[i];
+            const base = box.baseX ?? box.x;
             if (this._introAnimateRight) {
-              box.x += delta.x;
+              box.x = base + delta.x;
             } else {
-              box.x -= delta.x;
+              box.x = base - delta.x;
             }
-            this.drawIntroDialogBoxes();
           }
+          this.drawIntroDialogBoxes();
         })
         .onRepeat(() => {
+          const row = this._introBoxRows.rows[targetRowIndex];
+          for (let i = 0; i < row.length; i++) {
+            row[i].baseX = row[i].x;
+          }
           this._introAnimateRight = !this._introAnimateRight;
           if (this._introAnimateRight) {
             targetRowIndex = MathUtils.randInt(1, rowCount - 1);
@@ -149,9 +157,11 @@ export class DialogAnimationService implements OnDestroy {
 
     const row: boxParticle[] = [];
     for (let i = 0; i < boxesPerRow; i++) {
+      const x = i * (size + offset) + marginOffset;
       row.push({
         size,
-        x: i * (size + offset) + marginOffset,
+        x,
+        baseX: x,
         y,
         color: this.randomColor(),
       });

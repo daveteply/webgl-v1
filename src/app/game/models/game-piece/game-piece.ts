@@ -201,7 +201,7 @@ export class GamePiece extends Object3D {
 
     const delta = start ? { o: 0.0 } : { o: 1.0 };
     const target = start ? { o: 1.0 } : { o: 0.0 };
-    this._levelChangeTween = new Tween(delta)
+    this._levelChangeTween = new Tween(delta, true)
       .to(target, 2500)
       .delay(MathUtils.randInt(250, 1500))
       .onUpdate(() => {
@@ -229,7 +229,7 @@ export class GamePiece extends Object3D {
       const target = lock ? final : origin;
 
       // init tween
-      this._lockTween = new Tween(delta).to(target, 500).onUpdate(() => {
+      this._lockTween = new Tween(delta, true).to(target, 500).onUpdate(() => {
         this._mesh.scale.set(delta.x, delta.y, delta.z);
         this._pieceMaterials.forEach((m) => {
           if (m.useBasic) {
@@ -259,7 +259,7 @@ export class GamePiece extends Object3D {
     const target = select ? final : origin;
 
     // init tween
-    return new Tween(delta)
+    return new Tween(delta, true)
       .to(target, 250)
       .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {
@@ -285,7 +285,7 @@ export class GamePiece extends Object3D {
       o: 0.0,
     };
 
-    this._removeTween = new Tween(delta)
+    this._removeTween = new Tween(delta, true)
       .to(target, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
       .onUpdate(() => {
         this._mesh.rotation.x = delta.x;
@@ -331,7 +331,7 @@ export class GamePiece extends Object3D {
       this._matchKey = this._pieceMaterials[this._matchKeySequence[0]].matchKey;
 
       // tween
-      new Tween(delta)
+      new Tween(delta, true)
         .to(final, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
@@ -370,7 +370,7 @@ export class GamePiece extends Object3D {
       o: 1.0,
     };
 
-    this._additiveTween = new Tween(delta)
+    this._additiveTween = new Tween(delta, true)
       .to(target, 1200)
       .onUpdate(() => {
         this._mesh.scale.set(delta.o, delta.o, delta.o);

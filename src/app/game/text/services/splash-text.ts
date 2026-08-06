@@ -109,7 +109,7 @@ export class SplashText extends Object3D {
         break;
     }
 
-    this._introTween = new Tween(delta)
+    this._introTween = new Tween(delta, true)
       .to(target, 750)
       .easing(Easing.Elastic.Out)
       .onUpdate(() => {
@@ -122,7 +122,7 @@ export class SplashText extends Object3D {
   private initOutroTween(yOffset: number): void {
     const delta = { o: 1.0, z: 0.0, y: this._targetY + yOffset };
     const target = { o: 0.0, z: 5.0, y: 2.0 };
-    this._outroTween = new Tween(delta)
+    this._outroTween = new Tween(delta, true)
       .to(target, 1000)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {

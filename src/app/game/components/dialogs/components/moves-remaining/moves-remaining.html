@@ -1,1 +1,15 @@
-<p>moves-remaining works!</p>
+<div id="moves-tutorial">
+  <p class="up-finger">{{ indexFingerPointingUp }}</p>
+  <h1>Hint: Moves</h1>
+  <div mat-dialog-content>
+    @if (showIncrease) {
+      <p>Nice job!</p>
+      <p>Moves are earned with <b>faster</b> and <b>longer</b> matches</p>
+    } @else {
+      <p>Moves are limited; be strategic!</p>
+    }
+  </div>
+  <div mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>

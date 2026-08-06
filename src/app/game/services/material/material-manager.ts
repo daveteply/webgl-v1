@@ -64,7 +64,7 @@ export class MaterialManagerService {
       level,
       playableTextureCount,
       levelMaterialType,
-      this.textureManager.Textures
+      this.textureManager.Textures,
     );
 
     if (this.saveGame.IsRestoring) {
@@ -86,7 +86,7 @@ export class MaterialManagerService {
 
             // bump symbols and textures
             if (material.bumpTexture && material.colorStr) {
-              side.materialPhong.color.setHex(material.color?.getHex() || 0x0).convertLinearToSRGB();
+              side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
               side.materialPhong.bumpMap = material.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
@@ -129,7 +129,7 @@ export class MaterialManagerService {
 
             // bump symbols and textures
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
-              side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0).convertLinearToSRGB();
+              side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0);
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
@@ -155,7 +155,7 @@ export class MaterialManagerService {
     level: number,
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
-    textures: GameTexture[]
+    textures: GameTexture[],
   ): GamePieceMaterialData[] {
     const materials: GamePieceMaterialData[] = [];
 

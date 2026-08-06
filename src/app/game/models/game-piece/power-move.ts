@@ -48,7 +48,7 @@ export class PowerMove {
       const delta = { s: 0.1, o: 0.0 };
       const target = { s: 40.0, o: 0.8 };
 
-      this._appearTween = new Tween(delta)
+      this._appearTween = new Tween(delta, true)
         .to(target, 1500)
         .easing(Easing.Bounce.Out)
         .onUpdate(() => {
@@ -61,7 +61,7 @@ export class PowerMove {
         })
         .start();
 
-      this._spinTween = new Tween({})
+      this._spinTween = new Tween({}, true)
         .repeat(Infinity)
         .onUpdate(() => {
           this._mesh.rotateY(0.005);
@@ -70,7 +70,7 @@ export class PowerMove {
 
       const deltaB = { y: -0.05 };
       const targetB = { y: 0.05 };
-      this._bounceTween = new Tween(deltaB)
+      this._bounceTween = new Tween(deltaB, true)
         .to(targetB, 750)
         .repeat(Infinity)
         .easing(Easing.Quadratic.InOut)
@@ -85,7 +85,7 @@ export class PowerMove {
   public Remove(): void {
     const delta = { s: this._mesh.scale.x, o: 0.8 };
     const target = { s: 300.0, o: 0.0 };
-    new Tween(delta)
+    new Tween(delta, true)
       .to(target, 500)
       .easing(Easing.Sinusoidal.InOut)
       .onUpdate(() => {

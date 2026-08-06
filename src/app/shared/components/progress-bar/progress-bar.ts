@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { PercentPipe } from '@angular/common';
 
 @Component({
@@ -8,8 +8,9 @@ import { PercentPipe } from '@angular/common';
   styleUrl: './progress-bar.scss',
 })
 export class ProgressBar {
-  @Input() value!: number;
-  @Input() remaining?: number;
+  value = input<number>(0);
+  remaining = input<number>();
 }
 
 export { ProgressBar as ProgressBarComponent };
+
