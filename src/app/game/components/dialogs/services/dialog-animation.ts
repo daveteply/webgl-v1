@@ -123,23 +123,17 @@ export class DialogAnimationService implements OnDestroy {
         .delay(1000)
         .repeat(Infinity)
         .onUpdate(() => {
-          const row = this._introBoxRows.rows[targetRowIndex];
-          for (let i = 0; i < row.length; i++) {
-            const box = row[i];
-            const base = box.baseX ?? box.x;
+          for (let i = 0; i < this._introBoxRows.rows[targetRowIndex].length; i++) {
+            const box = this._introBoxRows.rows[targetRowIndex][i];
             if (this._introAnimateRight) {
-              box.x = base + delta.x;
+              box.x += delta.x;
             } else {
-              box.x = base - delta.x;
+              box.x -= delta.x;
             }
           }
           this.drawIntroDialogBoxes();
         })
         .onRepeat(() => {
-          const row = this._introBoxRows.rows[targetRowIndex];
-          for (let i = 0; i < row.length; i++) {
-            row[i].baseX = row[i].x;
-          }
           this._introAnimateRight = !this._introAnimateRight;
           if (this._introAnimateRight) {
             targetRowIndex = MathUtils.randInt(1, rowCount - 1);

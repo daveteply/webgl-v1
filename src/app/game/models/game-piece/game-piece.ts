@@ -329,6 +329,11 @@ export class GamePiece extends Object3D {
 
       // set match key
       this._matchKey = this._pieceMaterials[this._matchKeySequence[0]].matchKey;
+      if (this._pieceGeometryType === LevelGeometryType.Cylinder) {
+        const target = this._pieceMaterials[this._matchKeySequence[0]];
+        const targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+        this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+      }
 
       // tween
       new Tween(delta, true)

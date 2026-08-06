@@ -38,18 +38,19 @@ export class MaterialManagerService {
       wheelMaterials: new Array<WheelMaterial>(wheelCount),
     };
 
+    const maxMaterials = 8;
     for (let wheelInx = 0; wheelInx < wheelCount; wheelInx++) {
       // allocate piece material for next wheel
       this._gameMaterials.wheelMaterials[wheelInx] = { pieceMaterials: new Array<PieceMaterials>(pieceCount) };
       for (let pieceInx = 0; pieceInx < pieceCount; pieceInx++) {
         // allocate materials for each piece side
         this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx] = {
-          materials: new Array<PieceSideMaterial>(DEFAULT_PLAYABLE_TEXTURE_COUNT),
+          materials: new Array<PieceSideMaterial>(maxMaterials),
         };
-        for (let textureInx = 0; textureInx < DEFAULT_PLAYABLE_TEXTURE_COUNT; textureInx++) {
+        for (let textureInx = 0; textureInx < maxMaterials; textureInx++) {
           this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx].materials[textureInx] = {
             matchKey: 0,
-            materialPhong: new MeshPhongMaterial({ bumpScale: 0.03, transparent: true }),
+            materialPhong: new MeshPhongMaterial({ bumpScale: 0.05, transparent: true }),
             materialBasic: new MeshBasicMaterial({ transparent: true }),
             useBasic: false,
           };
@@ -81,22 +82,27 @@ export class MaterialManagerService {
             const side = piece.materials[i];
             const material = pieceMaterials[i];
 
-            // match key
-            side.matchKey = material?.matchKey;
+            if (material) {
+              // match key
+              side.matchKey = material.matchKey;
 
-            // bump symbols and textures
-            if (material.bumpTexture && material.colorStr) {
-              side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
-              side.materialPhong.bumpMap = material.bumpTexture.texture;
-              side.materialPhong.opacity = 0;
-              side.useBasic = false;
-            }
+              // bump symbols and textures
+              if (material.bumpTexture && material.colorStr) {
+                side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
+                side.materialPhong.bumpMap = material.bumpTexture.texture;
+                side.materialPhong.bumpScale = 0.05;
+                side.materialPhong.needsUpdate = true;
+                side.materialPhong.opacity = 0;
+                side.useBasic = false;
+              }
 
-            // emojis
-            if (material.texture && !material.colorStr) {
-              side.materialBasic.map = material.texture.texture;
-              side.materialBasic.opacity = 0;
-              side.useBasic = true;
+              // emojis
+              if (material.texture && !material.colorStr) {
+                side.materialBasic.map = material.texture.texture;
+                side.materialBasic.needsUpdate = true;
+                side.materialBasic.opacity = 0;
+                side.useBasic = true;
+              }
             }
           }
         }
@@ -131,6 +137,8 @@ export class MaterialManagerService {
             if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
               side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0);
               side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
+              side.materialPhong.bumpScale = 0.05;
+              side.materialPhong.needsUpdate = true;
               side.materialPhong.opacity = 0;
               side.useBasic = false;
             }
@@ -138,6 +146,7 @@ export class MaterialManagerService {
             // emojis
             if (restoreMaterial?.texture && !restoreMaterial.colorStr) {
               side.materialBasic.map = restoreMaterial.texture.texture;
+              side.materialBasic.needsUpdate = true;
               side.materialBasic.opacity = 0;
               side.useBasic = true;
             }
