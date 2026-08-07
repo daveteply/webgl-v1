@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
 
 import { GameMenu } from './game-menu';
 
@@ -9,6 +11,14 @@ describe('GameMenu', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GameMenu],
+      providers: [
+        {
+          provide: MatDialog,
+          useValue: {
+            open: () => ({ afterClosed: () => of(true) }),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GameMenu);

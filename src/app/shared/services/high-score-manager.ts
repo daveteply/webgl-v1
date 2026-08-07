@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { STORAGE_HIGH_SCORES } from '../../game/game-constants';
+import { StorageService } from './storage/storage.service';
 
 export interface HighScore {
   occurred: Date;
@@ -13,11 +14,11 @@ export interface HighScore {
   providedIn: 'root',
 })
 export class HighScoreManagerService {
+  private storageService = inject(StorageService);
+
   public UpdateHighScores(gameOverScore: number): void {
-    // Capacitor Preferences removed; using Web localStorage instead
-    const rawData = localStorage.getItem(STORAGE_HIGH_SCORES);
-    if (rawData) {
-      const scores: HighScore[] = JSON.parse(rawData);
+    const scores = this.storageService.getItem<HighScore[]>(STORAGE_HIGH_SCORES);
+    if (scores) {
       // clear highlights
       scores.forEach((s) => (s.highlight = false));
       // add new element
@@ -27,28 +28,28 @@ export class HighScoreManagerService {
       // store only 5 highest scores
       this.storeScores(scores.slice(0, 5));
     } else {
-      const scores: HighScore[] = [];
-      scores.push({ occurred: new Date(), score: gameOverScore, highlight: true });
-      this.storeScores(scores);
+      const newScores: HighScore[] = [];
+      newScores.push({ occurred: new Date(), score: gameOverScore, highlight: true });
+      this.storeScores(newScores);
     }
   }
 
   public GetHighScores(): Observable<HighScore[]> {
     return new Observable((observer) => {
-      // Capacitor Preferences removed; using Web localStorage instead
-      const rawData = localStorage.getItem(STORAGE_HIGH_SCORES);
-      if (rawData) {
-        observer.next(JSON.parse(rawData));
-        observer.complete();
-      } else {
-        observer.complete();
+      const scores = this.storageService.getItem<HighScore[]>(STORAGE_HIGH_SCORES);
+      if (scores) {
+        observer.next(scores);
       }
+      observer.complete();
     });
   }
 
+  public ClearHighScores(): void {
+    this.storageService.removeItem(STORAGE_HIGH_SCORES);
+  }
+
   private storeScores(scores: HighScore[]): void {
-    // Capacitor Preferences removed; using Web localStorage instead
-    localStorage.setItem(STORAGE_HIGH_SCORES, JSON.stringify(scores));
+    this.storageService.setItem(STORAGE_HIGH_SCORES, scores);
   }
 }
 

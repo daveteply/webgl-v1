@@ -1,7 +1,12 @@
 import { Injectable, OnDestroy, inject, isDevMode } from '@angular/core';
-import { AudioType, AUDIO_LIST } from './audio-info';
-import { MINIMUM_MATCH_COUNT } from '../../../game/game-constants';
+import { AudioType, AUDIO_LIST, BACKGROUND_MUSIC_AUDIO_TYPES } from './audio-info';
+import {
+  MINIMUM_MATCH_COUNT,
+  STORAGE_SETTINGS_GAME_VOLUME,
+  STORAGE_SETTINGS_MUSIC_VOLUME,
+} from '../../../game/game-constants';
 import { AppVisibilityService } from '../app-visibility';
+import { StorageService } from '../storage/storage.service';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -9,6 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class AudioManagerService implements OnDestroy {
   private appVisibility = inject(AppVisibilityService);
+  private storageService = inject(StorageService);
 
   private readonly NOTE_MIN = 48;
   private readonly NOTE_MAX = 71;
@@ -17,9 +23,15 @@ export class AudioManagerService implements OnDestroy {
   private _currentLevelCompleteInx = 0;
   private _visiblySubscription!: Subscription;
 
-  // Native Web Audio API Context & Master Gain
+  // Native Web Audio API Context & Gain Nodes
   private _audioCtx?: AudioContext;
   private _masterGain?: GainNode;
+  private _gameGain?: GainNode;
+  private _musicGain?: GainNode;
+
+  // Volume state (default 50% = 0.5 if not found in storage)
+  private _gameVolume: number;
+  private _musicVolume: number;
 
   // Cached decoded AudioBuffers for instant playback
   private _bufferCache = new Map<AudioType, AudioBuffer>();
@@ -28,6 +40,12 @@ export class AudioManagerService implements OnDestroy {
   private _activeSources = new Map<AudioType, AudioBufferSourceNode>();
 
   constructor() {
+    const savedGameVol = this.storageService.getItem<number>(STORAGE_SETTINGS_GAME_VOLUME);
+    this._gameVolume = savedGameVol !== null && savedGameVol !== undefined ? savedGameVol : 0.5;
+
+    const savedMusicVol = this.storageService.getItem<number>(STORAGE_SETTINGS_MUSIC_VOLUME);
+    this._musicVolume = savedMusicVol !== null && savedMusicVol !== undefined ? savedMusicVol : 0.5;
+
     this._visiblySubscription = this.appVisibility.VisibilityChanged.subscribe((isVisible) => {
       if (this._masterGain && this._audioCtx) {
         this._masterGain.gain.setValueAtTime(isVisible ? 1 : 0, this._audioCtx.currentTime);
@@ -35,13 +53,47 @@ export class AudioManagerService implements OnDestroy {
     });
   }
 
+  public GetGameVolume(): number {
+    return this._gameVolume;
+  }
+
+  public SetGameVolume(vol: number): void {
+    this._gameVolume = Math.max(0, Math.min(1, vol));
+    this.storageService.setItem(STORAGE_SETTINGS_GAME_VOLUME, this._gameVolume);
+    if (this._gameGain && this._audioCtx) {
+      this._gameGain.gain.setValueAtTime(this._gameVolume, this._audioCtx.currentTime);
+    }
+  }
+
+  public GetMusicVolume(): number {
+    return this._musicVolume;
+  }
+
+  public SetMusicVolume(vol: number): void {
+    this._musicVolume = Math.max(0, Math.min(1, vol));
+    this.storageService.setItem(STORAGE_SETTINGS_MUSIC_VOLUME, this._musicVolume);
+    if (this._musicGain && this._audioCtx) {
+      this._musicGain.gain.setValueAtTime(this._musicVolume, this._audioCtx.currentTime);
+    }
+  }
+
   private initAudioContext(): AudioContext | undefined {
     if (!this._audioCtx) {
       const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioCtxClass) {
         this._audioCtx = new AudioCtxClass();
+
         this._masterGain = this._audioCtx.createGain();
         this._masterGain.connect(this._audioCtx.destination);
+
+        this._gameGain = this._audioCtx.createGain();
+        this._gameGain.gain.setValueAtTime(this._gameVolume, this._audioCtx.currentTime);
+        this._gameGain.connect(this._masterGain);
+
+        this._musicGain = this._audioCtx.createGain();
+        this._musicGain.gain.setValueAtTime(this._musicVolume, this._audioCtx.currentTime);
+        this._musicGain.connect(this._masterGain);
+
         this.attachUserGestureResume();
       }
     }
@@ -186,7 +238,12 @@ export class AudioManagerService implements OnDestroy {
     source.playbackRate.value = rate;
     source.loop = loop;
 
-    if (this._masterGain) {
+    const isMusic = BACKGROUND_MUSIC_AUDIO_TYPES.has(audioType);
+    const targetGain = isMusic ? this._musicGain : this._gameGain;
+
+    if (targetGain) {
+      source.connect(targetGain);
+    } else if (this._masterGain) {
       source.connect(this._masterGain);
     } else {
       source.connect(ctx.destination);

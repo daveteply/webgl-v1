@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { StorageService } from '../../shared/services/storage/storage.service';
 
 export interface HintResult {
   value: string | null;
@@ -8,12 +9,14 @@ export interface HintResult {
   providedIn: 'root',
 })
 export class HintsManagerService {
+  private storageService = inject(StorageService);
+
   public SetHintViewed(target: string): void {
-    localStorage.setItem(target, 'true');
+    this.storageService.setItem(target, 'true');
   }
 
   public GetHintViewed(target: string): Promise<HintResult> {
-    const value = localStorage.getItem(target);
+    const value = this.storageService.getItem<string>(target);
     return Promise.resolve({ value });
   }
 }
