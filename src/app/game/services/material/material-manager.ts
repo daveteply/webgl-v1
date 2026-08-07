@@ -8,7 +8,7 @@ import { StoreService } from '../../../app-store/services/store.service';
 import { SaveGameService } from '../save-game/save-game';
 
 import { GameMaterials, PieceMaterials, PieceSideMaterial, WheelMaterial } from './material-models';
-import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
+import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { LevelMaterialType } from '../../level-material-type';
 import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
 import { PowerMoveType } from '../../models/power-move-type';

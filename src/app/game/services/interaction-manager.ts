@@ -11,7 +11,7 @@ import {
 import { GameWheel } from '../models/game-wheel';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { PowerMoveType } from '../models/power-move-type';
-import { AudioType } from '../../shared/services/audio/audio-info';
+import { AudioType } from '../../shared/services/audio/audio-data';
 
 import { GameEngineService } from './game-engine';
 import { ObjectManagerService } from './object-manager';

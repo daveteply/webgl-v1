@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, inject, isDevMode } from '@angular/core';
-import { AudioType, AUDIO_LIST, BACKGROUND_MUSIC_AUDIO_TYPES } from './audio-info';
+import { AudioType, AUDIO_LIST, BACKGROUND_MUSIC_AUDIO_TYPES } from './audio-data';
 import {
   MINIMUM_MATCH_COUNT,
   STORAGE_SETTINGS_GAME_VOLUME,

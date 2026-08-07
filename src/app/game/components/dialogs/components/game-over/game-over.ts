@@ -7,7 +7,7 @@ import { DestroyRef } from '@angular/core';
 import { MathUtils } from 'three';
 
 import { GAME_OVER_EMOJI } from '../../../../game-constants';
-import { GameOverData } from './game-over-data';
+import { GameOverData } from './game-over-type';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../../../shared/components/progress-bar/progress-bar';

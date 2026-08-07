@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 
 import { STORAGE_SAVE_STATE } from '../../game-constants';
 import { GamePiece } from '../../models/game-piece/game-piece';
-import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-data';
+import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { GameWheel } from '../../models/game-wheel';
-import { SaveGameData, SaveGameScore, SavePieceData, SaveWheelData } from './save-game-data';
+import { SaveGameData, SaveGameScore, SavePieceData, SaveWheelData } from './save-game-types';
 import { GameMaterials } from '../material/material-models';
 import { StorageService } from '../../../shared/services/storage/storage.service';
 

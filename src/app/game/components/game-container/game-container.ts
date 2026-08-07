@@ -30,7 +30,7 @@ import { ShareContentComponent } from '../share-content/share-content';
 import { GameMenu } from '../game-menu/game-menu';
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
 
-import { GameOverData } from '../dialogs/components/game-over/game-over-data';
+import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import {
   STORAGE_HINT_HOW_TO_PLAY,
   STORAGE_HINT_MOVES_DECREASE,

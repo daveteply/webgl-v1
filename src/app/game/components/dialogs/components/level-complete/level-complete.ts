@@ -16,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 
-import { AudioType } from '../../../../../shared/services/audio/audio-info';
+import { AudioType } from '../../../../../shared/services/audio/audio-data';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { DialogNotifyService } from '../../services/dialog-notify';

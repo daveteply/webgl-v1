@@ -9,9 +9,9 @@ import { ScoringManagerService } from './scoring-manager';
 import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
-import { AudioType } from '../../shared/services/audio/audio-info';
+import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
-import { SaveGameScore } from './save-game/save-game-data';
+import { SaveGameScore } from './save-game/save-game-types';
 
 @Injectable({
   providedIn: 'root',

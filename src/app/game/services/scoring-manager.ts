@@ -12,7 +12,7 @@ import {
 import { LevelMaterialType } from '../level-material-type';
 import { LevelStats } from '../models/level-stats';
 import { GameEngineService } from './game-engine';
-import { SaveGameScore } from './save-game/save-game-data';
+import { SaveGameScore } from './save-game/save-game-types';
 import { TextManagerService } from '../text/services/text-manager';
 
 @Injectable({
