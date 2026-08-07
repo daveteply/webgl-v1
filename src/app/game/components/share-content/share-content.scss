@@ -1,7 +1,7 @@
 #share-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
 
   .mat-mdc-fab {
     border-radius: 0.5em;

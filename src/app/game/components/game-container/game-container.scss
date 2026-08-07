@@ -79,17 +79,36 @@
 
   .game-scoring {
     position: absolute;
-    top: 0;
+    top: 0.5em;
     left: 0;
     right: 0;
-    height: 1.5em;
+    margin: 0 0.75em;
+    height: 1.8em;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5em;
     font-size: x-large;
-    padding: 0.5em 0.5em 0 0.5em;
+    padding: 0.4em 0.85em;
     z-index: 2;
     pointer-events: none;
+
+    // Glassmorphic Panel Styling
+    background: linear-gradient(
+      135deg,
+      rgba(67, 24, 114, 0.55) 0%,
+      rgba(109, 40, 217, 0.35) 50%,
+      rgba(147, 51, 234, 0.25) 100%
+    );
+    border-radius: 16px;
+    box-shadow:
+      0 12px 30px 0 rgba(46, 16, 101, 0.4),
+      0 0 20px 0 rgba(168, 85, 247, 0.2),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(216, 180, 254, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.55);
 
     > * {
       pointer-events: auto;
@@ -99,37 +118,66 @@
     &.show {
       opacity: 1;
     }
-    .level-info {
-      display: flex;
-      align-items: center;
-    }
+
     .game-logo {
-      height: 100%;
-      width: 5em;
+      flex: 1 1 auto;
+      height: 3em;
       background-image: url('/assets/rikkle-logo-2026.webp');
-      background-position: center center;
+      background-position: left center;
       background-repeat: no-repeat;
-      background-size: cover;
+      background-size: contain;
       filter: drop-shadow(0 0 0.25em rgba(255, 255, 255, 0.4));
     }
+
     .game-score {
+      flex: 0 0 auto;
       color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .moves-remaining {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      margin: 0 0.25em;
+    }
+
+    .level-info {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
     }
   }
 
-  .level-progress {
+  .game-footer {
     position: absolute;
-    bottom: 0;
+    bottom: 0.5em;
     left: 0;
     right: 0;
+    margin: 0 0.75em;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    color: #ffffff;
-    padding: 0.25em;
-    margin: 0 2.5em 0.5em 2.5em;
-    font-size: x-large;
+    padding: 0.35em 0.6em;
     z-index: 2;
     pointer-events: none;
+
+    // Glassmorphic Panel Styling
+    background: linear-gradient(
+      135deg,
+      rgba(67, 24, 114, 0.55) 0%,
+      rgba(109, 40, 217, 0.35) 50%,
+      rgba(147, 51, 234, 0.25) 100%
+    );
+    border-radius: 16px;
+    box-shadow:
+      0 12px 30px 0 rgba(46, 16, 101, 0.4),
+      0 0 20px 0 rgba(168, 85, 247, 0.2),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(216, 180, 254, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.55);
 
     > * {
       pointer-events: auto;
@@ -139,8 +187,19 @@
     &.show {
       opacity: 1;
     }
-    .level-progress--percent {
-      padding-right: 0.5em;
+
+    .level-progress {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+      padding: 0.25em;
+      margin: 0 0.75em;
+      font-size: x-large;
+
+      .level-progress--percent {
+        padding-right: 0.5em;
+      }
     }
   }
 }
@@ -157,6 +216,23 @@
   }
 }
 
+// Sweet-spot gap reduction for tall, narrow aspect ratios (iPhone XR, iPhone 12 Pro, Samsung S20)
+@media (max-aspect-ratio: 3/4) {
+  .game-layout {
+    .game-scoring {
+      top: calc((100vh - (100vw / 0.75)) * 0.28);
+    }
+
+    .game-footer {
+      bottom: calc((100vh - (100vw / 0.75)) * 0.28);
+    }
+  }
+
+  .copyright {
+    bottom: calc((100vh - (100vw / 0.75)) * 0.28);
+  }
+}
+
 // safari overrides to show app within safe area
 @supports (padding: max(0px)) {
   .game-layout {
@@ -166,7 +242,7 @@
       padding-top: max(0.5em, env(safe-area-inset-top));
     }
 
-    .level-progress {
+    .game-footer {
       padding-bottom: max(0.5em, env(safe-area-inset-bottom));
     }
   }

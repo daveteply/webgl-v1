@@ -22,12 +22,14 @@
   <div class="game">
     <canvas class="game-canvas" #gameCanvas></canvas>
   </div>
-  <div class="level-progress" [class.show]="showScoreProgress()">
-    <div class="level-progress--percent">{{ scoringManager.LevelProgress | number: '1.0-0' }}%</div>
-    <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
-    </wgl-progress-bar>
+  <div class="game-footer" [class.show]="showScoreProgress()">
+    <wgl-share-content></wgl-share-content>
+    <div class="level-progress">
+      <div class="level-progress--percent">{{ scoringManager.LevelProgress | number: '1.0-0' }}%</div>
+      <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
+      </wgl-progress-bar>
+    </div>
+    <wgl-game-menu></wgl-game-menu>
   </div>
   <div class="copyright" [class.hide]="showScoreProgress()">&copy; {{ copyrightYear }} David Teply</div>
-  <wgl-share-content></wgl-share-content>
-  <wgl-game-menu></wgl-game-menu>
 </div>
