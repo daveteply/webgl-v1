@@ -17,12 +17,16 @@ export class SplashText extends Object3D {
   private _font: Font;
   private _text: string;
 
+  private _colorCycle = false;
+  private _hue = Math.random();
+
   private readonly _targetY: number = 3.0;
 
-  constructor(text: string, font: Font, yOffset: number, color?: number) {
+  constructor(text: string, font: Font, yOffset: number, color?: number, colorCycle = false) {
     super();
     this._text = text;
     this._font = font;
+    this._colorCycle = colorCycle;
 
     // geometry
     this._textGeometry = new TextGeometry(this._text, {
@@ -128,6 +132,9 @@ export class SplashText extends Object3D {
       .to(target, 750)
       .easing(Easing.Elastic.Out)
       .onUpdate(() => {
+        if (this._colorCycle) {
+          this.updateColorCycle();
+        }
         this._materials.forEach((m) => (m.opacity = delta.o));
         this._mesh.position.x = delta.x;
         this._mesh.position.y = delta.y;
@@ -141,9 +148,22 @@ export class SplashText extends Object3D {
       .to(target, 1000)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {
+        if (this._colorCycle) {
+          this.updateColorCycle();
+        }
         this._materials.forEach((m) => (m.opacity = delta.o));
         this._mesh.position.z = delta.z;
         this._mesh.position.y = delta.y;
       });
+  }
+
+  private updateColorCycle(): void {
+    this._hue = (this._hue + 0.008) % 1.0;
+    const frontMat = this._materials[0];
+    const sideMat = this._materials[1];
+    if (frontMat && sideMat) {
+      frontMat.color.setHSL(this._hue, 1.0, 0.5);
+      sideMat.color.copy(frontMat.color).multiplyScalar(0.45);
+    }
   }
 }

@@ -95,58 +95,22 @@ export class PowerMove {
       bevelThickness: 0.04,
     };
 
-    switch (moveType) {
-      case PowerMoveType.HorizontalRight: {
-        const shape = PowerMove.createArrowShape('right');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      case PowerMoveType.HorizontalLeft: {
-        const shape = PowerMove.createArrowShape('left');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      case PowerMoveType.HorizontalMix: {
-        const shape = PowerMove.createArrowShape('horizontal-mix');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      case PowerMoveType.VerticalUp: {
-        const shape = PowerMove.createArrowShape('up');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      case PowerMoveType.VerticalDown: {
-        const shape = PowerMove.createArrowShape('down');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      case PowerMoveType.VerticalMix: {
-        const shape = PowerMove.createArrowShape('vertical-mix');
-        geo = new ExtrudeGeometry(shape, extrudeSettings);
-        geo.center();
-        break;
-      }
-      default: {
-        geo = new CylinderGeometry(0.5, 0.5, 0.6, 16);
-        break;
-      }
+    if (moveType === PowerMoveType.Additive) {
+      geo = new CylinderGeometry(0.5, 0.5, 0.6, 16);
+    } else {
+      const shapes = PowerMove.createArrowShape(moveType);
+      geo = new ExtrudeGeometry(shapes, extrudeSettings);
+      geo.center();
     }
 
     this._geometryCache.set(moveType, geo);
     return geo;
   }
 
-  private static createArrowShape(type: 'right' | 'left' | 'horizontal-mix' | 'up' | 'down' | 'vertical-mix'): Shape {
-    const shape = new Shape();
-
+  private static createArrowShape(type: PowerMoveType): Shape | Shape[] {
     switch (type) {
-      case 'right':
+      case PowerMoveType.HorizontalRight: {
+        const shape = new Shape();
         shape.moveTo(-0.5, -0.2);
         shape.lineTo(0.0, -0.2);
         shape.lineTo(0.0, -0.45);
@@ -155,9 +119,11 @@ export class PowerMove {
         shape.lineTo(0.0, 0.2);
         shape.lineTo(-0.5, 0.2);
         shape.closePath();
-        break;
+        return shape;
+      }
 
-      case 'left':
+      case PowerMoveType.HorizontalLeft: {
+        const shape = new Shape();
         shape.moveTo(0.5, -0.2);
         shape.lineTo(0.0, -0.2);
         shape.lineTo(0.0, -0.45);
@@ -166,23 +132,36 @@ export class PowerMove {
         shape.lineTo(0.0, 0.2);
         shape.lineTo(0.5, 0.2);
         shape.closePath();
-        break;
+        return shape;
+      }
 
-      case 'horizontal-mix':
-        shape.moveTo(-0.55, 0.0);
-        shape.lineTo(-0.15, -0.45);
-        shape.lineTo(-0.15, -0.2);
-        shape.lineTo(0.15, -0.2);
-        shape.lineTo(0.15, -0.45);
-        shape.lineTo(0.55, 0.0);
-        shape.lineTo(0.15, 0.45);
-        shape.lineTo(0.15, 0.2);
-        shape.lineTo(-0.15, 0.2);
-        shape.lineTo(-0.15, 0.45);
-        shape.closePath();
-        break;
+      case PowerMoveType.HorizontalMix: {
+        // Two long skinny horizontal arrows (one above the other: RIGHT on top, LEFT on bottom)
+        const topRightArrow = new Shape();
+        topRightArrow.moveTo(0.42, 0.14);
+        topRightArrow.lineTo(0.18, 0.28);
+        topRightArrow.lineTo(0.18, 0.19);
+        topRightArrow.lineTo(-0.42, 0.19);
+        topRightArrow.lineTo(-0.42, 0.09);
+        topRightArrow.lineTo(0.18, 0.09);
+        topRightArrow.lineTo(0.18, 0.0);
+        topRightArrow.closePath();
 
-      case 'up':
+        const bottomLeftArrow = new Shape();
+        bottomLeftArrow.moveTo(-0.42, -0.14);
+        bottomLeftArrow.lineTo(-0.18, -0.28);
+        bottomLeftArrow.lineTo(-0.18, -0.19);
+        bottomLeftArrow.lineTo(0.42, -0.19);
+        bottomLeftArrow.lineTo(0.42, -0.09);
+        bottomLeftArrow.lineTo(-0.18, -0.09);
+        bottomLeftArrow.lineTo(-0.18, 0.0);
+        bottomLeftArrow.closePath();
+
+        return [topRightArrow, bottomLeftArrow];
+      }
+
+      case PowerMoveType.VerticalUp: {
+        const shape = new Shape();
         shape.moveTo(0.0, 0.55);
         shape.lineTo(-0.45, 0.0);
         shape.lineTo(-0.2, 0.0);
@@ -191,9 +170,11 @@ export class PowerMove {
         shape.lineTo(0.2, 0.0);
         shape.lineTo(0.45, 0.0);
         shape.closePath();
-        break;
+        return shape;
+      }
 
-      case 'down':
+      case PowerMoveType.VerticalDown: {
+        const shape = new Shape();
         shape.moveTo(0.0, -0.55);
         shape.lineTo(-0.45, 0.0);
         shape.lineTo(-0.2, 0.0);
@@ -202,24 +183,40 @@ export class PowerMove {
         shape.lineTo(0.2, 0.0);
         shape.lineTo(0.45, 0.0);
         shape.closePath();
-        break;
+        return shape;
+      }
 
-      case 'vertical-mix':
-        shape.moveTo(0.0, 0.55);
-        shape.lineTo(0.45, 0.15);
-        shape.lineTo(0.2, 0.15);
-        shape.lineTo(0.2, -0.15);
-        shape.lineTo(0.45, -0.15);
-        shape.lineTo(0.0, -0.55);
-        shape.lineTo(-0.45, -0.15);
-        shape.lineTo(-0.2, -0.15);
-        shape.lineTo(-0.2, 0.15);
-        shape.lineTo(-0.45, 0.15);
-        shape.closePath();
-        break;
+      case PowerMoveType.VerticalMix: {
+        // Two long skinny vertical arrows (side-by-side: UP on left, DOWN on right)
+        const leftUpArrow = new Shape();
+        leftUpArrow.moveTo(-0.14, 0.42);
+        leftUpArrow.lineTo(-0.28, 0.18);
+        leftUpArrow.lineTo(-0.19, 0.18);
+        leftUpArrow.lineTo(-0.19, -0.42);
+        leftUpArrow.lineTo(-0.09, -0.42);
+        leftUpArrow.lineTo(-0.09, 0.18);
+        leftUpArrow.lineTo(0.0, 0.18);
+        leftUpArrow.closePath();
+
+        const rightDownArrow = new Shape();
+        rightDownArrow.moveTo(0.14, -0.42);
+        rightDownArrow.lineTo(0.28, -0.18);
+        rightDownArrow.lineTo(0.19, -0.18);
+        rightDownArrow.lineTo(0.19, 0.42);
+        rightDownArrow.lineTo(0.09, 0.42);
+        rightDownArrow.lineTo(0.09, -0.18);
+        rightDownArrow.lineTo(0.0, -0.18);
+        rightDownArrow.closePath();
+
+        return [leftUpArrow, rightDownArrow];
+      }
+
+      default: {
+        const shape = new Shape();
+        shape.absarc(0, 0, 0.4, 0, Math.PI * 2, false);
+        return shape;
+      }
     }
-
-    return shape;
   }
 
   public AnimateIntro(): Observable<void> {

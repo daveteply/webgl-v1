@@ -51,15 +51,16 @@ export class TextManagerService {
     this._scene.add(this._textGroup);
   }
 
-  public ShowText(message: string[], color?: number): void {
+  public ShowText(message: string[], color?: number, colorCycleFirstLine = false): void {
     if (!this._changaRegular) {
       return;
     }
 
     if (message?.length) {
       let yOffset = 0;
-      message.forEach((msg) => {
-        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, color));
+      message.forEach((msg, index) => {
+        const cycle = colorCycleFirstLine && index === 0;
+        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, color, cycle));
         yOffset -= 0.75;
       });
     }

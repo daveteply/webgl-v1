@@ -246,7 +246,7 @@ export class InteractionManagerService {
       this.objectManager.LevelCompleted.next(true);
       this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
     } else {
-      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length);
+      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, targetGamePiece.PowerMoveType);
       this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
       if (targetGamePiece.PowerMoveType === PowerMoveType.Additive) {
         // additive power move

@@ -11,6 +11,7 @@ import {
 } from '../game-constants';
 import { LevelMaterialType } from '../level-material-type';
 import { LevelStats } from '../models/level-stats';
+import { PowerMoveType, PowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';
 import { SaveGameScore } from './save-game/save-game-types';
 import { TextManagerService } from '../text/services/text-manager';
@@ -148,14 +149,16 @@ export class ScoringManagerService {
     this.MovesChange.next(false);
   }
 
-  public UpdatePowerMoveBonus(additionalMoveCount: number): void {
+  public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType): void {
     let usePowerMoveBonus = this.level() * POWER_MOVE_USE_SCORE_MULTIPLIER;
     if (additionalMoveCount) {
       usePowerMoveBonus *= additionalMoveCount + 1;
     }
     this.score.update((s) => s + usePowerMoveBonus);
-    const multiMove = additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
-    this.textTextManager.ShowText([`${multiMove}`, `+${usePowerMoveBonus} Points`], this.textColor);
+
+    const info = PowerMoveLabel.find((p) => p.type === moveType);
+    const label = `${info?.label}!` || (additionalMoveCount ? 'Multi-Power!' : 'Power Move!');
+    this.textTextManager.ShowText([`${label}`, `+${usePowerMoveBonus} Points`], this.textColor, true);
   }
 
   public RestartGame(): void {

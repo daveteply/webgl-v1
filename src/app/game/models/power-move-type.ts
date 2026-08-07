@@ -21,5 +21,5 @@ export const PowerMoveLabel: PowerMoveInfo[] = [
   { type: PowerMoveType.VerticalUp, label: 'Roll up' },
   { type: PowerMoveType.VerticalDown, label: 'Roll down' },
   { type: PowerMoveType.VerticalMix, label: 'Roll mix' },
-  { type: PowerMoveType.Additive, label: 'Restore' },
+  { type: PowerMoveType.Additive, label: 'Returned' },
 ];
