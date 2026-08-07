@@ -206,7 +206,7 @@ export class GameEngineService {
 
   private matchAbove(gamePiece: GamePiece): GamePiece | undefined {
     const parentWheel = gamePiece.parent as GameWheel;
-    if (!parentWheel.Above) {
+    if (!parentWheel?.Above) {
       return undefined;
     }
 
@@ -222,7 +222,7 @@ export class GameEngineService {
 
   private matchBelow(gamePiece: GamePiece): GamePiece | undefined {
     const parentWheel = gamePiece.parent as GameWheel;
-    if (!parentWheel.Below) {
+    if (!parentWheel?.Below) {
       return undefined;
     }
 
