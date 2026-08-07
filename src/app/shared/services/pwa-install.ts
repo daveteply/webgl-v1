@@ -17,10 +17,10 @@ export class PwaInstallService {
   private checkStandalone(): void {
     if (typeof window !== 'undefined') {
       const isStandaloneMode =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        (navigator as any).standalone === true ||
-        document.referrer.includes('android-app://');
-      this.isStandalone.set(isStandaloneMode);
+        (typeof window.matchMedia === 'function' && window.matchMedia('(display-mode: standalone)').matches) ||
+        (navigator as any)?.standalone === true ||
+        (document.referrer && document.referrer.includes('android-app://'));
+      this.isStandalone.set(!!isStandaloneMode);
     }
   }
 

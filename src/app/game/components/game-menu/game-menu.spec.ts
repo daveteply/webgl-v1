@@ -31,8 +31,7 @@ describe('GameMenu', () => {
   });
 
   it('should open install pwa dialog when InstallAppClick is called', () => {
-    const dialog = TestBed.inject(MatDialog);
-    const openSpy = vi.spyOn(dialog, 'open');
+    const openSpy = vi.spyOn((component as any).dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as any);
     component.InstallAppClick();
     expect(openSpy).toHaveBeenCalled();
   });
