@@ -311,10 +311,21 @@ export class TextureManagerService {
   private renderTest(canvasContext: CanvasRenderingContext2D) {
     if (canvasContext) {
       const imgData = canvasContext.getImageData(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
-      // Note: this is checking every r, g, b, a value
-      //  of every pixel every time.  Someday this should be
-      //  a diagonal line test.
-      if (imgData.data.every((d) => d === 255)) {
+      const data = imgData.data;
+      const width = CANVAS_TEXTURE_SCALE;
+      let isBlank = true;
+
+      // Diagonal line test sampling pixels along (i, i)
+      const step = 4;
+      for (let i = 0; i < width; i += step) {
+        const offset = (i * width + i) * 4;
+        if (data[offset] !== 255 || data[offset + 1] !== 255 || data[offset + 2] !== 255) {
+          isBlank = false;
+          break;
+        }
+      }
+
+      if (isBlank) {
         const targetScale = CANVAS_TEXTURE_SCALE * 0.2;
         const targetStart = CANVAS_TEXTURE_SCALE / 2 - targetScale / 2;
         if (isDevMode()) {

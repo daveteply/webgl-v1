@@ -26,5 +26,5 @@
       }
     }
   },
-  "postCreateCommand": "npm install"
+  "postCreateCommand": "npm install && npx playwright install"
 }

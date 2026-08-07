@@ -48,35 +48,49 @@ export class StarField extends Object3D {
         transparent: true,
       });
 
-      this._points = new Points(this._geometry, this._material);
-      this.add(this._points);
+      const particleCount = 900;
+      const positions = new Float32Array(particleCount * 3);
 
-      for (let i = 0; i < 900; i++) {
-        this._particles.push({
+      for (let i = 0; i < particleCount; i++) {
+        const p: Particle = {
           position: new Vector3(
             MathUtils.randFloat(-10.0, 10.0),
             MathUtils.randFloat(-15.0, 15.0),
             MathUtils.randFloat(-8.0, 8.0),
           ),
           velocity: MathUtils.randFloat(0.005, 0.03),
-        });
+        };
+        this._particles.push(p);
+
+        const idx = i * 3;
+        positions[idx] = p.position.x;
+        positions[idx + 1] = p.position.y;
+        positions[idx + 2] = p.position.z;
       }
+
+      this._geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+      this._points = new Points(this._geometry, this._material);
+      this.add(this._points);
     });
   }
 
   public UpdateParticles(): void {
-    // update position
-    this._particles.forEach((p) => {
+    const posAttr = this._geometry.getAttribute('position') as Float32BufferAttribute;
+    if (!posAttr) return;
+
+    const array = posAttr.array as Float32Array;
+
+    // update position in-place without creating garbage
+    for (let i = 0; i < this._particles.length; i++) {
+      const p = this._particles[i];
       p.position.z += p.velocity;
       if (p.position.z >= this._zLimit) {
         p.position.z = -8;
       }
-    });
+      array[i * 3 + 2] = p.position.z;
+    }
 
-    // update buffer geometry
-    const positions = this._particles.flatMap((p) => [p.position.x, p.position.y, p.position.z]);
-    this._geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    this._geometry.attributes['position'].needsUpdate = true;
+    posAttr.needsUpdate = true;
   }
 
   public UpdateColor(starColor: number): void {

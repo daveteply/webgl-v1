@@ -34,6 +34,8 @@ export class MaterialManagerService {
   }
 
   public InitMaterials(wheelCount: number, pieceCount: number): void {
+    this.DisposeMaterials();
+
     this._gameMaterials = {
       wheelMaterials: new Array<WheelMaterial>(wheelCount),
     };
@@ -54,6 +56,18 @@ export class MaterialManagerService {
             materialBasic: new MeshBasicMaterial({ transparent: true }),
             useBasic: false,
           };
+        }
+      }
+    }
+  }
+
+  public DisposeMaterials(): void {
+    if (!this._gameMaterials?.wheelMaterials) return;
+    for (const wheel of this._gameMaterials.wheelMaterials) {
+      for (const piece of wheel.pieceMaterials) {
+        for (const side of piece.materials) {
+          side.materialPhong?.dispose();
+          side.materialBasic?.dispose();
         }
       }
     }
