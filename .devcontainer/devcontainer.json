@@ -15,7 +15,9 @@
         "angular.ng-template",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "streetsidesoftware.code-spell-checker",
+        "github.vscode-github-actions"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true,

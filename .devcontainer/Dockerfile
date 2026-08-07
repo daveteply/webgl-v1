@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/typescript-node:22-bookworm
 
-# Install global Angular CLI
-RUN npm install -g @angular/cli@latest
+# Install latest npm & global Angular CLI
+RUN npm install -g npm@latest @angular/cli@latest
 
 # Install system dependencies required by Playwright headless browsers
 RUN apt-get update && apt-get install -y \
