@@ -409,13 +409,13 @@ export class GamePiece extends Object3D {
 
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
-  public PowerMoveAdd(moveType: PowerMoveType, texture: Texture, color?: number): void {
+  public PowerMoveAdd(moveType: PowerMoveType, color?: number): void {
     // prevent interaction with power move until animation is complete
     this._isRemoved = true;
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
-    this._powerMove = new PowerMove(texture, color);
+    this._powerMove = new PowerMove(moveType, color);
     this.add(this._powerMove.PowerMoveMesh);
     this._powerMove
       .AnimateIntro()

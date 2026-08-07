@@ -250,12 +250,7 @@ export class ObjectManagerService {
   }
 
   public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType, color?: number): void {
-    this.materialManager
-      .GetPowerMovePieceTexture(moveType)
-      .pipe(take(1))
-      .subscribe((textureData) => {
-        gamePiece.PowerMoveAdd(moveType, textureData, color);
-      });
+    gamePiece.PowerMoveAdd(moveType, color);
   }
 
   public AnimatePowerMove(moveType: PowerMoveType): void {

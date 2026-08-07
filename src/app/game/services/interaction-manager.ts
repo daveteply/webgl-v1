@@ -1,5 +1,5 @@
 import { Injectable, isDevMode, inject } from '@angular/core';
-import { MathUtils, PerspectiveCamera, Raycaster, Vector2 } from 'three';
+import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
 import {
   DIFFICULTY_TIER_2,
@@ -286,12 +286,11 @@ export class InteractionManagerService {
     this._rayCaster.setFromCamera(this._pointerPos, this._perspectiveCamera);
     const intersects = this._rayCaster.intersectObjects(this.objectManager.Axle);
     if (intersects.length) {
-      const castTarget = intersects[0].object;
-      if (castTarget.parent instanceof GamePiece) {
-        return castTarget.parent;
-      } else {
-        return castTarget as GamePiece;
+      let target: Object3D | null = intersects[0].object;
+      while (target && !(target instanceof GamePiece)) {
+        target = target.parent;
       }
+      return target ? (target as GamePiece) : undefined;
     } else {
       return undefined;
     }
