@@ -1,0 +1,72 @@
+<div id="user-settings" class="glass-dialog">
+  <h2 class="dialog-title text-center">
+    <mat-icon class="title-icon">settings</mat-icon>
+    Settings
+  </h2>
+
+  <div mat-dialog-content class="content-body">
+    <!-- Game SFX Volume -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span class="setting-label">
+          <mat-icon class="setting-icon">{{ gameIcon }}</mat-icon>
+          <span>Game Sounds</span>
+        </span>
+        <span class="setting-value">{{ gameVolume }}%</span>
+      </div>
+      <div class="slider-container">
+        <mat-slider min="0" max="100" step="1" class="volume-slider">
+          <input matSliderThumb [value]="gameVolume" (input)="onGameVolumeInput($event)" />
+        </mat-slider>
+      </div>
+    </div>
+
+    <!-- Background Music Volume -->
+    <div class="setting-row">
+      <div class="setting-header">
+        <span class="setting-label">
+          <mat-icon class="setting-icon">{{ musicIcon }}</mat-icon>
+          <span>Background Sounds</span>
+        </span>
+        <span class="setting-value">{{ musicVolume }}%</span>
+      </div>
+      <div class="slider-container">
+        <mat-slider min="0" max="100" step="1" class="volume-slider">
+          <input matSliderThumb [value]="musicVolume" (input)="onMusicVolumeInput($event)" />
+        </mat-slider>
+      </div>
+    </div>
+
+    <!-- High Scores Reset -->
+    <div class="setting-row score-reset-row">
+      <div class="setting-header">
+        <span class="setting-label">
+          <span class="emoji-icon">🏆</span>
+          <span>High Scores</span>
+        </span>
+      </div>
+      <div class="action-container" *ngIf="!confirmClear">
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="onPromptClearHighScores()"
+          [disabled]="scoresCleared"
+        >
+          <mat-icon>delete_forever</mat-icon>
+          <span>{{ scoresCleared ? 'Scores Cleared' : 'Reset High Scores' }}</span>
+        </button>
+      </div>
+      <div class="confirm-container" *ngIf="confirmClear">
+        <span class="confirm-prompt">Clear all saved high scores?</span>
+        <div class="confirm-buttons">
+          <button mat-button (click)="onCancelClearHighScores()">Cancel</button>
+          <button mat-raised-button color="warn" (click)="onConfirmClearHighScores()">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="center" class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="onClose()">Close</button>
+  </div>
+</div>

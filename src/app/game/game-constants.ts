@@ -48,6 +48,9 @@ export const STORAGE_HINT_HOW_TO_PLAY = 'Hint.HowToPlay';
 export const STORAGE_HINT_MOVES_DECREASE = 'Hint.Moves.Decrease';
 export const STORAGE_HINT_MOVES_INCREASE = 'Hint.Moves.Increase';
 export const STORAGE_SAVE_STATE = 'Save.State';
+export const STORAGE_SETTINGS_GAME_VOLUME = 'Settings.GameVolume';
+export const STORAGE_SETTINGS_MUSIC_VOLUME = 'Settings.MusicVolume';
+
 
 // Ads
 // export const LEVEL_START_POSSIBLE_ADS = 3;

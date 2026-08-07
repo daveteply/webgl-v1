@@ -31,7 +31,7 @@ export interface AudioInfo {
   audioType: AudioType;
 }
 
-export const AUDIO_LIST: AudioInfo[] = [
+export const BACKGROUND_MUSIC_AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-start/s1.mp3',
     audioType: AudioType.LEVEL_START_1,
@@ -51,62 +51,6 @@ export const AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/level-start/s5.mp3',
     audioType: AudioType.LEVEL_START_5,
-  },
-
-  {
-    url: 'assets/audio/level-dialog-stat.mp3',
-    audioType: AudioType.LEVEL_STAT,
-  },
-  {
-    url: 'assets/audio/mixkit-arcade-player-select-2036.mp3',
-    audioType: AudioType.LEVEL_ENABLE_CTA,
-  },
-
-  {
-    url: 'assets/audio/piece-move.mp3',
-    audioType: AudioType.PIECE_MOVE,
-  },
-  {
-    url: 'assets/audio/piece-non-move.mp3',
-    audioType: AudioType.PIECE_NON_MOVE,
-  },
-  {
-    url: 'assets/audio/moves-remaining-panic.mp3',
-    audioType: AudioType.PIECE_MOVE_REMAINING_PANIC,
-  },
-
-  {
-    url: 'assets/audio/piece-remove.mp3',
-    audioType: AudioType.PIECE_REMOVE,
-  },
-  {
-    url: 'assets/audio/piece-remove-2.mp3',
-    audioType: AudioType.PIECE_REMOVE_2,
-  },
-
-  {
-    url: 'assets/audio/piece-select.mp3',
-    audioType: AudioType.PIECE_SELECT,
-  },
-  {
-    url: 'assets/audio/match-fail.mp3',
-    audioType: AudioType.MATCH_FAIL,
-  },
-  {
-    url: 'assets/audio/long-match.mp3',
-    audioType: AudioType.MATCH_LONG,
-  },
-  {
-    url: 'assets/audio/power-move-appear.mp3',
-    audioType: AudioType.POWER_MOVE_APPEAR,
-  },
-  {
-    url: 'assets/audio/power-move-use.mp3',
-    audioType: AudioType.POWER_MOVE_USE,
-  },
-  {
-    url: 'assets/audio/game-over.mp3',
-    audioType: AudioType.GAME_OVER,
   },
   {
     url: 'assets/audio/level-complete/l1.mp3',
@@ -137,3 +81,64 @@ export const AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.LEVEL_END_7,
   },
 ];
+
+export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
+  {
+    url: 'assets/audio/level-dialog-stat.mp3',
+    audioType: AudioType.LEVEL_STAT,
+  },
+  {
+    url: 'assets/audio/mixkit-arcade-player-select-2036.mp3',
+    audioType: AudioType.LEVEL_ENABLE_CTA,
+  },
+  {
+    url: 'assets/audio/piece-move.mp3',
+    audioType: AudioType.PIECE_MOVE,
+  },
+  {
+    url: 'assets/audio/piece-non-move.mp3',
+    audioType: AudioType.PIECE_NON_MOVE,
+  },
+  {
+    url: 'assets/audio/moves-remaining-panic.mp3',
+    audioType: AudioType.PIECE_MOVE_REMAINING_PANIC,
+  },
+  {
+    url: 'assets/audio/piece-remove.mp3',
+    audioType: AudioType.PIECE_REMOVE,
+  },
+  {
+    url: 'assets/audio/piece-remove-2.mp3',
+    audioType: AudioType.PIECE_REMOVE_2,
+  },
+  {
+    url: 'assets/audio/piece-select.mp3',
+    audioType: AudioType.PIECE_SELECT,
+  },
+  {
+    url: 'assets/audio/match-fail.mp3',
+    audioType: AudioType.MATCH_FAIL,
+  },
+  {
+    url: 'assets/audio/long-match.mp3',
+    audioType: AudioType.MATCH_LONG,
+  },
+  {
+    url: 'assets/audio/power-move-appear.mp3',
+    audioType: AudioType.POWER_MOVE_APPEAR,
+  },
+  {
+    url: 'assets/audio/power-move-use.mp3',
+    audioType: AudioType.POWER_MOVE_USE,
+  },
+  {
+    url: 'assets/audio/game-over.mp3',
+    audioType: AudioType.GAME_OVER,
+  },
+];
+
+export const AUDIO_LIST: AudioInfo[] = [...BACKGROUND_MUSIC_AUDIO_LIST, ...GAME_SFX_AUDIO_LIST];
+
+export const BACKGROUND_MUSIC_AUDIO_TYPES = new Set<AudioType>(
+  BACKGROUND_MUSIC_AUDIO_LIST.map((info) => info.audioType)
+);

@@ -10,6 +10,7 @@ import { NotifyService } from '../../../shared/services/notify';
 import { ObjectManagerService } from '../../services/object-manager';
 import { ShareManagerService } from '../../services/share-manager';
 import { SaveGameConfirm } from '../dialogs/components/save-game-confirm/save-game-confirm';
+import { UserSettings } from '../dialogs/components/user-settings/user-settings';
 
 @Component({
   selector: 'wgl-game-menu',
@@ -30,6 +31,13 @@ export class GameMenu {
   public AboutClick(): void {
     this.analyticsManager.Log(AnalyticsEventType.GameMenuAboutCTA);
     this.notify.Notify();
+  }
+
+  public SettingsClick(): void {
+    this.dialog.open(UserSettings, {
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
   }
 
   public SaveState(): void {

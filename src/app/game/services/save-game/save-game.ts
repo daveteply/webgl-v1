@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable, inject, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { STORAGE_SAVE_STATE } from '../../game-constants';
@@ -7,11 +7,14 @@ import { GamePieceMaterialData } from '../../models/game-piece/game-piece-materi
 import { GameWheel } from '../../models/game-wheel';
 import { SaveGameData, SaveGameScore, SavePieceData, SaveWheelData } from './save-game-data';
 import { GameMaterials } from '../material/material-models';
+import { StorageService } from '../../../shared/services/storage/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SaveGameService {
+  private storageService = inject(StorageService);
+
   private _savedGameData: SaveGameData;
   get SavedGameData(): SaveGameData {
     return this._savedGameData;
@@ -31,9 +34,9 @@ export class SaveGameService {
 
   public HasSaveState(): Observable<boolean> {
     return new Observable((observer) => {
-      const rawData = localStorage.getItem(STORAGE_SAVE_STATE);
-      if (rawData) {
-        this._savedGameData = JSON.parse(rawData);
+      const savedData = this.storageService.getItem<SaveGameData>(STORAGE_SAVE_STATE);
+      if (savedData) {
+        this._savedGameData = savedData;
         observer.next(true);
       } else {
         observer.next(false);
@@ -52,7 +55,7 @@ export class SaveGameService {
     outlineColor: number,
   ): Observable<void> {
     return new Observable((observer) => {
-      localStorage.removeItem(STORAGE_SAVE_STATE);
+      this.storageService.removeItem(STORAGE_SAVE_STATE);
       this._savedGameData.wheelData = [];
       this._savedGameData.textureData = [];
 
@@ -100,7 +103,7 @@ export class SaveGameService {
       // misc
       this._savedGameData.outlineColor = outlineColor;
 
-      localStorage.setItem(STORAGE_SAVE_STATE, JSON.stringify(this._savedGameData));
+      this.storageService.setItem(STORAGE_SAVE_STATE, this._savedGameData);
       observer.next();
       observer.complete();
     });
