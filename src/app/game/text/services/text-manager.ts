@@ -45,7 +45,7 @@ export class TextManagerService {
     this._textGroup = new Group();
     this._textGroup.name = 'textGroup';
     this._textGroup.position.y = -2.0;
-    this._textGroup.position.z = -3.0;
+    this._textGroup.position.z = 0.5;
 
     this._scene = scene;
     this._scene.add(this._textGroup);

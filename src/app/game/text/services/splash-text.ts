@@ -1,16 +1,17 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
-import { MathUtils, Mesh, MeshLambertMaterial, Object3D } from 'three';
+import { Color, MathUtils, Mesh, MeshPhongMaterial, Object3D } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextSplashEventType } from './text-splash-event-type';
+import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class SplashText extends Object3D {
   private _introTween!: any;
   private _outroTween!: any;
 
   private _textGeometry!: TextGeometry;
-  private _material!: MeshLambertMaterial;
+  private _materials: MeshPhongMaterial[] = [];
   private _mesh!: Mesh;
 
   private _font: Font;
@@ -34,17 +35,39 @@ export class SplashText extends Object3D {
     } as any);
     this._textGeometry.scale(0.01, 0.01, 0.01);
 
-    // material
-    this._material = new MeshLambertMaterial({
+    // material - front face & bevel/sides
+    const baseColor =
+      color !== undefined
+        ? new Color(color)
+        : new Color(RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]);
+
+    // Front face material - matte, vibrant, soft diffuse shading
+    const frontMaterial = new MeshPhongMaterial({
+      color: baseColor,
+      emissive: baseColor,
+      emissiveIntensity: 0.12,
+      specular: new Color(0x222222),
+      shininess: 10,
       transparent: true,
       opacity: 0,
     });
-    if (color) {
-      this._material.color.set(color);
-    }
+
+    // Side/bevel material - 50% darker matte finish for bevel contrast
+    const sideColor = baseColor.clone().multiplyScalar(0.5);
+    const sideMaterial = new MeshPhongMaterial({
+      color: sideColor,
+      emissive: sideColor,
+      emissiveIntensity: 0.05,
+      specular: new Color(0x111111),
+      shininess: 5,
+      transparent: true,
+      opacity: 0,
+    });
+
+    this._materials = [frontMaterial, sideMaterial];
 
     // mesh
-    this._mesh = new Mesh(this._textGeometry, this._material);
+    this._mesh = new Mesh(this._textGeometry, this._materials);
     this.add(this._mesh);
 
     this.initIntroTween(this.xOffset(this._textGeometry), yOffset);
@@ -68,7 +91,7 @@ export class SplashText extends Object3D {
   public Dispose(): void {
     this._introTween?.stop();
     this._outroTween?.stop();
-    this._material.dispose();
+    this._materials.forEach((m) => m.dispose());
     this._textGeometry.dispose();
   }
 
@@ -113,7 +136,7 @@ export class SplashText extends Object3D {
       .to(target, 750)
       .easing(Easing.Elastic.Out)
       .onUpdate(() => {
-        this._material.opacity = delta.o;
+        this._materials.forEach((m) => (m.opacity = delta.o));
         this._mesh.position.x = delta.x;
         this._mesh.position.y = delta.y;
       });
@@ -126,7 +149,7 @@ export class SplashText extends Object3D {
       .to(target, 1000)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {
-        this._material.opacity = delta.o;
+        this._materials.forEach((m) => (m.opacity = delta.o));
         this._mesh.position.z = delta.z;
         this._mesh.position.y = delta.y;
       });
