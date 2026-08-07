@@ -28,10 +28,7 @@ describe('SaveGameService', () => {
   beforeEach(() => {
     mockStorage = new MockStorageService();
     TestBed.configureTestingModule({
-      providers: [
-        SaveGameService,
-        { provide: StorageService, useValue: mockStorage },
-      ],
+      providers: [SaveGameService, { provide: StorageService, useValue: mockStorage }],
     });
     service = TestBed.inject(SaveGameService);
   });
@@ -66,25 +63,13 @@ describe('SaveGameService', () => {
       children: [mockPiece],
     };
 
-    const levelMaterials: any[] = [
-      { matchKey: 1, colorStr: '#ff0000' },
-    ];
+    const levelMaterials: any[] = [{ matchKey: 1, colorStr: '#ff0000' }];
     const gameMaterials: any = {
       wheelMaterials: [{ pieceMaterials: [{ materials: [{ matchKey: 1 }] }] }],
     };
     const scoreData: any = { level: 3, score: 500, moves: 10 };
 
-    await firstValueFrom(
-      service.SaveState(
-        [mockWheel],
-        levelMaterials,
-        gameMaterials,
-        1,
-        1,
-        scoreData,
-        0xffffff,
-      ),
-    );
+    await firstValueFrom(service.SaveState([mockWheel], levelMaterials, gameMaterials, 1, 1, scoreData, 0xffffff));
 
     const hasSave = await firstValueFrom(service.HasSaveState());
     expect(hasSave).toBe(true);
@@ -93,5 +78,3 @@ describe('SaveGameService', () => {
     expect(service.SavedGameData.wheelData[0].piecesData[0].flipTurns).toBe(2);
   });
 });
-
-

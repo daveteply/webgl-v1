@@ -11,10 +11,7 @@ describe('ScoringManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        ScoringManagerService,
-        { provide: TextManagerService, useClass: MockTextManagerService },
-      ],
+      providers: [ScoringManagerService, { provide: TextManagerService, useClass: MockTextManagerService }],
     });
     service = TestBed.inject(ScoringManagerService);
   });
@@ -97,4 +94,3 @@ describe('ScoringManagerService', () => {
     expect(service.Score).toBe(1500);
   });
 });
-

@@ -11,6 +11,7 @@ import { ObjectManagerService } from '../../services/object-manager';
 import { ShareManagerService } from '../../services/share-manager';
 import { SaveGameConfirm } from '../dialogs/components/save-game-confirm/save-game-confirm';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
+import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
 
 @Component({
   selector: 'wgl-game-menu',
@@ -35,6 +36,13 @@ export class GameMenu {
 
   public SettingsClick(): void {
     this.dialog.open(UserSettings, {
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
+  }
+
+  public InstallAppClick(): void {
+    this.dialog.open(InstallPwaDialog, {
       minWidth: '20em',
       panelClass: ['wgl-pane-bounce'],
     });

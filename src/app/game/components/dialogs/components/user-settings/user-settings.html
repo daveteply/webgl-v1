@@ -46,12 +46,7 @@
         </span>
       </div>
       <div class="action-container" *ngIf="!confirmClear">
-        <button
-          mat-stroked-button
-          color="warn"
-          (click)="onPromptClearHighScores()"
-          [disabled]="scoresCleared"
-        >
+        <button mat-stroked-button color="warn" (click)="onPromptClearHighScores()" [disabled]="scoresCleared">
           <mat-icon>delete_forever</mat-icon>
           <span>{{ scoresCleared ? 'Scores Cleared' : 'Reset High Scores' }}</span>
         </button>

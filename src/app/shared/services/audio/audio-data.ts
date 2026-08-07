@@ -140,5 +140,5 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
 export const AUDIO_LIST: AudioInfo[] = [...BACKGROUND_MUSIC_AUDIO_LIST, ...GAME_SFX_AUDIO_LIST];
 
 export const BACKGROUND_MUSIC_AUDIO_TYPES = new Set<AudioType>(
-  BACKGROUND_MUSIC_AUDIO_LIST.map((info) => info.audioType)
+  BACKGROUND_MUSIC_AUDIO_LIST.map((info) => info.audioType),
 );

@@ -29,4 +29,11 @@ describe('GameMenu', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should open install pwa dialog when InstallAppClick is called', () => {
+    const dialog = TestBed.inject(MatDialog);
+    const openSpy = vi.spyOn(dialog, 'open');
+    component.InstallAppClick();
+    expect(openSpy).toHaveBeenCalled();
+  });
 });

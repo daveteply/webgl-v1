@@ -1,0 +1,131 @@
+#install-pwa-dialog {
+  text-align: center;
+  position: relative;
+  min-width: 18em;
+  max-width: 26em;
+  width: 90vw;
+  margin: auto;
+
+  .dialog-header {
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+
+    .title {
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+  }
+
+  .content {
+    padding: 0.5em 0;
+    margin: 0;
+    overflow: hidden !important;
+
+    .app-icon-preview {
+      margin: 0.5em auto 1em auto;
+      display: flex;
+      justify-content: center;
+
+      .pwa-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 16px;
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.4),
+          0 0 15px rgba(168, 85, 247, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    .desc {
+      font-size: 1.05em;
+      line-height: 1.4;
+      margin: 0.5em 0 1em 0;
+      color: #f3e8ff;
+    }
+
+    .status-msg {
+      &.success {
+        color: #86efac;
+
+        .status-icon {
+          font-size: 40px;
+          width: 40px;
+          height: 40px;
+          margin-bottom: 0.25em;
+          color: #4ade80;
+        }
+
+        p {
+          margin: 0.25em 0;
+          font-weight: 600;
+        }
+
+        .sub-text {
+          font-weight: normal;
+          font-size: 0.9em;
+          color: #d8b4fe;
+        }
+      }
+    }
+
+    .ios-instructions {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.75em 1em;
+      border: 1px solid rgba(216, 180, 254, 0.2);
+
+      .desc {
+        text-align: center;
+        margin-top: 0;
+      }
+
+      .steps {
+        margin: 0;
+        padding-left: 1.25em;
+
+        li {
+          margin-bottom: 0.5em;
+          font-size: 0.95em;
+          line-height: 1.35;
+        }
+      }
+    }
+
+    .generic-instructions {
+      .hint-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 0.75em 1em;
+        border: 1px solid rgba(216, 180, 254, 0.2);
+        font-size: 0.9em;
+        text-align: left;
+      }
+    }
+
+    .inline-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      vertical-align: sub;
+      color: #e9d5ff;
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75em;
+    padding-top: 0.75em;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+  }
+}

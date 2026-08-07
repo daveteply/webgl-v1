@@ -274,4 +274,3 @@ export class PowerMove {
     this._materials.forEach((m) => m.dispose());
   }
 }
-

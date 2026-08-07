@@ -51,7 +51,6 @@ export const STORAGE_SAVE_STATE = 'Save.State';
 export const STORAGE_SETTINGS_GAME_VOLUME = 'Settings.GameVolume';
 export const STORAGE_SETTINGS_MUSIC_VOLUME = 'Settings.MusicVolume';
 
-
 // Ads
 // export const LEVEL_START_POSSIBLE_ADS = 3;
 // export const LEVEL_START_FULL_ADS = 8;

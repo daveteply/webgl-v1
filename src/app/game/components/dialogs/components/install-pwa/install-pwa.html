@@ -1,0 +1,61 @@
+<div id="install-pwa-dialog" class="glass-dialog">
+  <div mat-dialog-title class="dialog-header text-center">
+    <span class="title">Add Rikkle to Home Screen</span>
+  </div>
+
+  <div mat-dialog-content class="content text-center">
+    <div class="app-icon-preview">
+      <img src="icons/android/launchericon-192x192.png" alt="Rikkle Icon" class="pwa-icon" />
+    </div>
+
+    @if (pwaInstallService.isStandalone()) {
+      <div class="status-msg success">
+        <mat-icon class="status-icon">check_circle</mat-icon>
+        <p>Rikkle is installed on your device!</p>
+        <p class="sub-text">You can launch Rikkle directly from your home screen or desktop.</p>
+      </div>
+    } @else if (pwaInstallService.canInstall()) {
+      <p class="desc">
+        Install Rikkle to play offline anytime, launch directly from your home screen or desktop, and enjoy fullscreen
+        mode!
+      </p>
+    } @else if (pwaInstallService.isIOS()) {
+      <div class="ios-instructions">
+        <p class="desc">To add Rikkle to your iPhone or iPad home screen:</p>
+        <ol class="steps">
+          <li>Tap the <strong>Share</strong> button <mat-icon class="inline-icon">ios_share</mat-icon> in Safari</li>
+          <li>
+            Scroll down and tap <strong>Add to Home Screen</strong> <mat-icon class="inline-icon">add_box</mat-icon>
+          </li>
+          <li>Tap <strong>Add</strong> in the top-right corner</li>
+        </ol>
+      </div>
+    } @else {
+      <div class="generic-instructions">
+        <p class="desc">
+          Install Rikkle to play offline anytime, launch from your desktop or home screen, and enjoy fullscreen
+          gameplay!
+        </p>
+        <div class="hint-box">
+          <mat-icon class="inline-icon">info</mat-icon>
+          <span
+            >Open your browser menu <mat-icon class="inline-icon">more_vert</mat-icon> and select
+            <strong>Install Rikkle</strong> or <strong>Add to Home Screen</strong>.</span
+          >
+        </div>
+      </div>
+    }
+  </div>
+
+  <div mat-dialog-actions align="center" class="dialog-actions">
+    @if (!pwaInstallService.isStandalone() && pwaInstallService.canInstall()) {
+      <button mat-raised-button color="primary" (click)="onInstallClick()">
+        <mat-icon>get_app</mat-icon>
+        <span>Install Now</span>
+      </button>
+    }
+    <button mat-stroked-button color="primary" mat-dialog-close>
+      <span>{{ pwaInstallService.isStandalone() ? 'Done' : 'Close' }}</span>
+    </button>
+  </div>
+</div>

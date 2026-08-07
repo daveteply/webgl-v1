@@ -11,28 +11,30 @@ const PRECACHE_ASSETS = [
   '/particle.webp',
   '/icons/android/launchericon-192x192.png',
   '/icons/android/launchericon-512x512.png',
-  '/icons/ios/180.png'
+  '/icons/ios/180.png',
 ];
 
 // Installation: Cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_ASSETS);
-    }).then(() => self.skipWaiting())
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => {
+        return cache.addAll(PRECACHE_ASSETS);
+      })
+      .then(() => self.skipWaiting()),
   );
 });
 
 // Activation: Clean up legacy caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name)));
+      })
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -54,7 +56,7 @@ self.addEventListener('fetch', (event) => {
         })
         .catch(() => {
           return caches.match('/index.html') || caches.match(event.request);
-        })
+        }),
     );
     return;
   }
@@ -64,16 +66,24 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         // Fetch update in background for stale-while-revalidate
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-          }
-        }).catch(() => {/* offline fallback */});
+        fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
+            }
+          })
+          .catch(() => {
+            /* offline fallback */
+          });
         return cachedResponse;
       }
 
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors')) {
+        if (
+          !networkResponse ||
+          networkResponse.status !== 200 ||
+          (networkResponse.type !== 'basic' && networkResponse.type !== 'cors')
+        ) {
           return networkResponse;
         }
 
@@ -84,6 +94,6 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       });
-    })
+    }),
   );
 });
