@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
+import { Color, MathUtils, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 
 import { InteractionManagerService } from './interaction-manager';
 import { ObjectManagerService } from './object-manager';
@@ -46,6 +46,7 @@ export class SceneManagerService implements OnDestroy {
 
     // camera
     this._camera = new PerspectiveCamera(45, width / height, 1, 50);
+    this.updateCameraProjection(width, height);
     this._camera.position.z = 5;
     // connect object manager
     this.objectManager.SetCamera(this._camera);
@@ -83,22 +84,39 @@ export class SceneManagerService implements OnDestroy {
 
     const width = (rawWidth * pixelRatio) | 0;
     const height = (rawHeight * pixelRatio) | 0;
-    if (width > 0 && height > 0 && (canvas.width !== width || canvas.height !== height)) {
-      // camera
-      this._camera.aspect = rawWidth / rawHeight;
-      this._camera.updateProjectionMatrix();
+    if (width > 0 && height > 0) {
+      // camera projection update
+      this.updateCameraProjection(rawWidth, rawHeight);
 
-      // renderer
-      this._renderer.setSize(width, height, false);
+      if (canvas.width !== width || canvas.height !== height) {
+        // renderer
+        this._renderer.setSize(width, height, false);
 
-      // composer
-      this.postProcessingManager.Composer?.setSize(width, height);
+        // composer
+        this.postProcessingManager.Composer?.setSize(width, height);
 
-      // smaa
-      this.postProcessingManager.SMAAPass?.setSize(width, height);
+        // smaa
+        this.postProcessingManager.SMAAPass?.setSize(width, height);
+      }
     }
 
     this.interactionManager.CanvasRect = canvas.getBoundingClientRect();
+  }
+
+  private updateCameraProjection(rawWidth: number, rawHeight: number): void {
+    if (!this._camera) return;
+    const aspect = rawWidth / rawHeight;
+    const targetAspect = 0.75;
+    if (aspect < targetAspect) {
+      // Calculate vertical FOV to maintain constant horizontal field of view across devices
+      const hFovRad = 2 * Math.atan(Math.tan(MathUtils.degToRad(45 / 2)) * targetAspect);
+      const vFovRad = 2 * Math.atan(Math.tan(hFovRad / 2) / aspect);
+      this._camera.fov = MathUtils.radToDeg(vFovRad);
+    } else {
+      this._camera.fov = 45;
+    }
+    this._camera.aspect = aspect;
+    this._camera.updateProjectionMatrix();
   }
 
   private animate(now: number): void {
