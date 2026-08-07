@@ -164,7 +164,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
-      if (loaded) {
+      if (loaded && this._showWelcome) {
         this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
       }
     });
@@ -289,7 +289,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     if (this._showWelcome) {
       this._showWelcome = false;
       this.showScoreProgress.set(true);
-      this.objectManager.NextLevel(this.scoringManager.Level);
+      this.objectManager.NextLevel(this.scoringManager.Level, true);
     } else {
       this.scoringManager.NextLevel();
       this.objectManager.NextLevel(this.scoringManager.Level, true);
