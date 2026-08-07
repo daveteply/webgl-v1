@@ -1,6 +1,6 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
 import { Observable } from 'rxjs';
-import { Color, MathUtils, Mesh, MeshPhongMaterial, Object3D } from 'three';
+import { Color, MathUtils, Mesh, MeshBasicMaterial, Object3D } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextSplashEventType } from './text-splash-event-type';
@@ -11,7 +11,7 @@ export class SplashText extends Object3D {
   private _outroTween!: any;
 
   private _textGeometry!: TextGeometry;
-  private _materials: MeshPhongMaterial[] = [];
+  private _materials: MeshBasicMaterial[] = [];
   private _mesh!: Mesh;
 
   private _font: Font;
@@ -41,25 +41,17 @@ export class SplashText extends Object3D {
         ? new Color(color)
         : new Color(RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)]);
 
-    // Front face material - matte, vibrant, soft diffuse shading
-    const frontMaterial = new MeshPhongMaterial({
+    // Front face material - vibrant, pure color (unaffected by point light over-exposure)
+    const frontMaterial = new MeshBasicMaterial({
       color: baseColor,
-      emissive: baseColor,
-      emissiveIntensity: 0.12,
-      specular: new Color(0x222222),
-      shininess: 10,
       transparent: true,
       opacity: 0,
     });
 
-    // Side/bevel material - 50% darker matte finish for bevel contrast
-    const sideColor = baseColor.clone().multiplyScalar(0.5);
-    const sideMaterial = new MeshPhongMaterial({
+    // Side/bevel material - 50% darker contrasting shade for crisp 3D depth and outline
+    const sideColor = baseColor.clone().multiplyScalar(0.45);
+    const sideMaterial = new MeshBasicMaterial({
       color: sideColor,
-      emissive: sideColor,
-      emissiveIntensity: 0.05,
-      specular: new Color(0x111111),
-      shininess: 5,
       transparent: true,
       opacity: 0,
     });

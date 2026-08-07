@@ -60,6 +60,7 @@ export class SceneManagerService implements OnDestroy {
       this._renderer = new WebGLRenderer({ canvas, stencil: false, depth: false });
       this._renderer.autoClear = false;
       this._renderer.setSize(width, height, false);
+      this._renderer.toneMappingExposure = 1.0;
 
       // post processing
       this.postProcessingManager.InitPostProcessing(this._scene, this._camera, this._renderer, width, height);
