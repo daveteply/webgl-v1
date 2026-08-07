@@ -1,5 +1,5 @@
-import { Injectable, NgZone, OnDestroy, inject } from '@angular/core';
-import { AmbientLight, Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Color, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from 'three';
 
 import { InteractionManagerService } from './interaction-manager';
 import { ObjectManagerService } from './object-manager';
@@ -12,7 +12,6 @@ import * as TWEEN from '@tweenjs/tween.js';
   providedIn: 'root',
 })
 export class SceneManagerService implements OnDestroy {
-  private ngZone = inject(NgZone);
   private objectManager = inject(ObjectManagerService);
   private interactionManager = inject(InteractionManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
@@ -102,20 +101,18 @@ export class SceneManagerService implements OnDestroy {
   }
 
   private animate(now: number): void {
-    this.ngZone.runOutsideAngular(() => {
-      TWEEN.update(now);
+    TWEEN.update(now);
 
-      const nowSec = now * 0.001;
-      const deltaTime = nowSec - this._previousFrameRenderTime;
-      this._previousFrameRenderTime = nowSec;
+    const nowSec = now * 0.001;
+    const deltaTime = nowSec - this._previousFrameRenderTime;
+    this._previousFrameRenderTime = nowSec;
 
-      this.objectManager.UpdateStarField();
-      this.postProcessingManager.Composer.render(deltaTime);
+    this.objectManager.UpdateStarField();
+    this.postProcessingManager.Composer.render(deltaTime);
 
-      if (this.shareManager.ScreenShotRequested && this._renderer?.domElement) {
-        this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
-      }
-    });
+    if (this.shareManager.ScreenShotRequested && this._renderer?.domElement) {
+      this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
+    }
 
     this._animateRequestId = requestAnimationFrame((now) => {
       this.animate(now);

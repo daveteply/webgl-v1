@@ -85,6 +85,26 @@ export class GamePiece extends Object3D {
     return this._flipTurns;
   }
 
+  private static sharedCubeGeometry: BoxGeometry | null = null;
+  private static sharedCylinderGeometry: CylinderGeometry | null = null;
+
+  private static getSharedCubeGeometry(): BoxGeometry {
+    if (!GamePiece.sharedCubeGeometry) {
+      const geo = new BoxGeometry();
+      const uvs = new Float32Array(UV_SIDES.flat());
+      geo.setAttribute('uv', new BufferAttribute(uvs, 2));
+      GamePiece.sharedCubeGeometry = geo;
+    }
+    return GamePiece.sharedCubeGeometry;
+  }
+
+  private static getSharedCylinderGeometry(): CylinderGeometry {
+    if (!GamePiece.sharedCylinderGeometry) {
+      GamePiece.sharedCylinderGeometry = new CylinderGeometry(0.6, 0.6, 1, 16);
+    }
+    return GamePiece.sharedCylinderGeometry;
+  }
+
   constructor(x: number, y: number, z: number, rotation: number) {
     super();
 
@@ -93,15 +113,12 @@ export class GamePiece extends Object3D {
     this.rotateY(rotation);
 
     // cube piece
-    this._geometryCube = new BoxGeometry();
-    // rotate uv so all vertical flipping displays correctly
-    const uvs = new Float32Array(UV_SIDES.flat());
-    this._geometryCube.setAttribute('uv', new BufferAttribute(uvs, 2));
+    this._geometryCube = GamePiece.getSharedCubeGeometry();
     this._meshCube = new Mesh(this._geometryCube);
     this.add(this._meshCube);
 
     // cylinder piece
-    this._geometryCylinder = new CylinderGeometry(0.6, 0.6, 1, 16);
+    this._geometryCylinder = GamePiece.getSharedCylinderGeometry();
     this._meshCylinder = new Mesh(this._geometryCylinder);
     this.add(this._meshCylinder);
 
