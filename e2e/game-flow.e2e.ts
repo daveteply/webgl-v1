@@ -7,7 +7,6 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('WebGL-V1 Game Flow & Canvas Interactions', () => {
-
   test.beforeEach(async ({ page }) => {
     // Navigate to local Angular application
     await page.goto('http://localhost:4200/');
