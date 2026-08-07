@@ -222,7 +222,7 @@ export class GamePiece extends Object3D {
       .to(target, 2500)
       .delay(MathUtils.randInt(250, 1500))
       .onUpdate(() => {
-        this._pieceMaterials.forEach((m) => {
+        this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
           } else {
@@ -248,7 +248,7 @@ export class GamePiece extends Object3D {
       // init tween
       this._lockTween = new Tween(delta, true).to(target, 500).onUpdate(() => {
         this._mesh.scale.set(delta.x, delta.y, delta.z);
-        this._pieceMaterials.forEach((m) => {
+        this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
           } else {
@@ -312,7 +312,7 @@ export class GamePiece extends Object3D {
         if (style === GamePieceRemovalStyle.FadeTranslate) {
           this._mesh.translateX(0.1);
         }
-        this._pieceMaterials.forEach((m) => {
+        this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
           } else {
