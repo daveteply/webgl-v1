@@ -68,6 +68,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private resize$: Observable<Event> = fromEvent(window, 'resize');
 
   private _showWelcome = true;
+  private _pendingIntroDialog = false;
 
   private _dialogRefLevel!: MatDialogRef<LevelComplete>;
   private _dialogRefIntro!: MatDialogRef<Intro>;
@@ -76,6 +77,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private _isGameOver = false;
 
   showScoreProgress = signal<boolean>(false);
+  splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
   LevelLabelColor!: string;
 
   public GridTemplateColumns = '';
@@ -135,17 +137,12 @@ export class GameContainer implements OnInit, AfterViewInit {
             });
           } else {
             if (this._showWelcome) {
-              // intro
-              this._dialogRefIntro = this.dialog.open(Intro, this.dialogConfig());
-              this._dialogRefIntro.afterClosed().subscribe((result) => {
-                // restore game
-                if (result?.isRestoring) {
-                  this.initTextures();
-                  this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
-                } else {
-                  this.handleLevelDialogCLosed();
-                }
-              });
+              // intro (deferred until splash screen finishes)
+              if (this.splashPhase() === 'done') {
+                this.openIntroDialog();
+              } else {
+                this._pendingIntroDialog = true;
+              }
             } else {
               // level complete
               const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
@@ -234,6 +231,36 @@ export class GameContainer implements OnInit, AfterViewInit {
     this.sceneManager.UpdateSize(this.document.defaultView?.devicePixelRatio || 1);
 
     this.objectManager.InitStarField();
+
+    // Splash screen animation sequence: black -> RikkleBacker image -> hold -> fade out
+    setTimeout(() => {
+      this.splashPhase.set('image');
+      setTimeout(() => {
+        this.splashPhase.set('fade-out');
+        setTimeout(() => {
+          this.splashPhase.set('done');
+          if (this._pendingIntroDialog) {
+            this._pendingIntroDialog = false;
+            this.openIntroDialog();
+          }
+        }, 1000);
+      }, 2000);
+    }, 150);
+  }
+
+  private openIntroDialog(): void {
+    if (!this._dialogRefIntro) {
+      this._dialogRefIntro = this.dialog.open(Intro, this.dialogConfig());
+      this._dialogRefIntro.afterClosed().subscribe((result) => {
+        // restore game
+        if (result?.isRestoring) {
+          this.initTextures();
+          this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
+        } else {
+          this.handleLevelDialogCLosed();
+        }
+      });
+    }
   }
 
   private initTextures(): void {

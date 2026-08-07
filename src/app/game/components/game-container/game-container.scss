@@ -5,21 +5,96 @@
   transition: opacity 2s ease-out;
 }
 
+.splash-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  pointer-events: none;
+
+  .splash-black-cover {
+    position: absolute;
+    inset: 0;
+    background-color: #000000;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .splash-image-cover {
+    position: absolute;
+    inset: 0;
+    background-image: url('/RikkleBacker.webp');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+
+  &.phase-image {
+    .splash-black-cover {
+      opacity: 0;
+    }
+    .splash-image-cover {
+      opacity: 1;
+    }
+  }
+
+  &.phase-fade-out {
+    .splash-black-cover {
+      opacity: 0;
+    }
+    .splash-image-cover {
+      opacity: 0;
+    }
+  }
+
+  &.phase-done {
+    display: none;
+  }
+}
+
 .game-layout {
   position: relative;
   height: 100%;
+  width: 100%;
   background-color: #0f0f0f;
+  overflow: hidden;
 
-  display: flex;
-  flex-direction: column;
+  .game {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    .game-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+  }
 
   .game-scoring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 1.5em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: x-large;
-    margin: 0 0.5em;
+    padding: 0.5em 0.5em 0 0.5em;
+    z-index: 2;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+
     @include fader;
     &.show {
       opacity: 1;
@@ -42,25 +117,24 @@
     }
   }
 
-  .game {
-    position: relative;
-    flex: 1;
-
-    .game-canvas {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-    }
-  }
-
   .level-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     align-items: center;
     color: #ffffff;
     padding: 0.25em;
-    margin: 0 2.5em;
+    margin: 0 2.5em 0.5em 2.5em;
     font-size: x-large;
+    z-index: 2;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+
     @include fader;
     &.show {
       opacity: 1;
@@ -87,8 +161,14 @@
 @supports (padding: max(0px)) {
   .game-layout {
     box-sizing: border-box;
-    padding-top: max(0.5em, env(safe-area-inset-top));
-    padding-bottom: max(0.5em, env(safe-area-inset-bottom));
+
+    .game-scoring {
+      padding-top: max(0.5em, env(safe-area-inset-top));
+    }
+
+    .level-progress {
+      padding-bottom: max(0.5em, env(safe-area-inset-bottom));
+    }
   }
 
   .copyright {

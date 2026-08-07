@@ -1,3 +1,13 @@
+<div
+  class="splash-screen"
+  [class.phase-image]="splashPhase() === 'image'"
+  [class.phase-fade-out]="splashPhase() === 'fade-out'"
+  [class.phase-done]="splashPhase() === 'done'"
+>
+  <div class="splash-black-cover"></div>
+  <div class="splash-image-cover"></div>
+</div>
+
 <div class="game-layout">
   <div class="game-scoring" [class.show]="showScoreProgress()">
     <div class="game-logo"></div>
