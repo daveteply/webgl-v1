@@ -18,16 +18,24 @@
     color: black !important;
     overflow: hidden;
     flex: 1;
-    z-index: 1;
   }
 
   .level-info-line {
     font-size: large;
+    line-height: 1rem;
     padding-bottom: 0.5em;
     display: none;
     &.show {
       display: flex;
       justify-content: space-between;
+    }
+    &.good {
+      color: darkgreen;
+      font-weight: bold;
+    }
+    &.bad {
+      color: darkorange;
+      font-style: italic;
     }
   }
 

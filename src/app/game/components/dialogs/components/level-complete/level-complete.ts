@@ -108,36 +108,36 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
     });
 
     this._timerEvent
-      .pipe(delay(550))
+      .pipe(delay(500))
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((stat: LevelStat) => {
         switch (stat.statType) {
           case LevelStatisticType.fastMatchBonusTotal:
             this.fastMatchBonusTotal = stat.statValue;
-            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             break;
 
           case LevelStatisticType.fastestMatchMs:
             if (this.fastMatchBonusTotal) {
               const roundedTime = Math.round((stat.statValue / 1000) * 100) / 100;
               this.fastestMatchTime = `${roundedTime}s`;
-              this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+              this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             }
             break;
 
           case LevelStatisticType.moveCount:
             this.moveCount = stat.statValue;
-            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             break;
 
           case LevelStatisticType.moveCountEarned:
             this.moveCountEarned = stat.statValue;
-            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             break;
 
           case LevelStatisticType.pieceCount:
             this.pieceCount = stat.statValue;
-            this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+            this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             break;
 
           case LevelStatisticType.infoComplete:
