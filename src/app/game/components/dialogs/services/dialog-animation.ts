@@ -214,8 +214,8 @@ export class DialogAnimationService implements OnDestroy {
 
   private updateLevelDialogBoxes(): void {
     if (this._ctx) {
-      this._ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+      this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+      this._ctx.globalAlpha = 0.35;
 
       // box lengths are the same
       for (let i = 0; i < this._boxesTop.length; i++) {
@@ -247,6 +247,8 @@ export class DialogAnimationService implements OnDestroy {
           this._ctx.fillText(boxBottom.emoji, boxBottom.x, boxBottom.y, boxBottom.size);
         }
       }
+
+      this._ctx.globalAlpha = 1.0;
     }
   }
 

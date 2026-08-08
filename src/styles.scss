@@ -120,12 +120,12 @@ body {
   &.has-canvas-animation {
     background: linear-gradient(
       135deg,
-      rgba(48, 16, 85, 0.45) 0%,
-      rgba(76, 29, 149, 0.3) 50%,
-      rgba(124, 58, 237, 0.2) 100%
+      rgba(55, 18, 98, 0.6) 0%,
+      rgba(91, 33, 182, 0.4) 50%,
+      rgba(126, 34, 206, 0.3) 100%
     ) !important;
-    backdrop-filter: blur(4px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(4px) saturate(140%) !important;
+    backdrop-filter: blur(14px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   }
 
   h1,

@@ -3,43 +3,55 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-sizing: border-box;
 
   .dialog-header {
-    color: black !important;
+    color: #ffffff !important;
+    text-shadow:
+      0 2px 10px rgba(168, 85, 247, 0.5),
+      0 0 20px rgba(124, 58, 237, 0.3);
     text-align: center;
     font-size: xx-large;
     z-index: 1;
     border-radius: 1em;
     margin-top: 0.25em;
-    margin-bottom: 0.25em;
+    margin-bottom: 0.35em;
   }
 
   .content {
-    color: black !important;
+    color: #f3e8ff !important;
     overflow: hidden;
     flex: 1;
+    padding: 0.5em 0.25em;
   }
 
   .level-info-line {
     font-size: large;
-    line-height: 1rem;
+    line-height: 1.4rem;
     padding-bottom: 0.5em;
     display: none;
+    color: #f3e8ff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+
     &.show {
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
     &.good {
-      color: darkgreen;
+      color: #4ade80;
       font-weight: bold;
+      text-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
     }
     &.bad {
-      color: darkorange;
+      color: #fbbf24;
       font-style: italic;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
     }
   }
 
   .progress {
+    margin-top: 0.5em;
     opacity: 1;
     transition: opacity 500ms;
     &.fade-out {
@@ -49,6 +61,8 @@
 
   .mat-mdc-raised-button {
     font-size: x-large;
-    margin-bottom: 0.75em;
+    margin-bottom: 0.25em;
   }
 }
+
+
