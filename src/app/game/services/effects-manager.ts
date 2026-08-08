@@ -188,7 +188,7 @@ export class EffectsManagerService {
   public AnimateRemove(selectedPieces: GamePiece[]): void {
     if (selectedPieces.length) {
       selectedPieces.forEach((p) => {
-        p.AnimateRemovalTween(Math.floor(Math.random() * 2));
+        p.AnimateRemovalTween(Math.floor(Math.random() * 6));
       });
       const removeSoundType =
         selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;

@@ -49,15 +49,35 @@ describe('GameEngineService', () => {
       expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT + 3);
     });
 
-    it('should filter vertical power moves when geometry is Cylinder', () => {
+    it('should filter vertical power moves when geometry is Cylinder or Dodecahedron', () => {
       service.RestoreLevelTypes(LevelMaterialType.ColorBumpMaterial, LevelGeometryType.Cylinder);
-      const selectedMoves = new Set<PowerMoveType>();
+      const selectedMovesCylinder = new Set<PowerMoveType>();
       for (let i = 0; i < 50; i++) {
-        selectedMoves.add(service.PowerMoveSelection(10));
+        selectedMovesCylinder.add(service.PowerMoveSelection(10));
       }
-      expect(selectedMoves.has(PowerMoveType.VerticalDown)).toBe(false);
-      expect(selectedMoves.has(PowerMoveType.VerticalMix)).toBe(false);
-      expect(selectedMoves.has(PowerMoveType.VerticalUp)).toBe(false);
+      expect(selectedMovesCylinder.has(PowerMoveType.VerticalDown)).toBe(false);
+      expect(selectedMovesCylinder.has(PowerMoveType.VerticalMix)).toBe(false);
+      expect(selectedMovesCylinder.has(PowerMoveType.VerticalUp)).toBe(false);
+
+      service.RestoreLevelTypes(LevelMaterialType.ColorBumpMaterial, LevelGeometryType.Dodecahedron);
+      const selectedMovesDodecahedron = new Set<PowerMoveType>();
+      for (let i = 0; i < 50; i++) {
+        selectedMovesDodecahedron.add(service.PowerMoveSelection(10));
+      }
+      expect(selectedMovesDodecahedron.has(PowerMoveType.VerticalDown)).toBe(false);
+      expect(selectedMovesDodecahedron.has(PowerMoveType.VerticalMix)).toBe(false);
+      expect(selectedMovesDodecahedron.has(PowerMoveType.VerticalUp)).toBe(false);
+    });
+
+    it('should constrain Dodecahedron geometry levels to ColorBumpShape or ColorBumpMaterial', () => {
+      for (let i = 0; i < 100; i++) {
+        service.InitLevelTypes(5);
+        if (service.LevelGeometryType === LevelGeometryType.Dodecahedron) {
+          expect([LevelMaterialType.ColorBumpShape, LevelMaterialType.ColorBumpMaterial]).toContain(
+            service.LevelMaterialType,
+          );
+        }
+      }
     });
   });
 
