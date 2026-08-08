@@ -31,5 +31,12 @@
     </div>
     <wgl-game-menu></wgl-game-menu>
   </div>
-  <div class="copyright" [class.hide]="showScoreProgress()">&copy; {{ copyrightYear }} David Teply</div>
+  <div
+    class="copyright"
+    [class.show]="splashPhase() !== 'black' && !showScoreProgress()"
+    [class.hide]="showScoreProgress()"
+  >
+    &copy; {{ copyrightYear }} David Teply
+  </div>
 </div>
+
