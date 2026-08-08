@@ -55,19 +55,24 @@ export class GameEngineService {
   }
 
   public InitLevelTypes(level: number): void {
-    // set level material type
-    this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(Math.random() * 3) + 1;
-    if (isDevMode()) {
-      console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
-    }
-
     // default geometry type
     this._levelGeometryType = LevelGeometryType.Cube;
     if (level > LEVEL_START_OTHER_GEOMETRIES && Math.floor(Math.random() * 2) % 2 === 0) {
-      this._levelGeometryType = LevelGeometryType.Cylinder;
+      const otherGeoRoll = Math.floor(Math.random() * 2);
+      this._levelGeometryType = otherGeoRoll === 0 ? LevelGeometryType.Cylinder : LevelGeometryType.Dodecahedron;
+    }
+
+    // set level material type
+    if (this._levelGeometryType === LevelGeometryType.Dodecahedron) {
+      // Dodecahedron levels are constrained to ColorBumpShape or ColorBumpMaterial
+      this._levelMaterialType =
+        Math.floor(Math.random() * 2) === 0 ? LevelMaterialType.ColorBumpShape : LevelMaterialType.ColorBumpMaterial;
+    } else {
+      this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(Math.random() * 3) + 1;
     }
 
     if (isDevMode()) {
+      console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
       console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
     }
   }
@@ -112,7 +117,10 @@ export class GameEngineService {
       .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
 
     // remove certain element types
-    if (this.LevelGeometryType === LevelGeometryType.Cylinder) {
+    if (
+      this.LevelGeometryType === LevelGeometryType.Cylinder ||
+      this.LevelGeometryType === LevelGeometryType.Dodecahedron
+    ) {
       powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalDown), 1);
       powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalMix), 1);
       powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalUp), 1);

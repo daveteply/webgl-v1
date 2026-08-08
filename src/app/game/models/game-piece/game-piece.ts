@@ -3,12 +3,13 @@ import {
   BufferAttribute,
   Color,
   CylinderGeometry,
+  DodecahedronGeometry,
   Material,
   MathUtils,
   Mesh,
   MeshPhongMaterial,
   Object3D,
-  Texture,
+  Vector3,
 } from 'three';
 import { take } from 'rxjs';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY, UV_SIDES } from '../../game-constants';
@@ -25,6 +26,8 @@ export class GamePiece extends Object3D {
   private _meshCube: Mesh;
   private _geometryCylinder: CylinderGeometry;
   private _meshCylinder: Mesh;
+  private _geometryDodecahedron: DodecahedronGeometry;
+  private _meshDodecahedron: Mesh;
 
   private _mesh!: Mesh;
 
@@ -88,6 +91,7 @@ export class GamePiece extends Object3D {
 
   private static sharedCubeGeometry: BoxGeometry | null = null;
   private static sharedCylinderGeometry: CylinderGeometry | null = null;
+  private static sharedDodecahedronGeometry: DodecahedronGeometry | null = null;
 
   private static getSharedCubeGeometry(): BoxGeometry {
     if (!GamePiece.sharedCubeGeometry) {
@@ -106,6 +110,79 @@ export class GamePiece extends Object3D {
     return GamePiece.sharedCylinderGeometry;
   }
 
+  private static getSharedDodecahedronGeometry(): DodecahedronGeometry {
+    if (!GamePiece.sharedDodecahedronGeometry) {
+      const geo = new DodecahedronGeometry(0.6, 0);
+      // Align pentagonal flat surface directly facing the wheel center (-Z) and player (+Z)
+      const alignAngle = -Math.atan((Math.sqrt(5) - 1) / 2);
+      geo.rotateY(alignAngle);
+      GamePiece.generatePentagonUVs(geo);
+      GamePiece.sharedDodecahedronGeometry = geo;
+    }
+    return GamePiece.sharedDodecahedronGeometry;
+  }
+
+  private static generatePentagonUVs(geo: DodecahedronGeometry): void {
+    const pos = geo.attributes['position'];
+    if (!pos) return;
+
+    const uvs = new Float32Array(pos.count * 2);
+    const vA = new Vector3();
+    const vB = new Vector3();
+    const vC = new Vector3();
+    const normal = new Vector3();
+    const uTangent = new Vector3();
+    const vTangent = new Vector3();
+    const center = new Vector3();
+    const p = new Vector3();
+
+    // 12 faces, 9 vertices per face (3 triangles * 3 vertices)
+    for (let face = 0; face < pos.count; face += 9) {
+      // Calculate face normal using first triangle
+      vA.fromBufferAttribute(pos, face);
+      vB.fromBufferAttribute(pos, face + 1);
+      vC.fromBufferAttribute(pos, face + 2);
+
+      normal.subVectors(vC, vB).cross(new Vector3().subVectors(vA, vB)).normalize();
+
+      // Compute face center
+      center.set(0, 0, 0);
+      for (let i = 0; i < 9; i++) {
+        p.fromBufferAttribute(pos, face + i);
+        center.add(p);
+      }
+      center.divideScalar(9);
+
+      // Create tangent basis vectors on pentagon plane
+      uTangent.set(0, 1, 0).cross(normal);
+      if (uTangent.lengthSq() < 0.0001) {
+        uTangent.set(1, 0, 0).cross(normal);
+      }
+      uTangent.normalize();
+      vTangent.crossVectors(normal, uTangent).normalize();
+
+      // Find max distance from center to normalize UVs to [0, 1]
+      let maxDist = 0.001;
+      for (let i = 0; i < 9; i++) {
+        p.fromBufferAttribute(pos, face + i);
+        const dist = p.distanceTo(center);
+        if (dist > maxDist) maxDist = dist;
+      }
+
+      // Map UVs for each vertex in this face
+      for (let i = 0; i < 9; i++) {
+        p.fromBufferAttribute(pos, face + i).sub(center);
+        const uVal = 0.5 + p.dot(uTangent) / (maxDist * 2.2);
+        const vVal = 0.5 + p.dot(vTangent) / (maxDist * 2.2);
+        const uIndex = (face + i) * 2;
+        uvs[uIndex] = uVal;
+        uvs[uIndex + 1] = vVal;
+      }
+    }
+
+    geo.setAttribute('uv', new BufferAttribute(uvs, 2));
+  }
+
   constructor(x: number, y: number, z: number, rotation: number) {
     super();
 
@@ -122,6 +199,11 @@ export class GamePiece extends Object3D {
     this._geometryCylinder = GamePiece.getSharedCylinderGeometry();
     this._meshCylinder = new Mesh(this._geometryCylinder);
     this.add(this._meshCylinder);
+
+    // dodecahedron piece
+    this._geometryDodecahedron = GamePiece.getSharedDodecahedronGeometry();
+    this._meshDodecahedron = new Mesh(this._geometryDodecahedron);
+    this.add(this._meshDodecahedron);
 
     // interaction and matching values
     this._thetaStart = Math.abs(rotation);
@@ -158,6 +240,7 @@ export class GamePiece extends Object3D {
     this._pieceGeometryType = levelGeometryType;
     this._meshCube.visible = false;
     this._meshCylinder.visible = false;
+    this._meshDodecahedron.visible = false;
     switch (this._pieceGeometryType) {
       case LevelGeometryType.Cube:
         this._meshCube.visible = true;
@@ -166,6 +249,10 @@ export class GamePiece extends Object3D {
       case LevelGeometryType.Cylinder:
         this._meshCylinder.visible = true;
         this._mesh = this._meshCylinder;
+        break;
+      case LevelGeometryType.Dodecahedron:
+        this._meshDodecahedron.visible = true;
+        this._mesh = this._meshDodecahedron;
         break;
     }
 
@@ -208,6 +295,12 @@ export class GamePiece extends Object3D {
         // cylinder side, top, bottom
         this._meshCylinder.material;
         this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+        break;
+
+      case LevelGeometryType.Dodecahedron:
+        target = this._pieceMaterials[this._matchKeySequence[0]];
+        targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+        this._meshDodecahedron.material = targetMaterial;
         break;
     }
 
@@ -449,30 +542,105 @@ export class GamePiece extends Object3D {
     // update removed state
     this._isRemoved = true;
 
-    // set animation properties
+    const startRotX = this._mesh.rotation.x;
+    const startRotY = this._mesh.rotation.y;
+    const startRotZ = this._mesh.rotation.z;
+    const startPosX = this._mesh.position.x;
+    const startPosY = this._mesh.position.y;
+    const startPosZ = this._mesh.position.z;
+
+    const rad = this._thetaStart;
+    const dirX = Math.cos(rad);
+    const dirZ = Math.sin(rad);
+
+    let targetRotX = startRotX + MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+    let targetRotY = startRotY + MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+    let targetRotZ = startRotZ + MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+
+    let targetPosX = startPosX;
+    let targetPosY = startPosY;
+    let targetPosZ = startPosZ;
+    let peakScale = 1.0;
+    let easingFunc: any = Easing.Sinusoidal.Out;
+
+    switch (style) {
+      case GamePieceRemovalStyle.FadeTranslate:
+        targetPosX += 0.8;
+        break;
+
+      case GamePieceRemovalStyle.ImplodePop:
+        peakScale = 1.4;
+        easingFunc = Easing.Back.Out;
+        targetRotX = startRotX + MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+        targetRotY = startRotY + MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+        break;
+
+      case GamePieceRemovalStyle.ExplodeScatter: {
+        const scatterDist = MathUtils.randFloat(2.5, 4.5);
+        targetPosX = dirX * scatterDist;
+        targetPosZ = dirZ * scatterDist;
+        targetPosY = startPosY + MathUtils.randFloat(-2.0, 2.0);
+        targetRotX = startRotX + MathUtils.randFloat(-Math.PI * 4, Math.PI * 4);
+        targetRotY = startRotY + MathUtils.randFloat(-Math.PI * 4, Math.PI * 4);
+        targetRotZ = startRotZ + MathUtils.randFloat(-Math.PI * 4, Math.PI * 4);
+        easingFunc = Easing.Quadratic.Out;
+        break;
+      }
+
+      case GamePieceRemovalStyle.VortexSpiral: {
+        const spiralDist = MathUtils.randFloat(1.5, 3.0);
+        targetPosX = dirX * spiralDist + dirZ * 1.5;
+        targetPosZ = dirZ * spiralDist - dirX * 1.5;
+        targetPosY = startPosY + MathUtils.randFloat(2.0, 4.0);
+        targetRotY = startRotY + Math.PI * 6;
+        easingFunc = Easing.Cubic.Out;
+        break;
+      }
+
+      case GamePieceRemovalStyle.GravitationalDrop: {
+        targetPosY = startPosY - MathUtils.randFloat(4.0, 7.0);
+        targetRotX = startRotX + MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+        targetRotZ = startRotZ + MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+        easingFunc = Easing.Quadratic.In;
+        break;
+      }
+    }
+
     const delta = {
-      x: this._mesh.rotation.x,
-      y: this._mesh.rotation.y,
-      z: this._mesh.rotation.z,
+      px: startPosX,
+      py: startPosY,
+      pz: startPosZ,
+      rx: startRotX,
+      ry: startRotY,
+      rz: startRotZ,
       o: 1.0,
     };
+
     const target = {
-      x: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
-      y: delta.y + MathUtils.randFloat(-Math.PI, Math.PI),
-      z: delta.x + MathUtils.randFloat(-Math.PI, Math.PI),
+      px: targetPosX,
+      py: targetPosY,
+      pz: targetPosZ,
+      rx: targetRotX,
+      ry: targetRotY,
+      rz: targetRotZ,
       o: 0.0,
     };
 
+    const duration = isRestoring ? 500 : MathUtils.randInt(800, 1300);
+
     this._removeTween = new Tween(delta, true)
-      .to(target, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
+      .to(target, duration)
+      .easing(easingFunc)
       .onUpdate(() => {
-        this._mesh.rotation.x = delta.x;
-        this._mesh.rotation.y = delta.y;
-        this._mesh.rotation.z = delta.z;
-        this._mesh.scale.set(delta.o, delta.o, delta.o);
-        if (style === GamePieceRemovalStyle.FadeTranslate) {
-          this._mesh.translateX(0.1);
+        this._mesh.position.set(delta.px, delta.py, delta.pz);
+        this._mesh.rotation.set(delta.rx, delta.ry, delta.rz);
+
+        let currentScale = delta.o;
+        if (style === GamePieceRemovalStyle.ImplodePop && delta.o > 0.4) {
+          currentScale = 1.0 + (peakScale - 1.0) * Math.sin((1 - delta.o) * Math.PI);
         }
+        this._mesh.scale.set(currentScale, currentScale, currentScale);
+
         this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
@@ -511,6 +679,10 @@ export class GamePiece extends Object3D {
         const target = this._pieceMaterials[this._matchKeySequence[0]];
         const targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
         this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+      } else if (this._pieceGeometryType === LevelGeometryType.Dodecahedron) {
+        const target = this._pieceMaterials[this._matchKeySequence[0]];
+        const targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+        this._meshDodecahedron.material = targetMaterial;
       }
 
       // tween
