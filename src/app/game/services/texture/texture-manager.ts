@@ -139,7 +139,7 @@ export class TextureManagerService {
         });
 
         if (isDevMode()) {
-          emojiList.forEach((emoji) => console.info(`  ${emoji.desc} ${emoji.sequence}`));
+          console.info(emojiList.map((emoji) => `  ${emoji.desc} ${emoji.sequence}`).join('\n'));
         }
         break;
     }

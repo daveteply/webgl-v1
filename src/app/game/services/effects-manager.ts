@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, inject, isDevMode } from '@angular/core';
 
 import { Tween } from '@tweenjs/tween.js';
 import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
@@ -12,6 +12,7 @@ import { GameWheel } from '../models/game-wheel';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
 import { SaveGameScore } from './save-game/save-game-types';
+import { LEVEL_ANIMATION_STYLES, LevelAnimationStyle } from '../models/level-animation-style';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +39,7 @@ export class EffectsManagerService {
     camera: PerspectiveCamera,
     light: PointLight,
     start: boolean,
+    customStyle?: LevelAnimationStyle,
   ): void {
     // clear selected for highlighting
     if (start) {
@@ -47,19 +49,19 @@ export class EffectsManagerService {
     // lock board (interact manager)
     this.LevelChangeAnimation.next(true);
 
-    // stop currently running tween
+    // stop currently running camera tweens
     this._levelChangeCameraTween1?.stop();
     this._levelChangeCameraTween2?.stop();
 
-    let vTargets = [...verticalTargets];
-    if (!start) {
-      vTargets = verticalTargets.map(() => {
-        return -WHEEL_START_POSITION;
-      });
+    // Select random level transition animation style if not explicitly passed
+    const activeStyle = customStyle ?? LEVEL_ANIMATION_STYLES[MathUtils.randInt(0, LEVEL_ANIMATION_STYLES.length - 1)];
+
+    if (isDevMode()) {
+      console.info('Level Animation Style: ', LevelAnimationStyle[activeStyle]);
     }
 
     // animate camera
-    const delta1 = start ? { z: 5.0, rotX: 0, l: 400 } : { z: 5.0, rotX: 0, l: 400 };
+    const delta1 = { z: 5.0, rotX: 0, l: 400 };
     const target1 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
     this._levelChangeCameraTween1 = new Tween(delta1, true).to(target1, start ? 750 : 3000).onUpdate(() => {
       camera.rotation.x = delta1.rotX;
@@ -68,7 +70,7 @@ export class EffectsManagerService {
     });
 
     const delta2 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
-    const target2 = start ? { z: 5.0, rotX: 0, l: 400 } : { z: 5.0, rotX: 0, l: 400 };
+    const target2 = { z: 5.0, rotX: 0, l: 400 };
     this._levelChangeCameraTween2 = new Tween(delta2, true)
       .to(target2, 2000)
       .delay(1250)
@@ -87,8 +89,9 @@ export class EffectsManagerService {
     const introSpinDirection = MathUtils.randInt(1, 3);
     let delay = 0;
     gameWheels.forEach((wheel, inx) => {
-      delay += 250;
-      wheel.AnimateLevelStartTween(vTargets[inx], delay, start, introSpinDirection);
+      delay += 200;
+      const targetY = start ? verticalTargets[inx] : -WHEEL_START_POSITION;
+      wheel.AnimateLevelStartTween(targetY, delay, start, introSpinDirection, activeStyle);
     });
 
     this._levelChangeCameraTween1.chain(this._levelChangeCameraTween2);
