@@ -255,14 +255,14 @@ export class MaterialManagerService {
     const sortedColors = scheme.colors.sort();
 
     if (isDevMode()) {
-      console.info('  color scheme:', scheme.id);
+      console.info('  Color Scheme:', scheme.id);
       console.info('    ' + sortedColors.map((c) => `%c ${c}`).join(''), ...sortedColors.map((c) => `color: ${c}`));
     }
 
     const shuffledColors = arrayShuffle(sortedColors).slice(0, playableTextureCount);
 
     if (isDevMode()) {
-      console.info('    game piece colors:', scheme);
+      console.info('    Game Piece Colors:', scheme);
       console.info('    ' + shuffledColors.map((c) => `%c ${c}`).join(''), ...shuffledColors.map((c) => `color: ${c}`));
     }
 

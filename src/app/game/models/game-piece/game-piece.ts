@@ -18,6 +18,7 @@ import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
 import { LevelGeometryType } from '../../level-geometry-type';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';
+import { LevelAnimationStyle } from '../level-animation-style';
 
 export class GamePiece extends Object3D {
   private _geometryCube: BoxGeometry;
@@ -150,6 +151,7 @@ export class GamePiece extends Object3D {
 
   public Reset(levelGeometryType: LevelGeometryType): void {
     this._removeTween?.stop();
+    this._levelChangeTween?.stop();
     this._isRemoved = false;
 
     // set geometry type and set normalized access variable
@@ -213,15 +215,167 @@ export class GamePiece extends Object3D {
     this._matchKey = this._pieceMaterials[this._matchKeySequence[0]]?.matchKey;
   }
 
-  public AnimateLevelChangeTween(start: boolean): void {
+  public AnimateLevelChangeTween(
+    start: boolean,
+    style: LevelAnimationStyle = LevelAnimationStyle.RadialAssemble,
+    delayOffset = 0,
+  ): void {
     this._levelChangeTween?.stop();
 
-    const delta = start ? { o: 0.0 } : { o: 1.0 };
-    const target = start ? { o: 1.0 } : { o: 0.0 };
+    const rad = this._thetaStart;
+    const dirX = Math.cos(rad);
+    const dirZ = Math.sin(rad);
+
+    let startX = 0;
+    let startY = 0;
+    let startZ = 0;
+    let startRotX = 0;
+    let startRotY = 0;
+    let startRotZ = 0;
+    let startScaleX = 1;
+    let startScaleY = 1;
+    let startScaleZ = 1;
+
+    let targetX = 0;
+    let targetY = 0;
+    let targetZ = 0;
+    let targetRotX = 0;
+    let targetRotY = 0;
+    let targetRotZ = 0;
+    let targetScaleX = 1;
+    let targetScaleY = 1;
+    let targetScaleZ = 1;
+
+    let easingFunc = start ? Easing.Sinusoidal.Out : Easing.Sinusoidal.In;
+
+    switch (style) {
+      case LevelAnimationStyle.RadialAssemble: {
+        const mult = start ? MathUtils.randFloat(6.0, 11.0) : MathUtils.randFloat(8.0, 15.0);
+        const yOff = MathUtils.randFloat(-5.0, 5.0);
+        if (start) {
+          startX = dirX * mult;
+          startZ = dirZ * mult;
+          startY = yOff;
+          startRotX = MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+          startRotY = MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+          startRotZ = MathUtils.randFloat(-Math.PI, Math.PI);
+          startScaleX = startScaleY = startScaleZ = 0.05;
+          easingFunc = Easing.Back.Out;
+        } else {
+          targetX = dirX * mult;
+          targetZ = dirZ * mult;
+          targetY = yOff;
+          targetRotX = MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+          targetRotY = MathUtils.randFloat(-Math.PI * 2, Math.PI * 2);
+          targetScaleX = targetScaleY = targetScaleZ = 0.0;
+          easingFunc = Easing.Quadratic.In;
+        }
+        break;
+      }
+      case LevelAnimationStyle.SpiralVortex: {
+        const radius = MathUtils.randFloat(6.0, 10.0);
+        const altY = MathUtils.randFloat(8.0, 15.0) * (MathUtils.randInt(0, 1) ? 1 : -1);
+        if (start) {
+          startX = dirX * radius + dirZ * 3.0;
+          startZ = dirZ * radius - dirX * 3.0;
+          startY = altY;
+          startRotY = Math.PI * 6;
+          startScaleX = startScaleY = startScaleZ = 0.05;
+          easingFunc = Easing.Cubic.Out;
+        } else {
+          targetX = dirX * radius - dirZ * 4.0;
+          targetZ = dirZ * radius + dirX * 4.0;
+          targetY = altY * -1;
+          targetRotY = -Math.PI * 6;
+          targetScaleX = targetScaleY = targetScaleZ = 0.0;
+          easingFunc = Easing.Cubic.In;
+        }
+        break;
+      }
+      case LevelAnimationStyle.ScatterSnap: {
+        if (start) {
+          startX = MathUtils.randFloat(-12, 12);
+          startY = MathUtils.randFloat(-12, 12);
+          startZ = MathUtils.randFloat(-12, 12);
+          startRotX = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          startRotY = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          startRotZ = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          startScaleX = startScaleY = startScaleZ = 0.02;
+          easingFunc = Easing.Exponential.Out;
+        } else {
+          targetX = MathUtils.randFloat(-15, 15);
+          targetY = MathUtils.randFloat(-15, 15);
+          targetZ = MathUtils.randFloat(-15, 15);
+          targetRotX = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          targetRotY = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          targetRotZ = MathUtils.randFloat(-Math.PI * 3, Math.PI * 3);
+          targetScaleX = targetScaleY = targetScaleZ = 0.0;
+          easingFunc = Easing.Exponential.In;
+        }
+        break;
+      }
+      case LevelAnimationStyle.CascadeWave: {
+        const xDist = MathUtils.randFloat(3.5, 4.5) * (MathUtils.randInt(0, 1) ? 1 : -1);
+        if (start) {
+          startX = xDist;
+          startZ = dirZ * MathUtils.randFloat(1.5, 3.0);
+          startY = MathUtils.randFloat(-0.8, 0.8);
+          startScaleX = 1.35;
+          startScaleY = startScaleZ = 0.85;
+          startRotZ = MathUtils.randFloat(-0.25, 0.25);
+          easingFunc = Easing.Bounce.Out;
+        } else {
+          targetX = -xDist * 1.5;
+          targetZ = dirZ * MathUtils.randFloat(2.0, 4.5);
+          targetScaleX = 0.1;
+          targetScaleY = targetScaleZ = 0.1;
+          targetRotZ = MathUtils.randFloat(-0.3, 0.3);
+          easingFunc = Easing.Quadratic.In;
+        }
+        break;
+      }
+    }
+
+    // Set initial properties for mesh
+    this._mesh.position.set(startX, startY, startZ);
+    this._mesh.rotation.set(startRotX, startRotY, startRotZ);
+    this._mesh.scale.set(startScaleX, startScaleY, startScaleZ);
+
+    const delta = {
+      px: startX,
+      py: startY,
+      pz: startZ,
+      rx: startRotX,
+      ry: startRotY,
+      rz: startRotZ,
+      sx: startScaleX,
+      sy: startScaleY,
+      sz: startScaleZ,
+      o: start ? 0.0 : 1.0,
+    };
+    const target = {
+      px: targetX,
+      py: targetY,
+      pz: targetZ,
+      rx: targetRotX,
+      ry: targetRotY,
+      rz: targetRotZ,
+      sx: targetScaleX,
+      sy: targetScaleY,
+      sz: targetScaleZ,
+      o: start ? 1.0 : 0.0,
+    };
+
+    const delay = delayOffset + MathUtils.randInt(100, 600);
+
     this._levelChangeTween = new Tween(delta, true)
-      .to(target, 2500)
-      .delay(MathUtils.randInt(250, 1500))
+      .to(target, 2200)
+      .delay(delay)
+      .easing(easingFunc)
       .onUpdate(() => {
+        this._mesh.position.set(delta.px, delta.py, delta.pz);
+        this._mesh.rotation.set(delta.rx, delta.ry, delta.rz);
+        this._mesh.scale.set(delta.sx, delta.sy, delta.sz);
         this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
             m.materialBasic.opacity = delta.o;
@@ -229,6 +383,13 @@ export class GamePiece extends Object3D {
             m.materialPhong.opacity = delta.o;
           }
         });
+      })
+      .onComplete(() => {
+        if (start) {
+          this._mesh.position.set(0, 0, 0);
+          this._mesh.rotation.set(0, 0, 0);
+          this._mesh.scale.set(1, 1, 1);
+        }
       })
       .start();
   }

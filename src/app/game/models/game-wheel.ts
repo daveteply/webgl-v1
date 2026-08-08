@@ -7,6 +7,8 @@ import { GamePiece } from './game-piece/game-piece';
 import { PiecePoints } from './piece-points';
 import { PowerMoveType } from './power-move-type';
 
+import { LevelAnimationStyle } from './level-animation-style';
+
 export class GameWheel extends Object3D {
   private _theta = 0;
   private _moveStartTheta = 0;
@@ -89,7 +91,13 @@ export class GameWheel extends Object3D {
     }
   }
 
-  public AnimateLevelStartTween(targetY: number, delay: number, start: boolean, spinDirection: number): void {
+  public AnimateLevelStartTween(
+    targetY: number,
+    delay: number,
+    start: boolean,
+    spinDirection: number,
+    animationStyle: LevelAnimationStyle = LevelAnimationStyle.RadialAssemble,
+  ): void {
     this._levelChangeTween?.stop();
 
     let introSpinRangeMin = -10;
@@ -126,9 +134,9 @@ export class GameWheel extends Object3D {
       })
       .start();
 
-    // opacity of each game piece
+    // opacity & 3D transformation of each game piece
     for (const gamePiece of this.children as GamePiece[]) {
-      gamePiece.AnimateLevelChangeTween(start);
+      gamePiece.AnimateLevelChangeTween(start, animationStyle, delay);
     }
   }
 
