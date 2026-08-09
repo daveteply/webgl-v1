@@ -24,7 +24,7 @@
   </div>
   <wgl-share-content
     class="docked-share-tab"
-    [class.show]="splashPhase() === 'fade-out' || splashPhase() === 'done'"
+    [class.show]="showScoreProgress()"
   ></wgl-share-content>
   <div class="game-footer" [class.show]="showScoreProgress()">
     <div class="level-progress">
