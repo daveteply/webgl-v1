@@ -9,6 +9,7 @@ import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/ser
 import { NotifyService } from '../../../shared/services/notify';
 import { ObjectManagerService } from '../../services/object-manager';
 import { ShareManagerService } from '../../services/share-manager';
+import { PwaInstallService } from '../../../shared/services/pwa-install';
 import { SaveGameConfirm } from '../dialogs/components/save-game-confirm/save-game-confirm';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
 import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
@@ -21,6 +22,7 @@ import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa'
 })
 export class GameMenu {
   public shareManager = inject(ShareManagerService);
+  public pwaInstallService = inject(PwaInstallService);
 
   private notify = inject(NotifyService);
   private objectManager = inject(ObjectManagerService);
@@ -41,7 +43,14 @@ export class GameMenu {
     });
   }
 
-  public InstallAppClick(): void {
+  public async InstallAppClick(): Promise<void> {
+    if (this.pwaInstallService.canInstall()) {
+      const result = await this.pwaInstallService.promptInstall();
+      if (result === 'accepted') {
+        return;
+      }
+    }
+
     this.dialog.open(InstallPwaDialog, {
       minWidth: '20em',
       panelClass: ['wgl-pane-bounce'],
