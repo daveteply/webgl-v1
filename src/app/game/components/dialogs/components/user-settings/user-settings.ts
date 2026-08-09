@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -6,6 +6,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AudioType } from '../../../../../shared/services/audio/audio-data';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { HighScoreManagerService } from '../../../../../shared/services/high-score-manager';
 import { StorageService } from '../../../../../shared/services/storage/storage.service';
@@ -25,7 +26,7 @@ import { HapticsManagerService } from '../../../../../shared/services/haptics-ma
   templateUrl: './user-settings.html',
   styleUrl: './user-settings.scss',
 })
-export class UserSettings {
+export class UserSettings implements OnDestroy {
   private audioManager = inject(AudioManagerService);
   private highScoreManager = inject(HighScoreManagerService);
   private storageService = inject(StorageService);
@@ -38,6 +39,8 @@ export class UserSettings {
   confirmClear = false;
   confirmFactoryReset = false;
   factoryResetCompleted = false;
+
+  private musicPreviewTimeout?: ReturnType<typeof setTimeout>;
 
   get gameIcon(): string {
     return this.gameVolume === 0 ? 'volume_off' : 'volume_up';
@@ -66,11 +69,36 @@ export class UserSettings {
     this.audioManager.SetGameVolume(val / 100);
   }
 
+  onGameVolumeChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const val = Number(input.value);
+    this.gameVolume = val;
+    this.audioManager.SetGameVolume(val / 100);
+    this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+  }
+
   onMusicVolumeInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const val = Number(input.value);
     this.musicVolume = val;
     this.audioManager.SetMusicVolume(val / 100);
+  }
+
+  onMusicVolumeChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const val = Number(input.value);
+    this.musicVolume = val;
+    this.audioManager.SetMusicVolume(val / 100);
+
+    if (this.musicPreviewTimeout) {
+      clearTimeout(this.musicPreviewTimeout);
+    }
+    this.audioManager.StopAudio(AudioType.LEVEL_END_7);
+    this.audioManager.PlayAudio(AudioType.LEVEL_END_7, false, false, 2.0);
+
+    this.musicPreviewTimeout = setTimeout(() => {
+      this.audioManager.StopAudio(AudioType.LEVEL_END_7);
+    }, 2500);
   }
 
   onPromptClearHighScores(): void {
@@ -109,6 +137,13 @@ export class UserSettings {
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if (this.musicPreviewTimeout) {
+      clearTimeout(this.musicPreviewTimeout);
+    }
+    this.audioManager.StopAudio(AudioType.LEVEL_END_7);
   }
 }
 

@@ -24,7 +24,7 @@
 
 .content-body {
   max-height: 65vh;
-  overflow-y: auto !important;
+  overflow: hidden;
   padding: 0.4em 0.2em;
   margin: 0;
 }

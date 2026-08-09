@@ -13,7 +13,12 @@
       </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input matSliderThumb [value]="gameVolume" (input)="onGameVolumeInput($event)" />
+          <input
+            matSliderThumb
+            [value]="gameVolume"
+            (input)="onGameVolumeInput($event)"
+            (change)="onGameVolumeChange($event)"
+          />
         </mat-slider>
       </div>
       <span class="setting-value">{{ gameVolume }}%</span>
@@ -27,7 +32,12 @@
       </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input matSliderThumb [value]="musicVolume" (input)="onMusicVolumeInput($event)" />
+          <input
+            matSliderThumb
+            [value]="musicVolume"
+            (input)="onMusicVolumeInput($event)"
+            (change)="onMusicVolumeChange($event)"
+          />
         </mat-slider>
       </div>
       <span class="setting-value">{{ musicVolume }}%</span>

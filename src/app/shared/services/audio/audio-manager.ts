@@ -203,7 +203,7 @@ export class AudioManagerService implements OnDestroy {
     this._noteNext = this.NOTE_MIN;
   }
 
-  public PlayAudio(audioType: AudioType, useNote = false, loop = false): void {
+  public PlayAudio(audioType: AudioType, useNote = false, loop = false, startOffset = 0): void {
     const target = AUDIO_LIST.find((audioTrack) => audioTrack.audioType === audioType);
     if (!target) return;
 
@@ -213,14 +213,14 @@ export class AudioManagerService implements OnDestroy {
 
     const cachedBuffer = this._bufferCache.get(audioType);
     if (cachedBuffer) {
-      this.playBuffer(ctx, audioType, cachedBuffer, rate, loop);
+      this.playBuffer(ctx, audioType, cachedBuffer, rate, loop, startOffset);
     } else {
       fetch(target.url)
         .then((res) => res.arrayBuffer())
         .then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer))
         .then((audioBuffer) => {
           this._bufferCache.set(audioType, audioBuffer);
-          this.playBuffer(ctx, audioType, audioBuffer, rate, loop);
+          this.playBuffer(ctx, audioType, audioBuffer, rate, loop, startOffset);
         })
         .catch((err) => {
           if (isDevMode()) {
@@ -230,7 +230,14 @@ export class AudioManagerService implements OnDestroy {
     }
   }
 
-  private playBuffer(ctx: AudioContext, audioType: AudioType, buffer: AudioBuffer, rate: number, loop: boolean): void {
+  private playBuffer(
+    ctx: AudioContext,
+    audioType: AudioType,
+    buffer: AudioBuffer,
+    rate: number,
+    loop: boolean,
+    startOffset = 0,
+  ): void {
     this.StopAudio(audioType);
 
     const source = ctx.createBufferSource();
@@ -249,7 +256,7 @@ export class AudioManagerService implements OnDestroy {
       source.connect(ctx.destination);
     }
 
-    source.start(0);
+    source.start(0, startOffset);
     this._activeSources.set(audioType, source);
   }
 
