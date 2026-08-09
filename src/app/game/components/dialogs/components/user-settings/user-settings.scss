@@ -24,7 +24,7 @@
 
 .content-body {
   max-height: 65vh;
-  overflow-y: auto !important;
+  overflow: hidden;
   padding: 0.4em 0.2em;
   margin: 0;
 }
@@ -61,11 +61,28 @@
     }
   }
 
-  &.toggle-row {
+  &.toggle-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toggle-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.2em 0;
+  }
+
+  .disabled-label {
+    opacity: 0.5;
+  }
+
+  .haptics-unavailable-note {
+    font-size: 0.72em;
+    opacity: 0.65;
+    margin-top: 0.15em;
+    margin-left: 2.1em;
+    font-style: italic;
   }
 
   &.reset-row {

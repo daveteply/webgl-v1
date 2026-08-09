@@ -13,7 +13,12 @@
       </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input matSliderThumb [value]="gameVolume" (input)="onGameVolumeInput($event)" />
+          <input
+            matSliderThumb
+            [value]="gameVolume"
+            (input)="onGameVolumeInput($event)"
+            (change)="onGameVolumeChange($event)"
+          />
         </mat-slider>
       </div>
       <span class="setting-value">{{ gameVolume }}%</span>
@@ -27,23 +32,34 @@
       </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input matSliderThumb [value]="musicVolume" (input)="onMusicVolumeInput($event)" />
+          <input
+            matSliderThumb
+            [value]="musicVolume"
+            (input)="onMusicVolumeInput($event)"
+            (change)="onMusicVolumeChange($event)"
+          />
         </mat-slider>
       </div>
       <span class="setting-value">{{ musicVolume }}%</span>
     </div>
 
     <!-- Haptic Feedback Toggle -->
-    <div class="setting-row toggle-row" *ngIf="isHapticsAvailable">
-      <span class="setting-label">
-        <mat-icon class="setting-icon">vibration</mat-icon>
-        <span>Haptic Feedback</span>
-      </span>
-      <mat-slide-toggle
-        [checked]="hapticsEnabled"
-        (change)="onHapticsChange($event.checked)"
-        color="primary"
-      ></mat-slide-toggle>
+    <div class="setting-row toggle-wrapper">
+      <div class="toggle-row">
+        <span class="setting-label" [class.disabled-label]="!isHapticsAvailable">
+          <mat-icon class="setting-icon">vibration</mat-icon>
+          <span>Haptic Feedback</span>
+        </span>
+        <mat-slide-toggle
+          [checked]="hapticsEnabled"
+          [disabled]="!isHapticsAvailable"
+          (change)="onHapticsChange($event.checked)"
+          color="primary"
+        ></mat-slide-toggle>
+      </div>
+      <div class="haptics-unavailable-note" *ngIf="!isHapticsAvailable">
+        Haptic feedback is not available
+      </div>
     </div>
 
     <!-- High Scores Reset -->
