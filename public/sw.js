@@ -3,24 +3,28 @@ const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
-  '/manifest.json',
   '/favicon.ico',
   '/favicon-16x16.png',
   '/favicon-32x32.png',
   '/rikkle-logo-2026.webp',
-  '/particle.webp',
   '/icons/android/launchericon-192x192.png',
   '/icons/android/launchericon-512x512.png',
   '/icons/ios/180.png',
 ];
 
-// Installation: Cache static assets
+// Installation: Cache static assets (safely ignoring any single asset failure)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(PRECACHE_ASSETS);
+        return Promise.allSettled(
+          PRECACHE_ASSETS.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn(`[SW] Precache failed for ${url}:`, err);
+            })
+          )
+        );
       })
       .then(() => self.skipWaiting()),
   );

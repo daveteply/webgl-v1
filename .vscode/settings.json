@@ -4,5 +4,5 @@
   "explorer.fileNesting.patterns": {
     "*.ts": "$(capture).spec.ts, $(capture).html, $(capture).scss, $(capture).css"
   },
-  "cSpell.words": ["mult"]
+  "cSpell.words": ["launchericon", "mult"]
 }
