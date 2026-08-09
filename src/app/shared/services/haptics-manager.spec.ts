@@ -36,7 +36,7 @@ describe('HapticsManagerService', () => {
 
   it('should not vibrate when hapticsEnabled is false', () => {
     const vibrateSpy = vi.fn().mockReturnValue(true);
-    vi.stubGlobal('navigator', { vibrate: vibrateSpy });
+    vi.stubGlobal('navigator', { vibrate: vibrateSpy, maxTouchPoints: 1 });
     service.HapticsEnabled = false;
 
     const result = service.LightTap();
@@ -48,12 +48,36 @@ describe('HapticsManagerService', () => {
 
   it('should trigger LightTap when vibrate is available and enabled', () => {
     const vibrateSpy = vi.fn().mockReturnValue(true);
-    vi.stubGlobal('navigator', { vibrate: vibrateSpy });
+    vi.stubGlobal('navigator', { vibrate: vibrateSpy, maxTouchPoints: 1 });
     service.HapticsEnabled = true;
 
     const result = service.LightTap();
     expect(vibrateSpy).toHaveBeenCalledWith(12);
     expect(result).toBe(true);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should return false for desktop environment without touch points', () => {
+    const vibrateSpy = vi.fn().mockReturnValue(true);
+    vi.stubGlobal('navigator', {
+      vibrate: vibrateSpy,
+      maxTouchPoints: 0,
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+    });
+    expect(service.isAvailable).toBe(false);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should return true for mobile environment with vibrate support', () => {
+    const vibrateSpy = vi.fn().mockReturnValue(true);
+    vi.stubGlobal('navigator', {
+      vibrate: vibrateSpy,
+      maxTouchPoints: 5,
+      userAgent: 'Mozilla/5.0 (Linux; Android 10)',
+    });
+    expect(service.isAvailable).toBe(true);
 
     vi.unstubAllGlobals();
   });
