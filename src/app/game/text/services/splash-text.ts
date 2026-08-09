@@ -1,4 +1,5 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../../services/tween-group';
 import { Observable } from 'rxjs';
 import { Color, MathUtils, Mesh, MeshBasicMaterial, Object3D } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
@@ -128,7 +129,7 @@ export class SplashText extends Object3D {
         break;
     }
 
-    this._introTween = new Tween(delta, true)
+    this._introTween = new Tween(delta, mainTweenGroup)
       .to(target, 750)
       .easing(Easing.Elastic.Out)
       .onUpdate(() => {
@@ -144,7 +145,7 @@ export class SplashText extends Object3D {
   private initOutroTween(yOffset: number): void {
     const delta = { o: 1.0, z: 0.0, y: this._targetY + yOffset };
     const target = { o: 0.0, z: 5.0, y: 2.0 };
-    this._outroTween = new Tween(delta, true)
+    this._outroTween = new Tween(delta, mainTweenGroup)
       .to(target, 1000)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {

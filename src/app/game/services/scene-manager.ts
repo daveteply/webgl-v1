@@ -6,7 +6,7 @@ import { ObjectManagerService } from './object-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
 import { ShareManagerService } from './share-manager';
 
-import * as TWEEN from '@tweenjs/tween.js';
+import { mainTweenGroup } from './tween-group';
 
 @Injectable({
   providedIn: 'root',
@@ -120,7 +120,7 @@ export class SceneManagerService implements OnDestroy {
   }
 
   private animate(now: number): void {
-    TWEEN.update(now);
+    mainTweenGroup.update(now);
 
     const nowSec = now * 0.001;
     const deltaTime = nowSec - this._previousFrameRenderTime;

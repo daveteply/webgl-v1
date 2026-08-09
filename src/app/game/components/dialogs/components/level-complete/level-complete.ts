@@ -15,6 +15,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../../../../services/tween-group';
 
 import { AudioType } from '../../../../../shared/services/audio/audio-data';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
@@ -94,7 +95,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
 
     this.dialogNotify.DialogNotifyEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       const delta = { b: 1 };
-      new Tween(delta, true)
+      new Tween(delta, mainTweenGroup)
         .to({ b: 30 }, 100)
         .repeat(2)
         .yoyo(true)
