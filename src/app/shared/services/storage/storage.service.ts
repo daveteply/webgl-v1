@@ -29,4 +29,12 @@ export class StorageService {
       console.warn(`Failed to remove key ${key} from localStorage`, e);
     }
   }
+
+  public clear(): void {
+    try {
+      localStorage.clear();
+    } catch (e) {
+      console.warn(`Failed to clear localStorage`, e);
+    }
+  }
 }

@@ -149,6 +149,20 @@
     }
   }
 
+  .docked-share-tab {
+    position: absolute;
+    left: 0;
+    bottom: 5.5em;
+    z-index: 2;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+
+    &.show {
+      opacity: 1;
+    }
+  }
+
   .game-footer {
     position: absolute;
     bottom: 0.5em;
@@ -239,6 +253,10 @@
 
     .game-footer {
       bottom: calc((100vh - (100vw / 0.75)) * 0.28);
+    }
+
+    .docked-share-tab {
+      bottom: calc((100vh - (100vw / 0.75)) * 0.28 + 5em);
     }
   }
 

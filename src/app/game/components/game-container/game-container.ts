@@ -95,9 +95,6 @@ export class GameContainer implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameOver) => {
-      // hide share
-      this.shareManager.UpdateInLevel(false);
-
       // game state
       this._isGameOver = gameOver;
       if (!this._isGameOver) {

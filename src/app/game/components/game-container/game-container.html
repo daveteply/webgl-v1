@@ -22,8 +22,11 @@
   <div class="game">
     <canvas class="game-canvas" #gameCanvas></canvas>
   </div>
+  <wgl-share-content
+    class="docked-share-tab"
+    [class.show]="showScoreProgress()"
+  ></wgl-share-content>
   <div class="game-footer" [class.show]="showScoreProgress()">
-    <wgl-share-content></wgl-share-content>
     <div class="level-progress">
       <div class="level-progress--percent">{{ scoringManager.LevelProgress | number: '1.0-0' }}%</div>
       <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
