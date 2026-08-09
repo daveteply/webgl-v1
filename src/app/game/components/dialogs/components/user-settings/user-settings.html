@@ -6,39 +6,48 @@
 
   <div mat-dialog-content class="content-body">
     <!-- Game SFX Volume -->
-    <div class="setting-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <mat-icon class="setting-icon">{{ gameIcon }}</mat-icon>
-          <span>Game Sounds</span>
-        </span>
-        <span class="setting-value">{{ gameVolume }}%</span>
-      </div>
+    <div class="setting-row inline-row">
+      <span class="setting-label">
+        <mat-icon class="setting-icon">{{ gameIcon }}</mat-icon>
+        <span>Game</span>
+      </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
           <input matSliderThumb [value]="gameVolume" (input)="onGameVolumeInput($event)" />
         </mat-slider>
       </div>
+      <span class="setting-value">{{ gameVolume }}%</span>
     </div>
 
     <!-- Background Music Volume -->
-    <div class="setting-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <mat-icon class="setting-icon">{{ musicIcon }}</mat-icon>
-          <span>Background Sounds</span>
-        </span>
-        <span class="setting-value">{{ musicVolume }}%</span>
-      </div>
+    <div class="setting-row inline-row">
+      <span class="setting-label">
+        <mat-icon class="setting-icon">{{ musicIcon }}</mat-icon>
+        <span>Music</span>
+      </span>
       <div class="slider-container">
         <mat-slider min="0" max="100" step="1" class="volume-slider">
           <input matSliderThumb [value]="musicVolume" (input)="onMusicVolumeInput($event)" />
         </mat-slider>
       </div>
+      <span class="setting-value">{{ musicVolume }}%</span>
+    </div>
+
+    <!-- Haptic Feedback Toggle -->
+    <div class="setting-row toggle-row" *ngIf="isHapticsAvailable">
+      <span class="setting-label">
+        <mat-icon class="setting-icon">vibration</mat-icon>
+        <span>Haptic Feedback</span>
+      </span>
+      <mat-slide-toggle
+        [checked]="hapticsEnabled"
+        (change)="onHapticsChange($event.checked)"
+        color="primary"
+      ></mat-slide-toggle>
     </div>
 
     <!-- High Scores Reset -->
-    <div class="setting-row score-reset-row">
+    <div class="setting-row reset-row">
       <div class="setting-header">
         <span class="setting-label">
           <span class="emoji-icon">🏆</span>
@@ -51,7 +60,7 @@
           <span>{{ scoresCleared ? 'Scores Cleared' : 'Reset High Scores' }}</span>
         </button>
       </div>
-      <div class="confirm-container" *ngIf="confirmClear">
+      <div class="confirm-container score-reset" *ngIf="confirmClear">
         <span class="confirm-prompt">Clear all saved high scores?</span>
         <div class="confirm-buttons">
           <button mat-button (click)="onCancelClearHighScores()">Cancel</button>
@@ -61,7 +70,7 @@
     </div>
 
     <!-- Factory Reset -->
-    <div class="setting-row factory-reset-row">
+    <div class="setting-row reset-row">
       <div class="setting-header">
         <span class="setting-label">
           <span class="emoji-icon">💣</span>
@@ -75,9 +84,10 @@
         </button>
       </div>
       <mat-expansion-panel [expanded]="confirmFactoryReset" hideToggle class="reset-expansion-panel">
-        <div class="confirm-container">
+        <div class="confirm-container factory-reset">
           <span class="confirm-prompt">
-            💥 Are you sure? This will wipe out <strong>all local storage</strong>, including high scores, saved games, and settings!
+            💥 Are you sure? This will wipe out <strong>all local storage</strong>, including high scores, saved games,
+            and settings!
           </span>
           <div class="confirm-buttons">
             <button mat-button (click)="onCancelFactoryReset()">Cancel</button>

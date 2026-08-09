@@ -2,195 +2,202 @@
   text-align: center;
   position: relative;
   min-width: 18em;
-  padding: 0.5em 1em;
+  max-width: 24em;
+  padding: 0.5em 0.8em;
   margin: auto;
+}
 
-  .dialog-title {
+.dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  margin: 0.2em 0 0.4em;
+  font-size: 1.4em;
+
+  .title-icon {
+    font-size: 1.2em;
+    width: 1.2em;
+    height: 1.2em;
+  }
+}
+
+.content-body {
+  max-height: 65vh;
+  overflow-y: auto !important;
+  padding: 0.4em 0.2em;
+  margin: 0;
+}
+
+.setting-row {
+  margin-bottom: 0.8em;
+  text-align: left;
+
+  &.inline-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+
+    .setting-label {
+      min-width: 4.8em;
+      flex: 0 0 auto;
+    }
+
+    .slider-container {
+      flex: 1;
+      padding: 0;
+
+      .volume-slider {
+        width: 100%;
+      }
+    }
+
+    .setting-value {
+      min-width: 2.8em;
+      text-align: right;
+      font-size: 0.85em;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+  }
+
+  &.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.2em 0;
+  }
+
+  &.reset-row {
+    margin-top: 0.8em;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 0.8em;
+  }
+}
+
+.setting-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 500;
+
+  .setting-icon {
+    font-size: 1.3em;
+    width: 1.3em;
+    height: 1.3em;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .emoji-icon {
+    font-size: 1.2em;
+    line-height: 1;
+  }
+}
+
+.action-container {
+  margin-top: 0.4em;
+  display: flex;
+  justify-content: flex-start;
+
+  button span {
+    display: inline-flex;
+    align-items: center;
     gap: 0.3em;
-    margin-top: 0.3em;
-    margin-bottom: 0.5em;
-    font-size: 1.5em;
+  }
+}
 
-    .title-icon {
-      font-size: 1.2em;
-      width: 1.2em;
-      height: 1.2em;
+.confirm-container {
+  border-radius: 8px;
+  padding: 0.6em 0.8em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 0.5em;
+
+  &.score-reset {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+  }
+
+  &.factory-reset {
+    background: rgba(244, 67, 54, 0.15);
+    border: 1px solid rgba(244, 67, 54, 0.4);
+    gap: 0.8em;
+    text-align: left;
+  }
+}
+
+.confirm-prompt {
+  font-size: 0.85em;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 0.35em;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+
+  button {
+    font-size: 0.78em;
+    padding: 0 0.4em;
+
+    mat-icon {
+      font-size: 1.1em;
+      width: 1.1em;
+      height: 1.1em;
     }
   }
 
-  .content-body {
-    overflow: hidden !important;
-    padding: 0.5em 0;
-    margin: 0;
+  @media (min-width: 480px) {
+    gap: 0.5em;
 
-    .setting-row {
-      margin-bottom: 1.2em;
-      text-align: left;
+    button {
+      font-size: 0.9em;
+      padding: 0 0.8em;
 
-      .setting-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.25em;
-
-        .setting-label {
-          display: flex;
-          align-items: center;
-          gap: 0.5em;
-          font-weight: 500;
-
-          .setting-icon {
-            font-size: 1.3em;
-            width: 1.3em;
-            height: 1.3em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .emoji-icon {
-            font-size: 1.2em;
-            line-height: 1;
-          }
-        }
-
-        .setting-value {
-          font-size: 0.9em;
-          opacity: 0.8;
-          font-weight: 600;
-          min-width: 3em;
-          text-align: right;
-        }
-      }
-
-      .slider-container {
-        padding: 0 0.5em;
-
-        .volume-slider {
-          width: 100%;
-        }
-      }
-    }
-
-    .score-reset-row {
-      margin-top: 1.5em;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding-top: 1em;
-
-      .action-container {
-        margin-top: 0.5em;
-        display: flex;
-        justify-content: flex-start;
-
-        button {
-          span {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3em;
-          }
-        }
-      }
-
-      .confirm-container {
-        margin-top: 0.5em;
-        background: rgba(244, 67, 54, 0.1);
-        border: 1px solid rgba(244, 67, 54, 0.3);
-        border-radius: 8px;
-        padding: 0.6em 0.8em;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5em;
-
-        .confirm-prompt {
-          font-size: 0.9em;
-          font-weight: 500;
-        }
-
-        .confirm-buttons {
-          display: flex;
-          gap: 0.5em;
-          justify-content: flex-end;
-        }
-      }
-    }
-
-    .factory-reset-row {
-      margin-top: 1em;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding-top: 1em;
-
-      .action-container {
-        margin-top: 0.5em;
-        display: flex;
-        justify-content: flex-start;
-
-        button {
-          span {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3em;
-          }
-        }
-      }
-
-      .reset-expansion-panel {
-        background: transparent !important;
-        box-shadow: none !important;
-        margin-top: 0.5em !important;
-        overflow: hidden;
-
-        ::ng-deep .mat-expansion-panel-body {
-          padding: 0 !important;
-        }
-
-        .confirm-container {
-          background: rgba(244, 67, 54, 0.15);
-          border: 1px solid rgba(244, 67, 54, 0.4);
-          border-radius: 8px;
-          padding: 0.8em;
-          display: flex;
-          flex-direction: column;
-          gap: 0.8em;
-          text-align: left;
-
-          .confirm-prompt {
-            font-size: 0.85em;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.9);
-          }
-
-          .confirm-buttons {
-            display: flex;
-            gap: 0.5em;
-            justify-content: flex-end;
-          }
-        }
-      }
-
-      .reset-success-message {
-        margin-top: 0.5em;
-        display: flex;
-        align-items: center;
-        gap: 0.4em;
-        font-size: 0.85em;
-        color: #ff9800;
-        font-weight: 500;
-
-        .spin-icon {
-          animation: spin 1s linear infinite;
-        }
+      mat-icon {
+        font-size: 1.2em;
+        width: 1.2em;
+        height: 1.2em;
       }
     }
   }
+}
 
-  .dialog-actions {
-    display: flex;
-    justify-content: center;
-    padding-top: 0.5em;
+.reset-expansion-panel {
+  background: transparent !important;
+  box-shadow: none !important;
+  margin-top: 0.5em !important;
+  overflow: hidden;
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
   }
+}
+
+.reset-success-message {
+  margin-top: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.85em;
+  color: #ff9800;
+  font-weight: 500;
+
+  .spin-icon {
+    animation: spin 1s linear infinite;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.4em;
 }
 
 @keyframes spin {

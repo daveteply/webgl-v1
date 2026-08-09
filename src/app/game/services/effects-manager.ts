@@ -5,6 +5,7 @@ import { mainTweenGroup } from './tween-group';
 import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
+import { HapticsManagerService } from '../../shared/services/haptics-manager';
 import { ScoringManagerService } from './scoring-manager';
 
 import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
@@ -21,6 +22,7 @@ import { LEVEL_ANIMATION_STYLES, LevelAnimationStyle } from '../models/level-ani
 export class EffectsManagerService {
   private audioManager = inject(AudioManagerService);
   private scoringManager = inject(ScoringManagerService);
+  private hapticsManager = inject(HapticsManagerService);
 
   private _selectionTweens: any[] = [];
   private _levelChangeCameraTween1: any;
@@ -194,6 +196,7 @@ export class EffectsManagerService {
       const removeSoundType =
         selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
       this.audioManager.PlayAudio(removeSoundType);
+      this.hapticsManager.LightTap();
     }
   }
 

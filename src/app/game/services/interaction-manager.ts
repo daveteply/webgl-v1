@@ -19,6 +19,7 @@ import { ScoringManagerService } from './scoring-manager';
 import { EffectsManagerService } from './effects-manager';
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
+import { HapticsManagerService } from '../../shared/services/haptics-manager';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,7 @@ export class InteractionManagerService {
   private scoringManager = inject(ScoringManagerService);
   private audioManager = inject(AudioManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
+  private hapticsManager = inject(HapticsManagerService);
 
   private _canvasRect!: DOMRect;
   set CanvasRect(rect: DOMRect) {
@@ -83,6 +85,7 @@ export class InteractionManagerService {
           // level completed
           if (this.scoringManager.LevelComplete) {
             this.audioManager.PlayLevelComplete();
+            this.hapticsManager.LevelCompletePulse();
             this.objectManager.AnimateLevelComplete();
             this.LockBoard(false);
 
@@ -177,6 +180,7 @@ export class InteractionManagerService {
       if (this._activeWheel) {
         if (this._activeWheel.SnapToGrid()) {
           this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
+          this.hapticsManager.SnapTap();
           this.scoringManager.UpdateMoveCount();
 
           // panic
@@ -248,6 +252,7 @@ export class InteractionManagerService {
     } else {
       this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, targetGamePiece.PowerMoveType);
       this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+      this.hapticsManager.PowerMovePulse();
       if (targetGamePiece.PowerMoveType === PowerMoveType.Additive) {
         // additive power move
         this.objectManager.AdditivePowerMove();
