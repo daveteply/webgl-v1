@@ -5,13 +5,23 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { HighScoreManagerService } from '../../../../../shared/services/high-score-manager';
 import { StorageService } from '../../../../../shared/services/storage/storage.service';
+import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
 
 @Component({
   selector: 'wgl-user-settings',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, MatSliderModule, MatExpansionModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatExpansionModule,
+  ],
   templateUrl: './user-settings.html',
   styleUrl: './user-settings.scss',
 })
@@ -19,6 +29,7 @@ export class UserSettings {
   private audioManager = inject(AudioManagerService);
   private highScoreManager = inject(HighScoreManagerService);
   private storageService = inject(StorageService);
+  private hapticsManager = inject(HapticsManagerService);
   private dialogRef = inject(MatDialogRef<UserSettings>);
 
   gameVolume = Math.round(this.audioManager.GetGameVolume() * 100);
@@ -34,6 +45,18 @@ export class UserSettings {
 
   get musicIcon(): string {
     return this.musicVolume === 0 ? 'music_off' : 'music_note';
+  }
+
+  get isHapticsAvailable(): boolean {
+    return this.hapticsManager.isAvailable;
+  }
+
+  get hapticsEnabled(): boolean {
+    return this.hapticsManager.hapticsEnabled;
+  }
+
+  onHapticsChange(enabled: boolean): void {
+    this.hapticsManager.HapticsEnabled = enabled;
   }
 
   onGameVolumeInput(event: Event): void {

@@ -47,13 +47,19 @@
   }
 
   &.phase-image {
-    .splash-black-cover { opacity: 0; }
-    .splash-image-cover { opacity: 1; }
+    .splash-black-cover {
+      opacity: 0;
+    }
+    .splash-image-cover {
+      opacity: 1;
+    }
   }
 
   &.phase-fade-out {
     .splash-black-cover,
-    .splash-image-cover { opacity: 0; }
+    .splash-image-cover {
+      opacity: 0;
+    }
   }
 
   &.phase-done {
@@ -202,9 +208,15 @@
   $aspect-offset: calc((100vh - (100vw / 0.75)) * 0.28);
 
   .game-layout {
-    .game-scoring { top: $aspect-offset; }
-    .game-footer { bottom: $aspect-offset; }
-    .docked-share-tab { bottom: calc(#{$aspect-offset} + 5em); }
+    .game-scoring {
+      top: $aspect-offset;
+    }
+    .game-footer {
+      bottom: $aspect-offset;
+    }
+    .docked-share-tab {
+      bottom: calc(#{$aspect-offset} + 5em);
+    }
   }
 
   .copyright {
@@ -217,8 +229,12 @@
   .game-layout {
     box-sizing: border-box;
 
-    .game-scoring { padding-top: max(0.5em, env(safe-area-inset-top)); }
-    .game-footer { padding-bottom: max(0.5em, env(safe-area-inset-bottom)); }
+    .game-scoring {
+      padding-top: max(0.5em, env(safe-area-inset-top));
+    }
+    .game-footer {
+      padding-bottom: max(0.5em, env(safe-area-inset-bottom));
+    }
   }
 
   .copyright {
