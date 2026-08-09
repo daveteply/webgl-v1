@@ -1,10 +1,12 @@
 #how-to-play {
-  width: 60%;
+  width: 100%;
+  max-width: 24em;
   margin: auto;
   text-align: center;
+  box-sizing: border-box;
 
   .title {
-    font-size: xx-large;
+    font-size: x-large;
     font-weight: bold;
   }
 
@@ -16,36 +18,45 @@
   .instructions-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75em;
+    gap: 0.6em;
     text-align: left;
-    margin: 0.5em 0;
+    margin: 0.25em 0;
   }
 
   .instruction-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75em;
-    font-size: 1.05em;
-    line-height: 1.4;
+    font-size: 0.95em;
+    line-height: 1.45;
     background: rgba(255, 255, 255, 0.08);
-    padding: 0.75em 1em;
-    border-radius: 12px;
+    padding: 0.6em 0.75em;
+    border-radius: 10px;
     border: 1px solid rgba(216, 180, 254, 0.2);
   }
 
   .step-icon {
-    font-size: 1.3em;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.2em;
-    height: 2.2em;
+    font-size: 1.1em;
+    width: 1.8em;
+    height: 1.8em;
     background: rgba(124, 58, 237, 0.35);
     border-radius: 50%;
-    flex-shrink: 0;
+    vertical-align: middle;
+    margin-right: 0.4em;
 
     .arrow {
       font-size: 0.75em;
+    }
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5em;
+
+    button {
+      white-space: nowrap;
+      min-width: 8em;
     }
   }
 }
