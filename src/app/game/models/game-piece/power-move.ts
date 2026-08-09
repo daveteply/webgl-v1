@@ -1,4 +1,5 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../../services/tween-group';
 import { Observable } from 'rxjs';
 import {
   BufferGeometry,
@@ -224,7 +225,7 @@ export class PowerMove {
       const delta = { s: 0.001, o: 0.0 };
       const target = { s: 1.0, o: 0.85 };
 
-      this._appearTween = new Tween(delta, true)
+      this._appearTween = new Tween(delta, mainTweenGroup)
         .to(target, 1500)
         .easing(Easing.Bounce.Out)
         .onUpdate(() => {
@@ -238,7 +239,7 @@ export class PowerMove {
         .start();
 
       let animTime = 0;
-      this._bounceTween = new Tween({}, true)
+      this._bounceTween = new Tween({}, mainTweenGroup)
         .repeat(Infinity)
         .onUpdate(() => {
           animTime += 0.05;
@@ -252,7 +253,7 @@ export class PowerMove {
   public Remove(): void {
     const delta = { s: this._root.scale.x, o: 0.85 };
     const target = { s: 4.0, o: 0.0 };
-    new Tween(delta, true)
+    new Tween(delta, mainTweenGroup)
       .to(target, 500)
       .easing(Easing.Sinusoidal.InOut)
       .onUpdate(() => {

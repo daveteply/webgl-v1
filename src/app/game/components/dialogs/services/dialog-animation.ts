@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 
-import { Tween, update as updateTween } from '@tweenjs/tween.js';
+import { Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../../../services/tween-group';
 
 import { StoreService } from '../../../../app-store/services/store.service';
 import { EmojiInfo } from '../../../../app-store/models/emoji-info';
@@ -85,7 +86,7 @@ export class DialogAnimationService implements OnDestroy {
     switch (this._animationType) {
       case DialogAnimationType.Intro:
         this.drawIntroDialogBoxes();
-        updateTween();
+        mainTweenGroup.update();
         break;
 
       case DialogAnimationType.Level:
@@ -118,7 +119,7 @@ export class DialogAnimationService implements OnDestroy {
       const delta = { x: 0.0 };
       const target = { x: 4.0 };
 
-      this._introTween = new Tween(delta, true)
+      this._introTween = new Tween(delta, mainTweenGroup)
         .to(target, 900)
         .delay(1000)
         .repeat(Infinity)

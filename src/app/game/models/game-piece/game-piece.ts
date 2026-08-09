@@ -14,6 +14,7 @@ import {
 import { take } from 'rxjs';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY, UV_SIDES } from '../../game-constants';
 import { Tween, Easing } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../../services/tween-group';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
@@ -461,7 +462,7 @@ export class GamePiece extends Object3D {
 
     const delay = delayOffset + MathUtils.randInt(100, 600);
 
-    this._levelChangeTween = new Tween(delta, true)
+    this._levelChangeTween = new Tween(delta, mainTweenGroup)
       .to(target, 2200)
       .delay(delay)
       .easing(easingFunc)
@@ -500,7 +501,7 @@ export class GamePiece extends Object3D {
       const target = lock ? final : origin;
 
       // init tween
-      this._lockTween = new Tween(delta, true).to(target, 500).onUpdate(() => {
+      this._lockTween = new Tween(delta, mainTweenGroup).to(target, 500).onUpdate(() => {
         this._mesh.scale.set(delta.x, delta.y, delta.z);
         this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
@@ -530,7 +531,7 @@ export class GamePiece extends Object3D {
     const target = select ? final : origin;
 
     // init tween
-    return new Tween(delta, true)
+    return new Tween(delta, mainTweenGroup)
       .to(target, 250)
       .easing(Easing.Sinusoidal.Out)
       .onUpdate(() => {
@@ -628,7 +629,7 @@ export class GamePiece extends Object3D {
 
     const duration = isRestoring ? 500 : MathUtils.randInt(800, 1300);
 
-    this._removeTween = new Tween(delta, true)
+    this._removeTween = new Tween(delta, mainTweenGroup)
       .to(target, duration)
       .easing(easingFunc)
       .onUpdate(() => {
@@ -686,7 +687,7 @@ export class GamePiece extends Object3D {
       }
 
       // tween
-      new Tween(delta, true)
+      new Tween(delta, mainTweenGroup)
         .to(final, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
@@ -725,7 +726,7 @@ export class GamePiece extends Object3D {
       o: 1.0,
     };
 
-    this._additiveTween = new Tween(delta, true)
+    this._additiveTween = new Tween(delta, mainTweenGroup)
       .to(target, 1200)
       .onUpdate(() => {
         this._mesh.scale.set(delta.o, delta.o, delta.o);

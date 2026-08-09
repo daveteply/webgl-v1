@@ -1,4 +1,5 @@
 import { Easing, Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../services/tween-group';
 import { MathUtils, Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
@@ -124,7 +125,7 @@ export class GameWheel extends Object3D {
       theta: start ? 0 : MathUtils.randInt(-5, 5),
     };
 
-    this._levelChangeTween = new Tween(delta, true)
+    this._levelChangeTween = new Tween(delta, mainTweenGroup)
       .to(target, 3000)
       .delay(delay)
       .easing(start ? Easing.Sinusoidal.Out : Easing.Sinusoidal.In)
@@ -222,7 +223,7 @@ export class GameWheel extends Object3D {
     const actualMove = Math.abs(this._theta - this._moveStartTheta) >= GRID_INC;
 
     const delta = { r: this.rotation.y };
-    new Tween(delta, true)
+    new Tween(delta, mainTweenGroup)
       .to({ r: this._theta }, 500)
       .easing(actualMove ? Easing.Bounce.Out : Easing.Cubic.InOut)
       .onUpdate(() => {
@@ -250,7 +251,7 @@ export class GameWheel extends Object3D {
     const delta = { theta: startTheta };
     const target = { theta: stopTheta };
 
-    this._horizontalMotionTween = new Tween(delta, true)
+    this._horizontalMotionTween = new Tween(delta, mainTweenGroup)
       .to(target, isRestoring ? 500 : 2000)
       .easing(isRestoring ? Easing.Circular.Out : Easing.Elastic.In)
       .onUpdate(() => {

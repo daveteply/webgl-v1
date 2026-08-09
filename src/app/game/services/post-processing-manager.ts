@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Object3D, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three';
 import { Easing, Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from './tween-group';
 import { LevelTransitionType } from './level-transition-type';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
@@ -127,7 +128,7 @@ export class PostProcessingManagerService {
   private initBokehTween(start: boolean) {
     const delta = { maxblur: start ? 0.2 : 0 };
     const target = { maxblur: start ? 0 : 0.2 };
-    this._bokehTween = new Tween(delta, true)
+    this._bokehTween = new Tween(delta, mainTweenGroup)
       .to(target, 2500)
       .easing(Easing.Quadratic.Out)
       .onUpdate(() => {
@@ -144,7 +145,7 @@ export class PostProcessingManagerService {
   private initUnrealBloomTween() {
     const delta = { strength: 0 };
     const target = { strength: 1.5 };
-    this._unrealBloomTween = new Tween(delta, true)
+    this._unrealBloomTween = new Tween(delta, mainTweenGroup)
       .to(target, 1500)
       .repeat(1)
       .yoyo(true)

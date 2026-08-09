@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, inject, isDevMode } from '@angular/core';
 
 import { Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from './tween-group';
 import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
@@ -63,7 +64,7 @@ export class EffectsManagerService {
     // animate camera
     const delta1 = { z: 5.0, rotX: 0, l: 400 };
     const target1 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
-    this._levelChangeCameraTween1 = new Tween(delta1, true).to(target1, start ? 750 : 3000).onUpdate(() => {
+    this._levelChangeCameraTween1 = new Tween(delta1, mainTweenGroup).to(target1, start ? 750 : 3000).onUpdate(() => {
       camera.rotation.x = delta1.rotX;
       camera.position.z = delta1.z;
       light.intensity = delta1.l;
@@ -71,7 +72,7 @@ export class EffectsManagerService {
 
     const delta2 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
     const target2 = { z: 5.0, rotX: 0, l: 400 };
-    this._levelChangeCameraTween2 = new Tween(delta2, true)
+    this._levelChangeCameraTween2 = new Tween(delta2, mainTweenGroup)
       .to(target2, 2000)
       .delay(1250)
       .onUpdate(() => {
