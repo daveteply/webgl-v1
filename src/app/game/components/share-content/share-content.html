@@ -1,6 +1,12 @@
 <div id="share-content" *ngIf="ShowSelf">
-  <button mat-fab (click)="Share()" color="primary" class="share-cta" [class.show]="shareManager.InLevel">
+  <button
+    mat-icon-button
+    (click)="Share()"
+    class="share-tab-btn"
+    title="Share Rikkle"
+    aria-label="Share Rikkle"
+  >
     <mat-icon>share</mat-icon>
-    <mat-progress-bar *ngIf="Loading" color="accent" mode="indeterminate"></mat-progress-bar>
   </button>
 </div>
+

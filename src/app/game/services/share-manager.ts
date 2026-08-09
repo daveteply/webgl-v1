@@ -106,7 +106,7 @@ export class ShareManagerService {
   private async createScreenShot(screenShotDataUrl: string, useLogo = true): Promise<void> {
     if (this.document.fonts && typeof this.document.fonts.load === 'function') {
       try {
-        await this.document.fonts.load('10em "Changa"');
+        await this.document.fonts.load('bold 8em "Changa"');
       } catch {
         // Fallback gracefully if font load check fails
       }
@@ -124,44 +124,46 @@ export class ShareManagerService {
           // draw captured WebGL frame
           ctx.drawImage(img, 0, 0);
 
-          // upper gradient
-          const height = img.height * 0.45;
-          const grad = ctx.createLinearGradient(0, 0, 0, height);
-          grad.addColorStop(0, 'black');
-          grad.addColorStop(0.2, 'black');
-          grad.addColorStop(1, 'transparent');
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, img.width, height);
+          // upper gradient for logo
+          const upperGradHeight = img.height * 0.22;
+          const upperGrad = ctx.createLinearGradient(0, 0, 0, upperGradHeight);
+          upperGrad.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
+          upperGrad.addColorStop(0.5, 'rgba(0, 0, 0, 0.5)');
+          upperGrad.addColorStop(1, 'transparent');
+          ctx.fillStyle = upperGrad;
+          ctx.fillRect(0, 0, img.width, upperGradHeight);
 
-          // draw Rikkle logo
+          // draw Rikkle logo at top center
           if (useLogo && this._rikkleLogo) {
-            ctx.drawImage(this._rikkleLogo, img.width / 2 - this._rikkleLogo.width / 2, 100);
+            ctx.drawImage(this._rikkleLogo, img.width / 2 - this._rikkleLogo.width / 2, 60);
           }
 
-          // overlay text using self-hosted Changa font
+          // lower gradient for level & score text
+          const lowerGradHeight = img.height * 0.28;
+          const lowerGrad = ctx.createLinearGradient(0, img.height - lowerGradHeight, 0, img.height);
+          lowerGrad.addColorStop(0, 'transparent');
+          lowerGrad.addColorStop(0.5, 'rgba(0, 0, 0, 0.7)');
+          lowerGrad.addColorStop(1, 'rgba(0, 0, 0, 0.95)');
+          ctx.fillStyle = lowerGrad;
+          ctx.fillRect(0, img.height - lowerGradHeight, img.width, lowerGradHeight);
+
+          // overlay level & score text at bottom
           ctx.textAlign = 'center';
-          ctx.font = '10em "Changa", sans-serif';
+          ctx.font = 'bold 8em "Changa", sans-serif';
           ctx.fillStyle = 'white';
-          const textX = useLogo && this._rikkleLogo ? this._rikkleLogo.height + 200 : 300;
-          ctx.fillText(`Level: ${this.scoringManager.Level}`, img.width / 2, textX);
-          ctx.fillText(`Score: ${formatNumber(this.scoringManager.Score, 'en-US')}`, img.width / 2, textX + 100);
+          ctx.strokeStyle = 'black';
+          ctx.lineWidth = 16;
+          ctx.lineJoin = 'round';
 
-          // lower gradient
-          // const lowerGrad = ctx.createLinearGradient(0, img.height - 300, 0, img.height);
-          // lowerGrad.addColorStop(0, 'transparent');
-          // lowerGrad.addColorStop(0.4, 'white');
-          // lowerGrad.addColorStop(1, 'white');
-          // ctx.fillStyle = lowerGrad;
-          // ctx.fillRect(0, img.height - 300, img.width, img.height);
+          const bottomY = img.height - 100;
+          const levelStr = `Level: ${this.scoringManager.Level}`;
+          const scoreStr = `Score: ${formatNumber(this.scoringManager.Score, 'en-US')}`;
 
-          // draw Turbogeekbear logo
-          // if (useLogo && this._turbogeekbearLogo) {
-          //   ctx.drawImage(
-          //     this._turbogeekbearLogo,
-          //     img.width / 2 - this._turbogeekbearLogo.width / 2,
-          //     img.height - this._turbogeekbearLogo.height - 50,
-          //   );
-          // }
+          ctx.strokeText(levelStr, img.width / 2, bottomY - 110);
+          ctx.fillText(levelStr, img.width / 2, bottomY - 110);
+
+          ctx.strokeText(scoreStr, img.width / 2, bottomY);
+          ctx.fillText(scoreStr, img.width / 2, bottomY);
 
           this.startShare(canvas.toDataURL());
         }
@@ -182,15 +184,14 @@ export class ShareManagerService {
         text: 'Have you seen Rikkle?!',
       };
 
+      this.ShareInitiated.next();
+
       if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
-        this.ShareInitiated.next();
         await navigator.share({ ...shareData, files: [file] });
       } else if (typeof navigator !== 'undefined' && navigator.clipboard && window.ClipboardItem) {
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        this.ShareInitiated.next();
       } else {
         this.triggerDownload(screenShotDataUrl);
-        this.ShareInitiated.next();
       }
     } catch (err) {
       console.warn('Share error or cancellation:', err);
