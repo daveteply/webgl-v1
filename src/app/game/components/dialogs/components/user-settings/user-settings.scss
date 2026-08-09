@@ -116,11 +116,88 @@
         }
       }
     }
+
+    .factory-reset-row {
+      margin-top: 1em;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 1em;
+
+      .action-container {
+        margin-top: 0.5em;
+        display: flex;
+        justify-content: flex-start;
+
+        button {
+          span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3em;
+          }
+        }
+      }
+
+      .reset-expansion-panel {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin-top: 0.5em !important;
+        overflow: hidden;
+
+        ::ng-deep .mat-expansion-panel-body {
+          padding: 0 !important;
+        }
+
+        .confirm-container {
+          background: rgba(244, 67, 54, 0.15);
+          border: 1px solid rgba(244, 67, 54, 0.4);
+          border-radius: 8px;
+          padding: 0.8em;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8em;
+          text-align: left;
+
+          .confirm-prompt {
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+          }
+
+          .confirm-buttons {
+            display: flex;
+            gap: 0.5em;
+            justify-content: flex-end;
+          }
+        }
+      }
+
+      .reset-success-message {
+        margin-top: 0.5em;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        font-size: 0.85em;
+        color: #ff9800;
+        font-weight: 500;
+
+        .spin-icon {
+          animation: spin 1s linear infinite;
+        }
+      }
+    }
   }
 
   .dialog-actions {
     display: flex;
     justify-content: center;
     padding-top: 0.5em;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

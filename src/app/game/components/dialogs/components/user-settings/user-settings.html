@@ -59,6 +59,40 @@
         </div>
       </div>
     </div>
+
+    <!-- Factory Reset -->
+    <div class="setting-row factory-reset-row">
+      <div class="setting-header">
+        <span class="setting-label">
+          <span class="emoji-icon">💣</span>
+          <span>Factory Reset</span>
+        </span>
+      </div>
+      <div class="action-container" *ngIf="!factoryResetCompleted">
+        <button mat-stroked-button color="warn" (click)="onPromptFactoryReset()">
+          <mat-icon>local_fire_department</mat-icon>
+          <span>Nuke the Rikkle! 💥</span>
+        </button>
+      </div>
+      <mat-expansion-panel [expanded]="confirmFactoryReset" hideToggle class="reset-expansion-panel">
+        <div class="confirm-container">
+          <span class="confirm-prompt">
+            💥 Are you sure? This will wipe out <strong>all local storage</strong>, including high scores, saved games, and settings!
+          </span>
+          <div class="confirm-buttons">
+            <button mat-button (click)="onCancelFactoryReset()">Cancel</button>
+            <button mat-raised-button color="warn" (click)="onConfirmFactoryReset()">
+              <mat-icon>delete_forever</mat-icon>
+              Yes, Wipe it All!
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <div class="reset-success-message" *ngIf="factoryResetCompleted">
+        <mat-icon class="spin-icon">refresh</mat-icon>
+        <span>Rikkle Nuked! Reloading fresh game...</span>
+      </div>
+    </div>
   </div>
 
   <div mat-dialog-actions align="center" class="dialog-actions">
