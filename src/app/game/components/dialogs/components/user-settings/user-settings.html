@@ -44,16 +44,22 @@
     </div>
 
     <!-- Haptic Feedback Toggle -->
-    <div class="setting-row toggle-row" *ngIf="isHapticsAvailable">
-      <span class="setting-label">
-        <mat-icon class="setting-icon">vibration</mat-icon>
-        <span>Haptic Feedback</span>
-      </span>
-      <mat-slide-toggle
-        [checked]="hapticsEnabled"
-        (change)="onHapticsChange($event.checked)"
-        color="primary"
-      ></mat-slide-toggle>
+    <div class="setting-row toggle-wrapper">
+      <div class="toggle-row">
+        <span class="setting-label" [class.disabled-label]="!isHapticsAvailable">
+          <mat-icon class="setting-icon">vibration</mat-icon>
+          <span>Haptic Feedback</span>
+        </span>
+        <mat-slide-toggle
+          [checked]="hapticsEnabled"
+          [disabled]="!isHapticsAvailable"
+          (change)="onHapticsChange($event.checked)"
+          color="primary"
+        ></mat-slide-toggle>
+      </div>
+      <div class="haptics-unavailable-note" *ngIf="!isHapticsAvailable">
+        Haptic feedback is not available
+      </div>
     </div>
 
     <!-- High Scores Reset -->

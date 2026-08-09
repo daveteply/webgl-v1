@@ -37,6 +37,19 @@ describe('UserSettings', () => {
     expect(hapticsSpy).toHaveBeenCalledWith(false);
   });
 
+  it('should render disabled toggle and notice when haptic feedback is not available', () => {
+    vi.spyOn(hapticsManager, 'isAvailable', 'get').mockReturnValue(false);
+    fixture.detectChanges();
+
+    const noteEl = fixture.nativeElement.querySelector('.haptics-unavailable-note');
+    const toggleEl = fixture.nativeElement.querySelector('mat-slide-toggle');
+
+    expect(noteEl).toBeTruthy();
+    expect(noteEl.textContent.trim()).toBe('Haptic feedback is not available');
+    expect(toggleEl).toBeTruthy();
+    expect(component.isHapticsAvailable).toBe(false);
+  });
+
   it('should update game volume on input without playing audio', () => {
     const audioManager = (component as any).audioManager;
     const setGameVolumeSpy = vi.spyOn(audioManager, 'SetGameVolume');

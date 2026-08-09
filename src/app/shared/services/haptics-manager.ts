@@ -19,7 +19,16 @@ export class HapticsManagerService {
    * Check if Web Vibration API is supported by the user agent and hardware.
    */
   public get isAvailable(): boolean {
-    return typeof navigator !== 'undefined' && 'vibrate' in navigator && typeof navigator.vibrate === 'function';
+    if (typeof navigator === 'undefined' || !('vibrate' in navigator) || typeof navigator.vibrate !== 'function') {
+      return false;
+    }
+    // Desktop Chrome exposes navigator.vibrate even on non-vibrating desktop PCs.
+    // Ensure the device supports touch points or a mobile/tablet environment.
+    const isTouchOrMobile =
+      (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+
+    return !!isTouchOrMobile;
   }
 
   /**
