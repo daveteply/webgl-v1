@@ -4,6 +4,7 @@
   "description": "Rikkle is an immersive 3D cylindrical puzzle matching game. Rotate cylinder rings left or right to line up 3 or more matching colors or symbols vertically, horizontally, or in L-shapes, and tap to clear them, score points, and earn bonus moves!",
   "start_url": "/",
   "id": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#000000",
@@ -11,61 +12,130 @@
   "categories": ["games", "puzzle"],
   "icons": [
     {
-      "src": "icons/android/launchericon-48x48.png",
+      "src": "/icons/android/launchericon-48x48.png",
       "sizes": "48x48",
       "type": "image/png"
     },
     {
-      "src": "icons/android/launchericon-72x72.png",
+      "src": "/icons/android/launchericon-72x72.png",
       "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "icons/android/launchericon-96x96.png",
+      "src": "/icons/android/launchericon-96x96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "icons/android/launchericon-144x144.png",
+      "src": "/icons/android/launchericon-144x144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "icons/android/launchericon-192x192.png",
+      "src": "/icons/android/launchericon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icons/android/launchericon-512x512.png",
+      "src": "/icons/android/launchericon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icons/android-chrome-192x192.png",
+      "src": "/icons/android/launchericon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/android/launchericon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icons/android-chrome-512x512.png",
+      "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "icons/ios/180.png",
+      "src": "/icons/ios/180.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "icons/ios/512.png",
+      "src": "/icons/ios/512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "icons/ios/1024.png",
+      "src": "/icons/ios/1024.png",
       "sizes": "1024x1024",
       "type": "image/png"
+    }
+  ],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "shortcuts": [
+    {
+      "name": "Play Rikkle",
+      "short_name": "Play",
+      "description": "Start playing Rikkle immediately",
+      "url": "/",
+      "icons": [{ "src": "/icons/android/launchericon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop/desktop-ss_1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Rikkle 3D Puzzle Game Splash Screen"
+    },
+    {
+      "src": "/screenshots/desktop/desktop-ss_2.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Rikkle 3D Puzzle Game Level Complete"
+    },
+    {
+      "src": "/screenshots/desktop/desktop-ss_3.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "An Emoji level in Rikkle 3D Puzzle Game"
+    },
+    {
+      "src": "/screenshots/mobile/mobile-ss_1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Rikkle Mobile Puzzle Splash screen"
+    },
+    {
+      "src": "/screenshots/mobile/mobile-ss_2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Rikkle Mobile Puzzle Level complete"
+    },
+    {
+      "src": "/screenshots/mobile/mobile-ss_3.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Rikkle Mobile Puzzle Level loading"
     }
   ]
 }

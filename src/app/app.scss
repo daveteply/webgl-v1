@@ -12,7 +12,8 @@
 
   @media screen and (min-width: $default-app-width) {
     background-image:
-      radial-gradient(ellipse at center, rgba(15, 15, 15, 0.25) 0%, rgba(0, 0, 0, 0.82) 100%), url('/RikkleBacker.webp');
+      radial-gradient(ellipse at center, rgba(15, 15, 15, 0.25) 0%, rgba(0, 0, 0, 0.82) 100%),
+      url('/rikkle-backer.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
