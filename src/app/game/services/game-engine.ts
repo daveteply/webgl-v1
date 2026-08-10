@@ -10,6 +10,7 @@ import {
 } from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
+import { GravityType } from '../models/gravity-type';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
@@ -49,6 +50,11 @@ export class GameEngineService {
     return this._levelGeometryType;
   }
 
+  private _gravityType: GravityType = GravityType.None;
+  get GravityType(): GravityType {
+    return this._gravityType;
+  }
+
   private _levelTransitionType: LevelTransitionType = LevelTransitionType.Default;
   get LevelTransitionType(): LevelTransitionType {
     return this._levelTransitionType;
@@ -71,15 +77,29 @@ export class GameEngineService {
       this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(Math.random() * 3) + 1;
     }
 
+    // set gravity type (levels 1 & 2 are always None)
+    if (level <= 2) {
+      this._gravityType = GravityType.None;
+    } else {
+      const gravityOptions = [GravityType.None, GravityType.Down, GravityType.Up, GravityType.Mix];
+      this._gravityType = gravityOptions[Math.floor(Math.random() * gravityOptions.length)];
+    }
+
     if (isDevMode()) {
       console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
       console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
+      console.info('Level Gravity Type: ', this._gravityType);
     }
   }
 
-  public RestoreLevelTypes(levelMaterialType: LevelMaterialType, levelGeometryType: LevelGeometryType): void {
+  public RestoreLevelTypes(
+    levelMaterialType: LevelMaterialType,
+    levelGeometryType: LevelGeometryType,
+    gravityType?: GravityType,
+  ): void {
     this._levelMaterialType = levelMaterialType;
     this._levelGeometryType = levelGeometryType;
+    this._gravityType = gravityType ?? GravityType.None;
   }
 
   public InitLevelTransitionType(): void {
@@ -157,6 +177,21 @@ export class GameEngineService {
 
     // all matches should be complete
     return this._matches;
+  }
+
+  public FindAllMatches(axle: GameWheel[]): GamePiece[] {
+    const allMatches: Set<GamePiece> = new Set();
+    for (const wheel of axle) {
+      for (const piece of wheel.children as GamePiece[]) {
+        if (!piece.IsRemoved && !allMatches.has(piece)) {
+          const pieceMatches = this.FindMatches(piece, axle);
+          if (pieceMatches.length >= 3) {
+            pieceMatches.forEach((m) => allMatches.add(m));
+          }
+        }
+      }
+    }
+    return Array.from(allMatches);
   }
 
   private directionalSearch(gamePiece: GamePiece): void {

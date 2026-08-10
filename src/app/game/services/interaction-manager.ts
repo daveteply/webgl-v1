@@ -1,4 +1,5 @@
 import { Injectable, isDevMode, inject } from '@angular/core';
+import { take } from 'rxjs';
 import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
 import {
@@ -11,6 +12,7 @@ import {
 import { GameWheel } from '../models/game-wheel';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { PowerMoveType } from '../models/power-move-type';
+import { GravityType } from '../models/gravity-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 
 import { GameEngineService } from './game-engine';
@@ -108,8 +110,22 @@ export class InteractionManagerService {
               }
             }
 
-            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
-            this.LockBoard(false);
+            // Gravity animation
+            if (this.gameEngine.GravityType !== GravityType.None) {
+              this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+                this.effectsManager.ClearSelectedPieces();
+                this.postProcessingManager.UpdateOutlinePassObjects([]);
+                this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+                this.LockBoard(false);
+              });
+
+              this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
+            } else {
+              this.effectsManager.ClearSelectedPieces();
+              this.postProcessingManager.UpdateOutlinePassObjects([]);
+              this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+              this.LockBoard(false);
+            }
           }
         } else {
           // unselect

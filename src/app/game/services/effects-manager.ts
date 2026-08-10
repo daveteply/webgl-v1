@@ -7,10 +7,20 @@ import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { HapticsManagerService } from '../../shared/services/haptics-manager';
 import { ScoringManagerService } from './scoring-manager';
+import { MaterialManagerService } from './material/material-manager';
+import { PieceMaterials } from './material/material-models';
+import { GameEngineService } from './game-engine';
 
-import { HALF_PI, MINIMUM_MATCH_COUNT, WHEEL_START_POSITION } from '../game-constants';
-import { GamePiece } from '../models/game-piece/game-piece';
+import {
+  DECIMAL_COMPARISON_TOLERANCE,
+  GRID_VERTICAL_OFFSET,
+  HALF_PI,
+  MINIMUM_MATCH_COUNT,
+  WHEEL_START_POSITION,
+} from '../game-constants';
+import { GamePiece, PieceStateSnapshot } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
+import { GravityType } from '../models/gravity-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
 import { SaveGameScore } from './save-game/save-game-types';
@@ -23,6 +33,8 @@ export class EffectsManagerService {
   private audioManager = inject(AudioManagerService);
   private scoringManager = inject(ScoringManagerService);
   private hapticsManager = inject(HapticsManagerService);
+  private materialManager = inject(MaterialManagerService);
+  private gameEngine = inject(GameEngineService);
 
   private _selectionTweens: any[] = [];
   private _levelChangeCameraTween1: any;
@@ -35,6 +47,7 @@ export class EffectsManagerService {
 
   SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
   LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
+  GravityAnimationComplete: EventEmitter<void> = new EventEmitter();
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -188,14 +201,20 @@ export class EffectsManagerService {
     }
   }
 
+  public ClearSelectedPieces(): void {
+    this._selectedPieces = [];
+  }
+
   public AnimateRemove(selectedPieces: GamePiece[]): void {
     if (selectedPieces.length) {
       selectedPieces.forEach((p) => {
         p.AnimateRemovalTween(Math.floor(Math.random() * 6));
       });
-      const removeSoundType =
-        selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
-      this.audioManager.PlayAudio(removeSoundType);
+      if (this.gameEngine.GravityType === GravityType.None) {
+        const removeSoundType =
+          selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
+        this.audioManager.PlayAudio(removeSoundType);
+      }
       this.hapticsManager.LightTap();
     }
   }
@@ -214,6 +233,207 @@ export class EffectsManagerService {
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {
     gamePiece.AnimateFlipTween(Math.floor(velocity), directionUp);
+  }
+
+  public AnimateGravity(axle: GameWheel[], gravityType: GravityType): void {
+    if (gravityType === GravityType.None || !axle.length) {
+      this.GravityAnimationComplete.emit();
+      return;
+    }
+
+    if (gravityType === GravityType.Mix) {
+      gravityType = Math.random() < 0.5 ? GravityType.Down : GravityType.Up;
+      if (isDevMode()) {
+        console.info('Mix Gravity Resolved To:', gravityType);
+      }
+    }
+
+    this._selectedPieces = [];
+
+    // Stop ongoing removal/scatter tweens and reset mesh position/rotation to local origin
+    axle.forEach((wheel) => {
+      for (const piece of wheel.children as GamePiece[]) {
+        piece.StopTweens();
+      }
+    });
+
+    const numWheels = axle.length;
+    const firstWheel = axle[0];
+    const piecesPerWheel = firstWheel.children.length;
+
+    // Group pieces into columns by ThetaOffset
+    const columns: GamePiece[][] = [];
+    const samplePieces = firstWheel.children as GamePiece[];
+
+    for (let pIdx = 0; pIdx < piecesPerWheel; pIdx++) {
+      const samplePiece = samplePieces[pIdx];
+      const column: GamePiece[] = [];
+      for (let wIdx = 0; wIdx < numWheels; wIdx++) {
+        const wheelPieces = axle[wIdx].children as GamePiece[];
+        const matchPiece = wheelPieces.find(
+          (p) => Math.abs(p.ThetaOffset - samplePiece.ThetaOffset) < DECIMAL_COMPARISON_TOLERANCE,
+        );
+        if (matchPiece) {
+          column.push(matchPiece);
+        }
+      }
+      if (column.length === numWheels) {
+        columns.push(column);
+      }
+    }
+
+    interface ShiftAction {
+      targetPiece: GamePiece;
+      sourcePiece?: GamePiece;
+      isNewSpawn: boolean;
+      startOffsetY: number;
+      newMaterial?: PieceMaterials;
+    }
+
+    const actionsToAnimate: ShiftAction[] = [];
+    let hasAnyShift = false;
+
+    for (const col of columns) {
+      const removedIndices: number[] = [];
+      col.forEach((p, idx) => {
+        if (p.IsRemoved) removedIndices.push(idx);
+      });
+
+      if (removedIndices.length === 0) continue;
+
+      hasAnyShift = true;
+      const numRemoved = removedIndices.length;
+
+      if (gravityType === GravityType.Down) {
+        const lowestRemoved = Math.min(...removedIndices);
+
+        const nonRemovedAbove: GamePiece[] = [];
+        for (let i = lowestRemoved; i < numWheels; i++) {
+          if (!col[i].IsRemoved) {
+            nonRemovedAbove.push(col[i]);
+          }
+        }
+
+        nonRemovedAbove.forEach((sourceP, i) => {
+          const targetIdx = lowestRemoved + i;
+          const targetP = col[targetIdx];
+          const sourceIdx = col.indexOf(sourceP);
+          const steps = sourceIdx - targetIdx;
+          const startOffsetY = steps * GRID_VERTICAL_OFFSET;
+
+          actionsToAnimate.push({
+            targetPiece: targetP,
+            sourcePiece: sourceP,
+            isNewSpawn: false,
+            startOffsetY,
+          });
+        });
+
+        const newSpawnCount = numWheels - (lowestRemoved + nonRemovedAbove.length);
+        for (let i = 0; i < newSpawnCount; i++) {
+          const targetIdx = numWheels - newSpawnCount + i;
+          const targetP = col[targetIdx];
+          const startOffsetY = (numRemoved + i) * GRID_VERTICAL_OFFSET;
+          const newMat = this.materialManager.GetRandomPieceMaterial();
+
+          actionsToAnimate.push({
+            targetPiece: targetP,
+            isNewSpawn: true,
+            startOffsetY,
+            newMaterial: newMat,
+          });
+        }
+      } else if (gravityType === GravityType.Up) {
+        const highestRemoved = Math.max(...removedIndices);
+
+        const nonRemovedBelow: GamePiece[] = [];
+        for (let i = 0; i <= highestRemoved; i++) {
+          if (!col[i].IsRemoved) {
+            nonRemovedBelow.push(col[i]);
+          }
+        }
+
+        nonRemovedBelow
+          .slice()
+          .reverse()
+          .forEach((sourceP, i) => {
+            const targetIdx = highestRemoved - i;
+            const targetP = col[targetIdx];
+            const sourceIdx = col.indexOf(sourceP);
+            const steps = sourceIdx - targetIdx;
+            const startOffsetY = steps * GRID_VERTICAL_OFFSET;
+
+            actionsToAnimate.push({
+              targetPiece: targetP,
+              sourcePiece: sourceP,
+              isNewSpawn: false,
+              startOffsetY,
+            });
+          });
+
+        const newSpawnCount = highestRemoved + 1 - nonRemovedBelow.length;
+        for (let i = 0; i < newSpawnCount; i++) {
+          const targetIdx = i;
+          const targetP = col[targetIdx];
+          const startOffsetY = -(numRemoved + (newSpawnCount - 1 - i)) * GRID_VERTICAL_OFFSET;
+          const newMat = this.materialManager.GetRandomPieceMaterial();
+
+          actionsToAnimate.push({
+            targetPiece: targetP,
+            isNewSpawn: true,
+            startOffsetY,
+            newMaterial: newMat,
+          });
+        }
+      }
+    }
+
+    if (!hasAnyShift || actionsToAnimate.length === 0) {
+      this.GravityAnimationComplete.emit();
+      return;
+    }
+
+    // Sound cue when gravity slide begins
+    this.audioManager.PlayAudio(AudioType.GRAVITY_EFFECT);
+
+    // Save snapshot of source pieces before copying state
+    const snapshots = new Map<GamePiece, PieceStateSnapshot>();
+    actionsToAnimate.forEach((action) => {
+      if (action.sourcePiece && !snapshots.has(action.sourcePiece)) {
+        snapshots.set(action.sourcePiece, action.sourcePiece.GetStateSnapshot());
+      }
+    });
+
+    const tweens: any[] = [];
+    const duration = 1600;
+
+    actionsToAnimate.forEach((action) => {
+      if (action.isNewSpawn && action.newMaterial) {
+        action.targetPiece.Reset(this.gameEngine.LevelGeometryType ?? 0);
+        action.targetPiece.UpdateMaterials(action.newMaterial);
+      } else if (action.sourcePiece) {
+        const snap = snapshots.get(action.sourcePiece);
+        if (snap) {
+          action.targetPiece.ApplyStateSnapshot(snap);
+        }
+      }
+
+      const tween = action.targetPiece.AnimateGravitySlide(action.startOffsetY, duration);
+      tweens.push(tween);
+    });
+
+    if (tweens.length) {
+      new Tween({ t: 0 }, mainTweenGroup)
+        .to({ t: 1 }, duration)
+        .onComplete(() => {
+          this.GravityAnimationComplete.emit();
+        })
+        .start();
+
+      tweens.forEach((t) => t.start());
+    } else {
+      this.GravityAnimationComplete.emit();
+    }
   }
 
   get SaveGameScoringData(): SaveGameScore {
