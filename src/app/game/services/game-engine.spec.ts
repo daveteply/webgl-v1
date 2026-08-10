@@ -4,6 +4,7 @@ import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
+import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 import {
   DEFAULT_PLAYABLE_TEXTURE_COUNT,
@@ -25,10 +26,30 @@ describe('GameEngineService', () => {
   });
 
   describe('Level & Difficulty Initialization', () => {
-    it('should initialize level 1 material to ColorBumpShape', () => {
+    it('should initialize level 1 material to ColorBumpShape and gravity to None', () => {
       service.InitLevelTypes(1);
       expect(service.LevelMaterialType).toBe(LevelMaterialType.ColorBumpShape);
       expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
+      expect(service.GravityType).toBe(GravityType.None);
+    });
+
+    it('should initialize level 2 gravity to None', () => {
+      service.InitLevelTypes(2);
+      expect(service.GravityType).toBe(GravityType.None);
+    });
+
+    it('should initialize level 3+ gravity to None, Down, Up, or Mix', () => {
+      const foundTypes = new Set<GravityType>();
+      for (let i = 0; i < 50; i++) {
+        service.InitLevelTypes(3);
+        foundTypes.add(service.GravityType);
+      }
+      expect(foundTypes.size).toBeGreaterThan(1);
+    });
+
+    it('should restore gravity type in RestoreLevelTypes', () => {
+      service.RestoreLevelTypes(LevelMaterialType.Emoji, LevelGeometryType.Cylinder, GravityType.Up);
+      expect(service.GravityType).toBe(GravityType.Up);
     });
 
     it('should update playable texture count according to difficulty tiers', () => {
