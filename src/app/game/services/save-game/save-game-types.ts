@@ -1,5 +1,6 @@
 import { LevelStats } from '../../models/level-stats';
 import { PowerMoveType } from '../../models/power-move-type';
+import { GravityType } from '../../models/gravity-type';
 
 export interface SaveMaterialData {
   matchKey: number;
@@ -34,6 +35,7 @@ export interface SaveGameScore {
 export interface SaveGameData {
   levelMaterialType?: number;
   levelGeometryType?: number;
+  gravityType?: GravityType;
   wheelData: SaveWheelData[];
   textureData: SaveMaterialData[];
   gameMaterials?: number[][][];
