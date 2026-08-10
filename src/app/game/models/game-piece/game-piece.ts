@@ -22,6 +22,16 @@ import { LevelGeometryType } from '../../level-geometry-type';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';
 import { LevelAnimationStyle } from '../level-animation-style';
 
+export interface PieceStateSnapshot {
+  isRemoved: boolean;
+  matchKeySequence: number[];
+  matchKey: number;
+  pieceMaterials: PieceSideMaterial[];
+  pieceGeometryType: LevelGeometryType;
+  isPowerMove: boolean;
+  powerMoveType?: PowerMoveType;
+}
+
 export class GamePiece extends Object3D {
   private _geometryCube: BoxGeometry;
   private _meshCube: Mesh;
@@ -272,9 +282,25 @@ export class GamePiece extends Object3D {
     this._mesh.rotation.z = 0;
     this._mesh.position.set(0, 0, 0);
 
-    this._thetaOffset = this._thetaStart;
+    const parentWheel = this.parent as any;
+    if (parentWheel && parentWheel.Theta !== undefined) {
+      this.ThetaOffset = parentWheel.Theta;
+    } else {
+      this._thetaOffset = this._thetaStart;
+    }
 
     this._matchKeySequence = [1, 2, 0, 3];
+  }
+
+  public StopTweens(): void {
+    this._removeTween?.stop();
+    this._levelChangeTween?.stop();
+    this._lockTween?.stop();
+    if (this._mesh) {
+      this._mesh.position.set(0, 0, 0);
+      this._mesh.rotation.set(0, 0, 0);
+      this._mesh.scale.set(1, 1, 1);
+    }
   }
 
   public UpdateMaterials(pieceMaterials: PieceMaterials): void {
@@ -765,5 +791,151 @@ export class GamePiece extends Object3D {
     this._isRemoved = true;
     this._isPowerMove = false;
     this._powerMove.Remove();
+  }
+
+  public GetStateSnapshot(): PieceStateSnapshot {
+    return {
+      isRemoved: this._isRemoved,
+      matchKeySequence: [...this._matchKeySequence],
+      matchKey: this._matchKey,
+      pieceMaterials: this._pieceMaterials,
+      pieceGeometryType: this._pieceGeometryType,
+      isPowerMove: this._isPowerMove,
+      powerMoveType: this._powerMoveType,
+    };
+  }
+
+  public ApplyStateSnapshot(snapshot: PieceStateSnapshot): void {
+    this._removeTween?.stop();
+    this._levelChangeTween?.stop();
+    this._lockTween?.stop();
+
+    this._isRemoved = snapshot.isRemoved;
+    this._matchKeySequence = [...snapshot.matchKeySequence];
+    this._matchKey = snapshot.matchKey;
+    this._pieceMaterials = snapshot.pieceMaterials;
+    this._pieceGeometryType = snapshot.pieceGeometryType;
+
+    // ensure _mesh is assigned based on geometry type
+    switch (this._pieceGeometryType) {
+      case LevelGeometryType.Cube:
+        this._meshCube.visible = true;
+        this._meshCylinder.visible = false;
+        this._meshDodecahedron.visible = false;
+        this._mesh = this._meshCube;
+        break;
+      case LevelGeometryType.Cylinder:
+        this._meshCube.visible = false;
+        this._meshCylinder.visible = true;
+        this._meshDodecahedron.visible = false;
+        this._mesh = this._meshCylinder;
+        break;
+      case LevelGeometryType.Dodecahedron:
+        this._meshCube.visible = false;
+        this._meshCylinder.visible = false;
+        this._meshDodecahedron.visible = true;
+        this._mesh = this._meshDodecahedron;
+        break;
+    }
+
+    if (this._mesh) {
+      this._mesh.scale.set(1, 1, 1);
+      this._mesh.rotation.set(0, 0, 0);
+      this._mesh.position.set(0, 0, 0);
+    }
+
+    // update material rendering
+    if (this._pieceMaterials) {
+      let target: PieceSideMaterial;
+      let targetMaterial: Material;
+
+      switch (this._pieceGeometryType) {
+        case LevelGeometryType.Cube:
+          this._meshCube.material = this._pieceMaterials.map((m) => {
+            return m.useBasic ? m.materialBasic : m.materialPhong;
+          });
+          break;
+
+        case LevelGeometryType.Cylinder:
+          target = this._pieceMaterials[this._matchKeySequence[0]];
+          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+          this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+          break;
+
+        case LevelGeometryType.Dodecahedron:
+          target = this._pieceMaterials[this._matchKeySequence[0]];
+          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+          this._meshDodecahedron.material = targetMaterial;
+          break;
+      }
+      this._pieceMaterials.forEach((m) => {
+        if (m.useBasic) {
+          m.materialBasic.opacity = snapshot.isRemoved ? 0 : 1.0;
+        } else {
+          m.materialPhong.opacity = snapshot.isRemoved ? 0 : 1.0;
+        }
+      });
+    }
+
+    // copy power move if present
+    if (this._powerMove) {
+      this._isPowerMove = false;
+      this.remove(this._powerMove.PowerMoveMesh);
+      this._powerMove?.Dispose();
+    }
+    if (snapshot.isPowerMove && snapshot.powerMoveType !== undefined) {
+      this.PowerMoveAdd(snapshot.powerMoveType);
+    }
+  }
+
+  public CopyStateFrom(source: GamePiece): void {
+    this.ApplyStateSnapshot(source.GetStateSnapshot());
+  }
+
+  public AnimateGravitySlide(startOffsetY: number, duration: number): Tween<any> {
+    this._removeTween?.stop();
+    this._levelChangeTween?.stop();
+    this._lockTween?.stop();
+    this._isRemoved = false;
+
+    if (!this._mesh) {
+      switch (this._pieceGeometryType) {
+        case LevelGeometryType.Cylinder:
+          this._mesh = this._meshCylinder;
+          break;
+        case LevelGeometryType.Dodecahedron:
+          this._mesh = this._meshDodecahedron;
+          break;
+        default:
+          this._mesh = this._meshCube;
+      }
+    }
+
+    this._mesh.position.set(0, startOffsetY, 0);
+    this._mesh.rotation.set(0, 0, 0);
+    this._mesh.scale.set(1, 1, 1);
+
+    this._pieceMaterials?.forEach((m) => {
+      if (m.useBasic) {
+        m.materialBasic.opacity = 1.0;
+      } else {
+        m.materialPhong.opacity = 1.0;
+      }
+    });
+
+    const delta = { y: startOffsetY };
+    const target = { y: 0 };
+
+    return new Tween(delta, mainTweenGroup)
+      .to(target, duration)
+      .easing(Easing.Bounce.Out)
+      .onUpdate(() => {
+        this._mesh.position.y = delta.y;
+      })
+      .onComplete(() => {
+        this._mesh.position.set(0, 0, 0);
+        this._mesh.rotation.set(0, 0, 0);
+        this._mesh.scale.set(1, 1, 1);
+      });
   }
 }
