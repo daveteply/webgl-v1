@@ -5,6 +5,7 @@ import { STORAGE_SAVE_STATE } from '../../game-constants';
 import { GamePiece } from '../../models/game-piece/game-piece';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { GameWheel } from '../../models/game-wheel';
+import { GravityType } from '../../models/gravity-type';
 import { SaveGameData, SaveGameScore, SavePieceData, SaveWheelData } from './save-game-types';
 import { GameMaterials } from '../material/material-models';
 import { StorageService } from '../../../shared/services/storage/storage.service';
@@ -53,6 +54,7 @@ export class SaveGameService {
     levelGeometryType: number,
     score: SaveGameScore,
     outlineColor: number,
+    gravityType?: GravityType,
   ): Observable<void> {
     return new Observable((observer) => {
       this.storageService.removeItem(STORAGE_SAVE_STATE);
@@ -98,6 +100,7 @@ export class SaveGameService {
       // level info
       this._savedGameData.levelGeometryType = levelGeometryType;
       this._savedGameData.levelMaterialType = levelMaterialType;
+      this._savedGameData.gravityType = gravityType;
       this._savedGameData.scoring = score;
 
       // misc

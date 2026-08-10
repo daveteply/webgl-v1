@@ -126,6 +126,11 @@ export class ObjectManagerService {
     );
     if (this.saveGame.IsRestoring) {
       this.postProcessingManager.UpdateOutlinePassColor(this.saveGame.SavedGameData.outlineColor as number);
+      this.gameEngine.RestoreLevelTypes(
+        this.saveGame.SavedGameData.levelMaterialType as number,
+        this.saveGame.SavedGameData.levelGeometryType as number,
+        this.saveGame.SavedGameData.gravityType,
+      );
     }
 
     // update materials in the material manager service
@@ -158,6 +163,7 @@ export class ObjectManagerService {
       this.gameEngine.LevelGeometryType,
       this.effectsManager.SaveGameScoringData,
       this.postProcessingManager.OutlineColor,
+      this.gameEngine.GravityType,
     );
   }
 

@@ -17,6 +17,7 @@ export enum AudioType {
   POWER_MOVE_APPEAR,
   POWER_MOVE_USE,
   GAME_OVER,
+  GRAVITY_EFFECT,
   LEVEL_END_1,
   LEVEL_END_2,
   LEVEL_END_3,
@@ -88,15 +89,15 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.LEVEL_STAT,
   },
   {
-    url: 'assets/audio/mixkit-arcade-player-select-2036.mp3',
+    url: 'assets/audio/player-select.wav',
     audioType: AudioType.LEVEL_ENABLE_CTA,
   },
   {
-    url: 'assets/audio/piece-move.mp3',
+    url: 'assets/audio/piece-move.wav',
     audioType: AudioType.PIECE_MOVE,
   },
   {
-    url: 'assets/audio/piece-non-move.mp3',
+    url: 'assets/audio/piece-non-move.wav',
     audioType: AudioType.PIECE_NON_MOVE,
   },
   {
@@ -104,19 +105,19 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.PIECE_MOVE_REMAINING_PANIC,
   },
   {
-    url: 'assets/audio/piece-remove.mp3',
+    url: 'assets/audio/piece-remove.wav',
     audioType: AudioType.PIECE_REMOVE,
   },
   {
-    url: 'assets/audio/piece-remove-2.mp3',
+    url: 'assets/audio/piece-remove-2.wav',
     audioType: AudioType.PIECE_REMOVE_2,
   },
   {
-    url: 'assets/audio/piece-select.mp3',
+    url: 'assets/audio/piece-select.wav',
     audioType: AudioType.PIECE_SELECT,
   },
   {
-    url: 'assets/audio/match-fail.mp3',
+    url: 'assets/audio/match-fail.wav',
     audioType: AudioType.MATCH_FAIL,
   },
   {
@@ -134,6 +135,10 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/game-over.mp3',
     audioType: AudioType.GAME_OVER,
+  },
+  {
+    url: 'assets/audio/gravity-effect.wav',
+    audioType: AudioType.GRAVITY_EFFECT,
   },
 ];
 

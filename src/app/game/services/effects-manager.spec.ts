@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { EffectsManagerService as EffectsManager } from './effects-manager';
 import { GameWheel } from '../models/game-wheel';
 import { LevelAnimationStyle } from '../models/level-animation-style';
+import { GravityType } from '../models/gravity-type';
 
 describe('EffectsManager', () => {
   let service: EffectsManager;
@@ -29,5 +30,14 @@ describe('EffectsManager', () => {
     service.AnimateLevelChangeAnimation(wheels, verticalTargets, camera, light, true, LevelAnimationStyle.SpiralVortex);
 
     expect(spy).toHaveBeenCalledWith(0, expect.any(Number), true, expect.any(Number), LevelAnimationStyle.SpiralVortex);
+  });
+
+  it('should emit GravityAnimationComplete immediately when gravityType is None', () => {
+    let completed = false;
+    service.GravityAnimationComplete.subscribe(() => {
+      completed = true;
+    });
+    service.AnimateGravity([], GravityType.None);
+    expect(completed).toBe(true);
   });
 });
