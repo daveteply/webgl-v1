@@ -93,33 +93,7 @@ export class MaterialManagerService {
 
           // set up each side
           for (let i = 0; i < piece.materials.length; i++) {
-            const side = piece.materials[i];
-            const material = pieceMaterials[i];
-
-            if (material) {
-              // match key
-              side.matchKey = material.matchKey;
-
-              // bump symbols and textures
-              if (material.bumpTexture && material.colorStr) {
-                side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
-                side.materialPhong.specular.setHex(0x333333);
-                side.materialPhong.shininess = 15;
-                side.materialPhong.bumpMap = material.bumpTexture.texture;
-                side.materialPhong.bumpScale = BUMP_SCALE;
-                side.materialPhong.needsUpdate = true;
-                side.materialPhong.opacity = 0;
-                side.useBasic = false;
-              }
-
-              // emojis
-              if (material.texture && !material.colorStr) {
-                side.materialBasic.map = material.texture.texture;
-                side.materialBasic.needsUpdate = true;
-                side.materialBasic.opacity = 0;
-                side.useBasic = true;
-              }
-            }
+            this.applyMaterialToSide(piece.materials[i], pieceMaterials[i], 0);
           }
         }
       }
@@ -139,35 +113,9 @@ export class MaterialManagerService {
           const restorePiece = restoreWheel[pieceInx];
 
           for (let sideInx = 0; sideInx < piece.materials.length; sideInx++) {
-            // matchKey for side
             const restoreMatchKey = restorePiece[sideInx];
-
-            // fetch matching material
             const restoreMaterial = this._levelMaterials.find((m) => m.matchKey === restoreMatchKey);
-
-            // set restored material properties
-            const side = piece.materials[sideInx];
-            side.matchKey = restoreMatchKey;
-
-            // bump symbols and textures
-            if (restoreMaterial?.bumpTexture && restoreMaterial.colorStr) {
-              side.materialPhong.color.setHex(restoreMaterial.color?.getHex() || 0x0);
-              side.materialPhong.specular.setHex(0x333333);
-              side.materialPhong.shininess = 15;
-              side.materialPhong.bumpMap = restoreMaterial.bumpTexture.texture;
-              side.materialPhong.bumpScale = BUMP_SCALE;
-              side.materialPhong.needsUpdate = true;
-              side.materialPhong.opacity = 0;
-              side.useBasic = false;
-            }
-
-            // emojis
-            if (restoreMaterial?.texture && !restoreMaterial.colorStr) {
-              side.materialBasic.map = restoreMaterial.texture.texture;
-              side.materialBasic.needsUpdate = true;
-              side.materialBasic.opacity = 0;
-              side.useBasic = true;
-            }
+            this.applyMaterialToSide(piece.materials[sideInx], restoreMaterial, 0);
           }
         }
       }
@@ -176,6 +124,54 @@ export class MaterialManagerService {
 
   public GetPowerMovePieceTexture(moveType: PowerMoveType): Observable<Texture> {
     return this.textureManager.GetPowerMoveTexture(moveType);
+  }
+
+  public GetRandomPieceMaterial(): PieceMaterials {
+    const pieceMaterials = arrayShuffle(this._levelMaterials);
+    const maxMaterials = 8;
+    const resultMaterials: PieceSideMaterial[] = [];
+
+    for (let i = 0; i < maxMaterials; i++) {
+      const side: PieceSideMaterial = {
+        matchKey: 0,
+        materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
+        materialBasic: new MeshBasicMaterial({ transparent: true }),
+        useBasic: false,
+      };
+      this.applyMaterialToSide(side, pieceMaterials[i], 1.0);
+      resultMaterials.push(side);
+    }
+    return { materials: resultMaterials };
+  }
+
+  private applyMaterialToSide(
+    side: PieceSideMaterial,
+    material: GamePieceMaterialData | undefined,
+    opacity = 0,
+  ): void {
+    if (!material) return;
+
+    side.matchKey = material.matchKey;
+
+    // bump symbols and textures
+    if (material.bumpTexture && material.colorStr) {
+      side.materialPhong.color.setHex(material.color?.getHex() || 0x0);
+      side.materialPhong.specular.setHex(0x333333);
+      side.materialPhong.shininess = 15;
+      side.materialPhong.bumpMap = material.bumpTexture.texture;
+      side.materialPhong.bumpScale = BUMP_SCALE;
+      side.materialPhong.needsUpdate = true;
+      side.materialPhong.opacity = opacity;
+      side.useBasic = false;
+    }
+
+    // emojis
+    if (material.texture && !material.colorStr) {
+      side.materialBasic.map = material.texture.texture;
+      side.materialBasic.needsUpdate = true;
+      side.materialBasic.opacity = opacity;
+      side.useBasic = true;
+    }
   }
 
   private getLevelMaterials(

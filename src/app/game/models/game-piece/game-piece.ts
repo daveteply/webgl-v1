@@ -242,13 +242,8 @@ export class GamePiece extends Object3D {
     return this._matchKey;
   }
 
-  public Reset(levelGeometryType: LevelGeometryType): void {
-    this._removeTween?.stop();
-    this._levelChangeTween?.stop();
-    this._isRemoved = false;
-
-    // set geometry type and set normalized access variable
-    this._pieceGeometryType = levelGeometryType;
+  public SetGeometryType(geometryType: LevelGeometryType): void {
+    this._pieceGeometryType = geometryType;
     this._meshCube.visible = false;
     this._meshCylinder.visible = false;
     this._meshDodecahedron.visible = false;
@@ -266,6 +261,14 @@ export class GamePiece extends Object3D {
         this._mesh = this._meshDodecahedron;
         break;
     }
+  }
+
+  public Reset(levelGeometryType: LevelGeometryType): void {
+    this.StopTweens();
+    this._isRemoved = false;
+
+    // set geometry type and set normalized access variable
+    this.SetGeometryType(levelGeometryType);
 
     // reset power move
     if (this._powerMove) {
@@ -275,12 +278,6 @@ export class GamePiece extends Object3D {
     }
 
     this._flipTurns = 0;
-
-    this._mesh.scale.set(1, 1, 1);
-    this._mesh.rotation.x = 0;
-    this._mesh.rotation.y = 0;
-    this._mesh.rotation.z = 0;
-    this._mesh.position.set(0, 0, 0);
 
     const parentWheel = this.parent as any;
     if (parentWheel && parentWheel.Theta !== undefined) {
@@ -806,76 +803,21 @@ export class GamePiece extends Object3D {
   }
 
   public ApplyStateSnapshot(snapshot: PieceStateSnapshot): void {
-    this._removeTween?.stop();
-    this._levelChangeTween?.stop();
-    this._lockTween?.stop();
+    this.StopTweens();
 
     this._isRemoved = snapshot.isRemoved;
     this._matchKeySequence = [...snapshot.matchKeySequence];
+    this.SetGeometryType(snapshot.pieceGeometryType);
+    this.UpdateMaterials({ materials: snapshot.pieceMaterials });
     this._matchKey = snapshot.matchKey;
-    this._pieceMaterials = snapshot.pieceMaterials;
-    this._pieceGeometryType = snapshot.pieceGeometryType;
 
-    // ensure _mesh is assigned based on geometry type
-    switch (this._pieceGeometryType) {
-      case LevelGeometryType.Cube:
-        this._meshCube.visible = true;
-        this._meshCylinder.visible = false;
-        this._meshDodecahedron.visible = false;
-        this._mesh = this._meshCube;
-        break;
-      case LevelGeometryType.Cylinder:
-        this._meshCube.visible = false;
-        this._meshCylinder.visible = true;
-        this._meshDodecahedron.visible = false;
-        this._mesh = this._meshCylinder;
-        break;
-      case LevelGeometryType.Dodecahedron:
-        this._meshCube.visible = false;
-        this._meshCylinder.visible = false;
-        this._meshDodecahedron.visible = true;
-        this._mesh = this._meshDodecahedron;
-        break;
-    }
-
-    if (this._mesh) {
-      this._mesh.scale.set(1, 1, 1);
-      this._mesh.rotation.set(0, 0, 0);
-      this._mesh.position.set(0, 0, 0);
-    }
-
-    // update material rendering
-    if (this._pieceMaterials) {
-      let target: PieceSideMaterial;
-      let targetMaterial: Material;
-
-      switch (this._pieceGeometryType) {
-        case LevelGeometryType.Cube:
-          this._meshCube.material = this._pieceMaterials.map((m) => {
-            return m.useBasic ? m.materialBasic : m.materialPhong;
-          });
-          break;
-
-        case LevelGeometryType.Cylinder:
-          target = this._pieceMaterials[this._matchKeySequence[0]];
-          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
-          this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
-          break;
-
-        case LevelGeometryType.Dodecahedron:
-          target = this._pieceMaterials[this._matchKeySequence[0]];
-          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
-          this._meshDodecahedron.material = targetMaterial;
-          break;
+    this._pieceMaterials?.forEach((m) => {
+      if (m.useBasic) {
+        m.materialBasic.opacity = snapshot.isRemoved ? 0 : 1.0;
+      } else {
+        m.materialPhong.opacity = snapshot.isRemoved ? 0 : 1.0;
       }
-      this._pieceMaterials.forEach((m) => {
-        if (m.useBasic) {
-          m.materialBasic.opacity = snapshot.isRemoved ? 0 : 1.0;
-        } else {
-          m.materialPhong.opacity = snapshot.isRemoved ? 0 : 1.0;
-        }
-      });
-    }
+    });
 
     // copy power move if present
     if (this._powerMove) {
