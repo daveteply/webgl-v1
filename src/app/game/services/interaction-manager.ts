@@ -318,7 +318,7 @@ export class InteractionManagerService {
   }
 
   private getPickedGamePiece(x: number, y: number): GamePiece | undefined {
-    if (!this._canvasRect) return undefined;
+    if (!this._canvasRect || !this._perspectiveCamera) return undefined;
 
     const width = this._canvasRect.right - this._canvasRect.left;
     const height = this._canvasRect.bottom - this._canvasRect.top;
@@ -327,7 +327,7 @@ export class InteractionManagerService {
     this._pointerPos.y = -((y - Math.floor(this._canvasRect.top)) / height) * 2 + 1;
 
     this._rayCaster.setFromCamera(this._pointerPos, this._perspectiveCamera);
-    const intersects = this._rayCaster.intersectObjects(this.objectManager.Axle);
+    const intersects = this.objectManager?.Axle ? this._rayCaster.intersectObjects(this.objectManager.Axle) : [];
     if (intersects.length) {
       let target: Object3D | null = intersects[0].object;
       while (target && !(target instanceof GamePiece)) {

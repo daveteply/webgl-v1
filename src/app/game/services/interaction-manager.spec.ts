@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { PerspectiveCamera } from 'three';
 
 import { InteractionManager } from './interaction-manager';
 
@@ -17,6 +18,7 @@ describe('InteractionManager', () => {
   it('should stop drag when pointer leaves container bounds', () => {
     const el = document.createElement('div');
     service.InitInteractions(el);
+    service.SetCamera(new PerspectiveCamera());
     service.CanvasRect = {
       left: 100,
       right: 500,
