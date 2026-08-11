@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable, inject, isDevMode } from '@angular/core';
+import { Injectable, inject, isDevMode } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from './tween-group';
@@ -45,9 +46,9 @@ export class EffectsManagerService {
     return this._selectedPieces;
   }
 
-  SelectionAnimationComplete: EventEmitter<boolean> = new EventEmitter();
-  LevelChangeAnimation: EventEmitter<boolean> = new EventEmitter();
-  GravityAnimationComplete: EventEmitter<void> = new EventEmitter();
+  SelectionAnimationComplete: Subject<boolean> = new Subject<boolean>();
+  LevelChangeAnimation: Subject<boolean> = new Subject<boolean>();
+  GravityAnimationComplete: Subject<void> = new Subject<void>();
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -237,7 +238,7 @@ export class EffectsManagerService {
 
   public AnimateGravity(axle: GameWheel[], gravityType: GravityType): void {
     if (gravityType === GravityType.None || !axle.length) {
-      this.GravityAnimationComplete.emit();
+      this.GravityAnimationComplete.next();
       return;
     }
 
@@ -389,7 +390,7 @@ export class EffectsManagerService {
     }
 
     if (!hasAnyShift || actionsToAnimate.length === 0) {
-      this.GravityAnimationComplete.emit();
+      this.GravityAnimationComplete.next();
       return;
     }
 
@@ -426,13 +427,13 @@ export class EffectsManagerService {
       new Tween({ t: 0 }, mainTweenGroup)
         .to({ t: 1 }, duration)
         .onComplete(() => {
-          this.GravityAnimationComplete.emit();
+          this.GravityAnimationComplete.next();
         })
         .start();
 
       tweens.forEach((t) => t.start());
     } else {
-      this.GravityAnimationComplete.emit();
+      this.GravityAnimationComplete.next();
     }
   }
 

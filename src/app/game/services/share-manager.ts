@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { DOCUMENT, formatNumber } from '@angular/common';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { SHARE_FILE_NAME } from '../game-constants';
 import { ScoringManagerService } from './scoring-manager';
 
@@ -24,8 +24,8 @@ export class ShareManagerService {
     return this._inLevel();
   }
 
-  public ShareInitiated: EventEmitter<void> = new EventEmitter();
-  public ShareFailed: EventEmitter<void> = new EventEmitter();
+  public ShareInitiated: Subject<void> = new Subject<void>();
+  public ShareFailed: Subject<void> = new Subject<void>();
 
   public UpdateInLevel(inLevel: boolean): void {
     this._inLevel.set(inLevel);

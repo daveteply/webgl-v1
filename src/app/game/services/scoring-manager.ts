@@ -1,4 +1,5 @@
-import { EventEmitter, Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { MathUtils } from 'three';
 import {
   DIFFICULTY_TIER_3,
@@ -28,7 +29,7 @@ export class ScoringManagerService {
   private _timeStop!: number;
 
   // events
-  public MovesChange: EventEmitter<boolean> = new EventEmitter();
+  public MovesChange: Subject<boolean> = new Subject<boolean>();
 
   // Signals for template reactivity
   readonly level = signal<number>(1);

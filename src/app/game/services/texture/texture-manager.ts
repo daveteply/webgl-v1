@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { EventEmitter, Injectable, inject, isDevMode } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject, isDevMode } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { StoreService } from '../../../app-store/services/store.service';
 import { SaveGameService } from '../save-game/save-game';
@@ -58,11 +58,11 @@ export class TextureManagerService {
     return this._textures;
   }
 
-  public LevelTextureLoadingStarted: EventEmitter<boolean> = new EventEmitter();
+  public LevelTextureLoadingStarted: Subject<boolean> = new Subject<boolean>();
   public LevelTexturesLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public LevelTexturesRestoredLoaded: EventEmitter<void> = new EventEmitter();
-  public LevelTextureLoadProgress: EventEmitter<number> = new EventEmitter();
-  public LevelTextureLoadError: EventEmitter<string> = new EventEmitter();
+  public LevelTexturesRestoredLoaded: Subject<void> = new Subject<void>();
+  public LevelTextureLoadProgress: Subject<number> = new Subject<number>();
+  public LevelTextureLoadError: Subject<string> = new Subject<string>();
 
   constructor() {
     this._loaderManager = new LoadingManager(

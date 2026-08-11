@@ -1,17 +1,18 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotifyService {
-  private _notifyEvent: EventEmitter<void>;
+  private _notifyEvent: Subject<void>;
 
-  get NotifyEvent(): EventEmitter<void> {
-    return this._notifyEvent;
+  get NotifyEvent(): Observable<void> {
+    return this._notifyEvent.asObservable();
   }
 
   constructor() {
-    this._notifyEvent = new EventEmitter<void>();
+    this._notifyEvent = new Subject<void>();
   }
 
   public Notify(): void {

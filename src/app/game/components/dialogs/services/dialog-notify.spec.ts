@@ -13,4 +13,13 @@ describe('DialogNotify', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should emit via DialogNotifyEvent when Notify is called', () => {
+    let emitted = false;
+    service.DialogNotifyEvent.subscribe(() => {
+      emitted = true;
+    });
+    service.Notify();
+    expect(emitted).toBe(true);
+  });
 });

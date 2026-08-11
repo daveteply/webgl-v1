@@ -1,17 +1,18 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DialogNotifyService {
-  private _dialogEvent: EventEmitter<void>;
+  private _dialogEvent: Subject<void>;
 
-  get DialogNotifyEvent(): EventEmitter<void> {
-    return this._dialogEvent;
+  get DialogNotifyEvent(): Observable<void> {
+    return this._dialogEvent.asObservable();
   }
 
   constructor() {
-    this._dialogEvent = new EventEmitter<void>();
+    this._dialogEvent = new Subject<void>();
   }
 
   public Notify(): void {

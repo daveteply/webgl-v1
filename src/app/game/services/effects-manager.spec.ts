@@ -40,4 +40,18 @@ describe('EffectsManager', () => {
     service.AnimateGravity([], GravityType.None);
     expect(completed).toBe(true);
   });
+
+  it('should emit LevelChangeAnimation state during level transitions', () => {
+    let animationState: boolean | undefined;
+    service.LevelChangeAnimation.subscribe((state) => {
+      animationState = state;
+    });
+
+    const wheels = [new GameWheel(0, [])];
+    const camera = new PerspectiveCamera();
+    const light = new PointLight();
+
+    service.AnimateLevelChangeAnimation(wheels, [0], camera, light, true);
+    expect(animationState).toBe(true);
+  });
 });
