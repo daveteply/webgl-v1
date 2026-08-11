@@ -41,12 +41,19 @@ describe('ScoringManagerService', () => {
     expect(service.LevelProgress).toBe((1 / target) * 100);
   });
 
-  it('should decrement moves on UpdateMoveCount and detect GameOver', () => {
+  it('should decrement moves on UpdateMoveCount, emit MovesChange, and detect GameOver', () => {
     const initialMoves = service.PlayerMoves;
     expect(initialMoves).toBeGreaterThan(0);
 
+    let movesChangedEmitted = false;
+    service.MovesChange.subscribe((increase) => {
+      movesChangedEmitted = true;
+      expect(increase).toBe(false);
+    });
+
     service.UpdateMoveCount();
     expect(service.PlayerMoves).toBe(initialMoves - 1);
+    expect(movesChangedEmitted).toBe(true);
 
     // Force moves to 0
     while (service.PlayerMoves > 0) {

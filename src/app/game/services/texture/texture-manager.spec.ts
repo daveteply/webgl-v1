@@ -13,4 +13,14 @@ describe('TextureManager', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should emit texture load progress via Subject stream', () => {
+    let progressVal = 0;
+    service.LevelTextureLoadProgress.subscribe((p) => {
+      progressVal = p;
+    });
+
+    service.LevelTextureLoadProgress.next(50);
+    expect(progressVal).toBe(50);
+  });
 });

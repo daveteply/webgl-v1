@@ -1,13 +1,14 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppVisibilityService {
-  VisibilityChanged: EventEmitter<boolean>;
+  VisibilityChanged: Subject<boolean>;
 
   constructor() {
-    this.VisibilityChanged = new EventEmitter<boolean>();
+    this.VisibilityChanged = new Subject<boolean>();
   }
 }
 

@@ -3,7 +3,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
   OnDestroy,
   ViewChild,
   DestroyRef,
@@ -13,7 +12,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay } from 'rxjs';
+import { delay, Subject } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../../../services/tween-group';
 
@@ -61,7 +60,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   pieceCount = 0;
 
   private _timerQueue: LevelStat[] = [];
-  private _timerEvent: EventEmitter<LevelStat> = new EventEmitter<LevelStat>();
+  private _timerEvent: Subject<LevelStat> = new Subject<LevelStat>();
 
   borderStyle!: string;
 

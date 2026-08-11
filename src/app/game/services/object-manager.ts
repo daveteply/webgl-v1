@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, PointLight, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
@@ -55,8 +55,8 @@ export class ObjectManagerService {
   private _starField: StarField;
 
   // events
-  public LevelChangeAnimationComplete: EventEmitter<void> = new EventEmitter();
-  public LevelCompleted: EventEmitter<boolean> = new EventEmitter();
+  public LevelChangeAnimationComplete: Subject<void> = new Subject<void>();
+  public LevelCompleted: Subject<boolean> = new Subject<boolean>();
   public LevelMaterialsUpdated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {

@@ -13,4 +13,23 @@ describe('ShareManager', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should emit ShareInitiated and ShareFailed events via Subject', () => {
+    let initiated = false;
+    let failed = false;
+
+    service.ShareInitiated.subscribe(() => {
+      initiated = true;
+    });
+
+    service.ShareFailed.subscribe(() => {
+      failed = true;
+    });
+
+    service.ShareInitiated.next();
+    service.ShareFailed.next();
+
+    expect(initiated).toBe(true);
+    expect(failed).toBe(true);
+  });
 });
