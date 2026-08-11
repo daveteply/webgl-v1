@@ -158,6 +158,10 @@ export class InteractionManagerService {
   private onPointerDown = (event: PointerEvent): void => {
     if (this._locked) return;
 
+    if (this._element) {
+      this._canvasRect = this._element.getBoundingClientRect();
+    }
+
     this._isPointerDown = true;
     this._isDragging = false;
     this._startX = event.clientX;
@@ -173,6 +177,24 @@ export class InteractionManagerService {
 
   private onPointerMove = (event: PointerEvent): void => {
     if (!this._isPointerDown || this._locked) return;
+
+    if (this._canvasRect) {
+      const isOutside =
+        event.clientX < this._canvasRect.left ||
+        event.clientX > this._canvasRect.right ||
+        event.clientY < this._canvasRect.top ||
+        event.clientY > this._canvasRect.bottom;
+
+      if (isOutside) {
+        if (this._isDragging) {
+          this.onPointerUp(event);
+        } else {
+          this._isPointerDown = false;
+          this._activeWheel = undefined;
+        }
+        return;
+      }
+    }
 
     const dist = Math.hypot(event.clientX - this._startX, event.clientY - this._startY);
     if (dist > 6) {
