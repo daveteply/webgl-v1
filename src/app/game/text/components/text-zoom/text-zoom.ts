@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, computed, input, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ZoomChar } from './zoom-char/zoom-char';
 
@@ -12,14 +12,16 @@ import { ZoomChar } from './zoom-char/zoom-char';
 export class TextZoom {
   private decimalPipe = inject(DecimalPipe);
 
-  chars: string[] = [];
+  text = input<number | string>('');
 
-  @Input() set text(target: number | string) {
+  chars = computed<string[]>(() => {
+    const target = this.text();
     const formatted = Number(target) ? this.decimalPipe.transform(target) : target;
     if (formatted !== null && formatted !== undefined) {
-      this.chars = formatted.toString().split('');
+      return formatted.toString().split('');
     }
-  }
+    return [];
+  });
 }
 
 export { TextZoom as TextZoomComponent };

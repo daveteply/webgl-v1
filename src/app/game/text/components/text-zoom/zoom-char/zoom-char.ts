@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, OnDestroy, ViewChild } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../../../services/tween-group';
 
@@ -9,13 +9,9 @@ import { mainTweenGroup } from '../../../../services/tween-group';
   styleUrl: './zoom-char.scss',
 })
 export class ZoomChar implements AfterViewInit, OnDestroy {
-  char = '';
+  text = input<string>('');
 
   private _zoomTween: any;
-
-  @Input() set text(target: string) {
-    this.char = target;
-  }
 
   @ViewChild('charEl') localChar!: ElementRef<HTMLDivElement>;
 

@@ -22,8 +22,8 @@ self.addEventListener('install', (event) => {
           PRECACHE_ASSETS.map((url) =>
             cache.add(url).catch((err) => {
               console.warn(`[SW] Precache failed for ${url}:`, err);
-            })
-          )
+            }),
+          ),
         );
       })
       .then(() => self.skipWaiting()),

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, DOCUMENT, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, DOCUMENT, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,27 +18,27 @@ export class ShareContent implements OnInit {
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 
-  ShowSelf = false;
-  Loading = false;
+  ShowSelf = signal<boolean>(false);
+  Loading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.shareManager
       .CanShare()
       .pipe(take(1))
       .subscribe((result) => {
-        this.ShowSelf = result;
+        this.ShowSelf.set(result);
       });
 
     this.shareManager.ShareInitiated.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.Loading = false;
+      this.Loading.set(false);
     });
     this.shareManager.ShareFailed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.Loading = false;
+      this.Loading.set(false);
     });
   }
 
   Share(): void {
-    this.Loading = true;
+    this.Loading.set(true);
     this.shareManager.RequestScreenShot(this.document);
   }
 }

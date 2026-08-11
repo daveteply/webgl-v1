@@ -144,11 +144,7 @@ export class MaterialManagerService {
     return { materials: resultMaterials };
   }
 
-  private applyMaterialToSide(
-    side: PieceSideMaterial,
-    material: GamePieceMaterialData | undefined,
-    opacity = 0,
-  ): void {
+  private applyMaterialToSide(side: PieceSideMaterial, material: GamePieceMaterialData | undefined, opacity = 0): void {
     if (!material) return;
 
     side.matchKey = material.matchKey;

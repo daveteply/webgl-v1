@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,12 +14,12 @@ import { StoreService } from '../../../app-store/services/store.service';
 export class About implements OnInit {
   private store = inject(StoreService);
 
-  levelColors!: string[];
-  levelEmojis!: EmojiInfo;
+  levelColors = signal<string[]>([]);
+  levelEmojis = signal<EmojiInfo | undefined>(undefined);
 
   ngOnInit(): void {
-    this.levelColors = this.store.LevelColors;
-    this.levelEmojis = this.store.EmojiInfo;
+    this.levelColors.set(this.store.LevelColors);
+    this.levelEmojis.set(this.store.EmojiInfo);
   }
 }
 

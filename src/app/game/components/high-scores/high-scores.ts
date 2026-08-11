@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, input, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
 import { HighScore, HighScoreManagerService } from '../../../shared/services/high-score-manager';
 
@@ -12,13 +12,12 @@ import { HighScore, HighScoreManagerService } from '../../../shared/services/hig
 export class HighScores implements OnInit {
   private highScoreManager = inject(HighScoreManagerService);
 
-  highScores!: HighScore[];
-
-  @Input() showHighligh = true;
+  highScores = signal<HighScore[]>([]);
+  showHighligh = input<boolean>(true);
 
   ngOnInit(): void {
     this.highScoreManager.GetHighScores().subscribe((highScores) => {
-      this.highScores = highScores;
+      this.highScores.set(highScores);
     });
   }
 }
