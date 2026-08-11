@@ -110,19 +110,8 @@ export class GameEngineService {
   }
 
   public UpdatePlayableTextureCount(level: number): void {
-    if (level <= DIFFICULTY_TIER_1) {
-      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
-      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
-    } else if (level > DIFFICULTY_TIER_1 && level <= DIFFICULTY_TIER_3) {
-      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 1;
-      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[1];
-    } else if (level > DIFFICULTY_TIER_3 && level <= DIFFICULTY_TIER_4) {
-      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 2;
-      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[2];
-    } else if (level > DIFFICULTY_TIER_4) {
-      this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT + 3;
-      this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[3];
-    }
+    this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
+    this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
 
     if (isDevMode()) {
       console.info('------------------');

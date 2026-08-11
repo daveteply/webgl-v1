@@ -3,7 +3,13 @@
   <div mat-dialog-content>
     @if (levelColors().length) {
       <div>
-        <h2>Colors</h2>
+        <h2>
+          @if (levelColorScheme()?.name) {
+            <span>{{ levelColorScheme()?.emoji }} {{ levelColorScheme()?.name }}</span>
+          } @else {
+            <span>Colors</span>
+          }
+        </h2>
         <div class="level-colors">
           @for (color of levelColors(); track $index) {
             <div>

@@ -6,7 +6,7 @@ import { mainTweenGroup } from '../../../services/tween-group';
 import { StoreService } from '../../../../app-store/services/store.service';
 import { EmojiInfo } from '../../../../app-store/models/emoji-info';
 import { MathUtils } from 'three';
-import { INTRO_DIALOG_COLORS } from '../../../services/material/color-info';
+import { INTRO_DIALOG_COLORS } from '../../../services/material/color-schemes';
 
 interface boxParticle {
   x: number;

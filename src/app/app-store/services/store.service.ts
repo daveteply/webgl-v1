@@ -1,20 +1,36 @@
 import { Injectable, signal } from '@angular/core';
 import { EmojiInfo, EmojiInfoSequence } from '../models/emoji-info';
 
+export interface ColorSchemeMeta {
+  name?: string;
+  emoji?: string;
+  colors: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService {
   readonly levelColors = signal<string[]>([]);
+  readonly levelColorScheme = signal<ColorSchemeMeta | undefined>(undefined);
   readonly emojiInfo = signal<EmojiInfo>({});
 
   get LevelColors(): string[] {
     return this.levelColors();
   }
 
-  public UpdateLevelColors(colorList: string[]): void {
+  get LevelColorScheme(): ColorSchemeMeta | undefined {
+    return this.levelColorScheme();
+  }
+
+  public UpdateLevelColors(colorList: string[], meta?: { name?: string; emoji?: string }): void {
     this.resetAll();
     this.levelColors.set(colorList);
+    this.levelColorScheme.set({
+      colors: colorList,
+      name: meta?.name,
+      emoji: meta?.emoji,
+    });
   }
 
   get EmojiInfo(): EmojiInfo {
@@ -41,5 +57,6 @@ export class StoreService {
   private resetAll(): void {
     this.emojiInfo.set({});
     this.levelColors.set([]);
+    this.levelColorScheme.set(undefined);
   }
 }
