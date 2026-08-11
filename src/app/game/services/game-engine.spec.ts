@@ -52,22 +52,22 @@ describe('GameEngineService', () => {
       expect(service.GravityType).toBe(GravityType.Up);
     });
 
-    it('should update playable texture count according to difficulty tiers', () => {
+    it('should keep playable texture count constant across levels', () => {
       // Tier 1
       service.UpdatePlayableTextureCount(DIFFICULTY_TIER_1);
       expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
 
-      // Tier 2 (level > TIER_1 and <= TIER_3)
+      // Tier 2
       service.UpdatePlayableTextureCount(DIFFICULTY_TIER_1 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT + 1);
+      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
 
       // Tier 3
       service.UpdatePlayableTextureCount(DIFFICULTY_TIER_3 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT + 2);
+      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
 
       // Tier 4
       service.UpdatePlayableTextureCount(DIFFICULTY_TIER_4 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT + 3);
+      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
     });
 
     it('should filter vertical power moves when geometry is Cylinder or Dodecahedron', () => {

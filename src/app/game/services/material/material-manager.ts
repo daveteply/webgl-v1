@@ -10,7 +10,7 @@ import { SaveGameService } from '../save-game/save-game';
 import { GameMaterials, PieceMaterials, PieceSideMaterial, WheelMaterial } from './material-models';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { LevelMaterialType } from '../../level-material-type';
-import { ColorSchemeData, COLOR_SCHEME_DATA } from './color-info';
+import { ColorSchemeData, COLOR_SCHEMES } from './color-schemes';
 import { PowerMoveType } from '../../models/power-move-type';
 import { GameTexture } from '../texture/game-texture';
 import { BUMP_DEPTH as BUMP_SCALE } from '../../game-constants';
@@ -187,9 +187,10 @@ export class MaterialManagerService {
     // selected style for current level
     switch (levelMaterialType) {
       // colors and symbol maps
-      case LevelMaterialType.ColorBumpShape:
-        selectedColors = this.initColorScheme(level, playableTextureCount);
-        this.store.UpdateLevelColors(selectedColors);
+      case LevelMaterialType.ColorBumpShape: {
+        const schemeInfo = this.initColorScheme(level, playableTextureCount);
+        selectedColors = schemeInfo.colors;
+        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
         selectedColors.forEach((c, inx) => {
           const color = new Color(c);
@@ -202,11 +203,13 @@ export class MaterialManagerService {
           });
         });
         break;
+      }
 
       // colors and bump maps
-      case LevelMaterialType.ColorBumpMaterial:
-        selectedColors = this.initColorScheme(level, playableTextureCount);
-        this.store.UpdateLevelColors(selectedColors);
+      case LevelMaterialType.ColorBumpMaterial: {
+        const schemeInfo = this.initColorScheme(level, playableTextureCount);
+        selectedColors = schemeInfo.colors;
+        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
         bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
 
@@ -220,6 +223,7 @@ export class MaterialManagerService {
           });
         });
         break;
+      }
 
       // emojis
       case LevelMaterialType.Emoji:
@@ -236,34 +240,34 @@ export class MaterialManagerService {
     return materials;
   }
 
-  private initColorScheme(level: number, playableTextureCount: number): string[] {
-    let scheme: ColorSchemeData;
-    if (level === 1) {
-      scheme = COLOR_SCHEME_DATA.find((c) => c.id === 2) || COLOR_SCHEME_DATA[0];
-    } else {
-      scheme = COLOR_SCHEME_DATA[MathUtils.randInt(0, COLOR_SCHEME_DATA.length - 1)];
-    }
+  private initColorScheme(
+    level: number,
+    playableTextureCount: number,
+  ): { colors: string[]; name?: string; emoji?: string } {
+    let selectedScheme: ColorSchemeData | undefined;
+    let targetColors: string[] = [];
 
-    const sortedColors = scheme.colors.sort();
-
-    if (isDevMode()) {
-      console.info('  Color Scheme:', scheme.id);
-      console.info('    ' + sortedColors.map((c) => `%c ${c}`).join(''), ...sortedColors.map((c) => `color: ${c}`));
-    }
-
-    const shuffledColors = arrayShuffle(sortedColors).slice(0, playableTextureCount);
-
-    if (isDevMode()) {
-      console.info('    Game Piece Colors:', scheme);
-      console.info('    ' + shuffledColors.map((c) => `%c ${c}`).join(''), ...shuffledColors.map((c) => `color: ${c}`));
-    }
-
-    let targetColors = level === 1 ? sortedColors.slice(-playableTextureCount) : shuffledColors;
     if (this.saveGame.IsRestoring) {
       targetColors = this.saveGame.SavedGameData.textureData.map((t) => t.colorStr) as string[];
+    } else if (level === 1) {
+      // Level 1 always carries the signature purple/blue glassmorphic theme (Scheme 0)
+      selectedScheme = COLOR_SCHEMES[0];
+      targetColors = selectedScheme.colors.slice(0, playableTextureCount);
+    } else {
+      // Pick a random scheme from curated 8-color schemes (Schemes 1-14)
+      const schemeIndex = MathUtils.randInt(1, COLOR_SCHEMES.length - 1);
+      selectedScheme = COLOR_SCHEMES[schemeIndex];
+      targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     }
 
-    return targetColors;
+    if (isDevMode()) {
+      if (selectedScheme) {
+        console.info(`  Color Scheme: ${selectedScheme.emoji} ${selectedScheme.name} (ID: ${selectedScheme.id})`);
+      }
+      console.info('    ' + targetColors.map((c) => `%c ${c}`).join(''), ...targetColors.map((c) => `color: ${c}`));
+    }
+
+    return { colors: targetColors, name: selectedScheme?.name, emoji: selectedScheme?.emoji };
   }
 }
 

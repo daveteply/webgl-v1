@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { EmojiInfo } from '../../../app-store/models/emoji-info';
-import { StoreService } from '../../../app-store/services/store.service';
+import { ColorSchemeMeta, StoreService } from '../../../app-store/services/store.service';
 
 @Component({
   selector: 'wgl-about',
@@ -15,10 +15,12 @@ export class About implements OnInit {
   private store = inject(StoreService);
 
   levelColors = signal<string[]>([]);
+  levelColorScheme = signal<ColorSchemeMeta | undefined>(undefined);
   levelEmojis = signal<EmojiInfo | undefined>(undefined);
 
   ngOnInit(): void {
     this.levelColors.set(this.store.LevelColors);
+    this.levelColorScheme.set(this.store.LevelColorScheme);
     this.levelEmojis.set(this.store.EmojiInfo);
   }
 }
