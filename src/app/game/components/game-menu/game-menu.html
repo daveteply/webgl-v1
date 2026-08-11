@@ -3,6 +3,10 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
+    <div class="menu-version-header">
+      <span>Version {{ appVersion }}</span>
+    </div>
+    <mat-divider></mat-divider>
     <button mat-menu-item (click)="AboutClick()"><mat-icon>info</mat-icon><span>About this Level</span></button>
     <button mat-menu-item (click)="SettingsClick()"><mat-icon>settings</mat-icon><span>Settings</span></button>
     <button mat-menu-item (click)="InstallAppClick()">
