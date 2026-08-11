@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -19,11 +19,13 @@ import { ProgressBar } from '../../../../../shared/components/progress-bar/progr
   styleUrl: './game-over.scss',
 })
 export class GameOver {
-  texturesStillLoading = true;
-  progress = 100;
+  texturesStillLoading = signal<boolean>(true);
+  progress = signal<number>(100);
 
-  isLevelOne: boolean;
-  gameOverEmoji = String.fromCodePoint(GAME_OVER_EMOJI[MathUtils.randInt(0, GAME_OVER_EMOJI.length - 1)]);
+  isLevelOne = signal<boolean>(false);
+  gameOverEmoji = signal<string>(
+    String.fromCodePoint(GAME_OVER_EMOJI[MathUtils.randInt(0, GAME_OVER_EMOJI.length - 1)]),
+  );
 
   private textureManager = inject(TextureManagerService);
   private dialogRef = inject(MatDialogRef<GameOver>);
@@ -34,17 +36,17 @@ export class GameOver {
   constructor() {
     this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
       if (loaded) {
-        this.texturesStillLoading = false;
-        this.progress = 100;
+        this.texturesStillLoading.set(false);
+        this.progress.set(100);
         this.cdr.markForCheck();
       }
     });
     this.textureManager.LevelTextureLoadProgress.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((progress) => {
-      this.progress = progress;
+      this.progress.set(progress);
       this.cdr.markForCheck();
     });
 
-    this.isLevelOne = this.data?.level === 1;
+    this.isLevelOne.set(this.data?.level === 1);
   }
 
   onCloseGameOver(): void {

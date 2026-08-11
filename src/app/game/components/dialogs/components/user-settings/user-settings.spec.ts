@@ -47,7 +47,7 @@ describe('UserSettings', () => {
     expect(noteEl).toBeTruthy();
     expect(noteEl.textContent.trim()).toBe('Haptic feedback is not available');
     expect(toggleEl).toBeTruthy();
-    expect(component.isHapticsAvailable).toBe(false);
+    expect(component.isHapticsAvailable()).toBe(false);
   });
 
   it('should update game volume on input without playing audio', () => {
@@ -58,7 +58,7 @@ describe('UserSettings', () => {
     const fakeEvent = { target: { value: '75' } } as unknown as Event;
     component.onGameVolumeInput(fakeEvent);
 
-    expect(component.gameVolume).toBe(75);
+    expect(component.gameVolume()).toBe(75);
     expect(setGameVolumeSpy).toHaveBeenCalledWith(0.75);
     expect(playAudioSpy).not.toHaveBeenCalled();
   });
@@ -71,7 +71,7 @@ describe('UserSettings', () => {
     const fakeEvent = { target: { value: '80' } } as unknown as Event;
     component.onGameVolumeChange(fakeEvent);
 
-    expect(component.gameVolume).toBe(80);
+    expect(component.gameVolume()).toBe(80);
     expect(setGameVolumeSpy).toHaveBeenCalledWith(0.8);
     expect(playAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_STAT);
   });
@@ -84,7 +84,7 @@ describe('UserSettings', () => {
     const fakeEvent = { target: { value: '40' } } as unknown as Event;
     component.onMusicVolumeInput(fakeEvent);
 
-    expect(component.musicVolume).toBe(40);
+    expect(component.musicVolume()).toBe(40);
     expect(setMusicVolumeSpy).toHaveBeenCalledWith(0.4);
     expect(playAudioSpy).not.toHaveBeenCalled();
   });
@@ -98,7 +98,7 @@ describe('UserSettings', () => {
     const fakeEvent = { target: { value: '60' } } as unknown as Event;
     component.onMusicVolumeChange(fakeEvent);
 
-    expect(component.musicVolume).toBe(60);
+    expect(component.musicVolume()).toBe(60);
     expect(setMusicVolumeSpy).toHaveBeenCalledWith(0.6);
     expect(stopAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_END_7);
     expect(playAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_END_7, false, false, 2.0);

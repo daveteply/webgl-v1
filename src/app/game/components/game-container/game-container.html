@@ -13,7 +13,7 @@
     <div class="game-logo"></div>
     <wgl-text-zoom class="game-score" [text]="scoringManager.Score"></wgl-text-zoom>
     <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
-    <div class="level-info" [style.color]="LevelLabelColor">
+    <div class="level-info" [style.color]="LevelLabelColor()">
       <span>Level</span>
       <span>&nbsp;</span>
       <div>{{ scoringManager.Level }}</div>
@@ -36,6 +36,6 @@
     [class.show]="splashPhase() !== 'black' && !showScoreProgress()"
     [class.hide]="showScoreProgress()"
   >
-    &copy; {{ copyrightYear }} David Teply
+    &copy; {{ copyrightYear() }} David Teply
   </div>
 </div>

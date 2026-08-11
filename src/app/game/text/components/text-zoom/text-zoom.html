@@ -1,5 +1,5 @@
 <div class="text-zoom-container">
-  @for (char of chars; track $index) {
+  @for (char of chars(); track $index) {
     <wgl-zoom-char [text]="char"></wgl-zoom-char>
   }
 </div>

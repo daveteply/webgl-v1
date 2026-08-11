@@ -1,8 +1,8 @@
-@if (highScores?.length) {
+@if (highScores().length) {
   <div id="highScores">
     <div class="title">High Scores</div>
-    @for (highScore of highScores; track $index) {
-      <div class="score-entry" [class.new-entry]="showHighligh && highScore.highlight">
+    @for (highScore of highScores(); track $index) {
+      <div class="score-entry" [class.new-entry]="showHighligh() && highScore.highlight">
         <span>{{ highScore.occurred | date: 'mediumDate' }}</span>
         <span>{{ highScore.score | number }} </span>
       </div>

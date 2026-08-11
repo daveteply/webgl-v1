@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -33,30 +33,19 @@ export class UserSettings implements OnDestroy {
   private hapticsManager = inject(HapticsManagerService);
   private dialogRef = inject(MatDialogRef<UserSettings>);
 
-  gameVolume = Math.round(this.audioManager.GetGameVolume() * 100);
-  musicVolume = Math.round(this.audioManager.GetMusicVolume() * 100);
-  scoresCleared = false;
-  confirmClear = false;
-  confirmFactoryReset = false;
-  factoryResetCompleted = false;
+  gameVolume = signal<number>(Math.round(this.audioManager.GetGameVolume() * 100));
+  musicVolume = signal<number>(Math.round(this.audioManager.GetMusicVolume() * 100));
+  scoresCleared = signal<boolean>(false);
+  confirmClear = signal<boolean>(false);
+  confirmFactoryReset = signal<boolean>(false);
+  factoryResetCompleted = signal<boolean>(false);
 
   private musicPreviewTimeout?: ReturnType<typeof setTimeout>;
 
-  get gameIcon(): string {
-    return this.gameVolume === 0 ? 'volume_off' : 'volume_up';
-  }
-
-  get musicIcon(): string {
-    return this.musicVolume === 0 ? 'music_off' : 'music_note';
-  }
-
-  get isHapticsAvailable(): boolean {
-    return this.hapticsManager.isAvailable;
-  }
-
-  get hapticsEnabled(): boolean {
-    return this.hapticsManager.hapticsEnabled;
-  }
+  gameIcon = computed(() => (this.gameVolume() === 0 ? 'volume_off' : 'volume_up'));
+  musicIcon = computed(() => (this.musicVolume() === 0 ? 'music_off' : 'music_note'));
+  isHapticsAvailable = computed(() => this.hapticsManager.isAvailable);
+  hapticsEnabled = computed(() => this.hapticsManager.hapticsEnabled);
 
   onHapticsChange(enabled: boolean): void {
     this.hapticsManager.HapticsEnabled = enabled;
@@ -65,14 +54,14 @@ export class UserSettings implements OnDestroy {
   onGameVolumeInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const val = Number(input.value);
-    this.gameVolume = val;
+    this.gameVolume.set(val);
     this.audioManager.SetGameVolume(val / 100);
   }
 
   onGameVolumeChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const val = Number(input.value);
-    this.gameVolume = val;
+    this.gameVolume.set(val);
     this.audioManager.SetGameVolume(val / 100);
     this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
   }
@@ -80,14 +69,14 @@ export class UserSettings implements OnDestroy {
   onMusicVolumeInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const val = Number(input.value);
-    this.musicVolume = val;
+    this.musicVolume.set(val);
     this.audioManager.SetMusicVolume(val / 100);
   }
 
   onMusicVolumeChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const val = Number(input.value);
-    this.musicVolume = val;
+    this.musicVolume.set(val);
     this.audioManager.SetMusicVolume(val / 100);
 
     if (this.musicPreviewTimeout) {
@@ -102,29 +91,29 @@ export class UserSettings implements OnDestroy {
   }
 
   onPromptClearHighScores(): void {
-    this.confirmClear = true;
+    this.confirmClear.set(true);
   }
 
   onConfirmClearHighScores(): void {
     this.highScoreManager.ClearHighScores();
-    this.scoresCleared = true;
-    this.confirmClear = false;
+    this.scoresCleared.set(true);
+    this.confirmClear.set(false);
   }
 
   onCancelClearHighScores(): void {
-    this.confirmClear = false;
+    this.confirmClear.set(false);
   }
 
   onPromptFactoryReset(): void {
-    this.confirmFactoryReset = !this.confirmFactoryReset;
+    this.confirmFactoryReset.set(!this.confirmFactoryReset());
   }
 
   onConfirmFactoryReset(): void {
     this.storageService.clear();
-    this.scoresCleared = true;
-    this.confirmClear = false;
-    this.confirmFactoryReset = false;
-    this.factoryResetCompleted = true;
+    this.scoresCleared.set(true);
+    this.confirmClear.set(false);
+    this.confirmFactoryReset.set(false);
+    this.factoryResetCompleted.set(true);
 
     setTimeout(() => {
       window.location.reload();
@@ -132,7 +121,7 @@ export class UserSettings implements OnDestroy {
   }
 
   onCancelFactoryReset(): void {
-    this.confirmFactoryReset = false;
+    this.confirmFactoryReset.set(false);
   }
 
   onClose(): void {

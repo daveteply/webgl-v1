@@ -78,12 +78,12 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   showScoreProgress = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
-  LevelLabelColor!: string;
+  LevelLabelColor = signal<string>('');
 
   public GridTemplateColumns = '';
   public GridTemplateRows = '';
 
-  copyrightYear = new Date().getFullYear();
+  copyrightYear = signal<number>(new Date().getFullYear());
 
   constructor() {
     // set up window resizing event with automatic cleanup
@@ -322,7 +322,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   private updateDifficultyColor(): void {
     // visual indicator for difficulty level
-    this.LevelLabelColor = `#${this.gameEngine.PlayableTextureCountColor.toString(16)}`;
+    this.LevelLabelColor.set(`#${this.gameEngine.PlayableTextureCountColor.toString(16)}`);
     this.objectManager.UpdateStarFieldColor(this.gameEngine.PlayableTextureCountColor);
   }
 }
