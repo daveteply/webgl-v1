@@ -12,6 +12,7 @@ import { SaveGameService } from '../../../../services/save-game/save-game';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../../../shared/components/progress-bar/progress-bar';
+import { APP_VERSION } from '../../../../../version';
 
 @Component({
   selector: 'wgl-intro',
@@ -22,6 +23,8 @@ import { ProgressBar } from '../../../../../shared/components/progress-bar/progr
 export class Intro implements OnInit, OnDestroy {
   @ViewChild('dialogCanvas')
   dialogCanvas!: ElementRef<HTMLCanvasElement>;
+
+  public appVersion = APP_VERSION;
 
   private objectManager = inject(ObjectManagerService);
   private textureManager = inject(TextureManagerService);

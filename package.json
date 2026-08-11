@@ -2,6 +2,9 @@
   "name": "webgl-v1",
   "version": "0.0.0",
   "scripts": {
+    "set-version": "node tools/set-version.js",
+    "prestart": "npm run set-version",
+    "prebuild": "npm run set-version",
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build",

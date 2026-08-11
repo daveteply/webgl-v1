@@ -1,6 +1,7 @@
 <div id="intro-dialog" class="glass-dialog has-canvas-animation">
   <canvas #dialogCanvas class="canvas-backer"></canvas>
   <div class="logo"></div>
+  <div class="version-label">{{ appVersion }}</div>
 
   <mat-dialog-content class="content">
     <wgl-high-scores [showHighligh]="false"></wgl-high-scores>

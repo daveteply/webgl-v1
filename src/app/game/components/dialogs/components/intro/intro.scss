@@ -60,6 +60,15 @@
       transition: all 250ms ease-in-out;
     }
   }
+
+  .version-label {
+    font-size: 0.9em;
+    font-family: 'Changa', sans-serif;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.05em;
+    user-select: none;
+    margin-bottom: 0.5em;
+  }
 }
 
 .about-icon {

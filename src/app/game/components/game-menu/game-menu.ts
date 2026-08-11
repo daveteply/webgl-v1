@@ -3,6 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
@@ -13,16 +14,18 @@ import { PwaInstallService } from '../../../shared/services/pwa-install';
 import { SaveGameConfirm } from '../dialogs/components/save-game-confirm/save-game-confirm';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
 import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
+import { APP_VERSION } from '../../../version';
 
 @Component({
   selector: 'wgl-game-menu',
-  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatDialogModule],
+  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatDialogModule, MatDividerModule],
   templateUrl: './game-menu.html',
   styleUrl: './game-menu.scss',
 })
 export class GameMenu {
   public shareManager = inject(ShareManagerService);
   public pwaInstallService = inject(PwaInstallService);
+  public appVersion = APP_VERSION;
 
   private notify = inject(NotifyService);
   private objectManager = inject(ObjectManagerService);
