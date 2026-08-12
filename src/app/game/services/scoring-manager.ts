@@ -158,7 +158,7 @@ export class ScoringManagerService {
     this.score.update((s) => s + usePowerMoveBonus);
 
     const info = PowerMoveLabel.find((p) => p.type === moveType);
-    const label = `${info?.label}!` || (additionalMoveCount ? 'Multi-Power!' : 'Power Move!');
+    const label = info?.label ? `${info.label}!` : additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
     this.textTextManager.ShowText([`${label}`, `+${usePowerMoveBonus} Points`], this.textColor, true);
   }
 

@@ -11,7 +11,7 @@ import { mainTweenGroup } from '../../../../services/tween-group';
 export class ZoomChar implements AfterViewInit, OnDestroy {
   text = input<string>('');
 
-  private _zoomTween: any;
+  private _zoomTween?: Tween<Record<string, number>>;
 
   @ViewChild('charEl') localChar!: ElementRef<HTMLDivElement>;
 

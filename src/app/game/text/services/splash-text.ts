@@ -2,14 +2,14 @@ import { Easing, Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../services/tween-group';
 import { Observable } from 'rxjs';
 import { Color, MathUtils, Mesh, MeshBasicMaterial, Object3D } from 'three';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { TextGeometry, TextGeometryParameters } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextSplashEventType } from './text-splash-event-type';
 import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 
 export class SplashText extends Object3D {
-  private _introTween!: any;
-  private _outroTween!: any;
+  private _introTween?: Tween<Record<string, number>>;
+  private _outroTween?: Tween<Record<string, number>>;
 
   private _textGeometry!: TextGeometry;
   private _materials: MeshBasicMaterial[] = [];
@@ -37,7 +37,7 @@ export class SplashText extends Object3D {
       bevelEnabled: true,
       bevelThickness: 6,
       bevelSize: 4,
-    } as any);
+    } as TextGeometryParameters);
     this._textGeometry.scale(0.01, 0.01, 0.01);
 
     // material - front face & bevel/sides
@@ -70,16 +70,18 @@ export class SplashText extends Object3D {
     this.initIntroTween(this.xOffset(this._textGeometry), yOffset);
     this.initOutroTween(yOffset);
 
-    this._introTween.chain(this._outroTween);
+    if (this._introTween && this._outroTween) {
+      this._introTween.chain(this._outroTween);
+    }
   }
 
   public AnimateText(): Observable<TextSplashEventType> {
     return new Observable((observer) => {
-      this._introTween.start();
-      this._introTween.onComplete(() => {
+      this._introTween?.start();
+      this._introTween?.onComplete(() => {
         observer.next(TextSplashEventType.IntroComplete);
       });
-      this._outroTween.onComplete(() => {
+      this._outroTween?.onComplete(() => {
         observer.next(TextSplashEventType.OutroComplete);
       });
     });

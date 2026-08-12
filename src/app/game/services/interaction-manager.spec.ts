@@ -28,7 +28,7 @@ describe('InteractionManager', () => {
       height: 400,
       x: 100,
       y: 100,
-      toJSON: () => {},
+      toJSON: () => undefined,
     } as DOMRect;
 
     // Simulate pointerdown inside bounds
@@ -40,7 +40,7 @@ describe('InteractionManager', () => {
     window.dispatchEvent(moveOutsideEvent);
 
     // Verify pointer state was reset/stopped
-    expect((service as any)._isPointerDown).toBe(false);
-    expect((service as any)._isDragging).toBe(false);
+    expect(service['_isPointerDown']).toBe(false);
+    expect(service['_isDragging']).toBe(false);
   });
 });

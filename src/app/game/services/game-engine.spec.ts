@@ -104,7 +104,7 @@ describe('GameEngineService', () => {
 
   describe('FindMatches Algorithm', () => {
     it('should find adjacent matching pieces horizontally (Next/Prev)', () => {
-      const mockWheel: any = {
+      const mockWheel = {
         Above: undefined,
         Below: undefined,
         ResetIsMatch: () => {
@@ -112,17 +112,17 @@ describe('GameEngineService', () => {
           if (p2) p2.IsMatch = false;
           if (p3) p3.IsMatch = false;
         },
-      };
+      } as unknown as GameWheel;
 
       const createMockPiece = (key: number) => {
-        const piece: any = {
+        const piece = {
           MatchKey: key,
           IsMatch: false,
           IsRemoved: false,
           Next: null,
           Prev: null,
           parent: mockWheel,
-        };
+        } as unknown as GamePiece;
         return piece;
       };
 

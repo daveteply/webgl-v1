@@ -4,15 +4,18 @@ import { SaveGameService } from './save-game';
 import { StorageService } from '../../../shared/services/storage/storage.service';
 import { GameWheel } from '../../models/game-wheel';
 import { GamePiece } from '../../models/game-piece/game-piece';
+import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
+import { GameMaterials } from '../material/material-models';
+import { SaveGameScore } from './save-game-types';
 
 class MockStorageService {
-  private store: { [key: string]: any } = {};
+  private store: Record<string, string> = {};
 
   getItem<T>(key: string): T | null {
     return this.store[key] ? (JSON.parse(this.store[key]) as T) : null;
   }
 
-  setItem(key: string, value: any): void {
+  setItem(key: string, value: unknown): void {
     this.store[key] = JSON.stringify(value);
   }
 
@@ -52,22 +55,22 @@ describe('SaveGameService', () => {
 
   it('should serialize and save game state to StorageService', async () => {
     // Mock game wheel and pieces
-    const mockPiece: any = {
+    const mockPiece = {
       IsRemoved: false,
       FlipTurns: 2,
       IsPowerMove: false,
-    };
+    } as unknown as GamePiece;
 
-    const mockWheel: any = {
+    const mockWheel = {
       Theta: 1.57,
       children: [mockPiece],
-    };
+    } as unknown as GameWheel;
 
-    const levelMaterials: any[] = [{ matchKey: 1, colorStr: '#ff0000' }];
-    const gameMaterials: any = {
+    const levelMaterials = [{ matchKey: 1, colorStr: '#ff0000' }] as unknown as GamePieceMaterialData[];
+    const gameMaterials = {
       wheelMaterials: [{ pieceMaterials: [{ materials: [{ matchKey: 1 }] }] }],
-    };
-    const scoreData: any = { level: 3, score: 500, moves: 10 };
+    } as unknown as GameMaterials;
+    const scoreData = { level: 3, score: 500, moves: 10 } as unknown as SaveGameScore;
 
     await firstValueFrom(service.SaveState([mockWheel], levelMaterials, gameMaterials, 1, 1, scoreData, 0xffffff));
 

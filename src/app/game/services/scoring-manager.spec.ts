@@ -3,7 +3,7 @@ import { ScoringManagerService } from './scoring-manager';
 import { TextManagerService } from '../text/services/text-manager';
 
 class MockTextManagerService {
-  ShowText = () => {};
+  ShowText = () => undefined;
 }
 
 describe('ScoringManagerService', () => {

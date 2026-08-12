@@ -35,7 +35,7 @@ export class StarField extends Object3D {
 
   private _zLimit: number;
 
-  private _sporadicTextures: Map<ObjectType, Texture> = new Map();
+  private _sporadicTextures = new Map<ObjectType, Texture>();
   private _sporadicObjects: SporadicObject[] = [];
   private _frameCount = 0;
   private _nextSporadicFrame = 300;

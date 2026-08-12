@@ -22,12 +22,7 @@ export class TextManagerService {
   private _isPresenting = false;
 
   constructor() {
-    this._loadingManager = new LoadingManager(
-      () => {}, // progress
-      (url: string, itemsLoaded: number, itemsTotal: number) => {},
-      // error
-      (url: string) => {},
-    );
+    this._loadingManager = new LoadingManager();
     this._fontLoader = new FontLoader(this._loadingManager);
   }
 

@@ -26,8 +26,14 @@ import { DialogAnimationService } from '../../services/dialog-animation';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 
 import { LEVEL_COMPLETE_HEADINGS } from '../../../../game-constants';
+import { LevelStats } from '../../../../models/level-stats';
 import { TextZoom } from '../../../../text/components/text-zoom/text-zoom';
 import { ProgressBar } from '../../../../../shared/components/progress-bar/progress-bar';
+
+interface LevelDialogData {
+  stats?: LevelStats;
+  level?: number;
+}
 
 enum LevelStatisticType {
   infoComplete = 1,
@@ -84,7 +90,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   private dialogAnimation = inject(DialogAnimationService);
   private analyticsManager = inject(AnalyticsManagerService);
   public dialogRef = inject(MatDialogRef<LevelComplete>);
-  public data = inject(MAT_DIALOG_DATA);
+  public data = inject<LevelDialogData | null>(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
 
@@ -186,7 +192,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
     this.dialogAnimation.Dispose();
   }
 
-  private setData(levelData: any): void {
+  private setData(levelData: LevelDialogData): void {
     this._timerQueue = [];
     this.fastMatchBonusTotal.set(0);
     this.fastestMatchTimeRaw.set(0);

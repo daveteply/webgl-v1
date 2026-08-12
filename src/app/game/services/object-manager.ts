@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Group, MathUtils, PerspectiveCamera, PointLight, Scene, Vector3 } from 'three';
 
 import { GameWheel } from '../models/game-wheel';
@@ -102,11 +102,11 @@ export class ObjectManagerService {
   public InitShapes(): Observable<void> {
     return new Observable((o) => {
       // create wheels, wheels will create game pieces
-      for (let i = 0; i < this._verticalTargets.length; i++) {
+      this._verticalTargets.forEach(() => {
         const gameWheel = new GameWheel(WHEEL_START_POSITION, this._piecePoints);
         this._axle.push(gameWheel);
         this._stack.add(gameWheel);
-      }
+      });
 
       // initialize materials
       this.materialManager.InitMaterials(this._verticalTargets.length, this._piecePoints.length);

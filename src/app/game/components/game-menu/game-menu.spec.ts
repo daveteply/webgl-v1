@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { GameMenu } from './game-menu';
+import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
 
 describe('GameMenu', () => {
   let component: GameMenu;
@@ -30,9 +32,12 @@ describe('GameMenu', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open install pwa dialog when InstallAppClick is called', () => {
-    const openSpy = vi.spyOn((component as any).dialog, 'open').mockReturnValue({ afterClosed: () => of(true) } as any);
-    component.InstallAppClick();
+  it('should open install pwa dialog when InstallAppClick is called', async () => {
+    const dialog = component['dialog'];
+    const openSpy = vi
+      .spyOn(dialog, 'open')
+      .mockReturnValue({ afterClosed: () => of(true) } as unknown as MatDialogRef<InstallPwaDialog>);
+    await component.InstallAppClick();
     expect(openSpy).toHaveBeenCalled();
   });
 });

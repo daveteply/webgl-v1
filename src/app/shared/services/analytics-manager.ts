@@ -15,6 +15,7 @@ export enum AnalyticsEventType {
 export class AnalyticsManagerService {
   public Log(_logType: AnalyticsEventType): void {
     // Analytics logging disabled / no-op in web version
+    void _logType;
   }
 }
 

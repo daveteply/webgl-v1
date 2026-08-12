@@ -23,8 +23,8 @@ export class App {
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 
-  @HostListener('document:visibilitychange', ['$event'])
-  visibilitychange(event?: Event) {
+  @HostListener('document:visibilitychange')
+  visibilitychange() {
     this.appVisibility.VisibilityChanged.next(!this.document.hidden);
   }
 

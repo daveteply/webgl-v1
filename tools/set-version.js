@@ -40,4 +40,3 @@ if (currentContent !== content) {
 } else {
   console.log(`[set-version] Version unchanged (${versionString})`);
 }
-
