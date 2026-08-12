@@ -9,7 +9,7 @@ describe('SaveGameConfirm', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SaveGameConfirm],
-      providers: [{ provide: MatDialogRef, useValue: { close: () => {} } }],
+      providers: [{ provide: MatDialogRef, useValue: { close: () => undefined } }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SaveGameConfirm);

@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
 import { AudioType } from '../../../../../shared/services/audio/audio-data';
+import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 
 describe('UserSettings', () => {
   let component: UserSettings;
@@ -51,7 +52,7 @@ describe('UserSettings', () => {
   });
 
   it('should update game volume on input without playing audio', () => {
-    const audioManager = (component as any).audioManager;
+    const audioManager = TestBed.inject(AudioManagerService);
     const setGameVolumeSpy = vi.spyOn(audioManager, 'SetGameVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
 
@@ -64,7 +65,7 @@ describe('UserSettings', () => {
   });
 
   it('should play AudioType.LEVEL_STAT when game volume selection changes', () => {
-    const audioManager = (component as any).audioManager;
+    const audioManager = TestBed.inject(AudioManagerService);
     const setGameVolumeSpy = vi.spyOn(audioManager, 'SetGameVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
 
@@ -77,7 +78,7 @@ describe('UserSettings', () => {
   });
 
   it('should update music volume on input without playing audio', () => {
-    const audioManager = (component as any).audioManager;
+    const audioManager = TestBed.inject(AudioManagerService);
     const setMusicVolumeSpy = vi.spyOn(audioManager, 'SetMusicVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
 
@@ -90,7 +91,7 @@ describe('UserSettings', () => {
   });
 
   it('should play AudioType.LEVEL_END_7 preview on music volume change', () => {
-    const audioManager = (component as any).audioManager;
+    const audioManager = TestBed.inject(AudioManagerService);
     const setMusicVolumeSpy = vi.spyOn(audioManager, 'SetMusicVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
     const stopAudioSpy = vi.spyOn(audioManager, 'StopAudio');

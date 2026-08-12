@@ -20,7 +20,7 @@ interface boxParticle {
 }
 
 interface introRows {
-  rows: Array<boxParticle[]>;
+  rows: boxParticle[][];
 }
 
 enum DialogAnimationType {
@@ -40,7 +40,7 @@ export class DialogAnimationService implements OnDestroy {
   private _levelEmojis!: EmojiInfo;
 
   private _introBoxRows!: introRows;
-  private _introTween!: any;
+  private _introTween?: Tween<{ x: number }>;
   private _introAnimateRight = true;
 
   private _canvas!: HTMLCanvasElement;
@@ -124,8 +124,7 @@ export class DialogAnimationService implements OnDestroy {
         .delay(1000)
         .repeat(Infinity)
         .onUpdate(() => {
-          for (let i = 0; i < this._introBoxRows.rows[targetRowIndex].length; i++) {
-            const box = this._introBoxRows.rows[targetRowIndex][i];
+          for (const box of this._introBoxRows.rows[targetRowIndex]) {
             if (this._introAnimateRight) {
               box.x += delta.x;
             } else {
@@ -257,10 +256,8 @@ export class DialogAnimationService implements OnDestroy {
     if (this._ctx) {
       this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-      for (let i = 0; i < this._introBoxRows.rows.length; i++) {
-        const row = this._introBoxRows.rows[i];
-        for (let j = 0; j < row.length; j++) {
-          const box = row[j];
+      for (const row of this._introBoxRows.rows) {
+        for (const box of row) {
           this._ctx.fillStyle = box.color as string;
           this._ctx.fillRect(box.x, box.y, box.size, box.size);
         }

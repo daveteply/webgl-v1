@@ -9,7 +9,10 @@
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "prepare": "husky",
+    "lint": "ng lint",
+    "format": "prettier --write ."
   },
   "private": true,
   "packageManager": "npm@10.9.8",
@@ -32,11 +35,15 @@
     "@angular/build": "^22.1.2",
     "@angular/cli": "^22.1.2",
     "@angular/compiler-cli": "^22.1.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.50.0",
     "@types/three": "^0.185.4",
+    "angular-eslint": "22.1.0",
+    "eslint": "^10.6.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
-    "vitest": "^4.0.8",
-    "@playwright/test": "^1.50.0"
+    "typescript-eslint": "8.62.1",
+    "vitest": "^4.0.8"
   }
 }

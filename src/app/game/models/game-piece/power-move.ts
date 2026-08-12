@@ -21,9 +21,9 @@ export class PowerMove {
   private _root: Object3D;
   private _materials: MeshPhongMaterial[] = [];
 
-  private _appearTween!: any;
-  private _spinTween!: any;
-  private _bounceTween!: any;
+  private _appearTween?: Tween<Record<string, number>>;
+  private _spinTween?: Tween<Record<string, number>>;
+  private _bounceTween?: Tween<Record<string, number>>;
 
   private _powerMoveColor!: number;
   get PowerMoveColor(): number {
@@ -36,7 +36,7 @@ export class PowerMove {
 
   private static _geometryCache = new Map<PowerMoveType, BufferGeometry>();
 
-  constructor(moveType: PowerMoveType, arg2?: any, color?: number) {
+  constructor(moveType: PowerMoveType, arg2?: unknown, color?: number) {
     const actualColor = typeof arg2 === 'number' ? arg2 : color;
     this._powerMoveColor = actualColor || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
 

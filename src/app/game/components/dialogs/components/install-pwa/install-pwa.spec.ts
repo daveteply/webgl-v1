@@ -13,7 +13,7 @@ describe('InstallPwaDialog', () => {
         {
           provide: MatDialogRef,
           useValue: {
-            close: () => {},
+            close: () => undefined,
           },
         },
       ],

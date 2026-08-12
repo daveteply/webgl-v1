@@ -52,10 +52,10 @@ export class GamePiece extends Object3D {
   private _thetaStart: number;
   private _thetaOffset: number;
 
-  private _lockTween: any;
-  private _levelChangeTween: any;
-  private _removeTween: any;
-  private _additiveTween: any;
+  private _lockTween?: Tween<Record<string, number>>;
+  private _levelChangeTween?: Tween<Record<string, number>>;
+  private _removeTween?: Tween<Record<string, number>>;
+  private _additiveTween?: Tween<Record<string, number>>;
 
   // Each side material is arranged as follows:
   // 0 'back'
@@ -279,7 +279,7 @@ export class GamePiece extends Object3D {
 
     this._flipTurns = 0;
 
-    const parentWheel = this.parent as any;
+    const parentWheel = this.parent as (Object3D & { Theta?: number }) | null;
     if (parentWheel && parentWheel.Theta !== undefined) {
       this.ThetaOffset = parentWheel.Theta;
     } else {
@@ -317,7 +317,6 @@ export class GamePiece extends Object3D {
         target = this._pieceMaterials[this._matchKeySequence[0]];
         targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
         // cylinder side, top, bottom
-        this._meshCylinder.material;
         this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
         break;
 
@@ -544,7 +543,7 @@ export class GamePiece extends Object3D {
     }
   }
 
-  public InitSelectionTween(select: boolean): any {
+  public InitSelectionTween(select: boolean): Tween<{ x: number; y: number; z: number }> {
     // values
     const origin = { x: 1.0, y: 1.0, z: 1.0 };
     const final = { x: 1.5, y: 1.25, z: 1.25 };
@@ -585,7 +584,7 @@ export class GamePiece extends Object3D {
     let targetPosY = startPosY;
     let targetPosZ = startPosZ;
     let peakScale = 1.0;
-    let easingFunc: any = Easing.Sinusoidal.Out;
+    let easingFunc: (k: number) => number = Easing.Sinusoidal.Out;
 
     switch (style) {
       case GamePieceRemovalStyle.FadeTranslate:
@@ -834,7 +833,7 @@ export class GamePiece extends Object3D {
     this.ApplyStateSnapshot(source.GetStateSnapshot());
   }
 
-  public AnimateGravitySlide(startOffsetY: number, duration: number): Tween<any> {
+  public AnimateGravitySlide(startOffsetY: number, duration: number): Tween<{ y: number }> {
     this._removeTween?.stop();
     this._levelChangeTween?.stop();
     this._lockTween?.stop();
