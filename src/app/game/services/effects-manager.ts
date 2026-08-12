@@ -37,9 +37,9 @@ export class EffectsManagerService {
   private materialManager = inject(MaterialManagerService);
   private gameEngine = inject(GameEngineService);
 
-  private _selectionTweens: any[] = [];
-  private _levelChangeCameraTween1: any;
-  private _levelChangeCameraTween2: any;
+  private _selectionTweens: Tween<Record<string, number>>[] = [];
+  private _levelChangeCameraTween1?: Tween<Record<string, number>>;
+  private _levelChangeCameraTween2?: Tween<Record<string, number>>;
 
   private _selectedPieces: Object3D[] = [];
   get SelectedPieces(): Object3D[] {
@@ -137,8 +137,8 @@ export class EffectsManagerService {
 
   public AnimateLock(axle: GameWheel[], lock: boolean): void {
     axle.forEach((a) => {
-      for (let i = 0; i < a.children.length; i++) {
-        const gamePiece = a.children[i] as GamePiece;
+      for (const child of a.children) {
+        const gamePiece = child as GamePiece;
         if (!gamePiece.IsMatch) {
           gamePiece.AnimateLock(lock);
         }
@@ -405,7 +405,7 @@ export class EffectsManagerService {
       }
     });
 
-    const tweens: any[] = [];
+    const tweens: Tween<Record<string, number>>[] = [];
     const duration = 1600;
 
     actionsToAnimate.forEach((action) => {

@@ -2,9 +2,7 @@ import { Injectable, isDevMode } from '@angular/core';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
   DEFAULT_PLAYABLE_TEXTURE_COUNT,
-  DIFFICULTY_TIER_1,
   DIFFICULTY_TIER_3,
-  DIFFICULTY_TIER_4,
   DIFFICULT_LEVEL_COLOR,
   LEVEL_START_OTHER_GEOMETRIES,
 } from '../game-constants';
@@ -169,7 +167,7 @@ export class GameEngineService {
   }
 
   public FindAllMatches(axle: GameWheel[]): GamePiece[] {
-    const allMatches: Set<GamePiece> = new Set();
+    const allMatches = new Set<GamePiece>();
     for (const wheel of axle) {
       for (const piece of wheel.children as GamePiece[]) {
         if (!piece.IsRemoved && !allMatches.has(piece)) {

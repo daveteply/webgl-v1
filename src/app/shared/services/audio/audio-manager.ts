@@ -79,7 +79,8 @@ export class AudioManagerService implements OnDestroy {
 
   private initAudioContext(): AudioContext | undefined {
     if (!this._audioCtx) {
-      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioCtxClass =
+        window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioCtxClass) {
         this._audioCtx = new AudioCtxClass();
 
@@ -108,7 +109,7 @@ export class AudioManagerService implements OnDestroy {
   private attachUserGestureResume(): void {
     const resume = () => {
       if (this._audioCtx && this._audioCtx.state === 'suspended') {
-        this._audioCtx.resume().catch(() => {});
+        this._audioCtx.resume().catch(() => undefined);
       }
       window.removeEventListener('pointerdown', resume);
       window.removeEventListener('keydown', resume);
@@ -263,7 +264,7 @@ export class AudioManagerService implements OnDestroy {
   public PlayLongMatch(matchLength: number): void {
     this.SetMinNote();
     for (let i = 0; i < matchLength - MINIMUM_MATCH_COUNT; i++) {
-      this.nextNote;
+      void this.nextNote;
     }
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
@@ -273,7 +274,7 @@ export class AudioManagerService implements OnDestroy {
     if (active) {
       try {
         active.stop();
-      } catch (e) {
+      } catch {
         // no op if already stopped
       }
       this._activeSources.delete(audioType);
@@ -293,7 +294,9 @@ export class AudioManagerService implements OnDestroy {
     this._activeSources.forEach((src) => {
       try {
         src.stop();
-      } catch (e) {}
+      } catch {
+        // no op if already stopped
+      }
     });
     this._activeSources.clear();
     this._audioCtx?.close();

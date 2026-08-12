@@ -115,7 +115,7 @@ export class TextureManagerService {
 
     // clear existing textures
     this._textures = [];
-    let emojiList: EmojiSequence[] = [];
+    let emojiList: EmojiSequence[];
 
     switch (this._levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
@@ -260,7 +260,7 @@ export class TextureManagerService {
       }
       this.store.UpdateEmojiList(emojiSequence);
 
-      for (let i = 0; i < emojiSequence.length; i++) {
+      for (const emoji of emojiSequence) {
         this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
         this._canvasContext.fillStyle = '#ffffff';
         this._canvasContext.fillRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
@@ -268,8 +268,6 @@ export class TextureManagerService {
         this._canvasContext.font = CANVAS_TEXTURE_SCALE - 10 + 'px Arial';
         this._canvasContext.textBaseline = 'middle';
         this._canvasContext.textAlign = 'center';
-
-        const emoji = emojiSequence[i];
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
         this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);

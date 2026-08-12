@@ -181,7 +181,7 @@ export class MaterialManagerService {
     // match keys are numbered to ensure unique key per piece
     let matchKey = 1;
 
-    let selectedColors: string[] = [];
+    let selectedColors: string[];
     let bumpTexture: GameTexture;
 
     // selected style for current level
@@ -245,7 +245,7 @@ export class MaterialManagerService {
     playableTextureCount: number,
   ): { colors: string[]; name?: string; emoji?: string } {
     let selectedScheme: ColorSchemeData | undefined;
-    let targetColors: string[] = [];
+    let targetColors: string[];
 
     if (this.saveGame.IsRestoring) {
       targetColors = this.saveGame.SavedGameData.textureData.map((t) => t.colorStr) as string[];

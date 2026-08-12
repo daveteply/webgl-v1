@@ -32,7 +32,7 @@ export class PwaInstallService {
           window.matchMedia('(display-mode: fullscreen)').matches ||
           window.matchMedia('(display-mode: minimal-ui)').matches ||
           window.matchMedia('(display-mode: window-controls-overlay)').matches)) ||
-      (navigator as any)?.standalone === true ||
+      (navigator as unknown as { standalone?: boolean })?.standalone === true ||
       (document.referrer && document.referrer.includes('android-app://'));
 
     this.isStandalone.set(!!isStandaloneDisplay);
@@ -48,10 +48,12 @@ export class PwaInstallService {
         };
         if (mediaQuery.addEventListener) {
           mediaQuery.addEventListener('change', updateMode);
-        } else if ((mediaQuery as any).addListener) {
-          (mediaQuery as any).addListener(updateMode);
+        } else if ('addListener' in mediaQuery) {
+          (mediaQuery as unknown as { addListener: (cb: (e: MediaQueryListEvent) => void) => void }).addListener(
+            updateMode,
+          );
         }
-      } catch (err) {
+      } catch {
         // Fallback for older engines
       }
     }
@@ -60,7 +62,9 @@ export class PwaInstallService {
   private initListeners(): void {
     if (typeof window === 'undefined') return;
 
-    const globalPrompt = (window as any).deferredInstallPrompt || (window as any).__pwaInstallPrompt;
+    const win = window as unknown as Record<string, unknown>;
+    const globalPrompt = (win['deferredInstallPrompt'] || win['__pwaInstallPrompt']) as
+      BeforeInstallPromptEvent | undefined;
     if (globalPrompt) {
       this.deferredPrompt = globalPrompt;
       this.canInstall.set(true);
@@ -69,13 +73,13 @@ export class PwaInstallService {
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       e.preventDefault();
       this.deferredPrompt = e as BeforeInstallPromptEvent;
-      (window as any).deferredInstallPrompt = e;
+      win['deferredInstallPrompt'] = e;
       this.canInstall.set(true);
     });
 
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
-      (window as any).deferredInstallPrompt = null;
+      win['deferredInstallPrompt'] = null;
       this.canInstall.set(false);
       this.isStandalone.set(true);
     });
@@ -114,7 +118,7 @@ export class PwaInstallService {
 
         this.deferredPrompt = null;
         if (typeof window !== 'undefined') {
-          (window as any).deferredInstallPrompt = null;
+          (window as unknown as Record<string, unknown>)['deferredInstallPrompt'] = null;
         }
         this.canInstall.set(false);
 
@@ -125,7 +129,7 @@ export class PwaInstallService {
           console.warn('PWA install prompt failed after retries:', error);
           this.deferredPrompt = null;
           if (typeof window !== 'undefined') {
-            (window as any).deferredInstallPrompt = null;
+            (window as unknown as Record<string, unknown>)['deferredInstallPrompt'] = null;
           }
           this.canInstall.set(false);
           return 'unavailable';

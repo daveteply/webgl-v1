@@ -20,8 +20,8 @@ export class GameWheel extends Object3D {
   private _wheelAbove: GameWheel | undefined;
   private _wheelBelow: GameWheel | undefined;
 
-  private _levelChangeTween: any;
-  private _horizontalMotionTween: any;
+  private _levelChangeTween?: Tween<Record<string, number>>;
+  private _horizontalMotionTween?: Tween<Record<string, number>>;
 
   // game save state
   get Theta(): number {
@@ -79,8 +79,8 @@ export class GameWheel extends Object3D {
     this.position.y = this._originalPositionY;
     this.rotation.y = 0;
 
-    for (let i = 0; i < this.children.length; i++) {
-      const gamePiece = this.children[i] as GamePiece;
+    for (const child of this.children) {
+      const gamePiece = child as GamePiece;
       gamePiece.Reset(levelGeometryType);
     }
   }
@@ -169,8 +169,8 @@ export class GameWheel extends Object3D {
   }
 
   public AnimateVerticalPowerMove(moveType: PowerMoveType): void {
-    for (let i = 0; i < this.children.length; i++) {
-      const gamePiece = this.children[i] as GamePiece;
+    for (const child of this.children) {
+      const gamePiece = child as GamePiece;
 
       // including zero to allow some not to rotate
       const turns = MathUtils.randInt(0, 3);
@@ -232,8 +232,8 @@ export class GameWheel extends Object3D {
       .start();
 
     // recalculate game piece theta (for matching algorithm)
-    for (let i = 0; i < this.children.length; i++) {
-      const gamePiece = this.children[i] as GamePiece;
+    for (const child of this.children) {
+      const gamePiece = child as GamePiece;
       gamePiece.ThetaOffset = this._theta;
     }
 
@@ -241,8 +241,8 @@ export class GameWheel extends Object3D {
   }
 
   public ResetIsMatch(): void {
-    for (let i = 0; i < this.children.length; i++) {
-      const gamePiece = this.children[i] as GamePiece;
+    for (const child of this.children) {
+      const gamePiece = child as GamePiece;
       gamePiece.IsMatch = false;
     }
   }

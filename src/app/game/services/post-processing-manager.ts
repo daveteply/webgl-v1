@@ -25,8 +25,8 @@ export class PostProcessingManagerService {
   private _unrealBloomPass!: UnrealBloomPass;
   private _outputPass!: OutputPass;
 
-  private _bokehTween!: any;
-  private _unrealBloomTween!: any;
+  private _bokehTween?: Tween<Record<string, number>>;
+  private _unrealBloomTween?: Tween<Record<string, number>>;
 
   private _outlineColor!: number;
   get OutlineColor(): number {
@@ -59,7 +59,7 @@ export class PostProcessingManagerService {
     this._outlinePass.edgeStrength = 20;
 
     // smaa
-    this._smaaPass = new (SMAAPass as any)(width, height);
+    this._smaaPass = new (SMAAPass as unknown as new (w?: number, h?: number) => SMAAPass)(width, height);
 
     // bokeh
     this._bokehPass = new BokehPass(scene, camera, {
