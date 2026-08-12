@@ -289,14 +289,16 @@ export class GamePiece extends Object3D {
     this._matchKeySequence = [1, 2, 0, 3];
   }
 
-  public StopTweens(): void {
+  public StopTweens(preserveLock = false): void {
     this._removeTween?.stop();
     this._levelChangeTween?.stop();
     this._lockTween?.stop();
     if (this._mesh) {
       this._mesh.position.set(0, 0, 0);
       this._mesh.rotation.set(0, 0, 0);
-      this._mesh.scale.set(1, 1, 1);
+      if (!preserveLock) {
+        this._mesh.scale.set(1, 1, 1);
+      }
     }
   }
 
@@ -802,7 +804,7 @@ export class GamePiece extends Object3D {
   }
 
   public ApplyStateSnapshot(snapshot: PieceStateSnapshot): void {
-    this.StopTweens();
+    this.StopTweens(true);
 
     this._isRemoved = snapshot.isRemoved;
     this._matchKeySequence = [...snapshot.matchKeySequence];
@@ -833,7 +835,7 @@ export class GamePiece extends Object3D {
     this.ApplyStateSnapshot(source.GetStateSnapshot());
   }
 
-  public AnimateGravitySlide(startOffsetY: number, duration: number): Tween<{ y: number }> {
+  public AnimateGravitySlide(startOffsetY: number, duration: number, isLocked = true): Tween<{ y: number }> {
     this._removeTween?.stop();
     this._levelChangeTween?.stop();
     this._lockTween?.stop();
@@ -852,15 +854,18 @@ export class GamePiece extends Object3D {
       }
     }
 
+    const scale = isLocked ? 0.8 : 1.0;
+    const opacity = isLocked ? 0.4 : 1.0;
+
     this._mesh.position.set(0, startOffsetY, 0);
     this._mesh.rotation.set(0, 0, 0);
-    this._mesh.scale.set(1, 1, 1);
+    this._mesh.scale.set(scale, scale, scale);
 
     this._pieceMaterials?.forEach((m) => {
       if (m.useBasic) {
-        m.materialBasic.opacity = 1.0;
+        m.materialBasic.opacity = opacity;
       } else {
-        m.materialPhong.opacity = 1.0;
+        m.materialPhong.opacity = opacity;
       }
     });
 
@@ -876,7 +881,14 @@ export class GamePiece extends Object3D {
       .onComplete(() => {
         this._mesh.position.set(0, 0, 0);
         this._mesh.rotation.set(0, 0, 0);
-        this._mesh.scale.set(1, 1, 1);
+        this._mesh.scale.set(scale, scale, scale);
+        this._pieceMaterials?.forEach((m) => {
+          if (m.useBasic) {
+            m.materialBasic.opacity = opacity;
+          } else {
+            m.materialPhong.opacity = opacity;
+          }
+        });
       });
   }
 }

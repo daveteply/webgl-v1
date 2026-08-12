@@ -254,7 +254,7 @@ export class EffectsManagerService {
     // Stop ongoing removal/scatter tweens and reset mesh position/rotation to local origin
     axle.forEach((wheel) => {
       for (const piece of wheel.children as GamePiece[]) {
-        piece.StopTweens();
+        piece.StopTweens(true);
       }
     });
 
@@ -406,7 +406,7 @@ export class EffectsManagerService {
     });
 
     const tweens: Tween<Record<string, number>>[] = [];
-    const duration = 1600;
+    const duration = 1000;
 
     actionsToAnimate.forEach((action) => {
       if (action.isNewSpawn && action.newMaterial) {
@@ -418,6 +418,7 @@ export class EffectsManagerService {
           action.targetPiece.ApplyStateSnapshot(snap);
         }
       }
+      action.targetPiece.IsMatch = false;
 
       const tween = action.targetPiece.AnimateGravitySlide(action.startOffsetY, duration);
       tweens.push(tween);

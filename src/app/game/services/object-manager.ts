@@ -230,6 +230,10 @@ export class ObjectManagerService {
     this.audioManager.PlayLevelStart();
   }
 
+  public ResetIsMatch(): void {
+    this._axle.forEach((wheel) => wheel.ResetIsMatch());
+  }
+
   public AnimateLevelComplete(): void {
     // level transition
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, false);
