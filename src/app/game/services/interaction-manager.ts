@@ -115,6 +115,7 @@ export class InteractionManagerService {
               this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
                 this.effectsManager.ClearSelectedPieces();
                 this.postProcessingManager.UpdateOutlinePassObjects([]);
+                this.objectManager.ResetIsMatch();
                 this.effectsManager.AnimateLock(this.objectManager.Axle, false);
                 this.LockBoard(false);
               });
