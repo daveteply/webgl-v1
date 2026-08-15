@@ -254,7 +254,7 @@ export class MaterialManagerService {
       selectedScheme = COLOR_SCHEMES[0];
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     } else {
-      // Pick a random scheme from curated 8-color schemes (Schemes 1-14)
+      // Pick a random scheme from curated schemes
       const schemeIndex = MathUtils.randInt(1, COLOR_SCHEMES.length - 1);
       selectedScheme = COLOR_SCHEMES[schemeIndex];
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
