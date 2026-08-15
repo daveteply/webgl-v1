@@ -279,6 +279,7 @@ export class InteractionManagerService {
     this.scoringManager.UpdateMoveCount();
     const moveType = targetGamePiece.PowerMoveType;
     targetGamePiece.PowerMoveRemove();
+    this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, moveType);
 
     // power move could have been the player's last move
     if (this.scoringManager.GameOver) {
@@ -287,7 +288,6 @@ export class InteractionManagerService {
       this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
       this.LockBoard(false);
     } else {
-      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, moveType);
       this.hapticsManager.PowerMovePulse();
 
       if (moveType === PowerMoveType.Bomb) {
@@ -334,6 +334,8 @@ export class InteractionManagerService {
       // panic
       if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
         this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
+      } else if (this.scoringManager.PlayerMoves > MOVES_REMAINING_COUNT_PANIC) {
+        this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
       }
     }
 
