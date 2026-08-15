@@ -16,6 +16,7 @@ export enum AudioType {
   MATCH_LONG,
   POWER_MOVE_APPEAR,
   POWER_MOVE_USE,
+  POWER_MOVE_BOMB,
   GAME_OVER,
   GRAVITY_EFFECT,
   LEVEL_END_1,
@@ -131,6 +132,10 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/power-move-use.mp3',
     audioType: AudioType.POWER_MOVE_USE,
+  },
+  {
+    url: 'assets/audio/power-move-bomb.mp3',
+    audioType: AudioType.POWER_MOVE_BOMB,
   },
   {
     url: 'assets/audio/game-over.mp3',

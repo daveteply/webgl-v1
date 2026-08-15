@@ -1,7 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera } from 'three';
+import { vi } from 'vitest';
 
 import { InteractionManager } from './interaction-manager';
+import { PowerMoveType } from '../models/power-move-type';
+import { AudioType } from '../../shared/services/audio/audio-data';
+import { AudioManagerService } from '../../shared/services/audio/audio-manager';
+import { GamePiece } from '../models/game-piece/game-piece';
 
 describe('InteractionManager', () => {
   let service: InteractionManager;
@@ -42,5 +47,19 @@ describe('InteractionManager', () => {
     // Verify pointer state was reset/stopped
     expect(service['_isPointerDown']).toBe(false);
     expect(service['_isDragging']).toBe(false);
+  });
+
+  it('should play POWER_MOVE_BOMB audio when Bomb power move is triggered', () => {
+    const audioManager = TestBed.inject(AudioManagerService);
+    const playSpy = vi.spyOn(audioManager, 'PlayAudio');
+
+    const mockPiece = {
+      id: 1,
+      PowerMoveType: PowerMoveType.Bomb,
+      PowerMoveRemove: vi.fn(),
+    } as unknown as GamePiece;
+
+    service['powerMove'](mockPiece);
+    expect(playSpy).toHaveBeenCalledWith(AudioType.POWER_MOVE_BOMB);
   });
 });

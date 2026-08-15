@@ -2,12 +2,7 @@ import { Injectable, isDevMode, inject } from '@angular/core';
 import { take } from 'rxjs';
 import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
-import {
-  DIFFICULTY_TIER_2,
-  MINIMUM_MATCH_COUNT,
-  MOVES_REMAINING_COUNT_PANIC,
-  ROTATIONAL_CONSTANT,
-} from '../game-constants';
+import { MINIMUM_MATCH_COUNT, MOVES_REMAINING_COUNT_PANIC, ROTATIONAL_CONSTANT } from '../game-constants';
 
 import { GameWheel } from '../models/game-wheel';
 import { GamePiece } from '../models/game-piece/game-piece';
@@ -94,21 +89,14 @@ export class InteractionManagerService {
           } else {
             // power move
             let powerMovePiece: GamePiece | undefined;
-            const powerMoveTarget =
-              this.scoringManager.Level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
-            if (this._matchingPieces.length >= powerMoveTarget) {
+            const moveType = this.gameEngine.EvaluatePowerMove(this._matchingPieces.length, this.scoringManager.Level);
+            if (moveType !== PowerMoveType.None) {
               if (isDevMode()) {
-                console.info('Power Move Candidate Match!');
+                console.info('Power Move Awarded:', PowerMoveType[moveType]);
               }
-              const moveType = this.gameEngine.PowerMoveSelection(this.scoringManager.Level);
-              if (moveType !== PowerMoveType.None) {
-                if (isDevMode()) {
-                  console.info('  ', PowerMoveType[moveType]);
-                }
-                powerMovePiece = this._matchingPieces[0];
-                this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
-                this.objectManager.GamePiecePowerMove(powerMovePiece, moveType);
-              }
+              powerMovePiece = this._matchingPieces[0];
+              this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
+              this.objectManager.GamePiecePowerMove(powerMovePiece, moveType);
             }
 
             // Animate removal of matched pieces (excluding the piece that became a power move)
@@ -289,6 +277,7 @@ export class InteractionManagerService {
 
     // execute power move
     this.scoringManager.UpdateMoveCount();
+    const moveType = targetGamePiece.PowerMoveType;
     targetGamePiece.PowerMoveRemove();
 
     // power move could have been the player's last move
@@ -296,16 +285,52 @@ export class InteractionManagerService {
       this.audioManager.PlayAudio(AudioType.GAME_OVER);
       this.objectManager.LevelCompleted.next(true);
       this.audioManager.StopAudio(AudioType.PIECE_MOVE_REMAINING_PANIC);
+      this.LockBoard(false);
     } else {
-      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, targetGamePiece.PowerMoveType);
-      this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+      this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, moveType);
       this.hapticsManager.PowerMovePulse();
-      if (targetGamePiece.PowerMoveType === PowerMoveType.Additive) {
-        // additive power move
-        this.objectManager.AdditivePowerMove();
+
+      if (moveType === PowerMoveType.Bomb) {
+        this.audioManager.PlayAudio(AudioType.POWER_MOVE_BOMB);
+
+        const bombTargets = this.gameEngine.FindBombTargets(
+          targetGamePiece,
+          this.objectManager.Axle,
+          this.scoringManager.Level,
+        );
+
+        const otherTargets = bombTargets.filter((p) => p !== targetGamePiece);
+        if (otherTargets.length) {
+          this.effectsManager.AnimateRemove(otherTargets);
+          otherTargets.forEach(() => {
+            this.scoringManager.UpdateLevelProgress();
+          });
+        }
+
+        if (this.scoringManager.LevelComplete) {
+          this.audioManager.PlayLevelComplete();
+          this.hapticsManager.LevelCompletePulse();
+          this.objectManager.AnimateLevelComplete();
+          this.LockBoard(false);
+          this.objectManager.LevelCompleted.next(false);
+        } else if (this.gameEngine.GravityType !== GravityType.None) {
+          this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+            this.effectsManager.ClearSelectedPieces();
+            this.postProcessingManager.UpdateOutlinePassObjects([]);
+            this.objectManager.ResetIsMatch();
+            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+            this.LockBoard(false);
+          });
+          this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
+        } else {
+          this.LockBoard(false);
+        }
       } else {
-        this.objectManager.AnimatePowerMove(targetGamePiece.PowerMoveType);
+        this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+        this.objectManager.AnimatePowerMove(moveType);
+        this.LockBoard(false);
       }
+
       // panic
       if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {
         this.audioManager.PlayAudio(AudioType.PIECE_MOVE_REMAINING_PANIC, false, true);
@@ -315,9 +340,6 @@ export class InteractionManagerService {
     powerMoveGamePieces.forEach((gamePiece) => {
       gamePiece.PowerMoveRemove();
     });
-
-    // unlock the game board
-    this.LockBoard(false);
   }
 
   private deviceCordRotation(deltaX: number): void {

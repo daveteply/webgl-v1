@@ -55,4 +55,27 @@ describe('GamePiece', () => {
     expect(piece.IsPowerMove).toBe(false);
     expect(piece.PowerMove).toBeFalsy();
   });
+
+  it('should initialize and snapshot Bomb power move with spark emitter', () => {
+    const piece = new GamePiece(0, 0, 0, 0);
+    piece.PowerMoveAdd(PowerMoveType.Bomb, 0xff5500, false);
+
+    expect(piece.IsPowerMove).toBe(true);
+    expect(piece.PowerMoveType).toBe(PowerMoveType.Bomb);
+    expect(piece.PowerMove).toBeTruthy();
+    expect(piece.PowerMove.PowerMoveMesh).toBeTruthy();
+
+    const snapshot = piece.GetStateSnapshot();
+    expect(snapshot.isPowerMove).toBe(true);
+    expect(snapshot.powerMoveType).toBe(PowerMoveType.Bomb);
+
+    const targetPiece = new GamePiece(0, 0, 0, 0);
+    targetPiece.ApplyStateSnapshot(snapshot);
+    expect(targetPiece.IsPowerMove).toBe(true);
+    expect(targetPiece.PowerMoveType).toBe(PowerMoveType.Bomb);
+
+    piece.PowerMoveRemove();
+    expect(piece.IsRemoved).toBe(true);
+    expect(piece.IsPowerMove).toBe(false);
+  });
 });

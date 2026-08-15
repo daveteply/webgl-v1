@@ -6,7 +6,7 @@ export enum PowerMoveType {
   VerticalUp,
   VerticalDown,
   VerticalMix,
-  Additive,
+  Bomb,
 }
 
 export interface PowerMoveInfo {
@@ -21,5 +21,5 @@ export const PowerMoveLabel: PowerMoveInfo[] = [
   { type: PowerMoveType.VerticalUp, label: 'Roll up' },
   { type: PowerMoveType.VerticalDown, label: 'Roll down' },
   { type: PowerMoveType.VerticalMix, label: 'Roll mix' },
-  { type: PowerMoveType.Additive, label: 'Returned' },
+  { type: PowerMoveType.Bomb, label: 'Kaboom!' },
 ];
