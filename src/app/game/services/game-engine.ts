@@ -1,10 +1,11 @@
 import { Injectable, isDevMode } from '@angular/core';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
-  DEFAULT_PLAYABLE_TEXTURE_COUNT,
+  DIFFICULTY_TIER_2,
   DIFFICULTY_TIER_3,
-  DIFFICULT_LEVEL_COLOR,
   LEVEL_START_OTHER_GEOMETRIES,
+  MINIMUM_MATCH_COUNT,
+  PLAYABLE_TEXTURE_COUNT,
 } from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
@@ -28,14 +29,8 @@ enum SearchDirection {
 export class GameEngineService {
   private _matches: GamePiece[] = [];
 
-  private _playableTextureCount: number = DEFAULT_PLAYABLE_TEXTURE_COUNT;
   get PlayableTextureCount(): number {
-    return this._playableTextureCount;
-  }
-
-  private _playableTextureCountColor: number = DIFFICULT_LEVEL_COLOR[0];
-  get PlayableTextureCountColor(): number {
-    return this._playableTextureCountColor;
+    return PLAYABLE_TEXTURE_COUNT;
   }
 
   private _levelMaterialType!: LevelMaterialType;
@@ -107,44 +102,126 @@ export class GameEngineService {
     }
   }
 
-  public UpdatePlayableTextureCount(level: number): void {
-    this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
-    this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
-
-    if (isDevMode()) {
-      console.info('------------------');
-      console.info('Playable Texture Count: ', this._playableTextureCount, 'for level:', level);
-    }
-  }
-
   public PowerMoveSelection(level: number): PowerMoveType {
-    // create array of power move options
-    const powerMoveTypes = Object.keys(PowerMoveType)
-      .map((po) => Number.parseInt(po))
-      .filter((po) => !Number.isNaN(po) as unknown as PowerMoveType[keyof PowerMoveType][]);
+    // Power moves begin at level 3
+    if (level < 3) {
+      return PowerMoveType.None;
+    }
 
-    // remove certain element types
+    // Build available power moves based on 3-level progression increments
+    const availableTypes: PowerMoveType[] = [PowerMoveType.HorizontalRight, PowerMoveType.HorizontalLeft];
+
+    if (level >= 6) {
+      availableTypes.push(PowerMoveType.VerticalUp, PowerMoveType.VerticalDown);
+    }
+
+    if (level >= 9) {
+      availableTypes.push(PowerMoveType.HorizontalMix, PowerMoveType.VerticalMix);
+    }
+
+    if (level >= 12) {
+      availableTypes.push(PowerMoveType.Bomb);
+    }
+
+    // Filter vertical moves for Cylinder and Dodecahedron geometries
     if (
       this.LevelGeometryType === LevelGeometryType.Cylinder ||
       this.LevelGeometryType === LevelGeometryType.Dodecahedron
     ) {
-      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalDown), 1);
-      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalMix), 1);
-      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.VerticalUp), 1);
+      const verticalMoves = new Set([PowerMoveType.VerticalUp, PowerMoveType.VerticalDown, PowerMoveType.VerticalMix]);
+      for (let i = availableTypes.length - 1; i >= 0; i--) {
+        if (verticalMoves.has(availableTypes[i])) {
+          availableTypes.splice(i, 1);
+        }
+      }
     }
 
-    // after a certain level, player is always rewarded a power move
-    if (level > DIFFICULTY_TIER_3) {
-      powerMoveTypes.splice(powerMoveTypes.indexOf(PowerMoveType.None), 1);
+    // Up to DIFFICULTY_TIER_3, retain a chance of None
+    const selectionPool: PowerMoveType[] = [...availableTypes];
+    if (level <= DIFFICULTY_TIER_3) {
+      selectionPool.push(PowerMoveType.None);
     }
 
-    const moveType = powerMoveTypes[Math.floor(Math.random() * powerMoveTypes.length)];
+    const moveType = selectionPool[Math.floor(Math.random() * selectionPool.length)];
 
     if (isDevMode()) {
       console.info('    Power Move Type: ', PowerMoveType[moveType]);
     }
 
     return moveType;
+  }
+
+  public EvaluatePowerMove(matchCount: number, level: number): PowerMoveType {
+    const powerMoveTarget = level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
+    if (matchCount < powerMoveTarget) {
+      return PowerMoveType.None;
+    }
+    return this.PowerMoveSelection(level);
+  }
+
+  public FindBombTargets(bombPiece: GamePiece, axle: GameWheel[], level: number): GamePiece[] {
+    const parentWheel = bombPiece.parent as GameWheel;
+    const centerWheelIndex = axle.indexOf(parentWheel);
+    if (centerWheelIndex === -1) {
+      return [bombPiece];
+    }
+
+    const targetPieces = new Set<GamePiece>();
+    targetPieces.add(bombPiece);
+
+    // Scan vertical wheels from -2 to +2
+    for (let dy = -2; dy <= 2; dy++) {
+      const wheelIndex = centerWheelIndex + dy;
+      if (wheelIndex < 0 || wheelIndex >= axle.length) continue;
+
+      const wheel = axle[wheelIndex];
+      const pieces = wheel.children as GamePiece[];
+
+      // Locate piece at the same angular position (ThetaOffset)
+      let centerPieceOnWheel = pieces.find(
+        (p) => Math.abs(p.ThetaOffset - bombPiece.ThetaOffset) < DECIMAL_COMPARISON_TOLERANCE,
+      );
+
+      if (!centerPieceOnWheel && pieces.length > 0) {
+        let minDiff = Infinity;
+        centerPieceOnWheel = pieces[0];
+        for (const p of pieces) {
+          const diff = Math.abs(p.ThetaOffset - bombPiece.ThetaOffset);
+          if (diff < minDiff) {
+            minDiff = diff;
+            centerPieceOnWheel = p;
+          }
+        }
+      }
+
+      if (!centerPieceOnWheel) continue;
+
+      // Scan horizontal pieces from -2 to +2 (omitting corners at |dx|=2 and |dy|=2)
+      // dx=0 (center), dx=1 (Next), dx=2 (Next.Next), dx=-1 (Prev), dx=-2 (Prev.Prev)
+      const horizontalPieces: { dx: number; piece: GamePiece }[] = [
+        { dx: 0, piece: centerPieceOnWheel },
+        { dx: 1, piece: centerPieceOnWheel.Next },
+        { dx: 2, piece: centerPieceOnWheel.Next.Next },
+        { dx: -1, piece: centerPieceOnWheel.Prev },
+        { dx: -2, piece: centerPieceOnWheel.Prev.Prev },
+      ];
+
+      for (const item of horizontalPieces) {
+        // Omit the 4 corner pieces of the 5x5 bounding box
+        if (Math.abs(item.dx) === 2 && Math.abs(dy) === 2) {
+          continue;
+        }
+
+        if (item.piece && !item.piece.IsRemoved) {
+          targetPieces.add(item.piece);
+        }
+      }
+    }
+
+    // Scale pieces removed by level (minimum 5, maximum 21 circular blast pieces)
+    const maxPieces = Math.min(21, Math.max(5, Math.floor(level * 1.5)));
+    const result = Array.from(targetPieces);
+    return result.slice(0, maxPieces);
   }
 
   public FindMatches(gamePiece: GamePiece, axle: GameWheel[]): GamePiece[] {

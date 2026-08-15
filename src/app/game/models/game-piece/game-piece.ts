@@ -56,7 +56,6 @@ export class GamePiece extends Object3D {
   private _lockTween?: Tween<Record<string, number>>;
   private _levelChangeTween?: Tween<Record<string, number>>;
   private _removeTween?: Tween<Record<string, number>>;
-  private _additiveTween?: Tween<Record<string, number>>;
 
   // Each side material is arranged as follows:
   // 0 'back'
@@ -729,49 +728,6 @@ export class GamePiece extends Object3D {
         })
         .start();
     }
-  }
-
-  public AnimateAdditive(): void {
-    this._additiveTween?.stop();
-
-    // reset properties
-    this._isRemoved = false;
-    this._mesh.scale.set(1, 1, 1);
-    this._mesh.rotation.x = 0;
-    this._mesh.rotation.y = 0;
-    this._mesh.rotation.z = 0;
-    this._mesh.position.set(0, 0, 0);
-    this._flipTurns = 0;
-    this._matchKeySequence = [1, 2, 0, 3];
-    this._matchKey = this._pieceMaterials[this._matchKeySequence[0]]?.matchKey;
-
-    // animate the additive restore
-    const delta = {
-      x: this._mesh.rotation.x,
-      y: this._mesh.rotation.y,
-      z: this._mesh.rotation.z,
-      o: 0.0,
-    };
-    const target = {
-      x: 0,
-      y: 0,
-      z: 0,
-      o: 1.0,
-    };
-
-    this._additiveTween = new Tween(delta, mainTweenGroup)
-      .to(target, 1200)
-      .onUpdate(() => {
-        this._mesh.scale.set(delta.o, delta.o, delta.o);
-        this._pieceMaterials.forEach((m) => {
-          if (m.useBasic) {
-            m.materialBasic.opacity = delta.o;
-          } else {
-            m.materialPhong.opacity = delta.o;
-          }
-        });
-      })
-      .start();
   }
 
   // only 1 instance of power move; when the power move is selected, the

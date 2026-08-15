@@ -3,23 +3,27 @@ import { mainTweenGroup } from '../../services/tween-group';
 import { Observable } from 'rxjs';
 import {
   BufferGeometry,
+  CatmullRomCurve3,
   CylinderGeometry,
   ExtrudeGeometry,
-  Group,
   MathUtils,
   Mesh,
   MeshPhongMaterial,
   Object3D,
-  OctahedronGeometry,
   Shape,
-  TorusGeometry,
+  SphereGeometry,
+  TubeGeometry,
+  Vector3,
 } from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { RAINBOW_COLOR_ARRAY } from '../../game-constants';
 import { PowerMoveType } from '../power-move-type';
+import { ParticleEmitter } from '../particle-emitter';
 
 export class PowerMove {
   private _root: Object3D;
   private _materials: MeshPhongMaterial[] = [];
+  private _sparkEmitter?: ParticleEmitter;
 
   private _appearTween?: Tween<Record<string, number>>;
   private _spinTween?: Tween<Record<string, number>>;
@@ -58,32 +62,23 @@ export class PowerMove {
     });
     this._materials.push(mainMaterial);
 
-    if (moveType === PowerMoveType.Additive) {
-      const group = new Group();
+    const geo = PowerMove.getGeometryForType(moveType);
+    const mesh = new Mesh(geo, mainMaterial);
+    this._root = mesh;
 
-      const coreGeo = new OctahedronGeometry(0.35, 0);
-      const coreMesh = new Mesh(coreGeo, mainMaterial);
-
-      const ringMaterial = new MeshPhongMaterial({
-        color: this._powerMoveColor,
-        emissive: this._powerMoveColor,
-        emissiveIntensity: 0.5,
-        transparent: true,
-        opacity: isIntro ? 0.0 : 0.85,
+    // Attach burning fuse spark emitter for Bomb power move
+    if (moveType === PowerMoveType.Bomb) {
+      this._sparkEmitter = new ParticleEmitter({
+        count: 14,
+        size: 0.07,
+        colors: [0xffff55, 0xff8800, 0xff2200, 0xffffff],
+        spread: 0.03,
+        speed: 0.012,
+        lifetime: 20,
       });
-      this._materials.push(ringMaterial);
-
-      const ringGeo = new TorusGeometry(0.55, 0.06, 12, 32);
-      const ringMesh = new Mesh(ringGeo, ringMaterial);
-      ringMesh.rotation.x = Math.PI / 3;
-
-      group.add(coreMesh);
-      group.add(ringMesh);
-      this._root = group;
-    } else {
-      const geo = PowerMove.getGeometryForType(moveType);
-      const mesh = new Mesh(geo, mainMaterial);
-      this._root = mesh;
+      // Position emitter at the tip of the curved wick
+      this._sparkEmitter.position.set(0.16, 0.44, -0.02);
+      mesh.add(this._sparkEmitter);
     }
 
     if (isIntro) {
@@ -100,18 +95,40 @@ export class PowerMove {
     }
 
     let geo: BufferGeometry;
-    const extrudeSettings = {
-      depth: 0.25,
-      bevelEnabled: true,
-      bevelSegments: 3,
-      steps: 1,
-      bevelSize: 0.04,
-      bevelThickness: 0.04,
-    };
 
-    if (moveType === PowerMoveType.Additive) {
-      geo = new CylinderGeometry(0.5, 0.5, 0.6, 16);
+    if (moveType === PowerMoveType.Bomb) {
+      // 1. Classic bomb sphere body
+      const sphereGeo = new SphereGeometry(0.35, 24, 20);
+
+      // 2. Small cylinder collar on top
+      const collarGeo = new CylinderGeometry(0.09, 0.11, 0.12, 16);
+      collarGeo.translate(0, 0.33, 0);
+
+      // 3. Curved wick using TubeGeometry
+      const wickCurve = new CatmullRomCurve3([
+        new Vector3(0, 0.37, 0),
+        new Vector3(0.05, 0.44, 0.02),
+        new Vector3(0.12, 0.5, 0.0),
+        new Vector3(0.16, 0.54, -0.02),
+      ]);
+      const wickGeo = new TubeGeometry(wickCurve, 16, 0.025, 8, false);
+
+      const merged = mergeGeometries([sphereGeo, collarGeo, wickGeo]);
+      sphereGeo.dispose();
+      collarGeo.dispose();
+      wickGeo.dispose();
+
+      merged.center();
+      geo = merged;
     } else {
+      const extrudeSettings = {
+        depth: 0.25,
+        bevelEnabled: true,
+        bevelSegments: 3,
+        steps: 1,
+        bevelSize: 0.04,
+        bevelThickness: 0.04,
+      };
       const shapes = PowerMove.createArrowShape(moveType);
       geo = new ExtrudeGeometry(shapes, extrudeSettings);
       geo.center();
@@ -264,6 +281,7 @@ export class PowerMove {
         animTime += 0.05;
         this._root.rotation.y += 0.008;
         this._root.position.y = this._slideOffsetY + Math.sin(animTime) * 0.15;
+        this._sparkEmitter?.Update();
       })
       .start();
   }
@@ -291,6 +309,7 @@ export class PowerMove {
     this._appearTween?.stop();
     this._spinTween?.stop();
     this._bounceTween?.stop();
+    this._sparkEmitter?.Dispose();
     this._materials.forEach((m) => m.dispose());
   }
 }

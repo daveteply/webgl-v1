@@ -20,7 +20,7 @@ export const HALF_PI = Math.PI / 2;
 export const DECIMAL_COMPARISON_TOLERANCE = 0.001;
 
 // Game rules
-export const DEFAULT_PLAYABLE_TEXTURE_COUNT = 8;
+export const PLAYABLE_TEXTURE_COUNT = 6;
 export const MINIMUM_MATCH_COUNT = 3;
 // this is used with the target piece count along with a
 // logarithmic function to slowly increase as the player
@@ -59,7 +59,6 @@ export const STORAGE_SETTINGS_MUSIC_VOLUME = 'Settings.MusicVolume';
 export const CANVAS_TEXTURE_SCALE = 80;
 export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
 export const DARK_RAINBOW_COLOR_ARRAY = [0x510000, 0x401a00, 0x353600, 0x002f01, 0x000a3e];
-export const DIFFICULT_LEVEL_COLOR = [0xffffff, 0x00d4cf, 0x8000ff, 0xff0080];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
 export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';

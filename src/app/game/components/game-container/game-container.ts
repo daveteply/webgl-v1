@@ -78,7 +78,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   showScoreProgress = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
-  LevelLabelColor = signal<string>('');
+  LevelLabelColor = signal<string>('#ffffff');
 
   public GridTemplateColumns = '';
   public GridTemplateRows = '';
@@ -128,8 +128,6 @@ export class GameContainer implements OnInit, AfterViewInit {
                 // reset stats will take care of move count based on level
                 this.scoringManager.ResetStats(!data.startOver);
               }
-              this.gameEngine.UpdatePlayableTextureCount(this.scoringManager.Level);
-              this.updateDifficultyColor();
               this.objectManager.NextLevel(this.scoringManager.Level, true);
             });
           } else {
@@ -261,14 +259,6 @@ export class GameContainer implements OnInit, AfterViewInit {
   }
 
   private initTextures(): void {
-    // game difficulty level (change in number of textures used)
-    let targetLevel = this.scoringManager.Level;
-    if (this.saveGame.IsRestoring) {
-      targetLevel = this.saveGame.SavedGameData.scoring?.level || 1;
-    }
-    this.gameEngine.UpdatePlayableTextureCount(targetLevel);
-    this.updateDifficultyColor();
-
     // decide level materials and geometries
     if (this.saveGame.IsRestoring) {
       this.gameEngine.RestoreLevelTypes(
@@ -318,12 +308,6 @@ export class GameContainer implements OnInit, AfterViewInit {
       this.scoringManager.NextLevel();
       this.objectManager.NextLevel(this.scoringManager.Level, true);
     }
-  }
-
-  private updateDifficultyColor(): void {
-    // visual indicator for difficulty level
-    this.LevelLabelColor.set(`#${this.gameEngine.PlayableTextureCountColor.toString(16)}`);
-    this.objectManager.UpdateStarFieldColor(this.gameEngine.PlayableTextureCountColor);
   }
 }
 
