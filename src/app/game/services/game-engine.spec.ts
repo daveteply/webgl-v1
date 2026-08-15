@@ -6,12 +6,7 @@ import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
 import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
-import {
-  DEFAULT_PLAYABLE_TEXTURE_COUNT,
-  DIFFICULTY_TIER_1,
-  DIFFICULTY_TIER_3,
-  DIFFICULTY_TIER_4,
-} from '../game-constants';
+import { PLAYABLE_TEXTURE_COUNT } from '../game-constants';
 
 describe('GameEngineService', () => {
   let service: GameEngineService;
@@ -52,22 +47,8 @@ describe('GameEngineService', () => {
       expect(service.GravityType).toBe(GravityType.Up);
     });
 
-    it('should keep playable texture count constant across levels', () => {
-      // Tier 1
-      service.UpdatePlayableTextureCount(DIFFICULTY_TIER_1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
-
-      // Tier 2
-      service.UpdatePlayableTextureCount(DIFFICULTY_TIER_1 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
-
-      // Tier 3
-      service.UpdatePlayableTextureCount(DIFFICULTY_TIER_3 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
-
-      // Tier 4
-      service.UpdatePlayableTextureCount(DIFFICULTY_TIER_4 + 1);
-      expect(service.PlayableTextureCount).toBe(DEFAULT_PLAYABLE_TEXTURE_COUNT);
+    it('should return a fair, constant playable texture count for adequate gameplay', () => {
+      expect(service.PlayableTextureCount).toBe(PLAYABLE_TEXTURE_COUNT);
     });
 
     it('should filter vertical power moves when geometry is Cylinder or Dodecahedron', () => {

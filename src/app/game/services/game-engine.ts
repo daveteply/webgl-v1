@@ -1,12 +1,11 @@
 import { Injectable, isDevMode } from '@angular/core';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
-  DEFAULT_PLAYABLE_TEXTURE_COUNT,
   DIFFICULTY_TIER_2,
   DIFFICULTY_TIER_3,
-  DIFFICULT_LEVEL_COLOR,
   LEVEL_START_OTHER_GEOMETRIES,
   MINIMUM_MATCH_COUNT,
+  PLAYABLE_TEXTURE_COUNT,
 } from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
@@ -30,14 +29,8 @@ enum SearchDirection {
 export class GameEngineService {
   private _matches: GamePiece[] = [];
 
-  private _playableTextureCount: number = DEFAULT_PLAYABLE_TEXTURE_COUNT;
   get PlayableTextureCount(): number {
-    return this._playableTextureCount;
-  }
-
-  private _playableTextureCountColor: number = DIFFICULT_LEVEL_COLOR[0];
-  get PlayableTextureCountColor(): number {
-    return this._playableTextureCountColor;
+    return PLAYABLE_TEXTURE_COUNT;
   }
 
   private _levelMaterialType!: LevelMaterialType;
@@ -106,16 +99,6 @@ export class GameEngineService {
     this._levelTransitionType = Math.floor(Math.random() * 3);
     if (isDevMode()) {
       console.info('Level Transition:', LevelTransitionType[this._levelTransitionType]);
-    }
-  }
-
-  public UpdatePlayableTextureCount(level: number): void {
-    this._playableTextureCount = DEFAULT_PLAYABLE_TEXTURE_COUNT;
-    this._playableTextureCountColor = DIFFICULT_LEVEL_COLOR[0];
-
-    if (isDevMode()) {
-      console.info('------------------');
-      console.info('Playable Texture Count: ', this._playableTextureCount, 'for level:', level);
     }
   }
 
