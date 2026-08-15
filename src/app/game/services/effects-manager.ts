@@ -297,7 +297,7 @@ export class EffectsManagerService {
     for (const col of columns) {
       const removedIndices: number[] = [];
       col.forEach((p, idx) => {
-        if (p.IsRemoved) removedIndices.push(idx);
+        if (p.IsRemoved && !p.IsPowerMove) removedIndices.push(idx);
       });
 
       if (removedIndices.length === 0) continue;
@@ -310,7 +310,7 @@ export class EffectsManagerService {
 
         const nonRemovedAbove: GamePiece[] = [];
         for (let i = lowestRemoved; i < numWheels; i++) {
-          if (!col[i].IsRemoved) {
+          if (!col[i].IsRemoved || col[i].IsPowerMove) {
             nonRemovedAbove.push(col[i]);
           }
         }
@@ -349,7 +349,7 @@ export class EffectsManagerService {
 
         const nonRemovedBelow: GamePiece[] = [];
         for (let i = 0; i <= highestRemoved; i++) {
-          if (!col[i].IsRemoved) {
+          if (!col[i].IsRemoved || col[i].IsPowerMove) {
             nonRemovedBelow.push(col[i]);
           }
         }

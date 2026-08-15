@@ -54,4 +54,15 @@ describe('EffectsManager', () => {
     service.AnimateLevelChangeAnimation(wheels, [0], camera, light, true);
     expect(animationState).toBe(true);
   });
+
+  it('should handle AnimateGravity with game wheels and complete', () => {
+    let completed = false;
+    service.GravityAnimationComplete.subscribe(() => {
+      completed = true;
+    });
+
+    const wheels = [new GameWheel(0, []), new GameWheel(1, [])];
+    service.AnimateGravity(wheels, GravityType.Down);
+    expect(completed).toBe(true);
+  });
 });

@@ -30,6 +30,7 @@ export interface PieceStateSnapshot {
   pieceGeometryType: LevelGeometryType;
   isPowerMove: boolean;
   powerMoveType?: PowerMoveType;
+  powerMoveColor?: number;
 }
 
 export class GamePiece extends Object3D {
@@ -275,6 +276,7 @@ export class GamePiece extends Object3D {
       this._isPowerMove = false;
       this.remove(this._powerMove.PowerMoveMesh);
       this._powerMove?.Dispose();
+      this._powerMove = undefined as unknown as PowerMove;
     }
 
     this._flipTurns = 0;
@@ -302,7 +304,10 @@ export class GamePiece extends Object3D {
     }
   }
 
-  public UpdateMaterials(pieceMaterials: PieceMaterials): void {
+  public UpdateMaterials(pieceMaterials?: PieceMaterials): void {
+    if (!pieceMaterials?.materials) {
+      return;
+    }
     this._pieceMaterials = pieceMaterials.materials;
 
     let target: PieceSideMaterial;
@@ -317,15 +322,19 @@ export class GamePiece extends Object3D {
 
       case LevelGeometryType.Cylinder:
         target = this._pieceMaterials[this._matchKeySequence[0]];
-        targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
-        // cylinder side, top, bottom
-        this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+        if (target) {
+          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+          // cylinder side, top, bottom
+          this._meshCylinder.material = [targetMaterial, ...this._cylinderEndCapMaterials];
+        }
         break;
 
       case LevelGeometryType.Dodecahedron:
         target = this._pieceMaterials[this._matchKeySequence[0]];
-        targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
-        this._meshDodecahedron.material = targetMaterial;
+        if (target) {
+          targetMaterial = target.useBasic ? target.materialBasic : target.materialPhong;
+          this._meshDodecahedron.material = targetMaterial;
+        }
         break;
     }
 
@@ -767,28 +776,61 @@ export class GamePiece extends Object3D {
 
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
-  public PowerMoveAdd(moveType: PowerMoveType, color?: number): void {
-    // prevent interaction with power move until animation is complete
-    this._isRemoved = true;
+  public PowerMoveAdd(moveType: PowerMoveType, color?: number, isIntro = true): void {
+    this._removeTween?.stop();
+    this._isRemoved = false;
+    this._isPowerMove = true;
     this._matchKey = 0;
     this._powerMoveType = moveType;
 
-    this._powerMove = new PowerMove(moveType, color);
+    // Completely hide base mesh geometries so they do not render or write to depth buffer
+    if (this._meshCube) this._meshCube.visible = false;
+    if (this._meshCylinder) this._meshCylinder.visible = false;
+    if (this._meshDodecahedron) this._meshDodecahedron.visible = false;
+    if (this._mesh) {
+      this._mesh.visible = false;
+      this._mesh.position.set(0, 0, 0);
+      this._mesh.rotation.set(0, 0, 0);
+      this._mesh.scale.set(1, 1, 1);
+    }
+
+    this._pieceMaterials?.forEach((m) => {
+      if (m.useBasic) {
+        m.materialBasic.opacity = 0;
+      } else {
+        m.materialPhong.opacity = 0;
+      }
+    });
+
+    if (this._powerMove) {
+      this.remove(this._powerMove.PowerMoveMesh);
+      this._powerMove.Dispose();
+    }
+
+    this._powerMove = new PowerMove(moveType, color, isIntro);
     this.add(this._powerMove.PowerMoveMesh);
-    this._powerMove
-      .AnimateIntro()
-      .pipe(take(1))
-      .subscribe(() => {
-        // animation is complete
-        this._isRemoved = false;
-        this._isPowerMove = true;
-      });
+
+    if (isIntro) {
+      this._powerMove
+        .AnimateIntro()
+        .pipe(take(1))
+        .subscribe(() => {
+          this._isRemoved = false;
+          this._isPowerMove = true;
+        });
+    }
   }
 
   public PowerMoveRemove(): void {
     this._isRemoved = true;
     this._isPowerMove = false;
-    this._powerMove.Remove();
+    this._powerMove?.Remove();
+    if (this._meshCube) this._meshCube.visible = false;
+    if (this._meshCylinder) this._meshCylinder.visible = false;
+    if (this._meshDodecahedron) this._meshDodecahedron.visible = false;
+    if (this._mesh) {
+      this._mesh.visible = false;
+    }
   }
 
   public GetStateSnapshot(): PieceStateSnapshot {
@@ -800,6 +842,7 @@ export class GamePiece extends Object3D {
       pieceGeometryType: this._pieceGeometryType,
       isPowerMove: this._isPowerMove,
       powerMoveType: this._powerMoveType,
+      powerMoveColor: this._powerMove?.PowerMoveColor,
     };
   }
 
@@ -809,25 +852,34 @@ export class GamePiece extends Object3D {
     this._isRemoved = snapshot.isRemoved;
     this._matchKeySequence = [...snapshot.matchKeySequence];
     this.SetGeometryType(snapshot.pieceGeometryType);
-    this.UpdateMaterials({ materials: snapshot.pieceMaterials });
+    if (snapshot.pieceMaterials) {
+      this.UpdateMaterials({ materials: snapshot.pieceMaterials });
+    }
     this._matchKey = snapshot.matchKey;
 
-    this._pieceMaterials?.forEach((m) => {
-      if (m.useBasic) {
-        m.materialBasic.opacity = snapshot.isRemoved ? 0 : 1.0;
-      } else {
-        m.materialPhong.opacity = snapshot.isRemoved ? 0 : 1.0;
-      }
-    });
-
-    // copy power move if present
+    // clean up existing power move if present
     if (this._powerMove) {
       this._isPowerMove = false;
       this.remove(this._powerMove.PowerMoveMesh);
       this._powerMove?.Dispose();
+      this._powerMove = undefined as unknown as PowerMove;
     }
+
     if (snapshot.isPowerMove && snapshot.powerMoveType !== undefined) {
-      this.PowerMoveAdd(snapshot.powerMoveType);
+      this.PowerMoveAdd(snapshot.powerMoveType, snapshot.powerMoveColor, false);
+    } else {
+      this._isPowerMove = false;
+      if (this._mesh) {
+        this._mesh.visible = !snapshot.isRemoved;
+      }
+      const baseOpacity = snapshot.isRemoved ? 0 : 1.0;
+      this._pieceMaterials?.forEach((m) => {
+        if (m.useBasic) {
+          m.materialBasic.opacity = baseOpacity;
+        } else {
+          m.materialPhong.opacity = baseOpacity;
+        }
+      });
     }
   }
 
@@ -857,6 +909,47 @@ export class GamePiece extends Object3D {
     const scale = isLocked ? 0.8 : 1.0;
     const opacity = isLocked ? 0.4 : 1.0;
 
+    const delta = { y: startOffsetY };
+    const target = { y: 0 };
+
+    if (this._isPowerMove && this._powerMove) {
+      // Keep base piece mesh completely invisible for power move pieces
+      if (this._meshCube) this._meshCube.visible = false;
+      if (this._meshCylinder) this._meshCylinder.visible = false;
+      if (this._meshDodecahedron) this._meshDodecahedron.visible = false;
+      if (this._mesh) {
+        this._mesh.visible = false;
+        this._mesh.position.set(0, 0, 0);
+        this._mesh.rotation.set(0, 0, 0);
+      }
+      this._pieceMaterials?.forEach((m) => {
+        if (m.useBasic) {
+          m.materialBasic.opacity = 0;
+        } else {
+          m.materialPhong.opacity = 0;
+        }
+      });
+
+      this._powerMove.SlideOffsetY = startOffsetY;
+
+      return new Tween(delta, mainTweenGroup)
+        .to(target, duration)
+        .easing(Easing.Bounce.Out)
+        .onUpdate(() => {
+          if (this._powerMove) {
+            this._powerMove.SlideOffsetY = delta.y;
+          }
+        })
+        .onComplete(() => {
+          if (this._powerMove) {
+            this._powerMove.SlideOffsetY = 0;
+          }
+        });
+    }
+
+    if (this._mesh) {
+      this._mesh.visible = true;
+    }
     this._mesh.position.set(0, startOffsetY, 0);
     this._mesh.rotation.set(0, 0, 0);
     this._mesh.scale.set(scale, scale, scale);
@@ -868,9 +961,6 @@ export class GamePiece extends Object3D {
         m.materialPhong.opacity = opacity;
       }
     });
-
-    const delta = { y: startOffsetY };
-    const target = { y: 0 };
 
     return new Tween(delta, mainTweenGroup)
       .to(target, duration)

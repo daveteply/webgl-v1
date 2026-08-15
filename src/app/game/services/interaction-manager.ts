@@ -70,8 +70,6 @@ export class InteractionManagerService {
       // selection animation complete
       if (selectionMode) {
         if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
-          // initiate the removal animation
-          this.effectsManager.AnimateRemove(this._matchingPieces);
           // update score
           this.scoringManager.UpdateScore(this._matchingPieces.length, this.scoringManager.LevelComplete);
           // long match audio
@@ -86,6 +84,7 @@ export class InteractionManagerService {
 
           // level completed
           if (this.scoringManager.LevelComplete) {
+            this.effectsManager.AnimateRemove(this._matchingPieces);
             this.audioManager.PlayLevelComplete();
             this.hapticsManager.LevelCompletePulse();
             this.objectManager.AnimateLevelComplete();
@@ -94,6 +93,7 @@ export class InteractionManagerService {
             this.objectManager.LevelCompleted.next(false);
           } else {
             // power move
+            let powerMovePiece: GamePiece | undefined;
             const powerMoveTarget =
               this.scoringManager.Level >= DIFFICULTY_TIER_2 ? MINIMUM_MATCH_COUNT : MINIMUM_MATCH_COUNT + 1;
             if (this._matchingPieces.length >= powerMoveTarget) {
@@ -105,10 +105,17 @@ export class InteractionManagerService {
                 if (isDevMode()) {
                   console.info('  ', PowerMoveType[moveType]);
                 }
+                powerMovePiece = this._matchingPieces[0];
                 this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
-                this.objectManager.GamePiecePowerMove(this._matchingPieces[0], moveType);
+                this.objectManager.GamePiecePowerMove(powerMovePiece, moveType);
               }
             }
+
+            // Animate removal of matched pieces (excluding the piece that became a power move)
+            const piecesToRemove = powerMovePiece
+              ? this._matchingPieces.filter((p) => p !== powerMovePiece)
+              : this._matchingPieces;
+            this.effectsManager.AnimateRemove(piecesToRemove);
 
             // Gravity animation
             if (this.gameEngine.GravityType !== GravityType.None) {
@@ -124,6 +131,7 @@ export class InteractionManagerService {
             } else {
               this.effectsManager.ClearSelectedPieces();
               this.postProcessingManager.UpdateOutlinePassObjects([]);
+              this.objectManager.ResetIsMatch();
               this.effectsManager.AnimateLock(this.objectManager.Axle, false);
               this.LockBoard(false);
             }

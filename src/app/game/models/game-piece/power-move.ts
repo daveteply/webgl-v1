@@ -25,6 +25,15 @@ export class PowerMove {
   private _spinTween?: Tween<Record<string, number>>;
   private _bounceTween?: Tween<Record<string, number>>;
 
+  private _slideOffsetY = 0;
+  get SlideOffsetY(): number {
+    return this._slideOffsetY;
+  }
+  set SlideOffsetY(offset: number) {
+    this._slideOffsetY = offset;
+    this._root.position.y = this._slideOffsetY;
+  }
+
   private _powerMoveColor!: number;
   get PowerMoveColor(): number {
     return this._powerMoveColor;
@@ -36,16 +45,15 @@ export class PowerMove {
 
   private static _geometryCache = new Map<PowerMoveType, BufferGeometry>();
 
-  constructor(moveType: PowerMoveType, arg2?: unknown, color?: number) {
-    const actualColor = typeof arg2 === 'number' ? arg2 : color;
-    this._powerMoveColor = actualColor || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
+  constructor(moveType: PowerMoveType, color?: number, isIntro = true) {
+    this._powerMoveColor = color || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
 
     const mainMaterial = new MeshPhongMaterial({
       color: this._powerMoveColor,
       emissive: this._powerMoveColor,
       emissiveIntensity: 0.35,
       transparent: true,
-      opacity: 0.0,
+      opacity: isIntro ? 0.0 : 0.85,
       shininess: 60,
     });
     this._materials.push(mainMaterial);
@@ -61,7 +69,7 @@ export class PowerMove {
         emissive: this._powerMoveColor,
         emissiveIntensity: 0.5,
         transparent: true,
-        opacity: 0.0,
+        opacity: isIntro ? 0.0 : 0.85,
       });
       this._materials.push(ringMaterial);
 
@@ -78,7 +86,12 @@ export class PowerMove {
       this._root = mesh;
     }
 
-    this._root.scale.set(0.001, 0.001, 0.001);
+    if (isIntro) {
+      this._root.scale.set(0.001, 0.001, 0.001);
+    } else {
+      this._root.scale.set(1.0, 1.0, 1.0);
+      this.startBounceTween();
+    }
   }
 
   private static getGeometryForType(moveType: PowerMoveType): BufferGeometry {
@@ -238,19 +251,25 @@ export class PowerMove {
         })
         .start();
 
-      let animTime = 0;
-      this._bounceTween = new Tween({}, mainTweenGroup)
-        .repeat(Infinity)
-        .onUpdate(() => {
-          animTime += 0.05;
-          this._root.rotation.y += 0.008;
-          this._root.position.y = Math.sin(animTime) * 0.15;
-        })
-        .start();
+      this.startBounceTween();
     });
   }
 
+  private startBounceTween(): void {
+    this._bounceTween?.stop();
+    let animTime = 0;
+    this._bounceTween = new Tween({}, mainTweenGroup)
+      .repeat(Infinity)
+      .onUpdate(() => {
+        animTime += 0.05;
+        this._root.rotation.y += 0.008;
+        this._root.position.y = this._slideOffsetY + Math.sin(animTime) * 0.15;
+      })
+      .start();
+  }
+
   public Remove(): void {
+    this._bounceTween?.stop();
     const delta = { s: this._root.scale.x, o: 0.85 };
     const target = { s: 4.0, o: 0.0 };
     new Tween(delta, mainTweenGroup)
