@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ScoringManagerService } from './scoring-manager';
 import { TextManagerService } from '../text/services/text-manager';
+import { PowerMoveType } from '../models/power-move-type';
 
 class MockTextManagerService {
   ShowText = () => undefined;
@@ -99,5 +100,71 @@ describe('ScoringManagerService', () => {
     expect(service.LevelProgress).toBe(60);
     expect(service.LevelPieceTarget).toBe(10);
     expect(service.Score).toBe(1500);
+  });
+
+  it('should calculate bonus correctly for a single power move without awarding extra moves', () => {
+    const textManager = TestBed.inject(TextManagerService);
+    let capturedMessage: string[] = [];
+    textManager.ShowText = (msg: string[]) => {
+      capturedMessage = msg;
+    };
+
+    const initialMoves = service.PlayerMoves;
+    const initialScore = service.Score;
+
+    service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
+
+    expect(service.Score).toBe(initialScore + 50);
+    expect(service.PlayerMoves).toBe(initialMoves);
+    expect(service.LevelStats.moveCountEarned).toBe(0);
+    expect(capturedMessage).toEqual(['Spin right!', '+50 Points']);
+  });
+
+  it('should calculate bonus and award +1 move for multi-power move with 1 additional power move', () => {
+    const textManager = TestBed.inject(TextManagerService);
+    let capturedMessage: string[] = [];
+    textManager.ShowText = (msg: string[]) => {
+      capturedMessage = msg;
+    };
+
+    let movesChangeEmitted: boolean | undefined;
+    service.MovesChange.subscribe((increase) => {
+      movesChangeEmitted = increase;
+    });
+
+    const initialMoves = service.PlayerMoves;
+    const initialScore = service.Score;
+
+    service.UpdatePowerMoveBonus(1, PowerMoveType.HorizontalRight);
+
+    expect(service.Score).toBe(initialScore + 100);
+    expect(service.PlayerMoves).toBe(initialMoves + 1);
+    expect(service.LevelStats.moveCountEarned).toBe(1);
+    expect(movesChangeEmitted).toBe(true);
+    expect(capturedMessage).toEqual(['Multi-Power!', '+1 Move', '+100 Points']);
+  });
+
+  it('should calculate bonus and award +2 moves for multi-power move with 2 additional power moves', () => {
+    const textManager = TestBed.inject(TextManagerService);
+    let capturedMessage: string[] = [];
+    textManager.ShowText = (msg: string[]) => {
+      capturedMessage = msg;
+    };
+
+    let movesChangeEmitted: boolean | undefined;
+    service.MovesChange.subscribe((increase) => {
+      movesChangeEmitted = increase;
+    });
+
+    const initialMoves = service.PlayerMoves;
+    const initialScore = service.Score;
+
+    service.UpdatePowerMoveBonus(2, PowerMoveType.VerticalUp);
+
+    expect(service.Score).toBe(initialScore + 150);
+    expect(service.PlayerMoves).toBe(initialMoves + 2);
+    expect(service.LevelStats.moveCountEarned).toBe(2);
+    expect(movesChangeEmitted).toBe(true);
+    expect(capturedMessage).toEqual(['Multi-Power!', '+2 Moves', '+150 Points']);
   });
 });

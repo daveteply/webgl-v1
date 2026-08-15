@@ -154,12 +154,20 @@ export class ScoringManagerService {
     let usePowerMoveBonus = this.level() * POWER_MOVE_USE_SCORE_MULTIPLIER;
     if (additionalMoveCount) {
       usePowerMoveBonus *= additionalMoveCount + 1;
+      this.playerMoves.update((m) => m + additionalMoveCount);
+      this._levelStats.moveCountEarned += additionalMoveCount;
+      this.MovesChange.next(true);
     }
     this.score.update((s) => s + usePowerMoveBonus);
 
-    const info = PowerMoveLabel.find((p) => p.type === moveType);
-    const label = info?.label ? `${info.label}!` : additionalMoveCount ? 'Multi-Power!' : 'Power Move!';
-    this.textTextManager.ShowText([`${label}`, `+${usePowerMoveBonus} Points`], this.textColor, true);
+    if (additionalMoveCount > 0) {
+      const moveText = additionalMoveCount === 1 ? '+1 Move' : `+${additionalMoveCount} Moves`;
+      this.textTextManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
+    } else {
+      const info = PowerMoveLabel.find((p) => p.type === moveType);
+      const label = info?.label ? `${info.label}!` : 'Power Move!';
+      this.textTextManager.ShowText([label, `+${usePowerMoveBonus} Points`], this.textColor, true);
+    }
   }
 
   public RestartGame(): void {
