@@ -30,4 +30,58 @@
     font-size: x-large;
     margin-bottom: 0.5em;
   }
+
+  .start-over-expansion-panel {
+    background: transparent !important;
+    border: 1px solid transparent;
+    border-radius: 12px !important;
+    box-shadow: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 250ms ease-in-out;
+
+    &.mat-expanded {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      margin-top: 0.25em;
+      margin-bottom: 0.5em;
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0.75em 1em 1em 1em;
+    }
+
+    .confirm-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75em;
+      align-items: center;
+
+      .confirm-prompt {
+        font-size: 0.75em;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+
+        strong {
+          color: #fca5a5;
+        }
+      }
+
+      .confirm-buttons {
+        display: flex;
+        gap: 0.75em;
+        justify-content: center;
+        width: 100%;
+
+        button {
+          font-size: 0.75em;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
 import { CommonModule, DOCUMENT, DecimalPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, fromEvent, Observable, take } from 'rxjs';
+import { debounceTime, filter, fromEvent, Observable, take } from 'rxjs';
 
 import { ObjectManagerService } from '../../services/object-manager';
 import { SceneManagerService } from '../../services/scene-manager';
@@ -15,6 +15,7 @@ import { HintsManagerService } from '../../services/hints-manager';
 import { PostProcessingManagerService } from '../../services/post-processing-manager';
 import { SaveGameService } from '../../services/save-game/save-game';
 import { ShareManagerService } from '../../services/share-manager';
+import { PRNG } from '../../../shared/utils/prng';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -75,6 +76,8 @@ export class GameContainer implements OnInit, AfterViewInit {
   private _dialogGameOverRef!: MatDialogRef<GameOver>;
 
   private _isGameOver = false;
+  private _activeLevelSeed = PRNG.generateSeed();
+  private _activeRng: PRNG = new PRNG(this._activeLevelSeed);
 
   showScoreProgress = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
@@ -99,6 +102,17 @@ export class GameContainer implements OnInit, AfterViewInit {
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
+        this._activeLevelSeed = PRNG.generateSeed();
+        this._activeRng = new PRNG(this._activeLevelSeed);
+        this.saveGame
+          .SaveState(
+            this.scoringManager.Level,
+            this.scoringManager.Score,
+            this.scoringManager.PlayerMoves,
+            this._activeLevelSeed,
+          )
+          .pipe(take(1))
+          .subscribe();
       } else {
         this.highScoreManager.UpdateHighScores(this.scoringManager.Score);
       }
@@ -111,60 +125,62 @@ export class GameContainer implements OnInit, AfterViewInit {
     });
 
     // texture load started
-    this.textureManager.LevelTextureLoadingStarted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
-      (isRestoring) => {
-        if (!isRestoring) {
-          // level transition
-          this.gameEngine.InitLevelTransitionType();
+    this.textureManager.LevelTextureLoadingStarted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      // level transition
+      this.gameEngine.InitLevelTransitionType();
 
-          if (this._isGameOver) {
-            // game over
-            this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
-            this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
-              this.shareManager.UpdateInLevel(true);
-              if (data.startOver) {
-                this.scoringManager.RestartGame();
-              } else {
-                // reset stats will take care of move count based on level
-                this.scoringManager.ResetStats(!data.startOver);
-              }
-              this.objectManager.NextLevel(this.scoringManager.Level, true);
-            });
+      if (this._isGameOver) {
+        // game over
+        this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
+        this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
+          this.shareManager.UpdateInLevel(true);
+          if (data.startOver) {
+            this.saveGame.ClearSaveState();
+            this.scoringManager.RestartGame();
+            this._activeLevelSeed = PRNG.generateSeed();
+            this._activeRng = new PRNG(this._activeLevelSeed);
           } else {
-            if (this._showWelcome) {
-              // intro (deferred until splash screen finishes)
-              if (this.splashPhase() === 'done') {
-                this.openIntroDialog();
-              } else {
-                this._pendingIntroDialog = true;
-              }
-            } else {
-              // level complete
-              const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
-              this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
-              this._dialogRefLevel.backdropClick().subscribe(() => {
-                this.dialogNotify.Notify();
-              });
-              this._dialogRefLevel.afterClosed().subscribe(() => {
-                this.handleLevelDialogCLosed();
-              });
-            }
+            // reset stats will take care of move count based on level
+            this.scoringManager.ResetStats(!data.startOver);
+            this.saveGame
+              .SaveState(
+                this.scoringManager.Level,
+                this.scoringManager.Score,
+                this.scoringManager.PlayerMoves,
+                this._activeLevelSeed,
+              )
+              .pipe(take(1))
+              .subscribe();
           }
+          this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
+        });
+      } else {
+        if (this._showWelcome) {
+          // intro (deferred until splash screen finishes)
+          if (this.splashPhase() === 'done') {
+            this.openIntroDialog();
+          } else {
+            this._pendingIntroDialog = true;
+          }
+        } else {
+          // level complete
+          const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
+          this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
+          this._dialogRefLevel.backdropClick().subscribe(() => {
+            this.dialogNotify.Notify();
+          });
+          this._dialogRefLevel.afterClosed().subscribe(() => {
+            this.handleLevelDialogCLosed();
+          });
         }
-      },
-    );
+      }
+    });
 
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
       if (loaded && this._showWelcome) {
-        this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
+        this.objectManager.UpdateLevelMaterials(this.scoringManager.Level, this._activeRng);
       }
-    });
-
-    // textures restored (only emits while restoring)
-    this.textureManager.LevelTexturesRestoredLoaded.pipe(take(1)).subscribe(() => {
-      this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
-      this.handleLevelDialogCLosed();
     });
 
     // show the tutorial after the initial level loads
@@ -208,6 +224,17 @@ export class GameContainer implements OnInit, AfterViewInit {
       }
     });
 
+    // initialize scoring and RNG from saved state if present
+    const saved = this.saveGame.GetSaveState();
+    if (saved) {
+      this._activeLevelSeed = saved.seed;
+      this._activeRng = new PRNG(this._activeLevelSeed);
+      this.scoringManager.StartSavedGame(saved.level, saved.score, saved.moves);
+    } else {
+      this._activeLevelSeed = PRNG.generateSeed();
+      this._activeRng = new PRNG(this._activeLevelSeed);
+    }
+
     // initialize objects and materials
     this.objectManager
       .InitShapes()
@@ -247,39 +274,46 @@ export class GameContainer implements OnInit, AfterViewInit {
     if (!this._dialogRefIntro) {
       this._dialogRefIntro = this.dialog.open(Intro, this.dialogConfig());
       this._dialogRefIntro.afterClosed().subscribe((result) => {
-        // restore game
-        if (result?.isRestoring) {
-          this.initTextures();
-          this.scoringManager.Restore(this.saveGame.SavedGameData.scoring);
-        } else {
+        if (result?.isContinue) {
           this.handleLevelDialogCLosed();
+        } else {
+          this.saveGame.ClearSaveState();
+          const hadSavedGame = this.scoringManager.Level > 1;
+          this.scoringManager.RestartGame();
+          this._activeLevelSeed = PRNG.generateSeed();
+          this._activeRng = new PRNG(this._activeLevelSeed);
+          if (hadSavedGame) {
+            this.initTextures();
+            this.textureManager.LevelTexturesLoaded.pipe(
+              filter((loaded) => loaded),
+              take(1),
+            ).subscribe(() => {
+              this.handleLevelDialogCLosed();
+            });
+          } else {
+            this.handleLevelDialogCLosed();
+          }
         }
       });
     }
   }
 
   private initTextures(): void {
-    // decide level materials and geometries
-    if (this.saveGame.IsRestoring) {
-      this.gameEngine.RestoreLevelTypes(
-        this.saveGame.SavedGameData.levelMaterialType || 1,
-        this.saveGame.SavedGameData.levelGeometryType || 0,
-      );
-    } else {
-      this.gameEngine.InitLevelTypes(this.scoringManager.Level);
-    }
+    this.gameEngine.InitLevelTypes(this.scoringManager.Level, this._activeRng);
 
     // select next level material type
     this.textureManager.InitLevelTextures(
       this.gameEngine.PlayableTextureCount,
       this.gameEngine.LevelMaterialType,
       this.gameEngine.LevelGeometryType,
+      this._activeRng,
     );
   }
 
   private dialogConfig(height = ``): MatDialogConfig {
-    let config = {
-      minWidth: '20em',
+    let config: MatDialogConfig = {
+      minWidth: 'min(20em, 92vw)',
+      maxWidth: '92vw',
       disableClose: true,
       panelClass: ['wgl-pane-bounce'],
       data: {
@@ -303,10 +337,10 @@ export class GameContainer implements OnInit, AfterViewInit {
     if (this._showWelcome) {
       this._showWelcome = false;
       this.showScoreProgress.set(true);
-      this.objectManager.NextLevel(this.scoringManager.Level, true);
+      this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.NextLevel(this.scoringManager.Level, true);
+      this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     }
   }
 }

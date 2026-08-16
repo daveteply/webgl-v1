@@ -94,12 +94,6 @@ export class GamePiece extends Object3D {
     return this._powerMoveType;
   }
 
-  // for game save state
-  private _flipTurns: number;
-  get FlipTurns(): number {
-    return this._flipTurns;
-  }
-
   private static sharedCubeGeometry: BoxGeometry | null = null;
   private static sharedCylinderGeometry: CylinderGeometry | null = null;
   private static sharedDodecahedronGeometry: DodecahedronGeometry | null = null;
@@ -226,9 +220,6 @@ export class GamePiece extends Object3D {
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
       new MeshPhongMaterial({ color: new Color(endCapColor) }),
     ];
-
-    // game save state
-    this._flipTurns = 0;
   }
 
   set ThetaOffset(theta: number) {
@@ -277,8 +268,6 @@ export class GamePiece extends Object3D {
       this._powerMove?.Dispose();
       this._powerMove = undefined as unknown as PowerMove;
     }
-
-    this._flipTurns = 0;
 
     const parentWheel = this.parent as (Object3D & { Theta?: number }) | null;
     if (parentWheel && parentWheel.Theta !== undefined) {
@@ -571,7 +560,7 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(style: GamePieceRemovalStyle, isRestoring = false): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle): void {
     // update removed state
     this._isRemoved = true;
 
@@ -659,7 +648,7 @@ export class GamePiece extends Object3D {
       o: 0.0,
     };
 
-    const duration = isRestoring ? 500 : MathUtils.randInt(800, 1300);
+    const duration = MathUtils.randInt(800, 1300);
 
     this._removeTween = new Tween(delta, mainTweenGroup)
       .to(target, duration)
@@ -685,14 +674,8 @@ export class GamePiece extends Object3D {
       .start();
   }
 
-  public AnimateFlipTween(turns: number, directionUp: boolean, isRestoring = false): void {
+  public AnimateFlipTween(turns: number, directionUp: boolean): void {
     if (!this._isPowerMove && turns > 0) {
-      // Game Save State
-      //  by summing the overall number of turns; adding if "up" and subtracting of "down",
-      //  the restore will understand how many turns to make and which direction up/down
-      //  based on ending positive/negative number
-      this._flipTurns += directionUp ? turns : turns * -1;
-
       // set direction
       const delta = { theta: this._mesh.rotation.z };
       const final = {
@@ -720,7 +703,7 @@ export class GamePiece extends Object3D {
 
       // tween
       new Tween(delta, mainTweenGroup)
-        .to(final, isRestoring ? 500 : MathUtils.randInt(1000, 1500))
+        .to(final, MathUtils.randInt(1000, 1500))
         .easing(Easing.Sinusoidal.In)
         .delay(MathUtils.randInt(250, 750))
         .onUpdate(() => {

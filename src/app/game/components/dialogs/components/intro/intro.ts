@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
@@ -16,7 +18,7 @@ import { APP_VERSION } from '../../../../../version';
 
 @Component({
   selector: 'wgl-intro',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, HighScores, ProgressBar],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, MatIconModule, HighScores, ProgressBar],
   templateUrl: './intro.html',
   styleUrl: './intro.scss',
 })
@@ -38,6 +40,8 @@ export class Intro implements OnInit, OnDestroy {
   materialsUpdating = signal<boolean>(true);
   progress = signal<number>(0);
   hasRestoreData = signal<boolean>(false);
+  savedLevel = signal<number>(1);
+  confirmNewGame = signal<boolean>(false);
 
   constructor() {
     this.textureManager.LevelTextureLoadProgress.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((progress) => {
@@ -61,6 +65,12 @@ export class Intro implements OnInit, OnDestroy {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((hasSaveData) => {
         this.hasRestoreData.set(hasSaveData);
+        if (hasSaveData) {
+          const saved = this.saveGame.GetSaveState();
+          if (saved?.level) {
+            this.savedLevel.set(saved.level);
+          }
+        }
       });
   }
 
@@ -68,16 +78,26 @@ export class Intro implements OnInit, OnDestroy {
     this.dialogAnimation.Dispose();
   }
 
-  // ngAfterViewInit(): void {
-  //   this.dialogAnimation.SetScene(this.dialogCanvas.nativeElement);
-  //   this.dialogAnimation.CreateIntroDialogBoxes();
-  //   this.dialogAnimation.Animate();
-  // }
-
-  RestoreGame(): void {
+  ContinueGame(): void {
     this.analyticsManager.Log(AnalyticsEventType.IntroDialogRestoreCTA);
-    this.saveGame.RestoreState();
-    this.dialogRef.close({ isRestoring: true });
+    this.dialogRef.close({ isContinue: true });
+  }
+
+  onNewGameClick(): void {
+    if (this.hasRestoreData()) {
+      this.confirmNewGame.set(true);
+    } else {
+      this.dialogRef.close({ isContinue: false });
+    }
+  }
+
+  onConfirmNewGame(): void {
+    this.saveGame.ClearSaveState();
+    this.dialogRef.close({ isContinue: false });
+  }
+
+  onCancelNewGame(): void {
+    this.confirmNewGame.set(false);
   }
 }
 

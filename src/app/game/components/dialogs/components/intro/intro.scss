@@ -19,12 +19,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1.25em 1em;
+  max-width: 100%;
+  width: 100%;
+  padding: 1em 0.75em;
   box-sizing: border-box;
 
   .logo {
-    height: 10em;
-    width: 18em;
+    height: 7.5em;
+    width: 100%;
+    max-width: 15em;
     margin: 0 auto;
     background-image: url('/assets/rikkle-logo-2026.webp');
     background-position: center center;
@@ -37,6 +40,9 @@
     overflow: hidden;
     z-index: 1;
     flex: 1;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
   }
 
   .progress {
@@ -52,17 +58,76 @@
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    padding: 0.5em 1em;
+    padding: 0.5em 0.25em;
+    width: 100%;
+    box-sizing: border-box;
 
     button {
       margin: 0;
+      width: 100%;
+      max-width: 100%;
       border-radius: 12px;
       transition: all 250ms ease-in-out;
+      box-sizing: border-box;
+    }
+
+    .new-game-expansion-panel {
+      background: transparent !important;
+      border: 1px solid transparent;
+      border-radius: 12px !important;
+      box-shadow: none;
+      margin-top: 0;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 250ms ease-in-out;
+
+      &.mat-expanded {
+        background: rgba(15, 23, 42, 0.85) !important;
+        border-color: rgba(239, 68, 68, 0.4);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        margin-top: 0.25em;
+      }
+
+      ::ng-deep .mat-expansion-panel-body {
+        padding: 0.75em 0.5em 1em 0.5em;
+      }
+
+      .confirm-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75em;
+        align-items: center;
+        width: 100%;
+
+        .confirm-prompt {
+          font-size: 0.85em;
+          line-height: 1.4;
+          color: rgba(255, 255, 255, 0.9);
+          text-align: center;
+
+          strong {
+            color: #fca5a5;
+          }
+        }
+
+        .confirm-buttons {
+          display: flex;
+          gap: 0.5em;
+          justify-content: center;
+          width: 100%;
+
+          button {
+            font-size: 0.85em;
+            border-radius: 8px;
+            padding: 0.4em 0.8em;
+          }
+        }
+      }
     }
   }
 
   .version-label {
-    font-size: 0.9em;
+    font-size: 0.85em;
     font-family: 'Changa', sans-serif;
     color: rgba(255, 255, 255, 0.45);
     letter-spacing: 0.05em;

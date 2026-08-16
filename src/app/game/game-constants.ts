@@ -64,7 +64,7 @@ export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
 export const EMOJI_GROUP_STEP = 6;
 export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
-export const BUMP_DEPTH = 5;
+export const BUMP_SCALE = 5;
 export const UV_SIDES = [
   [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
   [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)

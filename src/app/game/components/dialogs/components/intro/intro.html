@@ -10,12 +10,43 @@
 
   <mat-dialog-actions align="center">
     <div class="dialog-buttons">
-      <button mat-raised-button color="primary" mat-dialog-close [disabled]="materialsUpdating()">
-        <span>New Game</span>
-      </button>
       @if (hasRestoreData()) {
-        <button (click)="RestoreGame()" mat-stroked-button [disabled]="materialsUpdating()">
-          <span>Continue</span>
+        <button
+          (click)="ContinueGame()"
+          mat-raised-button
+          color="primary"
+          class="continue-btn"
+          [disabled]="materialsUpdating()"
+        >
+          <span>Continue (Level {{ savedLevel() }})</span>
+        </button>
+
+        @if (!confirmNewGame()) {
+          <button (click)="onNewGameClick()" mat-stroked-button class="new-game-btn" [disabled]="materialsUpdating()">
+            <span>New Game</span>
+          </button>
+        }
+
+        <mat-expansion-panel [expanded]="confirmNewGame()" hideToggle class="new-game-expansion-panel">
+          <div class="confirm-container">
+            <span class="confirm-prompt">
+              ⚠️ Start a new game? This will overwrite your saved <strong>Level {{ savedLevel() }}</strong> progress!
+            </span>
+            <div class="confirm-buttons">
+              <button mat-button (click)="onCancelNewGame()">Cancel</button>
+              <button mat-raised-button color="warn" (click)="onConfirmNewGame()">Start New Game</button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      } @else {
+        <button
+          (click)="onNewGameClick()"
+          mat-raised-button
+          color="primary"
+          class="new-game-btn"
+          [disabled]="materialsUpdating()"
+        >
+          <span>New Game</span>
         </button>
       }
     </div>

@@ -24,7 +24,6 @@ import { GameWheel } from '../models/game-wheel';
 import { GravityType } from '../models/gravity-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
-import { SaveGameScore } from './save-game/save-game-types';
 import { LEVEL_ANIMATION_STYLES, LevelAnimationStyle } from '../models/level-animation-style';
 
 @Injectable({
@@ -424,18 +423,6 @@ export class EffectsManagerService {
     } else {
       this.GravityAnimationComplete.next();
     }
-  }
-
-  get SaveGameScoringData(): SaveGameScore {
-    return {
-      stats: this.scoringManager.LevelStats,
-      moves: this.scoringManager.PlayerMoves,
-      remaining: this.scoringManager.PiecesRemaining,
-      progress: this.scoringManager.LevelProgress,
-      pieceTarget: this.scoringManager.LevelPieceTarget,
-      score: this.scoringManager.Score,
-      level: this.scoringManager.Level,
-    };
   }
 }
 
