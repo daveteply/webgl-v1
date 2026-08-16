@@ -268,6 +268,24 @@ export class MaterialManagerService {
           });
         }
         break;
+
+      // plain colors without bump maps or textures
+      case LevelMaterialType.Color: {
+        const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
+        selectedColors = schemeInfo.colors;
+        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
+
+        selectedColors.forEach((c: string) => {
+          materials.push({
+            matchKey: matchKey++,
+            bumpTexture: undefined,
+            texture: undefined,
+            colorStr: c,
+            color: new Color(c),
+          });
+        });
+        break;
+      }
     }
 
     return materials;
@@ -286,10 +304,9 @@ export class MaterialManagerService {
       selectedScheme = COLOR_SCHEMES[0];
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     } else {
-      // Pick a random scheme from curated schemes
-      const schemeIndex = rng
-        ? rng.nextInt(1, COLOR_SCHEMES.length - 1)
-        : MathUtils.randInt(1, COLOR_SCHEMES.length - 1);
+      // Gradually expand the pool of unlocked color schemes as level progresses
+      const maxSchemeIndex = Math.min(COLOR_SCHEMES.length - 1, Math.max(3, Math.floor(level * 2)));
+      const schemeIndex = rng ? rng.nextInt(1, maxSchemeIndex) : MathUtils.randInt(1, maxSchemeIndex);
       selectedScheme = COLOR_SCHEMES[schemeIndex];
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     }

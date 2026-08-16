@@ -124,6 +124,9 @@ export class TextureManagerService {
           console.info(emojiList.map((emoji) => `  ${emoji.desc} ${emoji.sequence}`).join('\n'));
         }
         break;
+
+      case LevelMaterialType.Color:
+        this.emitCompletion();
     }
   }
 

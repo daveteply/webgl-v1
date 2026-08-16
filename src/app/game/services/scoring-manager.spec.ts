@@ -63,16 +63,17 @@ describe('ScoringManagerService', () => {
     expect(service.GameOver).toBe(true);
   });
 
-  it('should restart game and reset score and level to 1', () => {
-    service.IncLevel();
-    service.UpdateScore(5, true);
-    expect(service.Level).toBe(2);
-    expect(service.Score).toBeGreaterThan(0);
+  it('should restart game and reset score, level to 1, and player moves to default', () => {
+    service.StartSavedGame(5, 1500, 15);
+    expect(service.Level).toBe(5);
+    expect(service.Score).toBe(1500);
+    expect(service.PlayerMoves).toBe(15);
 
     service.RestartGame();
     expect(service.Level).toBe(1);
     expect(service.Score).toBe(0);
     expect(service.LevelProgress).toBe(0);
+    expect(service.PlayerMoves).toBe(3);
   });
 
   it('should initialize state correctly with StartSavedGame', () => {
@@ -150,5 +151,57 @@ describe('ScoringManagerService', () => {
     expect(service.LevelStats.moveCountEarned).toBe(2);
     expect(movesChangeEmitted).toBe(true);
     expect(capturedMessage).toEqual(['Multi-Power!', '+2 Moves', '+150 Points']);
+  });
+
+  describe('Perfect Match Scoring & StatsEntries', () => {
+    it('should award perfect match bonus when piece count matches target exactly', () => {
+      const target = service.LevelPieceTarget;
+      for (let i = 0; i < target; i++) {
+        service.UpdateLevelProgress();
+      }
+      expect(service.LevelComplete).toBe(true);
+      expect(service.LevelStats.pieceCount).toBe(target);
+
+      const initialScore = service.Score;
+      const wasAwarded = service.CheckPerfectMatch();
+
+      expect(wasAwarded).toBe(true);
+      expect(service.LevelStats.perfectMatchBonus).toBe(100); // Level 1 * 100
+      expect(service.Score).toBe(initialScore + 100);
+    });
+
+    it('should not award perfect match bonus if piece count exceeds target', () => {
+      const target = service.LevelPieceTarget;
+      for (let i = 0; i < target + 2; i++) {
+        service.UpdateLevelProgress();
+      }
+      expect(service.LevelComplete).toBe(true);
+      expect(service.LevelStats.pieceCount).toBe(target + 2);
+
+      const wasAwarded = service.CheckPerfectMatch();
+      expect(wasAwarded).toBe(false);
+      expect(service.LevelStats.perfectMatchBonus).toBe(0);
+    });
+
+    it('should accurately calculate StatsEntries for dialog height', () => {
+      // Initially no stats
+      expect(service.StatsEntries()).toBe(0);
+
+      // Perform a move
+      service.UpdateMoveCount();
+      expect(service.StatsEntries()).toBe(1); // moveCount
+
+      // Clear a piece
+      service.UpdateLevelProgress();
+      expect(service.StatsEntries()).toBe(2); // moveCount + pieceCount
+
+      // Award perfect match bonus
+      const target = service.LevelPieceTarget;
+      for (let i = 1; i < target; i++) {
+        service.UpdateLevelProgress();
+      }
+      service.CheckPerfectMatch();
+      expect(service.StatsEntries()).toBe(3); // moveCount + pieceCount + perfectMatchBonus
+    });
   });
 });

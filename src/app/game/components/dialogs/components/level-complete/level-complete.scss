@@ -1,5 +1,5 @@
 #level-dialog {
-  font-size: x-large;
+  font-size: 1.25rem;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -11,24 +11,25 @@
       0 2px 10px rgba(168, 85, 247, 0.5),
       0 0 20px rgba(124, 58, 237, 0.3);
     text-align: center;
-    font-size: xx-large;
+    font-size: 1.85rem;
     z-index: 1;
     border-radius: 1em;
-    margin-top: 0.25em;
-    margin-bottom: 0.35em;
+    margin-top: 0.1em;
+    margin-bottom: 0.2em;
   }
 
   .content {
     color: #f3e8ff !important;
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: hidden;
     flex: 1;
-    padding: 0.5em 0.25em;
+    padding: 0.15em 0.25em;
   }
 
   .level-info-line {
-    font-size: large;
-    line-height: 1.4rem;
-    padding-bottom: 0.5em;
+    font-size: 1.1rem;
+    line-height: 1.35rem;
+    padding-bottom: 0.25em;
     display: none;
     color: #f3e8ff;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -43,6 +44,20 @@
       font-weight: bold;
       text-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
     }
+    &.perfect {
+      font-weight: bold;
+      text-shadow: none;
+
+      span,
+      ::ng-deep wgl-text-zoom {
+        background-image: linear-gradient(90deg, #ff416c, #ff4b2b, #ffb800, #00f260, #0575e6, #8e2de2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        font-weight: bold;
+      }
+    }
     &.bad {
       color: #fbbf24;
       font-style: italic;
@@ -51,7 +66,7 @@
   }
 
   .progress {
-    margin-top: 0.5em;
+    margin-top: 0.35em;
     opacity: 1;
     transition: opacity 500ms;
     &.fade-out {
@@ -60,7 +75,27 @@
   }
 
   .mat-mdc-raised-button {
-    font-size: x-large;
-    margin-bottom: 0.25em;
+    font-size: 1.2rem;
+    margin-bottom: 0.15em;
+  }
+
+  @media (min-height: 750px) and (min-width: 500px) {
+    font-size: 1.4rem;
+
+    .dialog-header {
+      font-size: 2.1rem;
+      margin-top: 0.2em;
+      margin-bottom: 0.3em;
+    }
+
+    .level-info-line {
+      font-size: 1.25rem;
+      line-height: 1.45rem;
+      padding-bottom: 0.4em;
+    }
+
+    .mat-mdc-raised-button {
+      font-size: 1.4rem;
+    }
   }
 }

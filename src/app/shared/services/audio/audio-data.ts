@@ -19,6 +19,7 @@ export enum AudioType {
   POWER_MOVE_BOMB,
   GAME_OVER,
   GRAVITY_EFFECT,
+  PERFECT_MATCH,
   LEVEL_END_1,
   LEVEL_END_2,
   LEVEL_END_3,
@@ -144,6 +145,10 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/gravity-effect.wav',
     audioType: AudioType.GRAVITY_EFFECT,
+  },
+  {
+    url: 'assets/audio/perfect-match.mp3',
+    audioType: AudioType.PERFECT_MATCH,
   },
 ];
 

@@ -49,18 +49,81 @@ describe('GameEngineService', () => {
       expect(res1).toEqual(res2);
     });
 
-    it('should initialize level 2 gravity to None', () => {
-      service.InitLevelTypes(2);
-      expect(service.GravityType).toBe(GravityType.None);
+    it('should initialize levels 1-2 to ColorBumpShape, levels 3-4 to ColorBumpShape or Color, levels 5-8 with BumpMaterial, and levels 9+ with Emoji', () => {
+      for (let i = 0; i < 20; i++) {
+        service.InitLevelTypes(2);
+        expect(service.GravityType).toBe(GravityType.None);
+        expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
+        expect(service.LevelMaterialType).toBe(LevelMaterialType.ColorBumpShape);
+      }
+
+      const l4Materials = new Set<LevelMaterialType>();
+      for (let i = 0; i < 50; i++) {
+        service.InitLevelTypes(4);
+        l4Materials.add(service.LevelMaterialType);
+      }
+      expect(l4Materials.has(LevelMaterialType.ColorBumpShape)).toBe(true);
+      expect(l4Materials.has(LevelMaterialType.Color)).toBe(true);
+      expect(l4Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(false);
+      expect(l4Materials.has(LevelMaterialType.Emoji)).toBe(false);
+
+      const l8Materials = new Set<LevelMaterialType>();
+      for (let i = 0; i < 50; i++) {
+        service.InitLevelTypes(8);
+        l8Materials.add(service.LevelMaterialType);
+      }
+      expect(l8Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(true);
+      expect(l8Materials.has(LevelMaterialType.Emoji)).toBe(false);
+
+      const l9Materials = new Set<LevelMaterialType>();
+      for (let i = 0; i < 100; i++) {
+        service.InitLevelTypes(9);
+        l9Materials.add(service.LevelMaterialType);
+      }
+      expect(l9Materials.has(LevelMaterialType.Emoji)).toBe(true);
     });
 
-    it('should initialize level 3+ gravity to None, Down, Up, or Mix', () => {
+    it('should initialize level 3 gravity to None or Down', () => {
       const foundTypes = new Set<GravityType>();
       for (let i = 0; i < 50; i++) {
         service.InitLevelTypes(3);
         foundTypes.add(service.GravityType);
       }
+      for (const t of foundTypes) {
+        expect([GravityType.None, GravityType.Down]).toContain(t);
+      }
+    });
+
+    it('should initialize level 7+ gravity to None, Down, Up, or Mix', () => {
+      const foundTypes = new Set<GravityType>();
+      for (let i = 0; i < 100; i++) {
+        service.InitLevelTypes(7);
+        foundTypes.add(service.GravityType);
+      }
       expect(foundTypes.size).toBeGreaterThan(1);
+    });
+
+    it('should keep Cube geometry for levels 1 to 3, introduce Cylinder at level 4, and Dodecahedron at level 7+', () => {
+      for (let i = 0; i < 30; i++) {
+        service.InitLevelTypes(3);
+        expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
+      }
+
+      const l4Geos = new Set<LevelGeometryType>();
+      for (let i = 0; i < 50; i++) {
+        service.InitLevelTypes(4);
+        l4Geos.add(service.LevelGeometryType);
+      }
+      expect(l4Geos.has(LevelGeometryType.Cube)).toBe(true);
+      expect(l4Geos.has(LevelGeometryType.Cylinder)).toBe(true);
+      expect(l4Geos.has(LevelGeometryType.Dodecahedron)).toBe(false);
+
+      const l7Geos = new Set<LevelGeometryType>();
+      for (let i = 0; i < 100; i++) {
+        service.InitLevelTypes(7);
+        l7Geos.add(service.LevelGeometryType);
+      }
+      expect(l7Geos.has(LevelGeometryType.Dodecahedron)).toBe(true);
     });
 
     it('should restore gravity type in RestoreLevelTypes', () => {
@@ -92,13 +155,15 @@ describe('GameEngineService', () => {
       expect(selectedMovesDodecahedron.has(PowerMoveType.VerticalUp)).toBe(false);
     });
 
-    it('should constrain Dodecahedron geometry levels to ColorBumpShape or ColorBumpMaterial', () => {
+    it('should constrain Dodecahedron geometry levels to ColorBumpShape, Color, or ColorBumpMaterial', () => {
       for (let i = 0; i < 100; i++) {
-        service.InitLevelTypes(5);
+        service.InitLevelTypes(7);
         if (service.LevelGeometryType === LevelGeometryType.Dodecahedron) {
-          expect([LevelMaterialType.ColorBumpShape, LevelMaterialType.ColorBumpMaterial]).toContain(
-            service.LevelMaterialType,
-          );
+          expect([
+            LevelMaterialType.ColorBumpShape,
+            LevelMaterialType.Color,
+            LevelMaterialType.ColorBumpMaterial,
+          ]).toContain(service.LevelMaterialType);
         }
       }
     });

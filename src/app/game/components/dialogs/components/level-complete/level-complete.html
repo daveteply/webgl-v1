@@ -23,6 +23,10 @@
       <span>Pieces</span>
       <wgl-text-zoom [text]="pieceCount()"></wgl-text-zoom>
     </div>
+    <div class="level-info-line perfect" [class.show]="perfectMatchBonus()">
+      <span>Perfect match</span>
+      <wgl-text-zoom [text]="'+' + perfectMatchBonus()"></wgl-text-zoom>
+    </div>
     <wgl-progress-bar
       class="progress"
       [class.fade-out]="!texturesStillLoading()"
