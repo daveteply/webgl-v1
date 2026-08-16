@@ -88,4 +88,14 @@ describe('EffectsManager', () => {
     expect(spy1).toHaveBeenCalledWith(PowerMoveType.HorizontalRight);
     expect(spy2).toHaveBeenCalledWith(PowerMoveType.HorizontalRight);
   });
+
+  it('should emit RemoveAnimationComplete immediately when no pieces are provided', () => {
+    let completed = false;
+    service.RemoveAnimationComplete.subscribe(() => {
+      completed = true;
+    });
+
+    service.AnimateRemove([]);
+    expect(completed).toBe(true);
+  });
 });

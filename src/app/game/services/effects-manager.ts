@@ -49,6 +49,7 @@ export class EffectsManagerService {
   LevelChangeAnimation: Subject<boolean> = new Subject<boolean>();
   GravityAnimationComplete: Subject<void> = new Subject<void>();
   PowerMoveAnimationComplete: Subject<void> = new Subject<void>();
+  RemoveAnimationComplete: Subject<void> = new Subject<void>();
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -221,17 +222,30 @@ export class EffectsManagerService {
   }
 
   public AnimateRemove(selectedPieces: GamePiece[]): void {
-    if (selectedPieces.length) {
-      selectedPieces.forEach((p) => {
-        p.AnimateRemovalTween(Math.floor(Math.random() * 6));
-      });
-      if (this.gameEngine.GravityType === GravityType.None) {
-        const removeSoundType =
-          selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
-        this.audioManager.PlayAudio(removeSoundType);
-      }
-      this.hapticsManager.LightTap();
+    if (!selectedPieces || !selectedPieces.length) {
+      this.RemoveAnimationComplete.next();
+      return;
     }
+
+    let completed = false;
+    let remaining = selectedPieces.length;
+    const notifyComplete = () => {
+      remaining--;
+      if (remaining <= 0 && !completed) {
+        completed = true;
+        this.RemoveAnimationComplete.next();
+      }
+    };
+
+    selectedPieces.forEach((p) => {
+      const tween = p.AnimateRemovalTween(Math.floor(Math.random() * 6));
+      tween.onComplete(notifyComplete).onStop(notifyComplete);
+    });
+
+    const removeSoundType =
+      selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
+    this.audioManager.PlayAudio(removeSoundType);
+    this.hapticsManager.LightTap();
   }
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {

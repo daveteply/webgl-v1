@@ -80,13 +80,15 @@ export class InteractionManagerService {
           // level completed
           if (this.scoringManager.LevelComplete) {
             this.scoringManager.CheckPerfectMatch();
-            this.effectsManager.AnimateRemove(this._matchingPieces);
-            this.audioManager.PlayLevelComplete();
-            this.hapticsManager.LevelCompletePulse();
-            this.objectManager.AnimateLevelComplete();
-            this.LockBoard(false);
+            this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
+              this.audioManager.PlayLevelComplete();
+              this.hapticsManager.LevelCompletePulse();
+              this.objectManager.AnimateLevelComplete();
+              this.LockBoard(false);
 
-            this.objectManager.LevelCompleted.next(false);
+              this.objectManager.LevelCompleted.next(false);
+            });
+            this.effectsManager.AnimateRemove(this._matchingPieces);
           } else {
             // power move
             let powerMovePiece: GamePiece | undefined;
@@ -104,25 +106,30 @@ export class InteractionManagerService {
             const piecesToRemove = powerMovePiece
               ? this._matchingPieces.filter((p) => p !== powerMovePiece)
               : this._matchingPieces;
-            this.effectsManager.AnimateRemove(piecesToRemove);
 
             // Gravity animation
             if (this.gameEngine.GravityType !== GravityType.None) {
-              this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+              this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
+                this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+                  this.effectsManager.ClearSelectedPieces();
+                  this.postProcessingManager.UpdateOutlinePassObjects([]);
+                  this.objectManager.ResetIsMatch();
+                  this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+                  this.LockBoard(false);
+                });
+
+                this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
+              });
+              this.effectsManager.AnimateRemove(piecesToRemove);
+            } else {
+              this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
                 this.effectsManager.ClearSelectedPieces();
                 this.postProcessingManager.UpdateOutlinePassObjects([]);
                 this.objectManager.ResetIsMatch();
                 this.effectsManager.AnimateLock(this.objectManager.Axle, false);
                 this.LockBoard(false);
               });
-
-              this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
-            } else {
-              this.effectsManager.ClearSelectedPieces();
-              this.postProcessingManager.UpdateOutlinePassObjects([]);
-              this.objectManager.ResetIsMatch();
-              this.effectsManager.AnimateLock(this.objectManager.Axle, false);
-              this.LockBoard(false);
+              this.effectsManager.AnimateRemove(piecesToRemove);
             }
           }
         } else {
@@ -304,7 +311,6 @@ export class InteractionManagerService {
 
         const otherTargets = bombTargets.filter((p) => p !== targetGamePiece);
         if (otherTargets.length) {
-          this.effectsManager.AnimateRemove(otherTargets);
           otherTargets.forEach(() => {
             this.scoringManager.UpdateLevelProgress();
           });
@@ -312,28 +318,35 @@ export class InteractionManagerService {
 
         if (this.scoringManager.LevelComplete) {
           this.scoringManager.CheckPerfectMatch();
-          this.audioManager.PlayLevelComplete();
-          this.hapticsManager.LevelCompletePulse();
-          this.objectManager.AnimateLevelComplete();
-          this.LockBoard(false);
-          this.objectManager.LevelCompleted.next(false);
+          this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
+            this.audioManager.PlayLevelComplete();
+            this.hapticsManager.LevelCompletePulse();
+            this.objectManager.AnimateLevelComplete();
+            this.LockBoard(false);
+            this.objectManager.LevelCompleted.next(false);
+          });
+          this.effectsManager.AnimateRemove(otherTargets);
         } else if (this.gameEngine.GravityType !== GravityType.None) {
-          this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+          this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
+            this.effectsManager.GravityAnimationComplete.pipe(take(1)).subscribe(() => {
+              this.effectsManager.ClearSelectedPieces();
+              this.postProcessingManager.UpdateOutlinePassObjects([]);
+              this.objectManager.ResetIsMatch();
+              this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+              this.LockBoard(false);
+            });
+            this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
+          });
+          this.effectsManager.AnimateRemove(otherTargets);
+        } else {
+          this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
             this.effectsManager.ClearSelectedPieces();
             this.postProcessingManager.UpdateOutlinePassObjects([]);
             this.objectManager.ResetIsMatch();
             this.effectsManager.AnimateLock(this.objectManager.Axle, false);
             this.LockBoard(false);
           });
-          this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
-        } else {
-          setTimeout(() => {
-            this.effectsManager.ClearSelectedPieces();
-            this.postProcessingManager.UpdateOutlinePassObjects([]);
-            this.objectManager.ResetIsMatch();
-            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
-            this.LockBoard(false);
-          }, 1300);
+          this.effectsManager.AnimateRemove(otherTargets);
         }
       } else {
         this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);

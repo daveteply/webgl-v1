@@ -559,9 +559,22 @@ export class GamePiece extends Object3D {
       });
   }
 
-  public AnimateRemovalTween(style: GamePieceRemovalStyle): void {
+  public AnimateRemovalTween(style: GamePieceRemovalStyle): Tween<Record<string, number>> {
     // update removed state
     this._isRemoved = true;
+
+    if (!this._mesh) {
+      switch (this._pieceGeometryType) {
+        case LevelGeometryType.Cylinder:
+          this._mesh = this._meshCylinder;
+          break;
+        case LevelGeometryType.Dodecahedron:
+          this._mesh = this._meshDodecahedron;
+          break;
+        default:
+          this._mesh = this._meshCube;
+      }
+    }
 
     const startRotX = this._mesh.rotation.x;
     const startRotY = this._mesh.rotation.y;
@@ -671,6 +684,8 @@ export class GamePiece extends Object3D {
         });
       })
       .start();
+
+    return this._removeTween;
   }
 
   public AnimateFlipTween(turns: number, directionUp: boolean): void {

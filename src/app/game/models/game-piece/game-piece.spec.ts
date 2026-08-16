@@ -3,6 +3,7 @@ import { PowerMoveType } from '../power-move-type';
 import { LevelGeometryType } from '../../level-geometry-type';
 import { MeshBasicMaterial, MeshPhongMaterial } from 'three';
 import { PieceSideMaterial } from '../../services/material/material-models';
+import { GamePieceRemovalStyle } from './game-piece-removal-style';
 
 describe('GamePiece', () => {
   it('should create an instance', () => {
@@ -130,5 +131,12 @@ describe('GamePiece', () => {
 
     targetPiece.AnimateGravitySlide(5, 300);
     expect(targetPiece.GetMeshRestingRotationZ()).toBeCloseTo(Math.PI / 2);
+  });
+
+  it('should set IsRemoved and return tween on AnimateRemovalTween', () => {
+    const piece = new GamePiece(0, 0, 0, 0);
+    const tween = piece.AnimateRemovalTween(GamePieceRemovalStyle.ExplodeScatter);
+    expect(piece.IsRemoved).toBe(true);
+    expect(tween).toBeTruthy();
   });
 });

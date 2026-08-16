@@ -164,7 +164,7 @@ export class GameContainer implements OnInit, AfterViewInit {
           }
         } else {
           // level complete
-          const height = `min(${this.scoringManager.StatsEntries() * 2.8 + 10}em, 88dvh)`;
+          const height = `min(${Math.max(17.5, this.scoringManager.StatsEntries() * 2.8 + 10)}em, 88dvh)`;
           this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
           this._dialogRefLevel.backdropClick().subscribe(() => {
             this.dialogNotify.Notify();

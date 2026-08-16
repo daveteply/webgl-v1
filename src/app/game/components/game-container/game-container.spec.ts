@@ -50,4 +50,11 @@ describe('GameContainer', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should configure dialog height correctly when provided', () => {
+    const config = component['dialogConfig']('17.5em');
+    expect(config.height).toBe('17.5em');
+    expect(config.maxHeight).toBe('90dvh');
+    expect(config.disableClose).toBe(true);
+  });
 });
