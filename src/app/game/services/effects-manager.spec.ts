@@ -6,6 +6,7 @@ import { EffectsManagerService as EffectsManager } from './effects-manager';
 import { GameWheel } from '../models/game-wheel';
 import { LevelAnimationStyle } from '../models/level-animation-style';
 import { GravityType } from '../models/gravity-type';
+import { PowerMoveType } from '../models/power-move-type';
 
 describe('EffectsManager', () => {
   let service: EffectsManager;
@@ -64,5 +65,27 @@ describe('EffectsManager', () => {
     const wheels = [new GameWheel(0, []), new GameWheel(1, [])];
     service.AnimateGravity(wheels, GravityType.Down);
     expect(completed).toBe(true);
+  });
+
+  it('should trigger AnimateVerticalPowerMove on wheels for vertical moves', () => {
+    const wheels = [new GameWheel(0, []), new GameWheel(1, [])];
+    const spy1 = vi.spyOn(wheels[0], 'AnimateVerticalPowerMove');
+    const spy2 = vi.spyOn(wheels[1], 'AnimateVerticalPowerMove');
+
+    service.AnimatePowerMove(wheels, PowerMoveType.VerticalUp);
+
+    expect(spy1).toHaveBeenCalledWith(PowerMoveType.VerticalUp);
+    expect(spy2).toHaveBeenCalledWith(PowerMoveType.VerticalUp);
+  });
+
+  it('should trigger AnimateHorizontalPowerMove on wheels for horizontal moves', () => {
+    const wheels = [new GameWheel(0, []), new GameWheel(1, [])];
+    const spy1 = vi.spyOn(wheels[0], 'AnimateHorizontalPowerMove');
+    const spy2 = vi.spyOn(wheels[1], 'AnimateHorizontalPowerMove');
+
+    service.AnimatePowerMove(wheels, PowerMoveType.HorizontalRight);
+
+    expect(spy1).toHaveBeenCalledWith(PowerMoveType.HorizontalRight);
+    expect(spy2).toHaveBeenCalledWith(PowerMoveType.HorizontalRight);
   });
 });

@@ -48,6 +48,7 @@ export class EffectsManagerService {
   SelectionAnimationComplete: Subject<boolean> = new Subject<boolean>();
   LevelChangeAnimation: Subject<boolean> = new Subject<boolean>();
   GravityAnimationComplete: Subject<void> = new Subject<void>();
+  PowerMoveAnimationComplete: Subject<void> = new Subject<void>();
 
   public AnimateLevelChangeAnimation(
     gameWheels: GameWheel[],
@@ -118,19 +119,33 @@ export class EffectsManagerService {
     switch (moveType) {
       case PowerMoveType.HorizontalLeft:
       case PowerMoveType.HorizontalRight:
-      case PowerMoveType.HorizontalMix:
+      case PowerMoveType.HorizontalMix: {
         gameWheels.forEach((wheel) => {
           wheel.AnimateHorizontalPowerMove(moveType);
         });
+        new Tween({ t: 0 }, mainTweenGroup)
+          .to({ t: 1 }, 2500)
+          .onComplete(() => {
+            this.PowerMoveAnimationComplete.next();
+          })
+          .start();
         break;
+      }
 
       case PowerMoveType.VerticalUp:
       case PowerMoveType.VerticalDown:
-      case PowerMoveType.VerticalMix:
+      case PowerMoveType.VerticalMix: {
         gameWheels.forEach((wheel) => {
           wheel.AnimateVerticalPowerMove(moveType);
         });
+        new Tween({ t: 0 }, mainTweenGroup)
+          .to({ t: 1 }, 2250)
+          .onComplete(() => {
+            this.PowerMoveAnimationComplete.next();
+          })
+          .start();
         break;
+      }
     }
   }
 

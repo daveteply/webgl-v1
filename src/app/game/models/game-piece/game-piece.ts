@@ -255,6 +255,7 @@ export class GamePiece extends Object3D {
   }
 
   public Reset(levelGeometryType: LevelGeometryType): void {
+    this._matchKeySequence = [1, 2, 0, 3];
     this.StopTweens();
     this._isRemoved = false;
 
@@ -275,8 +276,6 @@ export class GamePiece extends Object3D {
     } else {
       this._thetaOffset = this._thetaStart;
     }
-
-    this._matchKeySequence = [1, 2, 0, 3];
   }
 
   public StopTweens(preserveLock = false): void {
@@ -285,7 +284,7 @@ export class GamePiece extends Object3D {
     this._lockTween?.stop();
     if (this._mesh) {
       this._mesh.position.set(0, 0, 0);
-      this._mesh.rotation.set(0, 0, 0);
+      this._mesh.rotation.set(0, 0, this.getMeshRestingRotationZ());
       if (!preserveLock) {
         this._mesh.scale.set(1, 1, 1);
       }
@@ -675,7 +674,7 @@ export class GamePiece extends Object3D {
   }
 
   public AnimateFlipTween(turns: number, directionUp: boolean): void {
-    if (!this._isPowerMove && turns > 0) {
+    if (!this._isPowerMove && !this._isRemoved && turns > 0) {
       // set direction
       const delta = { theta: this._mesh.rotation.z };
       const final = {
@@ -890,7 +889,7 @@ export class GamePiece extends Object3D {
       this._mesh.visible = true;
     }
     this._mesh.position.set(0, startOffsetY, 0);
-    this._mesh.rotation.set(0, 0, 0);
+    this._mesh.rotation.set(0, 0, this.getMeshRestingRotationZ());
     this._mesh.scale.set(scale, scale, scale);
 
     this._pieceMaterials?.forEach((m) => {
@@ -909,7 +908,7 @@ export class GamePiece extends Object3D {
       })
       .onComplete(() => {
         this._mesh.position.set(0, 0, 0);
-        this._mesh.rotation.set(0, 0, 0);
+        this._mesh.rotation.set(0, 0, this.getMeshRestingRotationZ());
         this._mesh.scale.set(scale, scale, scale);
         this._pieceMaterials?.forEach((m) => {
           if (m.useBasic) {
@@ -919,5 +918,27 @@ export class GamePiece extends Object3D {
           }
         });
       });
+  }
+
+  public GetMeshRestingRotationZ(): number {
+    return this.getMeshRestingRotationZ();
+  }
+
+  private getMeshRestingRotationZ(): number {
+    if (this._pieceGeometryType !== LevelGeometryType.Cube || !this._matchKeySequence?.length) {
+      return 0;
+    }
+    switch (this._matchKeySequence[0]) {
+      case 1:
+        return 0;
+      case 2:
+        return QUARTER_CIRCLE_RADIANS;
+      case 0:
+        return Math.PI;
+      case 3:
+        return -QUARTER_CIRCLE_RADIANS;
+      default:
+        return 0;
+    }
   }
 }

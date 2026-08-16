@@ -3,6 +3,7 @@ import { PerspectiveCamera } from 'three';
 import { vi } from 'vitest';
 
 import { InteractionManager } from './interaction-manager';
+import { EffectsManager } from './effects-manager';
 import { PowerMoveType } from '../models/power-move-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
@@ -61,5 +62,25 @@ describe('InteractionManager', () => {
 
     service['powerMove'](mockPiece);
     expect(playSpy).toHaveBeenCalledWith(AudioType.POWER_MOVE_BOMB);
+  });
+
+  it('should play POWER_MOVE_USE and keep board locked during vertical power moves until animation completes', () => {
+    const audioManager = TestBed.inject(AudioManagerService);
+    const effectsManager = TestBed.inject(EffectsManager);
+    const playSpy = vi.spyOn(audioManager, 'PlayAudio');
+
+    const mockPiece = {
+      id: 2,
+      PowerMoveType: PowerMoveType.VerticalUp,
+      PowerMoveRemove: vi.fn(),
+    } as unknown as GamePiece;
+
+    service['powerMove'](mockPiece);
+
+    expect(playSpy).toHaveBeenCalledWith(AudioType.POWER_MOVE_USE);
+    expect(service['_locked']).toBe(true);
+
+    effectsManager.PowerMoveAnimationComplete.next();
+    expect(service['_locked']).toBe(false);
   });
 });

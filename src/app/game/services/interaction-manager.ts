@@ -265,6 +265,8 @@ export class InteractionManagerService {
   }
 
   private powerMove(targetGamePiece: GamePiece): void {
+    this.LockBoard(true);
+
     // find other power moves
     const powerMoveGamePieces: GamePiece[] = [];
     this.objectManager.Axle.forEach((gameWheel) => {
@@ -323,12 +325,20 @@ export class InteractionManagerService {
           });
           this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
         } else {
-          this.LockBoard(false);
+          setTimeout(() => {
+            this.effectsManager.ClearSelectedPieces();
+            this.postProcessingManager.UpdateOutlinePassObjects([]);
+            this.objectManager.ResetIsMatch();
+            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
+            this.LockBoard(false);
+          }, 1300);
         }
       } else {
         this.audioManager.PlayAudio(AudioType.POWER_MOVE_USE);
+        this.effectsManager.PowerMoveAnimationComplete.pipe(take(1)).subscribe(() => {
+          this.LockBoard(false);
+        });
         this.objectManager.AnimatePowerMove(moveType);
-        this.LockBoard(false);
       }
 
       // panic
