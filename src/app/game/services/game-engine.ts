@@ -3,7 +3,8 @@ import {
   DECIMAL_COMPARISON_TOLERANCE,
   DIFFICULTY_TIER_2,
   DIFFICULTY_TIER_3,
-  LEVEL_START_OTHER_GEOMETRIES,
+  LEVEL_START_CYLINDER,
+  LEVEL_START_DODECAHEDRON,
   MINIMUM_MATCH_COUNT,
   PLAYABLE_TEXTURE_COUNT,
 } from '../game-constants';
@@ -57,25 +58,57 @@ export class GameEngineService {
   public InitLevelTypes(level: number, rng?: PRNG): void {
     const getRandom = rng ? () => rng.next() : Math.random;
 
-    // default geometry type
+    // gradual geometry type introduction
     this._levelGeometryType = LevelGeometryType.Cube;
-    if (level > LEVEL_START_OTHER_GEOMETRIES && Math.floor(getRandom() * 2) % 2 === 0) {
-      const otherGeoRoll = Math.floor(getRandom() * 2);
-      this._levelGeometryType = otherGeoRoll === 0 ? LevelGeometryType.Cylinder : LevelGeometryType.Dodecahedron;
+    if (level >= LEVEL_START_CYLINDER && Math.floor(getRandom() * 2) === 0) {
+      if (level >= LEVEL_START_DODECAHEDRON) {
+        const otherGeoRoll = Math.floor(getRandom() * 2);
+        this._levelGeometryType = otherGeoRoll === 0 ? LevelGeometryType.Cylinder : LevelGeometryType.Dodecahedron;
+      } else {
+        this._levelGeometryType = LevelGeometryType.Cylinder;
+      }
     }
 
-    // set level material type
+    // gradual material type introduction
     if (this._levelGeometryType === LevelGeometryType.Dodecahedron) {
-      // Dodecahedron levels are constrained to ColorBumpShape or ColorBumpMaterial
-      this._levelMaterialType =
-        Math.floor(getRandom() * 2) === 0 ? LevelMaterialType.ColorBumpShape : LevelMaterialType.ColorBumpMaterial;
+      // Dodecahedron levels are constrained to ColorBumpShape, Color, or ColorBumpMaterial
+      const dodecahedronMaterials = [
+        LevelMaterialType.ColorBumpShape,
+        LevelMaterialType.Color,
+        LevelMaterialType.ColorBumpMaterial,
+      ];
+      this._levelMaterialType = dodecahedronMaterials[Math.floor(getRandom() * dodecahedronMaterials.length)];
+    } else if (level <= 2) {
+      this._levelMaterialType = LevelMaterialType.ColorBumpShape;
+    } else if (level <= 4) {
+      const level4Materials = [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color];
+      this._levelMaterialType = level4Materials[Math.floor(getRandom() * level4Materials.length)];
+    } else if (level <= 8) {
+      const level8Materials = [
+        LevelMaterialType.ColorBumpShape,
+        LevelMaterialType.Color,
+        LevelMaterialType.ColorBumpMaterial,
+      ];
+      this._levelMaterialType = level8Materials[Math.floor(getRandom() * level8Materials.length)];
     } else {
-      this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(getRandom() * 3) + 1;
+      const allMaterials = [
+        LevelMaterialType.ColorBumpShape,
+        LevelMaterialType.Color,
+        LevelMaterialType.ColorBumpMaterial,
+        LevelMaterialType.Emoji,
+      ];
+      this._levelMaterialType = allMaterials[Math.floor(getRandom() * allMaterials.length)];
     }
 
-    // set gravity type (levels 1 & 2 are always None)
+    // gradual gravity type introduction
     if (level <= 2) {
       this._gravityType = GravityType.None;
+    } else if (level <= 4) {
+      const gravityOptions = [GravityType.None, GravityType.Down];
+      this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
+    } else if (level <= 6) {
+      const gravityOptions = [GravityType.None, GravityType.Down, GravityType.Up];
+      this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
     } else {
       const gravityOptions = [GravityType.None, GravityType.Down, GravityType.Up, GravityType.Mix];
       this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
@@ -98,8 +131,14 @@ export class GameEngineService {
     this._gravityType = gravityType ?? GravityType.None;
   }
 
-  public InitLevelTransitionType(): void {
-    this._levelTransitionType = Math.floor(Math.random() * 3);
+  public InitLevelTransitionType(level?: number): void {
+    if (level !== undefined && level <= 3) {
+      this._levelTransitionType = LevelTransitionType.Default;
+    } else if (level !== undefined && level <= 6) {
+      this._levelTransitionType = Math.floor(Math.random() * 2);
+    } else {
+      this._levelTransitionType = Math.floor(Math.random() * 3);
+    }
     if (isDevMode()) {
       console.info('Level Transition:', LevelTransitionType[this._levelTransitionType]);
     }

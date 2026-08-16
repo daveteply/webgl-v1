@@ -127,7 +127,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     // texture load started
     this.textureManager.LevelTextureLoadingStarted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       // level transition
-      this.gameEngine.InitLevelTransitionType();
+      this.gameEngine.InitLevelTransitionType(this.scoringManager.Level);
 
       if (this._isGameOver) {
         // game over
@@ -164,7 +164,7 @@ export class GameContainer implements OnInit, AfterViewInit {
           }
         } else {
           // level complete
-          const height = `${this.scoringManager.StatsEntries() * 3.5 + 8}em`;
+          const height = `min(${this.scoringManager.StatsEntries() * 2.8 + 10}em, 88dvh)`;
           this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
           this._dialogRefLevel.backdropClick().subscribe(() => {
             this.dialogNotify.Notify();
@@ -314,6 +314,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     let config: MatDialogConfig = {
       minWidth: 'min(20em, 92vw)',
       maxWidth: '92vw',
+      maxHeight: '90dvh',
       disableClose: true,
       panelClass: ['wgl-pane-bounce'],
       data: {

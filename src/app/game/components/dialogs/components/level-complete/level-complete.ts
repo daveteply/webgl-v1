@@ -42,6 +42,7 @@ enum LevelStatisticType {
   moveCount,
   moveCountEarned,
   pieceCount,
+  perfectMatch,
 }
 
 interface LevelStat {
@@ -75,6 +76,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   moveCount = signal<number>(0);
   moveCountEarned = signal<number>(0);
   pieceCount = signal<number>(0);
+  perfectMatchBonus = signal<number>(0);
 
   private _timerQueue: LevelStat[] = [];
   private _timerEvent: Subject<LevelStat> = new Subject<LevelStat>();
@@ -158,6 +160,11 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
             this.audioManager.PlayAudio(AudioType.LEVEL_STAT, true);
             break;
 
+          case LevelStatisticType.perfectMatch:
+            this.perfectMatchBonus.set(stat.statValue);
+            this.audioManager.PlayAudio(AudioType.PERFECT_MATCH);
+            break;
+
           case LevelStatisticType.infoComplete:
             this.audioManager.PlayAudio(AudioType.LEVEL_ENABLE_CTA);
             this.levelInfoProcessing.set(false);
@@ -199,6 +206,7 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
     this.moveCount.set(0);
     this.moveCountEarned.set(0);
     this.pieceCount.set(0);
+    this.perfectMatchBonus.set(0);
 
     this.levelInfoProcessing.set(true);
 
@@ -234,6 +242,13 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
       this._timerQueue.push({
         statType: LevelStatisticType.pieceCount,
         statValue: levelData.stats.pieceCount,
+      });
+    }
+
+    if (levelData.stats?.perfectMatchBonus) {
+      this._timerQueue.push({
+        statType: LevelStatisticType.perfectMatch,
+        statValue: levelData.stats.perfectMatchBonus,
       });
     }
 

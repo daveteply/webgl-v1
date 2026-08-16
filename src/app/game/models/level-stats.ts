@@ -4,4 +4,5 @@ export interface LevelStats {
   moveCount: number;
   moveCountEarned: number;
   pieceCount: number;
+  perfectMatchBonus?: number;
 }

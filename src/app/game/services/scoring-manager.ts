@@ -7,6 +7,7 @@ import {
   LONG_MATCH_SCORE_MULTIPLIER,
   MINIMUM_MATCH_COUNT,
   MINIMUM_SPEED_BONUS,
+  PERFECT_MATCH_SCORE_MULTIPLIER,
   POWER_MOVE_USE_SCORE_MULTIPLIER,
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
@@ -172,13 +173,14 @@ export class ScoringManagerService {
   public RestartGame(): void {
     this.level.set(1);
     this.score.set(0);
+    this.playerMoves.set(LEVEL_ADDITIVE);
     this.initLevelPieceTarget();
-    this.ResetStats();
+    this.ResetStats(true);
   }
 
   public ResetStats(restartLevel = false): void {
-    if (this.playerMoves() === 0) {
-      // reset moves for level restart
+    if (restartLevel || this.playerMoves() === 0) {
+      // reset moves for level restart or new game
       const newMoves = this.level() < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this.level();
       this.playerMoves.set(newMoves);
     }
@@ -194,17 +196,46 @@ export class ScoringManagerService {
       moveCount: 0,
       moveCountEarned: 0,
       pieceCount: 0,
+      perfectMatchBonus: 0,
     };
 
     this._timeStart = Date.now();
   }
 
+  public CheckPerfectMatch(): boolean {
+    if (
+      this.LevelComplete &&
+      this._levelStats.pieceCount === this.levelPieceTarget() &&
+      !this._levelStats.perfectMatchBonus
+    ) {
+      const perfectBonus = this.level() * PERFECT_MATCH_SCORE_MULTIPLIER;
+      this._levelStats.perfectMatchBonus = perfectBonus;
+      this.score.update((s) => s + perfectBonus);
+      this.textTextManager.ShowText(['Perfect Match!', `+${perfectBonus} Points`], this.textColor, true);
+      return true;
+    }
+    return false;
+  }
+
   public StatsEntries(): number {
     let entryCount = 0;
-    for (const value of Object.values(this._levelStats)) {
-      if (value) {
+    if (this._levelStats.fastMatchBonusTotal > 0) {
+      entryCount++;
+      if (this._levelStats.fastestMatchTime < Number.MAX_SAFE_INTEGER) {
         entryCount++;
       }
+    }
+    if (this._levelStats.moveCount > 0) {
+      entryCount++;
+    }
+    if (this._levelStats.moveCountEarned > 0) {
+      entryCount++;
+    }
+    if (this._levelStats.pieceCount > 0) {
+      entryCount++;
+    }
+    if (this._levelStats.perfectMatchBonus && this._levelStats.perfectMatchBonus > 0) {
+      entryCount++;
     }
     return entryCount;
   }

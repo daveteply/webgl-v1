@@ -94,4 +94,15 @@ describe('MaterialManager', () => {
 
     expect(keys1).toEqual(keys2);
   });
+
+  it('should create plain colored materials for LevelMaterialType.Color without textures or bump maps', () => {
+    service.InitMaterials(2, 4);
+    service.UpdateMaterials(2, 3, LevelMaterialType.Color);
+
+    expect(service.LevelMaterials.length).toBe(3);
+    expect(service.LevelMaterials[0].color).toBeDefined();
+    expect(service.LevelMaterials[0].colorStr).toBeDefined();
+    expect(service.LevelMaterials[0].texture).toBeUndefined();
+    expect(service.LevelMaterials[0].bumpTexture).toBeUndefined();
+  });
 });

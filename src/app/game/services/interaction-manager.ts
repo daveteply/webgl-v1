@@ -79,6 +79,7 @@ export class InteractionManagerService {
 
           // level completed
           if (this.scoringManager.LevelComplete) {
+            this.scoringManager.CheckPerfectMatch();
             this.effectsManager.AnimateRemove(this._matchingPieces);
             this.audioManager.PlayLevelComplete();
             this.hapticsManager.LevelCompletePulse();
@@ -310,6 +311,7 @@ export class InteractionManagerService {
         }
 
         if (this.scoringManager.LevelComplete) {
+          this.scoringManager.CheckPerfectMatch();
           this.audioManager.PlayLevelComplete();
           this.hapticsManager.LevelCompletePulse();
           this.objectManager.AnimateLevelComplete();
