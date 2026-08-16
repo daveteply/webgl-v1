@@ -1,18 +1,19 @@
 import { Injectable, inject, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
-import arrayShuffle from '../../../shared/utils/array-shuffle';
 
 import { TextureManagerService } from '../texture/texture-manager';
 import { StoreService } from '../../../app-store/services/store.service';
 
-import { GameMaterials, PieceMaterials, PieceSideMaterial, WheelMaterial } from './material-models';
+import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
+import { PieceMaterials, PieceSideMaterial, WheelMaterial, GameMaterials } from './material-models';
 import { LevelMaterialType } from '../../level-material-type';
-import { ColorSchemeData, COLOR_SCHEMES } from './color-schemes';
-import { PowerMoveType } from '../../models/power-move-type';
 import { GameTexture } from '../texture/game-texture';
+import { PowerMoveType } from '../../models/power-move-type';
+import { COLOR_SCHEMES, ColorSchemeData } from './color-schemes';
 import { BUMP_SCALE } from '../../game-constants';
+import arrayShuffle from '../../../shared/utils/array-shuffle';
+import { PRNG } from '../../../shared/utils/prng';
 
 @Injectable({
   providedIn: 'root',
@@ -71,20 +72,26 @@ export class MaterialManagerService {
     }
   }
 
-  public UpdateMaterials(level: number, playableTextureCount: number, levelMaterialType: LevelMaterialType): void {
+  public UpdateMaterials(
+    level: number,
+    playableTextureCount: number,
+    levelMaterialType: LevelMaterialType,
+    rng?: PRNG,
+  ): void {
     // game piece materials
     this._levelMaterials = this.getLevelMaterials(
       level,
       playableTextureCount,
       levelMaterialType,
       this.textureManager.Textures,
+      rng,
     );
 
     // update materials
     for (const wheel of this._gameMaterials.wheelMaterials) {
       for (const piece of wheel.pieceMaterials) {
         // shuffle for each game piece
-        const pieceMaterials = arrayShuffle(this._levelMaterials);
+        const pieceMaterials = arrayShuffle(this._levelMaterials, rng);
 
         // set up each side
         for (let i = 0; i < piece.materials.length; i++) {
@@ -199,6 +206,7 @@ export class MaterialManagerService {
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
     textures: GameTexture[],
+    rng?: PRNG,
   ): GamePieceMaterialData[] {
     const materials: GamePieceMaterialData[] = [];
 
@@ -212,7 +220,7 @@ export class MaterialManagerService {
     switch (levelMaterialType) {
       // colors and symbol maps
       case LevelMaterialType.ColorBumpShape: {
-        const schemeInfo = this.initColorScheme(level, playableTextureCount);
+        const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
         selectedColors = schemeInfo.colors;
         this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
@@ -231,11 +239,12 @@ export class MaterialManagerService {
 
       // colors and bump maps
       case LevelMaterialType.ColorBumpMaterial: {
-        const schemeInfo = this.initColorScheme(level, playableTextureCount);
+        const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
         selectedColors = schemeInfo.colors;
         this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
-        bumpTexture = textures[MathUtils.randInt(0, textures.length - 1)];
+        const bumpInx = rng ? rng.nextInt(0, textures.length - 1) : MathUtils.randInt(0, textures.length - 1);
+        bumpTexture = textures[bumpInx];
 
         selectedColors.forEach((c: string) => {
           materials.push({
@@ -267,6 +276,7 @@ export class MaterialManagerService {
   private initColorScheme(
     level: number,
     playableTextureCount: number,
+    rng?: PRNG,
   ): { colors: string[]; name?: string; emoji?: string } {
     let selectedScheme: ColorSchemeData | undefined;
     let targetColors: string[];
@@ -277,7 +287,9 @@ export class MaterialManagerService {
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     } else {
       // Pick a random scheme from curated schemes
-      const schemeIndex = MathUtils.randInt(1, COLOR_SCHEMES.length - 1);
+      const schemeIndex = rng
+        ? rng.nextInt(1, COLOR_SCHEMES.length - 1)
+        : MathUtils.randInt(1, COLOR_SCHEMES.length - 1);
       selectedScheme = COLOR_SCHEMES[schemeIndex];
       targetColors = selectedScheme.colors.slice(0, playableTextureCount);
     }

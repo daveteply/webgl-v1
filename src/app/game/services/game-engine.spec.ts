@@ -7,6 +7,7 @@ import { LevelMaterialType } from '../level-material-type';
 import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 import { PLAYABLE_TEXTURE_COUNT } from '../game-constants';
+import { PRNG } from '../../shared/utils/prng';
 
 describe('GameEngineService', () => {
   let service: GameEngineService;
@@ -26,6 +27,26 @@ describe('GameEngineService', () => {
       expect(service.LevelMaterialType).toBe(LevelMaterialType.ColorBumpShape);
       expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
       expect(service.GravityType).toBe(GravityType.None);
+    });
+
+    it('should deterministically initialize level types given the same PRNG seed', () => {
+      const rng1 = new PRNG(424242);
+      service.InitLevelTypes(5, rng1);
+      const res1 = {
+        geo: service.LevelGeometryType,
+        mat: service.LevelMaterialType,
+        gravity: service.GravityType,
+      };
+
+      const rng2 = new PRNG(424242);
+      service.InitLevelTypes(5, rng2);
+      const res2 = {
+        geo: service.LevelGeometryType,
+        mat: service.LevelMaterialType,
+        gravity: service.GravityType,
+      };
+
+      expect(res1).toEqual(res2);
     });
 
     it('should initialize level 2 gravity to None', () => {

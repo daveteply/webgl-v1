@@ -4,6 +4,7 @@ import { Texture } from 'three';
 import { MaterialManager } from './material-manager';
 import { LevelMaterialType } from '../../level-material-type';
 import { GameTexture } from '../texture/game-texture';
+import { PRNG } from '../../../shared/utils/prng';
 
 describe('MaterialManager', () => {
   let service: MaterialManager;
@@ -25,7 +26,6 @@ describe('MaterialManager', () => {
       { id: 'bump3', texture: new Texture() },
     ];
 
-    // inject mock textures via private property or update
     (service as unknown as { textureManager: { Textures: GameTexture[] } }).textureManager = {
       Textures: mockTextures,
     };
@@ -69,5 +69,29 @@ describe('MaterialManager', () => {
     expect(service.LevelMaterials.length).toBe(2);
     expect(service.LevelMaterials[0].texture).toBeDefined();
     expect(service.LevelMaterials[0].bumpTexture).toBeUndefined();
+  });
+
+  it('should deterministically assign piece materials using PRNG seed', () => {
+    service.InitMaterials(2, 4);
+    const mockTextures: GameTexture[] = [
+      { id: 'b1', texture: new Texture() },
+      { id: 'b2', texture: new Texture() },
+      { id: 'b3', texture: new Texture() },
+      { id: 'b4', texture: new Texture() },
+    ];
+
+    (service as unknown as { textureManager: { Textures: GameTexture[] } }).textureManager = {
+      Textures: mockTextures,
+    };
+
+    const rng1 = new PRNG(13579);
+    service.UpdateMaterials(3, 4, LevelMaterialType.ColorBumpShape, rng1);
+    const keys1 = service.GameMaterials.wheelMaterials[0].pieceMaterials.map((p) => p.materials.map((m) => m.matchKey));
+
+    const rng2 = new PRNG(13579);
+    service.UpdateMaterials(3, 4, LevelMaterialType.ColorBumpShape, rng2);
+    const keys2 = service.GameMaterials.wheelMaterials[0].pieceMaterials.map((p) => p.materials.map((m) => m.matchKey));
+
+    expect(keys1).toEqual(keys2);
   });
 });

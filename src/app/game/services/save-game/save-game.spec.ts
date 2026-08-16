@@ -41,8 +41,8 @@ describe('SaveGameService', () => {
     expect(service.SavedGameData).toBeNull();
   });
 
-  it('should save game checkpoint and detect it via HasSaveState', async () => {
-    await firstValueFrom(service.SaveState(3, 1250, 8));
+  it('should save game checkpoint with custom seed and detect it via HasSaveState', async () => {
+    await firstValueFrom(service.SaveState(3, 1250, 8, 987654));
 
     const hasSave = await firstValueFrom(service.HasSaveState());
     expect(hasSave).toBe(true);
@@ -51,17 +51,27 @@ describe('SaveGameService', () => {
         level: 3,
         score: 1250,
         moves: 8,
+        seed: 987654,
       }),
     );
   });
 
+  it('should generate a positive 32-bit seed if none is provided when saving', async () => {
+    await firstValueFrom(service.SaveState(2, 600, 6));
+
+    const state = service.GetSaveState();
+    expect(state?.seed).toBeDefined();
+    expect(state!.seed).toBeGreaterThan(0);
+  });
+
   it('should retrieve save state via GetSaveState', async () => {
-    await firstValueFrom(service.SaveState(5, 3400, 12));
+    await firstValueFrom(service.SaveState(5, 3400, 12, 112233));
 
     const state = service.GetSaveState();
     expect(state?.level).toBe(5);
     expect(state?.score).toBe(3400);
     expect(state?.moves).toBe(12);
+    expect(state?.seed).toBe(112233);
   });
 
   it('should clear save state and update HasSaveState', async () => {

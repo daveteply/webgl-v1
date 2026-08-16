@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { STORAGE_SAVE_STATE } from '../../game-constants';
 import { SaveGameData } from './save-game-types';
 import { StorageService } from '../../../shared/services/storage/storage.service';
+import { PRNG } from '../../../shared/utils/prng';
 
 @Injectable({
   providedIn: 'root',
@@ -37,17 +38,19 @@ export class SaveGameService {
     return this._savedGameData;
   }
 
-  public SaveState(level: number, score: number, moves: number): Observable<void> {
+  public SaveState(level: number, score: number, moves: number, seed?: number): Observable<void> {
     return new Observable((observer) => {
+      const levelSeed = typeof seed === 'number' ? seed : PRNG.generateSeed();
       this._savedGameData = {
         level,
         score,
         moves,
+        seed: levelSeed,
         updatedAt: Date.now(),
       };
       this.storageService.setItem(STORAGE_SAVE_STATE, this._savedGameData);
       if (isDevMode()) {
-        console.info(`Saved game checkpoint: Level ${level}, Score ${score}, Moves ${moves}`);
+        console.info(`Saved game checkpoint: Level ${level}, Score ${score}, Moves ${moves}, Seed ${levelSeed}`);
       }
       observer.next();
       observer.complete();

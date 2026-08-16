@@ -24,6 +24,7 @@ import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { TextManagerService } from '../text/services/text-manager';
 import { GameEngineService } from './game-engine';
 import { PostProcessingManagerService } from './post-processing-manager';
+import { PRNG } from '../../shared/utils/prng';
 
 @Injectable({
   providedIn: 'root',
@@ -113,17 +114,19 @@ export class ObjectManagerService {
     });
   }
 
-  public UpdateLevelMaterials(level: number): void {
+  public UpdateLevelMaterials(level: number, rng?: PRNG): void {
     // update highlight color
-    this.postProcessingManager.UpdateOutlinePassColor(
-      RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)],
-    );
+    const highlightInx = rng
+      ? rng.nextInt(0, RAINBOW_COLOR_ARRAY.length - 1)
+      : MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1);
+    this.postProcessingManager.UpdateOutlinePassColor(RAINBOW_COLOR_ARRAY[highlightInx]);
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(
       level,
       this.gameEngine.PlayableTextureCount,
       this.gameEngine.LevelMaterialType,
+      rng,
     );
 
     // update the properties and materials for the grid
@@ -140,9 +143,9 @@ export class ObjectManagerService {
     this.LevelMaterialsUpdated.next(true);
   }
 
-  public NextLevel(level: number, updateMaterials = false): void {
+  public NextLevel(level: number, updateMaterials = false, rng?: PRNG): void {
     if (updateMaterials) {
-      this.UpdateLevelMaterials(level);
+      this.UpdateLevelMaterials(level, rng);
     }
     // level transition
     this.postProcessingManager.UpdateLevelTransitionPass(this.gameEngine.LevelTransitionType, true);

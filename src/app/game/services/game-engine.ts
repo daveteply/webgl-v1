@@ -14,6 +14,7 @@ import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
 import { LevelTransitionType } from './level-transition-type';
+import { PRNG } from '../../shared/utils/prng';
 
 // forcing strings in enum
 enum SearchDirection {
@@ -53,11 +54,13 @@ export class GameEngineService {
     return this._levelTransitionType;
   }
 
-  public InitLevelTypes(level: number): void {
+  public InitLevelTypes(level: number, rng?: PRNG): void {
+    const getRandom = rng ? () => rng.next() : Math.random;
+
     // default geometry type
     this._levelGeometryType = LevelGeometryType.Cube;
-    if (level > LEVEL_START_OTHER_GEOMETRIES && Math.floor(Math.random() * 2) % 2 === 0) {
-      const otherGeoRoll = Math.floor(Math.random() * 2);
+    if (level > LEVEL_START_OTHER_GEOMETRIES && Math.floor(getRandom() * 2) % 2 === 0) {
+      const otherGeoRoll = Math.floor(getRandom() * 2);
       this._levelGeometryType = otherGeoRoll === 0 ? LevelGeometryType.Cylinder : LevelGeometryType.Dodecahedron;
     }
 
@@ -65,9 +68,9 @@ export class GameEngineService {
     if (this._levelGeometryType === LevelGeometryType.Dodecahedron) {
       // Dodecahedron levels are constrained to ColorBumpShape or ColorBumpMaterial
       this._levelMaterialType =
-        Math.floor(Math.random() * 2) === 0 ? LevelMaterialType.ColorBumpShape : LevelMaterialType.ColorBumpMaterial;
+        Math.floor(getRandom() * 2) === 0 ? LevelMaterialType.ColorBumpShape : LevelMaterialType.ColorBumpMaterial;
     } else {
-      this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(Math.random() * 3) + 1;
+      this._levelMaterialType = level === 1 ? LevelMaterialType.ColorBumpShape : Math.floor(getRandom() * 3) + 1;
     }
 
     // set gravity type (levels 1 & 2 are always None)
@@ -75,7 +78,7 @@ export class GameEngineService {
       this._gravityType = GravityType.None;
     } else {
       const gravityOptions = [GravityType.None, GravityType.Down, GravityType.Up, GravityType.Mix];
-      this._gravityType = gravityOptions[Math.floor(Math.random() * gravityOptions.length)];
+      this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
     }
 
     if (isDevMode()) {

@@ -23,6 +23,7 @@ import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-i
 import arrayShuffle from '../../../shared/utils/array-shuffle';
 import { LevelGeometryType } from '../../level-geometry-type';
 import { GameTexture } from './game-texture';
+import { PRNG } from '../../../shared/utils/prng';
 
 interface EmojiSequence {
   desc: string;
@@ -83,6 +84,7 @@ export class TextureManagerService {
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
     levelGeometryType: LevelGeometryType,
+    rng?: PRNG,
   ): void {
     this.LevelTexturesLoaded.next(false);
     this.LevelTextureLoadingStarted.next();
@@ -99,15 +101,15 @@ export class TextureManagerService {
 
     switch (this._levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
-        this.loadBumpSymbolTextures(playableTextureCount);
+        this.loadBumpSymbolTextures(playableTextureCount, rng);
         break;
 
       case LevelMaterialType.ColorBumpMaterial:
-        this.loadBumpTextures();
+        this.loadBumpTextures(rng);
         break;
 
       case LevelMaterialType.Emoji:
-        emojiList = this.initEmojiData(playableTextureCount);
+        emojiList = this.initEmojiData(playableTextureCount, rng);
         emojiList.forEach((data) => {
           this._textureLoader.load(data?.dataUrl || '', (texture) => {
             const gameTexture: GameTexture = { id: data.desc, texture: texture };
@@ -155,8 +157,8 @@ export class TextureManagerService {
     });
   }
 
-  private loadBumpSymbolTextures(playableTextureCount: number): void {
-    const targetTextures = arrayShuffle(this._bumpSymbolTextures).slice(0, playableTextureCount);
+  private loadBumpSymbolTextures(playableTextureCount: number, rng?: PRNG): void {
+    const targetTextures = arrayShuffle(this._bumpSymbolTextures, rng).slice(0, playableTextureCount);
 
     // loaded
     const loadedTextures = targetTextures.filter((t) => t.texture);
@@ -186,8 +188,11 @@ export class TextureManagerService {
     }
   }
 
-  private loadBumpTextures(): void {
-    const randBumpMaterialMap = this._bumpTextures[MathUtils.randInt(0, this._bumpTextures.length - 1)];
+  private loadBumpTextures(rng?: PRNG): void {
+    const inx = rng
+      ? rng.nextInt(0, this._bumpTextures.length - 1)
+      : MathUtils.randInt(0, this._bumpTextures.length - 1);
+    const randBumpMaterialMap = this._bumpTextures[inx];
 
     // check if loaded
     if (randBumpMaterialMap.texture) {
@@ -205,7 +210,7 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiData(playableTextureCount: number): EmojiSequence[] {
+  private initEmojiData(playableTextureCount: number, rng?: PRNG): EmojiSequence[] {
     if (!this._canvasElement) {
       this._canvasElement = this.document.createElement('canvas');
       this._canvasElement.width = this._canvasElement.height = CANVAS_TEXTURE_SCALE;
@@ -218,7 +223,7 @@ export class TextureManagerService {
     let emojiSequence: EmojiSequence[] = [];
 
     if (this._canvasContext) {
-      emojiSequence = this.randomEmojiCodeList(playableTextureCount);
+      emojiSequence = this.randomEmojiCodeList(playableTextureCount, rng);
       this.store.UpdateEmojiList(emojiSequence);
 
       for (const emoji of emojiSequence) {
@@ -244,15 +249,16 @@ export class TextureManagerService {
     return emojiSequence;
   }
 
-  private randomEmojiCodeList(playableTextureCount: number): EmojiSequence[] {
-    const emojiGroup = EmojiData[MathUtils.randInt(0, EmojiData.length - 1)];
+  private randomEmojiCodeList(playableTextureCount: number, rng?: PRNG): EmojiSequence[] {
+    const groupInx = rng ? rng.nextInt(0, EmojiData.length - 1) : MathUtils.randInt(0, EmojiData.length - 1);
+    const emojiGroup = EmojiData[groupInx];
     this.store.UpdateEmojiGroup(emojiGroup.id);
 
     if (isDevMode()) {
       console.info('emoji group: ', emojiGroup.id);
     }
 
-    const shuffledSubGroups = arrayShuffle(emojiGroup.subGroup);
+    const shuffledSubGroups = arrayShuffle(emojiGroup.subGroup, rng);
 
     // grab first 5 shuffled subgroups (some subgroups have a small number of sequences)
     const subGroups = shuffledSubGroups.slice(0, 5);
@@ -260,7 +266,7 @@ export class TextureManagerService {
 
     // create long list of codes
     const emojiSequences = subGroups.flatMap((s) => s.codes);
-    return arrayShuffle(emojiSequences)
+    return arrayShuffle(emojiSequences, rng)
       .map((s) => {
         return { desc: s.desc, sequence: s.sequence, ver: s.version };
       })

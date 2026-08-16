@@ -15,6 +15,7 @@ import { HintsManagerService } from '../../services/hints-manager';
 import { PostProcessingManagerService } from '../../services/post-processing-manager';
 import { SaveGameService } from '../../services/save-game/save-game';
 import { ShareManagerService } from '../../services/share-manager';
+import { PRNG } from '../../../shared/utils/prng';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -75,6 +76,8 @@ export class GameContainer implements OnInit, AfterViewInit {
   private _dialogGameOverRef!: MatDialogRef<GameOver>;
 
   private _isGameOver = false;
+  private _activeLevelSeed = PRNG.generateSeed();
+  private _activeRng: PRNG = new PRNG(this._activeLevelSeed);
 
   showScoreProgress = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
@@ -99,8 +102,15 @@ export class GameContainer implements OnInit, AfterViewInit {
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
         this.scoringManager.IncLevel();
+        this._activeLevelSeed = PRNG.generateSeed();
+        this._activeRng = new PRNG(this._activeLevelSeed);
         this.saveGame
-          .SaveState(this.scoringManager.Level, this.scoringManager.Score, this.scoringManager.PlayerMoves)
+          .SaveState(
+            this.scoringManager.Level,
+            this.scoringManager.Score,
+            this.scoringManager.PlayerMoves,
+            this._activeLevelSeed,
+          )
           .pipe(take(1))
           .subscribe();
       } else {
@@ -127,15 +137,22 @@ export class GameContainer implements OnInit, AfterViewInit {
           if (data.startOver) {
             this.saveGame.ClearSaveState();
             this.scoringManager.RestartGame();
+            this._activeLevelSeed = PRNG.generateSeed();
+            this._activeRng = new PRNG(this._activeLevelSeed);
           } else {
             // reset stats will take care of move count based on level
             this.scoringManager.ResetStats(!data.startOver);
             this.saveGame
-              .SaveState(this.scoringManager.Level, this.scoringManager.Score, this.scoringManager.PlayerMoves)
+              .SaveState(
+                this.scoringManager.Level,
+                this.scoringManager.Score,
+                this.scoringManager.PlayerMoves,
+                this._activeLevelSeed,
+              )
               .pipe(take(1))
               .subscribe();
           }
-          this.objectManager.NextLevel(this.scoringManager.Level, true);
+          this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
         });
       } else {
         if (this._showWelcome) {
@@ -162,7 +179,7 @@ export class GameContainer implements OnInit, AfterViewInit {
     // update level materials for start of game
     this.textureManager.LevelTexturesLoaded.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((loaded) => {
       if (loaded && this._showWelcome) {
-        this.objectManager.UpdateLevelMaterials(this.scoringManager.Level);
+        this.objectManager.UpdateLevelMaterials(this.scoringManager.Level, this._activeRng);
       }
     });
 
@@ -207,10 +224,15 @@ export class GameContainer implements OnInit, AfterViewInit {
       }
     });
 
-    // initialize scoring from saved state if present
+    // initialize scoring and RNG from saved state if present
     const saved = this.saveGame.GetSaveState();
     if (saved) {
+      this._activeLevelSeed = saved.seed;
+      this._activeRng = new PRNG(this._activeLevelSeed);
       this.scoringManager.StartSavedGame(saved.level, saved.score, saved.moves);
+    } else {
+      this._activeLevelSeed = PRNG.generateSeed();
+      this._activeRng = new PRNG(this._activeLevelSeed);
     }
 
     // initialize objects and materials
@@ -258,6 +280,8 @@ export class GameContainer implements OnInit, AfterViewInit {
           this.saveGame.ClearSaveState();
           const hadSavedGame = this.scoringManager.Level > 1;
           this.scoringManager.RestartGame();
+          this._activeLevelSeed = PRNG.generateSeed();
+          this._activeRng = new PRNG(this._activeLevelSeed);
           if (hadSavedGame) {
             this.initTextures();
             this.textureManager.LevelTexturesLoaded.pipe(
@@ -275,13 +299,14 @@ export class GameContainer implements OnInit, AfterViewInit {
   }
 
   private initTextures(): void {
-    this.gameEngine.InitLevelTypes(this.scoringManager.Level);
+    this.gameEngine.InitLevelTypes(this.scoringManager.Level, this._activeRng);
 
     // select next level material type
     this.textureManager.InitLevelTextures(
       this.gameEngine.PlayableTextureCount,
       this.gameEngine.LevelMaterialType,
       this.gameEngine.LevelGeometryType,
+      this._activeRng,
     );
   }
 
@@ -312,10 +337,10 @@ export class GameContainer implements OnInit, AfterViewInit {
     if (this._showWelcome) {
       this._showWelcome = false;
       this.showScoreProgress.set(true);
-      this.objectManager.NextLevel(this.scoringManager.Level, true);
+      this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     } else {
       this.scoringManager.NextLevel();
-      this.objectManager.NextLevel(this.scoringManager.Level, true);
+      this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     }
   }
 }
