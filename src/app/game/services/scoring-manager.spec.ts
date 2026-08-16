@@ -203,5 +203,10 @@ describe('ScoringManagerService', () => {
       service.CheckPerfectMatch();
       expect(service.StatsEntries()).toBe(3); // moveCount + pieceCount + perfectMatchBonus
     });
+
+    it('should cap levelPieceTarget at DIFFICULTY_TIER_4 (50) for high levels', () => {
+      service.StartSavedGame(100, 0, 10);
+      expect(service.LevelPieceTarget).toBe(50);
+    });
   });
 });
