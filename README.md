@@ -10,27 +10,32 @@ Welcome to the sights and sounds of Rikkle!
 
 ## 🎮 What is Rikkle?
 
-Rikkle reimagines classic puzzle-matching mechanics into a full 3D experience. Players interact with a cylindrical grid composed of stacked, rotatable wheels containing colorful, textured pieces (cubes or cylinders). By aligning adjacent pieces of matching materials, patterns, or colors, players solve levels while managing limited moves and striving for high scores.
+Rikkle reimagines classic puzzle-matching mechanics into a full 3D experience. Players interact with a cylindrical grid composed of stacked, rotatable wheels containing colorful, textured pieces (cubes, cylinders, or dodecahedrons). By aligning adjacent pieces of matching materials, patterns, or colors, players solve levels while managing limited moves and striving for high scores.
 
 ### Key Game Features & Mechanics
 
 - 🔄 **3D Cylindrical Grid Gameplay**: Rotate individual wheels in 360° space to find and align matching game pieces.
-- 🎨 **Procedural Materials & Geometries**: Levels alternate between cubic and cylindrical geometry types, accompanied by procedurally styled textures (Color, Bump, and Shape materials) and difficulty-tinted ambient starfield backdrops.
+- 🎨 **Procedural Materials & Geometries**: Levels alternate between cubic, cylindrical, and dodecahedron geometry types, accompanied by procedurally styled textures (ColorBumpShape, Emoji, Pattern, Shape, and Texture materials) and difficulty-tinted ambient starfield backdrops.
+- 🌌 **Dynamic Gravity System**: Higher difficulty tiers introduce vertical gravity effects (Down, Up, or Mix) where remaining pieces fall or rise to fill cleared spaces and new pieces spawn dynamically.
+- 💥 **Explosive Power Moves**: Unlock directional power-ups (Horizontal/Vertical Spins and Mix moves) as well as radial Bomb moves ("Kaboom!") with spark emitter particle effects to clear tight spots.
+- ✨ **Dynamic Removal & Transition Animations**: Multiple procedural piece removal effects (Fade, Implode/Pop, Explode/Scatter, Vortex/Spiral, Gravitational Drop) and level transition styles (Radial Assemble, Spiral Vortex, Scatter Snap, Cascade Wave) with strict sequential animation timing.
 - 📈 **Dynamic Level Scaling**: Texture complexity ramps up from 6 base textures up to 9 as difficulty tiers increase, testing recognition and strategic move planning.
-- ⚡ **Power Moves**: Unlock directional power-ups (Horizontal & Vertical Mix/Shift moves) to rearrange pieces and escape tight spots.
-- 🎵 **Web Audio API Soundscape**: Features musical note scale escalation on long chain matches, directional match sounds, audio panic cues when low on moves, and randomized level music with independent SFX and Music volume controls.
-- 💎 **Glassmorphic UI & Visual Polish**: Built with purple glassmorphic UI panels (`backdrop-filter` glass design), Three.js edge outline passes, smooth camera transition animations, and adaptive field-of-view scaling for mobile and desktop screens.
+- 🎵 **Web Audio API Soundscape & Haptics**: Features musical note scale escalation on long chain matches, directional match sounds, audio panic cues when low on moves, haptic feedback pulses on mobile, and randomized level music with independent SFX and Music volume controls.
+- 💎 **Glassmorphic UI & Visual Polish**: Built with purple glassmorphic UI panels (`backdrop-filter` glass design), Three.js edge outline passes, smooth camera transition animations, dynamic stat calculation dialogs, and adaptive field-of-view scaling for mobile and desktop screens.
 - 📱 **Progressive Web App (PWA)**: Full PWA support with service worker offline caching, responsive touch/drag controls, and instant installability.
-- 💾 **State Persistence**: Automatic game saving and local high score tracking allow you to resume your game anytime.
+- 💾 **State Persistence**: Automatic game saving and local high score tracking allow you to resume your game anytime using deterministic PRNG seeds.
 
 ---
 
 ## 🚀 Recent Updates & Improvements
 
 - **Angular 22 & Three.js 0.185 Architecture**: Upgraded core engine dependencies to Angular 22 and Three.js 0.185 for enhanced performance and modern web standard compliance.
+- **Gravity & Physics Sequencing**: Added dynamic vertical gravity shifts (Down, Up, Mix) and sequenced animation lifecycle to ensure piece removals fully finish before gravity slides or level transitions begin.
+- **Dodecahedron Geometry & Bomb Power Move**: Expanded puzzle geometries to include 12-sided dodecahedrons and added the radial Bomb power move with spark emitters.
+- **Dynamic Level Complete Dialogs**: Responsive dialog height auto-scaling based on player statistics with minimum bounds protection for clean, non-clipped mobile displays.
 - **RikkleBacker Splash & Adaptive FOV**: Introduced an animated _RikkleBacker_ splash screen intro sequence and dynamic camera perspective adjustments tailored to device screen aspect ratios.
 - **Enhanced Glassmorphic UI**: Redesigned UI dialogs, victory panels, and footer controls using modern CSS glassmorphism, responsive gap positioning, and mobile-friendly layouts.
-- **Native Web Audio API Engine**: Rebuilt audio architecture utilizing native `AudioContext`, gain nodes, and buffer caching for seamless sound playback and background visibility management.
+- **Native Web Audio API & Haptics Engine**: Rebuilt audio architecture utilizing native `AudioContext`, gain nodes, and buffer caching for seamless sound playback, paired with haptic vibration feedback.
 - **Expanded Test Suite**: Integrated Vitest unit testing and Playwright end-to-end (E2E) testing simulating full canvas dragging, wheel rotation, and level complete dialog flows.
 - **PWA & Production Hosting**: Added full PWA web manifest, service worker setup, and automated deployment via Vercel.
 
