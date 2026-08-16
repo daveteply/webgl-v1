@@ -12,16 +12,31 @@
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     @if (!isLevelOne()) {
-      <button mat-stroked-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseRestartLevel()">
+      <button mat-raised-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseRestartLevel()">
         Start Level {{ data.level }} again
       </button>
-    }
-    <button mat-raised-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseGameOver()">
-      @if (!isLevelOne()) {
-        <span>Start Over</span>
-      } @else {
-        <span>Play again!</span>
+
+      @if (!confirmStartOver()) {
+        <button mat-stroked-button color="warn" [disabled]="texturesStillLoading()" (click)="onCloseGameOver()">
+          Start Over
+        </button>
       }
-    </button>
+
+      <mat-expansion-panel [expanded]="confirmStartOver()" hideToggle class="start-over-expansion-panel">
+        <div class="confirm-container">
+          <span class="confirm-prompt">
+            ⚠️ Are you sure? You will lose your current <strong>Level {{ data.level }}</strong> run and progress!
+          </span>
+          <div class="confirm-buttons">
+            <button mat-button (click)="onCancelStartOver()">Cancel</button>
+            <button mat-raised-button color="warn" (click)="onConfirmStartOver()">Yes, Start Over</button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    } @else {
+      <button mat-raised-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseGameOver()">
+        <span>Play again!</span>
+      </button>
+    }
   </mat-dialog-actions>
 </div>

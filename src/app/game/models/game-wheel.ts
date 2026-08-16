@@ -164,10 +164,6 @@ export class GameWheel extends Object3D {
     this.animateHorizontal(startTheta, targetTheta);
   }
 
-  public AnimateHorizontalMotion(startTheta: number, targetTheta: number, isRestoring = false): void {
-    this.animateHorizontal(startTheta, targetTheta, isRestoring);
-  }
-
   public AnimateVerticalPowerMove(moveType: PowerMoveType): void {
     for (const child of this.children) {
       const gamePiece = child as GamePiece;
@@ -247,13 +243,13 @@ export class GameWheel extends Object3D {
     }
   }
 
-  private animateHorizontal(startTheta: number, stopTheta: number, isRestoring = false): void {
+  private animateHorizontal(startTheta: number, stopTheta: number): void {
     const delta = { theta: startTheta };
     const target = { theta: stopTheta };
 
     this._horizontalMotionTween = new Tween(delta, mainTweenGroup)
-      .to(target, isRestoring ? 500 : 2000)
-      .easing(isRestoring ? Easing.Circular.Out : Easing.Elastic.In)
+      .to(target, 2000)
+      .easing(Easing.Elastic.In)
       .onUpdate(() => {
         this._theta = delta.theta;
         this.rotation.y = this._theta;

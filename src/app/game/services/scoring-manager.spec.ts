@@ -75,31 +75,15 @@ describe('ScoringManagerService', () => {
     expect(service.LevelProgress).toBe(0);
   });
 
-  it('should restore state from SaveGameScore data', () => {
-    const restoreData = {
-      level: 5,
-      moves: 12,
-      remaining: 4,
-      progress: 60,
-      pieceTarget: 10,
-      score: 1500,
-      stats: {
-        fastestMatchTime: 500,
-        fastMatchBonusTotal: 200,
-        moveCount: 8,
-        moveCountEarned: 2,
-        pieceCount: 6,
-      },
-    };
-
-    service.Restore(restoreData);
+  it('should initialize state correctly with StartSavedGame', () => {
+    service.StartSavedGame(5, 1500, 12);
 
     expect(service.Level).toBe(5);
-    expect(service.PlayerMoves).toBe(12);
-    expect(service.PiecesRemaining).toBe(4);
-    expect(service.LevelProgress).toBe(60);
-    expect(service.LevelPieceTarget).toBe(10);
     expect(service.Score).toBe(1500);
+    expect(service.PlayerMoves).toBe(12);
+    expect(service.LevelProgress).toBe(0);
+    expect(service.LevelPieceTarget).toBeGreaterThan(0);
+    expect(service.PiecesRemaining).toBe(service.LevelPieceTarget);
   });
 
   it('should calculate bonus correctly for a single power move without awarding extra moves', () => {

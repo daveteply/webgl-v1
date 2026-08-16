@@ -14,7 +14,6 @@ import { LevelMaterialType } from '../level-material-type';
 import { LevelStats } from '../models/level-stats';
 import { PowerMoveType, PowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';
-import { SaveGameScore } from './save-game/save-game-types';
 import { TextManagerService } from '../text/services/text-manager';
 
 @Injectable({
@@ -210,15 +209,14 @@ export class ScoringManagerService {
     return entryCount;
   }
 
-  public Restore(restoreScore?: SaveGameScore): void {
-    if (restoreScore) {
-      this.level.set(restoreScore.level);
-      this.playerMoves.set(restoreScore.moves);
-      this.piecesRemaining.set(restoreScore.remaining);
-      this.levelProgress.set(restoreScore.progress);
-      this.levelPieceTarget.set(restoreScore.pieceTarget);
-      this.score.set(restoreScore.score);
-      this._levelStats = restoreScore.stats;
+  public StartSavedGame(level: number, score: number, moves: number): void {
+    this.level.set(level);
+    this.score.set(score);
+    this.playerMoves.set(moves);
+    this.initLevelPieceTarget();
+    this.ResetStats();
+    if (moves > 0) {
+      this.playerMoves.set(moves);
     }
   }
 

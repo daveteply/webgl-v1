@@ -15,7 +15,6 @@ import {
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
 import { PowerMoveType } from '../models/power-move-type';
-import { LevelMaterialType } from '../level-material-type';
 
 import { StarField } from '../models/star-field';
 
@@ -25,7 +24,6 @@ import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { TextManagerService } from '../text/services/text-manager';
 import { GameEngineService } from './game-engine';
 import { PostProcessingManagerService } from './post-processing-manager';
-import { SaveGameService } from './save-game/save-game';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +35,6 @@ export class ObjectManagerService {
   private audioManager = inject(AudioManagerService);
   private gameEngine = inject(GameEngineService);
   private postProcessingManager = inject(PostProcessingManagerService);
-  private saveGame = inject(SaveGameService);
 
   // create and store polar coordinates to draw game pieces
   private _piecePoints: PiecePoints[] = [];
@@ -70,9 +67,6 @@ export class ObjectManagerService {
     this.effectsManager.LevelChangeAnimation.subscribe((locked) => {
       if (!locked) {
         this.LevelChangeAnimationComplete.next();
-        if (this.saveGame.IsRestoring) {
-          this.RestorePositions();
-        }
       }
     });
   }
@@ -124,18 +118,10 @@ export class ObjectManagerService {
     this.postProcessingManager.UpdateOutlinePassColor(
       RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)],
     );
-    if (this.saveGame.IsRestoring) {
-      this.postProcessingManager.UpdateOutlinePassColor(this.saveGame.SavedGameData.outlineColor as number);
-      this.gameEngine.RestoreLevelTypes(
-        this.saveGame.SavedGameData.levelMaterialType as number,
-        this.saveGame.SavedGameData.levelGeometryType as number,
-        this.saveGame.SavedGameData.gravityType,
-      );
-    }
 
     // update materials in the material manager service
     this.materialManager.UpdateMaterials(
-      this.saveGame.IsRestoring ? (this.saveGame.SavedGameData.scoring?.level as number) : level,
+      level,
       this.gameEngine.PlayableTextureCount,
       this.gameEngine.LevelMaterialType,
     );
@@ -152,61 +138,6 @@ export class ObjectManagerService {
     }
 
     this.LevelMaterialsUpdated.next(true);
-  }
-
-  public SaveGameState(): Observable<void> {
-    return this.saveGame.SaveState(
-      this.Axle,
-      this.materialManager.LevelMaterials,
-      this.materialManager.GameMaterials,
-      this.gameEngine.LevelMaterialType,
-      this.gameEngine.LevelGeometryType,
-      this.effectsManager.SaveGameScoringData,
-      this.postProcessingManager.OutlineColor,
-      this.gameEngine.GravityType,
-    );
-  }
-
-  public RestorePositions(): void {
-    // wheel positions
-    for (let i = 0; i < this.saveGame.SavedGameData.wheelData.length; i++) {
-      const wheelData = this.saveGame.SavedGameData.wheelData[i];
-      const wheel = this.Axle[i];
-      if (wheel.Theta !== wheelData.theta) {
-        wheel.AnimateHorizontalMotion(wheel.Theta, wheelData.theta, true);
-      }
-
-      // pieces
-      for (let j = 0; j < wheel.children.length; j++) {
-        const pieceData = wheelData.piecesData[j];
-        const gamePiece = wheel.children[j] as GamePiece;
-        // remove
-        if (pieceData.isRemoved) {
-          gamePiece.AnimateRemovalTween(0, true);
-        }
-        // flip
-        if (pieceData.flipTurns !== gamePiece.FlipTurns) {
-          gamePiece.AnimateFlipTween(Math.abs(pieceData.flipTurns), pieceData.flipTurns > 0, true);
-        }
-        // power move
-        if (pieceData.powerMove) {
-          // need to remove first
-          gamePiece.AnimateRemovalTween(0, true);
-          // restore power move
-          this.GamePiecePowerMove(gamePiece, pieceData.powerMove, pieceData.powerMoveColor);
-        }
-      }
-    }
-
-    // message player
-    let color = 0xffffff;
-    if (this.saveGame.SavedGameData.levelMaterialType === LevelMaterialType.Emoji) {
-      color = RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
-    }
-    this.textManager.ShowText(['Restored!'], color);
-
-    // complete with restoration
-    this.saveGame.RestoreComplete();
   }
 
   public NextLevel(level: number, updateMaterials = false): void {

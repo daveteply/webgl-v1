@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef } from '@angular/core';
 import { MathUtils } from 'three';
@@ -14,7 +15,7 @@ import { ProgressBar } from '../../../../../shared/components/progress-bar/progr
 
 @Component({
   selector: 'wgl-game-over',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, HighScores, ProgressBar],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, HighScores, ProgressBar],
   templateUrl: './game-over.html',
   styleUrl: './game-over.scss',
 })
@@ -23,6 +24,7 @@ export class GameOver {
   progress = signal<number>(100);
 
   isLevelOne = signal<boolean>(false);
+  confirmStartOver = signal<boolean>(false);
   gameOverEmoji = signal<string>(
     String.fromCodePoint(GAME_OVER_EMOJI[MathUtils.randInt(0, GAME_OVER_EMOJI.length - 1)]),
   );
@@ -50,8 +52,21 @@ export class GameOver {
   }
 
   onCloseGameOver(): void {
+    if (!this.isLevelOne()) {
+      this.confirmStartOver.set(true);
+    } else {
+      this.data.startOver = true;
+      this.dialogRef.close(this.data);
+    }
+  }
+
+  onConfirmStartOver(): void {
     this.data.startOver = true;
     this.dialogRef.close(this.data);
+  }
+
+  onCancelStartOver(): void {
+    this.confirmStartOver.set(false);
   }
 
   onCloseRestartLevel(): void {
@@ -59,3 +74,5 @@ export class GameOver {
     this.dialogRef.close(this.data);
   }
 }
+
+export { GameOver as GameOverDialogComponent, GameOver as GameOverDialog };
