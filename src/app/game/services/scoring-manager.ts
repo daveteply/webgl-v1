@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MathUtils } from 'three';
 import {
-  DIFFICULTY_TIER_3,
+  DIFFICULTY_TIER_4,
   LEVEL_ADDITIVE,
   LONG_MATCH_SCORE_MULTIPLIER,
   MINIMUM_MATCH_COUNT,
@@ -270,8 +270,8 @@ export class ScoringManagerService {
   private initLevelPieceTarget(): void {
     let target = Math.ceil(Math.log2(this.level())) + this.level() + LEVEL_ADDITIVE;
     // cap the number of pieces
-    if (target > DIFFICULTY_TIER_3) {
-      target = DIFFICULTY_TIER_3;
+    if (target > DIFFICULTY_TIER_4) {
+      target = DIFFICULTY_TIER_4;
     }
     this.levelPieceTarget.set(target);
     this.piecesRemaining.set(target);

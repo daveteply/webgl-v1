@@ -33,9 +33,21 @@ export const PERFECT_MATCH_SCORE_MULTIPLIER = 100;
 export const MOVES_REMAINING_COUNT_WARNING = 3;
 export const MOVES_REMAINING_COUNT_DANGER = 2;
 export const MOVES_REMAINING_COUNT_PANIC = 2;
-export const LEVEL_START_OTHER_GEOMETRIES = 3;
-export const LEVEL_START_CYLINDER = 4;
-export const LEVEL_START_DODECAHEDRON = 7;
+export const LEVEL_START_CYLINDER = 7;
+export const LEVEL_START_DODECAHEDRON = 12;
+
+// Feature Unlock Levels
+export const POWER_MOVE_START_LEVEL = 3;
+export const POWER_MOVE_START_VERTICAL = 6;
+export const POWER_MOVE_START_MIX = 9;
+export const POWER_MOVE_START_BOMB = 12;
+export const GRAVITY_START_DOWN = 6;
+export const GRAVITY_START_UP = 10;
+export const GRAVITY_START_MIX = 14;
+export const MATERIAL_START_COLOR = 3;
+export const MATERIAL_START_BUMP = 5;
+export const MATERIAL_START_EMOJI = 9;
+
 export const DIFFICULTY_TIER_1 = 10;
 export const DIFFICULTY_TIER_2 = 20;
 export const DIFFICULTY_TIER_3 = 30;

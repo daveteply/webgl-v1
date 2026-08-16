@@ -2,11 +2,20 @@ import { Injectable, isDevMode } from '@angular/core';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
   DIFFICULTY_TIER_2,
-  DIFFICULTY_TIER_3,
+  GRAVITY_START_DOWN,
+  GRAVITY_START_MIX,
+  GRAVITY_START_UP,
   LEVEL_START_CYLINDER,
   LEVEL_START_DODECAHEDRON,
+  MATERIAL_START_BUMP,
+  MATERIAL_START_COLOR,
+  MATERIAL_START_EMOJI,
   MINIMUM_MATCH_COUNT,
   PLAYABLE_TEXTURE_COUNT,
+  POWER_MOVE_START_BOMB,
+  POWER_MOVE_START_LEVEL,
+  POWER_MOVE_START_MIX,
+  POWER_MOVE_START_VERTICAL,
 } from '../game-constants';
 import { LevelGeometryType } from '../level-geometry-type';
 import { LevelMaterialType } from '../level-material-type';
@@ -78,12 +87,12 @@ export class GameEngineService {
         LevelMaterialType.ColorBumpMaterial,
       ];
       this._levelMaterialType = dodecahedronMaterials[Math.floor(getRandom() * dodecahedronMaterials.length)];
-    } else if (level <= 2) {
+    } else if (level < MATERIAL_START_COLOR) {
       this._levelMaterialType = LevelMaterialType.ColorBumpShape;
-    } else if (level <= 4) {
+    } else if (level < MATERIAL_START_BUMP) {
       const level4Materials = [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color];
       this._levelMaterialType = level4Materials[Math.floor(getRandom() * level4Materials.length)];
-    } else if (level <= 8) {
+    } else if (level < MATERIAL_START_EMOJI) {
       const level8Materials = [
         LevelMaterialType.ColorBumpShape,
         LevelMaterialType.Color,
@@ -101,12 +110,12 @@ export class GameEngineService {
     }
 
     // gradual gravity type introduction
-    if (level <= 2) {
+    if (level < GRAVITY_START_DOWN) {
       this._gravityType = GravityType.None;
-    } else if (level <= 4) {
+    } else if (level < GRAVITY_START_UP) {
       const gravityOptions = [GravityType.None, GravityType.Down];
       this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
-    } else if (level <= 6) {
+    } else if (level < GRAVITY_START_MIX) {
       const gravityOptions = [GravityType.None, GravityType.Down, GravityType.Up];
       this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
     } else {
@@ -145,23 +154,23 @@ export class GameEngineService {
   }
 
   public PowerMoveSelection(level: number): PowerMoveType {
-    // Power moves begin at level 3
-    if (level < 3) {
+    // Power moves begin at POWER_MOVE_START_LEVEL
+    if (level < POWER_MOVE_START_LEVEL) {
       return PowerMoveType.None;
     }
 
-    // Build available power moves based on 3-level progression increments
+    // Build available power moves based on progression increments
     const availableTypes: PowerMoveType[] = [PowerMoveType.HorizontalRight, PowerMoveType.HorizontalLeft];
 
-    if (level >= 6) {
+    if (level >= POWER_MOVE_START_VERTICAL) {
       availableTypes.push(PowerMoveType.VerticalUp, PowerMoveType.VerticalDown);
     }
 
-    if (level >= 9) {
+    if (level >= POWER_MOVE_START_MIX) {
       availableTypes.push(PowerMoveType.HorizontalMix, PowerMoveType.VerticalMix);
     }
 
-    if (level >= 12) {
+    if (level >= POWER_MOVE_START_BOMB) {
       availableTypes.push(PowerMoveType.Bomb);
     }
 
@@ -178,11 +187,8 @@ export class GameEngineService {
       }
     }
 
-    // Up to DIFFICULTY_TIER_3, retain a chance of None
-    const selectionPool: PowerMoveType[] = [...availableTypes];
-    if (level <= DIFFICULTY_TIER_3) {
-      selectionPool.push(PowerMoveType.None);
-    }
+    // Always retain a chance of None
+    const selectionPool: PowerMoveType[] = [...availableTypes, PowerMoveType.None];
 
     const moveType = selectionPool[Math.floor(Math.random() * selectionPool.length)];
 

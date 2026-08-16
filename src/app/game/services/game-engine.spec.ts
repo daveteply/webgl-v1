@@ -83,10 +83,10 @@ describe('GameEngineService', () => {
       expect(l9Materials.has(LevelMaterialType.Emoji)).toBe(true);
     });
 
-    it('should initialize level 3 gravity to None or Down', () => {
+    it('should initialize level 6 gravity to None or Down', () => {
       const foundTypes = new Set<GravityType>();
       for (let i = 0; i < 50; i++) {
-        service.InitLevelTypes(3);
+        service.InitLevelTypes(6);
         foundTypes.add(service.GravityType);
       }
       for (const t of foundTypes) {
@@ -94,36 +94,36 @@ describe('GameEngineService', () => {
       }
     });
 
-    it('should initialize level 7+ gravity to None, Down, Up, or Mix', () => {
+    it('should initialize level 14+ gravity to None, Down, Up, or Mix', () => {
       const foundTypes = new Set<GravityType>();
       for (let i = 0; i < 100; i++) {
-        service.InitLevelTypes(7);
+        service.InitLevelTypes(14);
         foundTypes.add(service.GravityType);
       }
       expect(foundTypes.size).toBeGreaterThan(1);
     });
 
-    it('should keep Cube geometry for levels 1 to 3, introduce Cylinder at level 4, and Dodecahedron at level 7+', () => {
+    it('should keep Cube geometry for levels 1 to 6, introduce Cylinder at level 7, and Dodecahedron at level 12+', () => {
       for (let i = 0; i < 30; i++) {
-        service.InitLevelTypes(3);
+        service.InitLevelTypes(6);
         expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
       }
 
-      const l4Geos = new Set<LevelGeometryType>();
-      for (let i = 0; i < 50; i++) {
-        service.InitLevelTypes(4);
-        l4Geos.add(service.LevelGeometryType);
-      }
-      expect(l4Geos.has(LevelGeometryType.Cube)).toBe(true);
-      expect(l4Geos.has(LevelGeometryType.Cylinder)).toBe(true);
-      expect(l4Geos.has(LevelGeometryType.Dodecahedron)).toBe(false);
-
       const l7Geos = new Set<LevelGeometryType>();
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 50; i++) {
         service.InitLevelTypes(7);
         l7Geos.add(service.LevelGeometryType);
       }
-      expect(l7Geos.has(LevelGeometryType.Dodecahedron)).toBe(true);
+      expect(l7Geos.has(LevelGeometryType.Cube)).toBe(true);
+      expect(l7Geos.has(LevelGeometryType.Cylinder)).toBe(true);
+      expect(l7Geos.has(LevelGeometryType.Dodecahedron)).toBe(false);
+
+      const l12Geos = new Set<LevelGeometryType>();
+      for (let i = 0; i < 100; i++) {
+        service.InitLevelTypes(12);
+        l12Geos.add(service.LevelGeometryType);
+      }
+      expect(l12Geos.has(LevelGeometryType.Dodecahedron)).toBe(true);
     });
 
     it('should restore gravity type in RestoreLevelTypes', () => {
@@ -157,7 +157,7 @@ describe('GameEngineService', () => {
 
     it('should constrain Dodecahedron geometry levels to ColorBumpShape, Color, or ColorBumpMaterial', () => {
       for (let i = 0; i < 100; i++) {
-        service.InitLevelTypes(7);
+        service.InitLevelTypes(12);
         if (service.LevelGeometryType === LevelGeometryType.Dodecahedron) {
           expect([
             LevelMaterialType.ColorBumpShape,
