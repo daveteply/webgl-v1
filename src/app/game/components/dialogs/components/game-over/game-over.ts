@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, signal } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { MathUtils } from 'three';
 import { GAME_OVER_EMOJI } from '../../../../game-constants';
 import { GameOverData } from './game-over-type';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../../../shared/components/progress-bar/progress-bar';
 
@@ -19,7 +20,7 @@ import { ProgressBar } from '../../../../../shared/components/progress-bar/progr
   templateUrl: './game-over.html',
   styleUrl: './game-over.scss',
 })
-export class GameOver {
+export class GameOver implements OnInit {
   texturesStillLoading = signal<boolean>(true);
   progress = signal<number>(100);
 
@@ -30,6 +31,7 @@ export class GameOver {
   );
 
   private textureManager = inject(TextureManagerService);
+  private analyticsManager = inject(AnalyticsManagerService);
   private dialogRef = inject(MatDialogRef<GameOver>);
   public data: GameOverData = inject(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
@@ -51,7 +53,19 @@ export class GameOver {
     this.isLevelOne.set(this.data?.level === 1);
   }
 
+  ngOnInit(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameOverDialogViewed, {
+      level: this.data?.level,
+      isLevelOne: this.isLevelOne(),
+    });
+  }
+
   onCloseGameOver(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameOverStartOverCTA, {
+      level: this.data?.level,
+      isLevelOne: this.isLevelOne(),
+    });
+
     if (!this.isLevelOne()) {
       this.confirmStartOver.set(true);
     } else {
@@ -61,15 +75,24 @@ export class GameOver {
   }
 
   onConfirmStartOver(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameOverConfirmStartOverCTA, {
+      level: this.data?.level,
+    });
     this.data.startOver = true;
     this.dialogRef.close(this.data);
   }
 
   onCancelStartOver(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameOverCancelStartOverCTA, {
+      level: this.data?.level,
+    });
     this.confirmStartOver.set(false);
   }
 
   onCloseRestartLevel(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameOverRestartLevelCTA, {
+      level: this.data?.level,
+    });
     this.data.startOver = false;
     this.dialogRef.close(this.data);
   }

@@ -4,6 +4,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { vi } from 'vitest';
+
 import { AudioManagerService } from '../../../shared/services/audio/audio-manager';
 import { EffectsManagerService } from '../../services/effects-manager';
 import { GameEngineService } from '../../services/game-engine';
@@ -15,11 +17,14 @@ import { ScoringManagerService } from '../../services/scoring-manager';
 import { ShareManagerService } from '../../services/share-manager';
 import { TextureManagerService } from '../../services/texture/texture-manager';
 import { TextZoom } from '../../text/components/text-zoom/text-zoom';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
 import { GameContainer } from './game-container';
 
 describe('GameContainer', () => {
   let component: GameContainer;
   let fixture: ComponentFixture<GameContainer>;
+  let objectManager: ObjectManagerService;
+  let analyticsManager: AnalyticsManagerService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -39,6 +44,10 @@ describe('GameContainer', () => {
         ShareManagerService,
       ],
     }).compileComponents();
+
+    objectManager = TestBed.inject(ObjectManagerService);
+    analyticsManager = TestBed.inject(AnalyticsManagerService);
+    vi.spyOn(analyticsManager, 'Log');
   });
 
   beforeEach(() => {
@@ -56,5 +65,21 @@ describe('GameContainer', () => {
     expect(config.height).toBe('17.5em');
     expect(config.maxHeight).toBe('90dvh');
     expect(config.disableClose).toBe(true);
+  });
+
+  it('should log LevelCompleted when level is completed successfully', () => {
+    objectManager.LevelCompleted.next(false);
+    expect(analyticsManager.Log).toHaveBeenCalledWith(
+      AnalyticsEventType.LevelCompleted,
+      expect.objectContaining({ level: expect.any(Number) }),
+    );
+  });
+
+  it('should log GameOver when game over occurs', () => {
+    objectManager.LevelCompleted.next(true);
+    expect(analyticsManager.Log).toHaveBeenCalledWith(
+      AnalyticsEventType.GameOver,
+      expect.objectContaining({ level: expect.any(Number) }),
+    );
   });
 });

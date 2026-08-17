@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { AnalyticsEventType, AnalyticsManagerService } from './analytics-manager';
 
 export interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -14,6 +15,7 @@ export interface BeforeInstallPromptEvent extends Event {
 })
 export class PwaInstallService {
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
+  private analyticsManager = inject(AnalyticsManagerService);
 
   public canInstall = signal<boolean>(false);
   public isStandalone = signal<boolean>(false);
@@ -122,7 +124,9 @@ export class PwaInstallService {
         }
         this.canInstall.set(false);
 
-        return choiceResult?.outcome === 'accepted' ? 'accepted' : 'dismissed';
+        const outcome = choiceResult?.outcome === 'accepted' ? 'accepted' : 'dismissed';
+        this.analyticsManager.Log(AnalyticsEventType.PwaInstallPromptOutcome, { outcome });
+        return outcome;
       } catch (error) {
         attempt++;
         if (attempt > maxRetries) {

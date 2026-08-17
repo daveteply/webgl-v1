@@ -53,6 +53,21 @@ describe('AnalyticsManagerService', () => {
 
     service.Log(AnalyticsEventType.IntroDialogRestoreCTA);
     expect(mixpanel.track).toHaveBeenCalledWith('IntroDialogRestoreCTA', undefined);
+
+    service.Log(AnalyticsEventType.LevelStarted, { level: 1 });
+    expect(mixpanel.track).toHaveBeenCalledWith('LevelStarted', { level: 1 });
+
+    service.Log(AnalyticsEventType.LevelCompleted, { level: 1, score: 500 });
+    expect(mixpanel.track).toHaveBeenCalledWith('LevelCompleted', { level: 1, score: 500 });
+
+    service.Log(AnalyticsEventType.GameOver, { level: 3, score: 1200 });
+    expect(mixpanel.track).toHaveBeenCalledWith('GameOver', { level: 3, score: 1200 });
+
+    service.Log(AnalyticsEventType.AboutDialogViewed, { colorScheme: 'Colors' });
+    expect(mixpanel.track).toHaveBeenCalledWith('AboutDialogViewed', { colorScheme: 'Colors' });
+
+    service.Log(AnalyticsEventType.SettingsHapticsChanged, { enabled: true });
+    expect(mixpanel.track).toHaveBeenCalledWith('SettingsHapticsChanged', { enabled: true });
   });
 
   it('should queue actions until Mixpanel is loaded', async () => {

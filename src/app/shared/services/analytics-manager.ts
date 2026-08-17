@@ -4,12 +4,49 @@ import type { Dict } from 'mixpanel-browser';
 export const MIXPANEL_TOKEN = '28b44f3bae1356f754ef458b4ae316c6';
 
 export enum AnalyticsEventType {
+  // Share
   ShareCTA = 1000,
+
+  // Game Menu
   GameMenu = 2000,
   GameMenuAboutCTA = 2001,
   GameMenuSaveCTA = 2002,
+  GameMenuSettingsCTA = 2003,
+  GameMenuInstallAppCTA = 2004,
+
+  // Level Complete Dialog
   LevelDialogNextCTA = 3000,
+
+  // Intro Dialog
   IntroDialogRestoreCTA = 4000,
+  IntroDialogNewGameCTA = 4001,
+  IntroDialogConfirmNewGameCTA = 4002,
+  IntroDialogCancelNewGameCTA = 4003,
+
+  // Game Over Dialog
+  GameOverDialogViewed = 5000,
+  GameOverRestartLevelCTA = 5001,
+  GameOverStartOverCTA = 5002,
+  GameOverConfirmStartOverCTA = 5003,
+  GameOverCancelStartOverCTA = 5004,
+
+  // About Dialog
+  AboutDialogViewed = 6000,
+
+  // Game Lifecycle
+  LevelStarted = 7000,
+  LevelCompleted = 7001,
+  GameOver = 7002,
+
+  // Settings
+  SettingsHapticsChanged = 8000,
+  SettingsGameVolumeChanged = 8001,
+  SettingsMusicVolumeChanged = 8002,
+  SettingsClearHighScores = 8003,
+  SettingsFactoryReset = 8004,
+
+  // PWA
+  PwaInstallPromptOutcome = 9000,
 }
 
 type MixpanelInstance = typeof import('mixpanel-browser').default;

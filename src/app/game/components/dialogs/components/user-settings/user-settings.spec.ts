@@ -5,11 +5,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
 import { AudioType } from '../../../../../shared/services/audio/audio-data';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 
 describe('UserSettings', () => {
   let component: UserSettings;
   let fixture: ComponentFixture<UserSettings>;
   let hapticsManager: HapticsManagerService;
+  let analyticsManager: AnalyticsManagerService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,6 +24,9 @@ describe('UserSettings', () => {
       ],
     }).compileComponents();
 
+    analyticsManager = TestBed.inject(AnalyticsManagerService);
+    vi.spyOn(analyticsManager, 'Log');
+
     fixture = TestBed.createComponent(UserSettings);
     component = fixture.componentInstance;
     hapticsManager = TestBed.inject(HapticsManagerService);
@@ -32,10 +37,11 @@ describe('UserSettings', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle haptics setting via hapticsManager', () => {
+  it('should toggle haptics setting via hapticsManager and log SettingsHapticsChanged', () => {
     const hapticsSpy = vi.spyOn(hapticsManager, 'HapticsEnabled', 'set');
     component.onHapticsChange(false);
     expect(hapticsSpy).toHaveBeenCalledWith(false);
+    expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsHapticsChanged, { enabled: false });
   });
 
   it('should render disabled toggle and notice when haptic feedback is not available', () => {
@@ -64,7 +70,7 @@ describe('UserSettings', () => {
     expect(playAudioSpy).not.toHaveBeenCalled();
   });
 
-  it('should play AudioType.LEVEL_STAT when game volume selection changes', () => {
+  it('should play AudioType.LEVEL_STAT and log SettingsGameVolumeChanged when game volume changes', () => {
     const audioManager = TestBed.inject(AudioManagerService);
     const setGameVolumeSpy = vi.spyOn(audioManager, 'SetGameVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
@@ -75,6 +81,7 @@ describe('UserSettings', () => {
     expect(component.gameVolume()).toBe(80);
     expect(setGameVolumeSpy).toHaveBeenCalledWith(0.8);
     expect(playAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_STAT);
+    expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsGameVolumeChanged, { volume: 80 });
   });
 
   it('should update music volume on input without playing audio', () => {
@@ -90,7 +97,7 @@ describe('UserSettings', () => {
     expect(playAudioSpy).not.toHaveBeenCalled();
   });
 
-  it('should play AudioType.LEVEL_END_7 preview on music volume change', () => {
+  it('should play AudioType.LEVEL_END_7 preview and log SettingsMusicVolumeChanged on music volume change', () => {
     const audioManager = TestBed.inject(AudioManagerService);
     const setMusicVolumeSpy = vi.spyOn(audioManager, 'SetMusicVolume');
     const playAudioSpy = vi.spyOn(audioManager, 'PlayAudio');
@@ -103,5 +110,11 @@ describe('UserSettings', () => {
     expect(setMusicVolumeSpy).toHaveBeenCalledWith(0.6);
     expect(stopAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_END_7);
     expect(playAudioSpy).toHaveBeenCalledWith(AudioType.LEVEL_END_7, false, false, 2.0);
+    expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsMusicVolumeChanged, { volume: 60 });
+  });
+
+  it('should log SettingsClearHighScores on confirm clear high scores', () => {
+    component.onConfirmClearHighScores();
+    expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsClearHighScores);
   });
 });

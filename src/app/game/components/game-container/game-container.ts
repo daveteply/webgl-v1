@@ -15,6 +15,7 @@ import { HintsManagerService } from '../../services/hints-manager';
 import { PostProcessingManagerService } from '../../services/post-processing-manager';
 import { SaveGameService } from '../../services/save-game/save-game';
 import { ShareManagerService } from '../../services/share-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
 import { PRNG } from '../../../shared/utils/prng';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
@@ -62,6 +63,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private postProcessingManager = inject(PostProcessingManagerService);
   private saveGame = inject(SaveGameService);
   private shareManager = inject(ShareManagerService);
+  private analyticsManager = inject(AnalyticsManagerService);
   public scoringManager = inject(ScoringManagerService);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
@@ -101,6 +103,12 @@ export class GameContainer implements OnInit, AfterViewInit {
       // game state
       this._isGameOver = gameOver;
       if (!this._isGameOver) {
+        this.analyticsManager.Log(AnalyticsEventType.LevelCompleted, {
+          level: this.scoringManager.Level,
+          score: this.scoringManager.Score,
+          movesRemaining: this.scoringManager.PlayerMoves,
+        });
+
         this.scoringManager.IncLevel();
         this._activeLevelSeed = PRNG.generateSeed();
         this._activeRng = new PRNG(this._activeLevelSeed);
@@ -114,6 +122,10 @@ export class GameContainer implements OnInit, AfterViewInit {
           .pipe(take(1))
           .subscribe();
       } else {
+        this.analyticsManager.Log(AnalyticsEventType.GameOver, {
+          level: this.scoringManager.Level,
+          score: this.scoringManager.Score,
+        });
         this.highScoreManager.UpdateHighScores(this.scoringManager.Score);
       }
 
@@ -132,16 +144,17 @@ export class GameContainer implements OnInit, AfterViewInit {
       if (this._isGameOver) {
         // game over
         this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
-        this._dialogGameOverRef.afterClosed().subscribe((data: GameOverData) => {
+        this._dialogGameOverRef.afterClosed().subscribe((data?: GameOverData) => {
           this.shareManager.UpdateInLevel(true);
-          if (data.startOver) {
+          const startOver = data?.startOver ?? true;
+          if (startOver) {
             this.saveGame.ClearSaveState();
             this.scoringManager.RestartGame();
             this._activeLevelSeed = PRNG.generateSeed();
             this._activeRng = new PRNG(this._activeLevelSeed);
           } else {
             // reset stats will take care of move count based on level
-            this.scoringManager.ResetStats(!data.startOver);
+            this.scoringManager.ResetStats(!startOver);
             this.saveGame
               .SaveState(
                 this.scoringManager.Level,
@@ -152,6 +165,11 @@ export class GameContainer implements OnInit, AfterViewInit {
               .pipe(take(1))
               .subscribe();
           }
+          this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+            level: this.scoringManager.Level,
+            score: this.scoringManager.Score,
+            isRestart: true,
+          });
           this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
         });
       } else {
@@ -338,9 +356,17 @@ export class GameContainer implements OnInit, AfterViewInit {
     if (this._showWelcome) {
       this._showWelcome = false;
       this.showScoreProgress.set(true);
+      this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+        level: this.scoringManager.Level,
+        score: this.scoringManager.Score,
+      });
       this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     } else {
       this.scoringManager.NextLevel();
+      this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+        level: this.scoringManager.Level,
+        score: this.scoringManager.Score,
+      });
       this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
     }
   }
