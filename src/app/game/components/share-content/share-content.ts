@@ -6,6 +6,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { ShareManagerService } from '../../services/share-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
 
 @Component({
   selector: 'wgl-share-content',
@@ -15,6 +16,7 @@ import { ShareManagerService } from '../../services/share-manager';
 })
 export class ShareContent implements OnInit {
   public shareManager = inject(ShareManagerService);
+  private analyticsManager = inject(AnalyticsManagerService);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 
@@ -38,6 +40,7 @@ export class ShareContent implements OnInit {
   }
 
   Share(): void {
+    this.analyticsManager.Log(AnalyticsEventType.ShareCTA);
     this.Loading.set(true);
     this.shareManager.RequestScreenShot(this.document);
   }

@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AppVisibilityService } from './shared/services/app-visibility';
 import { NotifyService } from './shared/services/notify';
+import { AnalyticsManagerService } from './shared/services/analytics-manager';
 import { About } from './shared/components/about/about';
 
 @Component({
@@ -20,6 +21,7 @@ export class App {
   private dialog = inject(MatDialog);
   private notify = inject(NotifyService);
   private appVisibility = inject(AppVisibilityService);
+  private analyticsManager = inject(AnalyticsManagerService);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 
