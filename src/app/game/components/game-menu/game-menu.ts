@@ -34,6 +34,7 @@ export class GameMenu {
   }
 
   public SettingsClick(): void {
+    this.analyticsManager.Log(AnalyticsEventType.GameMenuSettingsCTA);
     this.dialog.open(UserSettings, {
       minWidth: '20em',
       panelClass: ['wgl-pane-bounce'],
@@ -41,6 +42,11 @@ export class GameMenu {
   }
 
   public async InstallAppClick(): Promise<void> {
+    this.analyticsManager.Log(AnalyticsEventType.GameMenuInstallAppCTA, {
+      canInstall: this.pwaInstallService.canInstall(),
+      isStandalone: this.pwaInstallService.isStandalone(),
+    });
+
     if (this.pwaInstallService.canInstall()) {
       const result = await this.pwaInstallService.promptInstall();
       if (result === 'accepted') {

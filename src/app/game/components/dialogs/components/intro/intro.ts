@@ -79,11 +79,17 @@ export class Intro implements OnInit, OnDestroy {
   }
 
   ContinueGame(): void {
-    this.analyticsManager.Log(AnalyticsEventType.IntroDialogRestoreCTA);
+    this.analyticsManager.Log(AnalyticsEventType.IntroDialogRestoreCTA, {
+      savedLevel: this.savedLevel(),
+    });
     this.dialogRef.close({ isContinue: true });
   }
 
   onNewGameClick(): void {
+    this.analyticsManager.Log(AnalyticsEventType.IntroDialogNewGameCTA, {
+      hasRestoreData: this.hasRestoreData(),
+      savedLevel: this.savedLevel(),
+    });
     if (this.hasRestoreData()) {
       this.confirmNewGame.set(true);
     } else {
@@ -92,11 +98,17 @@ export class Intro implements OnInit, OnDestroy {
   }
 
   onConfirmNewGame(): void {
+    this.analyticsManager.Log(AnalyticsEventType.IntroDialogConfirmNewGameCTA, {
+      previousSavedLevel: this.savedLevel(),
+    });
     this.saveGame.ClearSaveState();
     this.dialogRef.close({ isContinue: false });
   }
 
   onCancelNewGame(): void {
+    this.analyticsManager.Log(AnalyticsEventType.IntroDialogCancelNewGameCTA, {
+      savedLevel: this.savedLevel(),
+    });
     this.confirmNewGame.set(false);
   }
 }

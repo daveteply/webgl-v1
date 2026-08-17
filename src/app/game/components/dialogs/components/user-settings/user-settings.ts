@@ -11,6 +11,7 @@ import { AudioManagerService } from '../../../../../shared/services/audio/audio-
 import { HighScoreManagerService } from '../../../../../shared/services/high-score-manager';
 import { StorageService } from '../../../../../shared/services/storage/storage.service';
 import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
 
 @Component({
   selector: 'wgl-user-settings',
@@ -31,6 +32,7 @@ export class UserSettings implements OnDestroy {
   private highScoreManager = inject(HighScoreManagerService);
   private storageService = inject(StorageService);
   private hapticsManager = inject(HapticsManagerService);
+  private analyticsManager = inject(AnalyticsManagerService);
   private dialogRef = inject(MatDialogRef<UserSettings>);
 
   gameVolume = signal<number>(Math.round(this.audioManager.GetGameVolume() * 100));
@@ -49,6 +51,7 @@ export class UserSettings implements OnDestroy {
 
   onHapticsChange(enabled: boolean): void {
     this.hapticsManager.HapticsEnabled = enabled;
+    this.analyticsManager.Log(AnalyticsEventType.SettingsHapticsChanged, { enabled });
   }
 
   onGameVolumeInput(event: Event): void {
@@ -64,6 +67,7 @@ export class UserSettings implements OnDestroy {
     this.gameVolume.set(val);
     this.audioManager.SetGameVolume(val / 100);
     this.audioManager.PlayAudio(AudioType.LEVEL_STAT);
+    this.analyticsManager.Log(AnalyticsEventType.SettingsGameVolumeChanged, { volume: val });
   }
 
   onMusicVolumeInput(event: Event): void {
@@ -88,6 +92,8 @@ export class UserSettings implements OnDestroy {
     this.musicPreviewTimeout = setTimeout(() => {
       this.audioManager.StopAudio(AudioType.LEVEL_END_7);
     }, 2500);
+
+    this.analyticsManager.Log(AnalyticsEventType.SettingsMusicVolumeChanged, { volume: val });
   }
 
   onPromptClearHighScores(): void {
@@ -98,6 +104,7 @@ export class UserSettings implements OnDestroy {
     this.highScoreManager.ClearHighScores();
     this.scoresCleared.set(true);
     this.confirmClear.set(false);
+    this.analyticsManager.Log(AnalyticsEventType.SettingsClearHighScores);
   }
 
   onCancelClearHighScores(): void {
@@ -114,6 +121,7 @@ export class UserSettings implements OnDestroy {
     this.confirmClear.set(false);
     this.confirmFactoryReset.set(false);
     this.factoryResetCompleted.set(true);
+    this.analyticsManager.Log(AnalyticsEventType.SettingsFactoryReset);
 
     setTimeout(() => {
       window.location.reload();
