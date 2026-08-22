@@ -18,7 +18,7 @@ import { mainTweenGroup } from '../../services/tween-group';
 import { PowerMoveType } from '../power-move-type';
 import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
-import { LevelGeometryType } from '../../level-geometry-type';
+import { LevelGeometryType } from '../level-geometry-type';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';
 import { LevelAnimationStyle } from '../level-animation-style';
 

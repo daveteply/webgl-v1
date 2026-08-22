@@ -16,12 +16,12 @@ import {
   Vector2,
 } from 'three';
 import { CANVAS_TEXTURE_SCALE } from '../../game-constants';
-import { LevelMaterialType } from '../../level-material-type';
+import { LevelMaterialType } from '../../models/level-material-type';
 import { PowerMoveType } from '../../models/power-move-type';
 import { EmojiData } from './emoji-data';
 import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
 import arrayShuffle from '../../../shared/utils/array-shuffle';
-import { LevelGeometryType } from '../../level-geometry-type';
+import { LevelGeometryType } from '../../models/level-geometry-type';
 import { GameTexture } from './game-texture';
 import { PRNG } from '../../../shared/utils/prng';
 

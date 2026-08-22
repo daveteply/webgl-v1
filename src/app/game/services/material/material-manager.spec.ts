@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Texture } from 'three';
 
 import { MaterialManager } from './material-manager';
-import { LevelMaterialType } from '../../level-material-type';
+import { LevelMaterialType } from '../../models/level-material-type';
 import { GameTexture } from '../texture/game-texture';
 import { PRNG } from '../../../shared/utils/prng';
 

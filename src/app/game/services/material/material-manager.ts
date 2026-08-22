@@ -7,7 +7,7 @@ import { StoreService } from '../../../app-store/services/store.service';
 import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { PieceMaterials, PieceSideMaterial, WheelMaterial, GameMaterials } from './material-models';
-import { LevelMaterialType } from '../../level-material-type';
+import { LevelMaterialType } from '../../models/level-material-type';
 import { GameTexture } from '../texture/game-texture';
 import { PowerMoveType } from '../../models/power-move-type';
 import { COLOR_SCHEMES, ColorSchemeData } from './color-schemes';

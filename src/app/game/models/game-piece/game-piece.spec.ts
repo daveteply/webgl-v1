@@ -1,6 +1,6 @@
 import { GamePiece } from './game-piece';
 import { PowerMoveType } from '../power-move-type';
-import { LevelGeometryType } from '../../level-geometry-type';
+import { LevelGeometryType } from '../../models/level-geometry-type';
 import { MeshBasicMaterial, MeshPhongMaterial } from 'three';
 import { PieceSideMaterial } from '../../services/material/material-models';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';

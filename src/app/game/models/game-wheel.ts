@@ -2,7 +2,7 @@ import { Easing, Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../services/tween-group';
 import { MathUtils, Object3D } from 'three';
 import { GRID_INC, TWO_PI } from '../game-constants';
-import { LevelGeometryType } from '../level-geometry-type';
+import { LevelGeometryType } from './level-geometry-type';
 import { WheelMaterial } from '../services/material/material-models';
 import { GamePiece } from './game-piece/game-piece';
 import { PiecePoints } from './piece-points';

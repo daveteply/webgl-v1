@@ -11,7 +11,7 @@ import {
   POWER_MOVE_USE_SCORE_MULTIPLIER,
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
-import { LevelMaterialType } from '../level-material-type';
+import { LevelMaterialType } from '../models/level-material-type';
 import { LevelStats } from '../models/level-stats';
 import { PowerMoveType, PowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';

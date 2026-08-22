@@ -20,6 +20,7 @@ export enum AudioType {
   GAME_OVER,
   GRAVITY_EFFECT,
   PERFECT_MATCH,
+  HORIZONTAL_TURN,
   LEVEL_END_1,
   LEVEL_END_2,
   LEVEL_END_3,
@@ -149,6 +150,10 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
   {
     url: 'assets/audio/perfect-match.mp3',
     audioType: AudioType.PERFECT_MATCH,
+  },
+  {
+    url: 'assets/horizontal-turn.mp3',
+    audioType: AudioType.HORIZONTAL_TURN,
   },
 ];
 

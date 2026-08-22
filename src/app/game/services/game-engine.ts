@@ -17,8 +17,8 @@ import {
   POWER_MOVE_START_MIX,
   POWER_MOVE_START_VERTICAL,
 } from '../game-constants';
-import { LevelGeometryType } from '../level-geometry-type';
-import { LevelMaterialType } from '../level-material-type';
+import { LevelGeometryType } from '../models/level-geometry-type';
+import { LevelMaterialType } from '../models/level-material-type';
 import { GravityType } from '../models/gravity-type';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
