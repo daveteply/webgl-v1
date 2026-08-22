@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { SaveGameService } from './save-game';
 import { StorageService } from '../../../shared/services/storage/storage.service';
+import { LevelOrientationType } from '../../models/level-orientation-type';
 
 class MockStorageService {
   private store: Record<string, string> = {};
@@ -64,14 +65,15 @@ describe('SaveGameService', () => {
     expect(state!.seed).toBeGreaterThan(0);
   });
 
-  it('should retrieve save state via GetSaveState', async () => {
-    await firstValueFrom(service.SaveState(5, 3400, 12, 112233));
+  it('should retrieve save state via GetSaveState including orientation', async () => {
+    await firstValueFrom(service.SaveState(5, 3400, 12, 112233, LevelOrientationType.HorizontalRight));
 
     const state = service.GetSaveState();
     expect(state?.level).toBe(5);
     expect(state?.score).toBe(3400);
     expect(state?.moves).toBe(12);
     expect(state?.seed).toBe(112233);
+    expect(state?.orientation).toBe(LevelOrientationType.HorizontalRight);
   });
 
   it('should clear save state and update HasSaveState', async () => {

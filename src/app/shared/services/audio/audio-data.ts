@@ -152,7 +152,7 @@ export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
     audioType: AudioType.PERFECT_MATCH,
   },
   {
-    url: 'assets/horizontal-turn.mp3',
+    url: 'assets/audio/horizontal-turn.mp3',
     audioType: AudioType.HORIZONTAL_TURN,
   },
 ];

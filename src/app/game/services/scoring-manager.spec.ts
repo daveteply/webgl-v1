@@ -2,6 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { ScoringManagerService } from './scoring-manager';
 import { TextManagerService } from '../text/services/text-manager';
 import { PowerMoveType } from '../models/power-move-type';
+import { GameEngineService } from './game-engine';
+import { LevelMaterialType } from '../models/level-material-type';
+import { LevelGeometryType } from '../models/level-geometry-type';
+import { GravityType } from '../models/gravity-type';
+import { LevelOrientationType } from '../models/level-orientation-type';
 
 class MockTextManagerService {
   ShowText = () => undefined;
@@ -12,7 +17,11 @@ describe('ScoringManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ScoringManagerService, { provide: TextManagerService, useClass: MockTextManagerService }],
+      providers: [
+        ScoringManagerService,
+        GameEngineService,
+        { provide: TextManagerService, useClass: MockTextManagerService },
+      ],
     });
     service = TestBed.inject(ScoringManagerService);
   });
@@ -103,6 +112,41 @@ describe('ScoringManagerService', () => {
     expect(service.PlayerMoves).toBe(initialMoves);
     expect(service.LevelStats.moveCountEarned).toBe(0);
     expect(capturedMessage).toEqual(['Spin right!', '+50 Points']);
+  });
+
+  it('should display orientation-aware power move label when level is horizontal', () => {
+    const textManager = TestBed.inject(TextManagerService);
+    const gameEngine = TestBed.inject(GameEngineService);
+    let capturedMessage: string[] = [];
+    textManager.ShowText = (msg: string[]) => {
+      capturedMessage = msg;
+    };
+
+    gameEngine.RestoreLevelTypes(
+      LevelMaterialType.Color,
+      LevelGeometryType.Cube,
+      GravityType.None,
+      LevelOrientationType.HorizontalRight,
+    );
+
+    service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
+    expect(capturedMessage).toEqual(['Spin down!', '+50 Points']);
+
+    service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
+    expect(capturedMessage).toEqual(['Roll right!', '+50 Points']);
+
+    gameEngine.RestoreLevelTypes(
+      LevelMaterialType.Color,
+      LevelGeometryType.Cube,
+      GravityType.None,
+      LevelOrientationType.HorizontalLeft,
+    );
+
+    service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
+    expect(capturedMessage).toEqual(['Spin up!', '+50 Points']);
+
+    service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
+    expect(capturedMessage).toEqual(['Roll left!', '+50 Points']);
   });
 
   it('should calculate bonus and award +1 move for multi-power move with 1 additional power move', () => {

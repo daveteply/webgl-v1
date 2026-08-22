@@ -1,13 +1,19 @@
 import { Injectable, isDevMode, inject } from '@angular/core';
-import { take } from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three';
 
-import { MINIMUM_MATCH_COUNT, MOVES_REMAINING_COUNT_PANIC, ROTATIONAL_CONSTANT } from '../game-constants';
+import {
+  CAMERA_PAN_MAX_OFFSET,
+  MINIMUM_MATCH_COUNT,
+  MOVES_REMAINING_COUNT_PANIC,
+  ROTATIONAL_CONSTANT,
+} from '../game-constants';
 
 import { GameWheel } from '../models/game-wheel';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { PowerMoveType } from '../models/power-move-type';
 import { GravityType } from '../models/gravity-type';
+import { LevelOrientationType } from '../models/level-orientation-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 
 import { GameEngineService } from './game-engine';
@@ -42,6 +48,13 @@ export class InteractionManagerService {
   private _activeWheel: GameWheel | undefined;
   private _matchingPieces: GamePiece[] = [];
 
+  // Panning State for Horizontal Levels
+  private _panOffset = 0; // range [-1.0, 1.0]
+  get PanOffset(): number {
+    return this._panOffset;
+  }
+  public PanChange: Subject<number> = new Subject<number>();
+
   // Pointer Interaction State (Native replacement for Hammer.js)
   private _locked = false;
   private _isPointerDown = false;
@@ -49,6 +62,7 @@ export class InteractionManagerService {
   private _startX = 0;
   private _startY = 0;
   private _lastX = 0;
+  private _lastY = 0;
 
   private _element: HTMLElement | undefined;
 
@@ -56,9 +70,27 @@ export class InteractionManagerService {
     this._perspectiveCamera = camera;
   }
 
+  public SetPan(offset: number): void {
+    this._panOffset = Math.max(-1, Math.min(1, offset));
+    this.updateCameraPan();
+    this.PanChange.next(this._panOffset);
+  }
+
+  private updateCameraPan(): void {
+    if (!this._perspectiveCamera || !this.gameEngine.IsHorizontal) {
+      return;
+    }
+    const sign = this.gameEngine.LevelOrientation === LevelOrientationType.HorizontalRight ? -1 : 1;
+    this._perspectiveCamera.position.y = this._panOffset * CAMERA_PAN_MAX_OFFSET * sign;
+  }
+
   constructor() {
     this.effectsManager.LevelChangeAnimation.subscribe((start) => {
       this.LockBoard(start);
+      if (start) {
+        this._panOffset = 0;
+        this.PanChange.next(0);
+      }
     });
 
     this.effectsManager.SelectionAnimationComplete.subscribe((selectionMode) => {
@@ -172,6 +204,7 @@ export class InteractionManagerService {
     this._startX = event.clientX;
     this._startY = event.clientY;
     this._lastX = event.clientX;
+    this._lastY = event.clientY;
 
     const gamePiece = this.getPickedGamePiece(event.clientX, event.clientY);
     if (gamePiece && !gamePiece.IsRemoved) {
@@ -206,12 +239,26 @@ export class InteractionManagerService {
       this._isDragging = true;
     }
 
-    if (this._isDragging && this._activeWheel) {
+    if (this._isDragging) {
       const deltaX = event.clientX - this._lastX;
-      this.deviceCordRotation(deltaX);
+      const deltaY = event.clientY - this._lastY;
+
+      if (this.gameEngine.IsHorizontal) {
+        if (this._activeWheel) {
+          this.deviceCordRotation(deltaY);
+        } else if (Math.abs(deltaX) > 0) {
+          const panStep = (deltaX / this._canvasRect.width) * -2.0;
+          this.SetPan(this._panOffset + panStep);
+        }
+      } else {
+        if (this._activeWheel) {
+          this.deviceCordRotation(deltaX);
+        }
+      }
     }
 
     this._lastX = event.clientX;
+    this._lastY = event.clientY;
   };
 
   private onPointerUp = (event: PointerEvent): void => {
@@ -369,9 +416,18 @@ export class InteractionManagerService {
     });
   }
 
-  private deviceCordRotation(deltaX: number): void {
+  private deviceCordRotation(delta: number): void {
     if (this._activeWheel) {
-      this._activeWheel.UpdateTheta(MathUtils.degToRad(deltaX) * (ROTATIONAL_CONSTANT / this._canvasRect.width) * -1);
+      if (this.gameEngine.IsHorizontal) {
+        const sign = this.gameEngine.LevelOrientation === LevelOrientationType.HorizontalRight ? 1 : -1;
+        this._activeWheel.UpdateTheta(
+          MathUtils.degToRad(delta) * (ROTATIONAL_CONSTANT / (this._canvasRect?.height || 300)) * sign,
+        );
+      } else {
+        this._activeWheel.UpdateTheta(
+          MathUtils.degToRad(delta) * (ROTATIONAL_CONSTANT / (this._canvasRect?.width || 300)) * -1,
+        );
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 import { Injectable, inject, isDevMode } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { Tween } from '@tweenjs/tween.js';
+import { Easing, Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from './tween-group';
 import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 
@@ -13,9 +13,11 @@ import { PieceMaterials } from './material/material-models';
 import { GameEngineService } from './game-engine';
 
 import {
+  CAMERA_HORIZONTAL_OFFSET,
   DECIMAL_COMPARISON_TOLERANCE,
   GRID_VERTICAL_OFFSET,
   HALF_PI,
+  HORIZONTAL_TURN_DURATION,
   MINIMUM_MATCH_COUNT,
   WHEEL_START_POSITION,
 } from '../game-constants';
@@ -25,6 +27,7 @@ import { GravityType } from '../models/gravity-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
 import { LEVEL_ANIMATION_STYLES, LevelAnimationStyle } from '../models/level-animation-style';
+import { LevelOrientationType } from '../models/level-orientation-type';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +42,7 @@ export class EffectsManagerService {
   private _selectionTweens: Tween<Record<string, number>>[] = [];
   private _levelChangeCameraTween1?: Tween<Record<string, number>>;
   private _levelChangeCameraTween2?: Tween<Record<string, number>>;
+  private _horizontalTurnTween?: Tween<Record<string, number>>;
 
   private _selectedPieces: Object3D[] = [];
   get SelectedPieces(): Object3D[] {
@@ -58,6 +62,7 @@ export class EffectsManagerService {
     light: PointLight,
     start: boolean,
     customStyle?: LevelAnimationStyle,
+    customOrientation?: LevelOrientationType,
   ): void {
     // clear selected for highlighting
     if (start) {
@@ -70,21 +75,38 @@ export class EffectsManagerService {
     // stop currently running camera tweens
     this._levelChangeCameraTween1?.stop();
     this._levelChangeCameraTween2?.stop();
+    this._horizontalTurnTween?.stop();
 
     // Select random level transition animation style if not explicitly passed
     const activeStyle = customStyle ?? LEVEL_ANIMATION_STYLES[MathUtils.randInt(0, LEVEL_ANIMATION_STYLES.length - 1)];
+    const activeOrientation = customOrientation ?? this.gameEngine.LevelOrientation ?? LevelOrientationType.Vertical;
 
     if (isDevMode()) {
       console.info('Level Animation Style: ', LevelAnimationStyle[activeStyle]);
+      console.info('Active Orientation: ', LevelOrientationType[activeOrientation]);
     }
 
     // animate camera
-    const delta1 = { z: 5.0, rotX: 0, l: 400 };
-    const target1 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
+    const startRotZ = camera?.rotation?.z || 0;
+    const startPosX = camera?.position?.x || 0;
+    const startPosY = camera?.position?.y || 0;
+
+    const delta1 = { z: 5.0, rotX: 0, rotZ: startRotZ, posX: startPosX, posY: startPosY, l: 400 };
+    const target1 = start
+      ? { z: 0, rotX: HALF_PI, rotZ: 0, posX: 0, posY: 0, l: 2000 }
+      : { z: 0, rotX: -HALF_PI, rotZ: 0, posX: 0, posY: 0, l: 2000 };
+
     this._levelChangeCameraTween1 = new Tween(delta1, mainTweenGroup).to(target1, start ? 750 : 3000).onUpdate(() => {
-      camera.rotation.x = delta1.rotX;
-      camera.position.z = delta1.z;
-      light.intensity = delta1.l;
+      if (camera) {
+        camera.rotation.x = delta1.rotX;
+        camera.rotation.z = delta1.rotZ;
+        camera.position.x = delta1.posX;
+        camera.position.y = delta1.posY;
+        camera.position.z = delta1.z;
+      }
+      if (light) {
+        light.intensity = delta1.l;
+      }
     });
 
     const delta2 = start ? { z: 0, rotX: HALF_PI, l: 2000 } : { z: 0, rotX: -HALF_PI, l: 2000 };
@@ -93,14 +115,53 @@ export class EffectsManagerService {
       .to(target2, 2000)
       .delay(1250)
       .onUpdate(() => {
-        camera.rotation.x = delta2.rotX;
-        camera.position.z = delta2.z;
-        light.intensity = delta2.l;
+        if (camera) {
+          camera.rotation.x = delta2.rotX;
+          camera.position.z = delta2.z;
+        }
+        if (light) {
+          light.intensity = delta2.l;
+        }
       })
       .onComplete(() => {
-        // unlock board (interact manager)
-        this.LevelChangeAnimation.next(false);
-        this.scoringManager.ResetTimer();
+        if (start && activeOrientation !== LevelOrientationType.Vertical) {
+          // Animate horizontal turn (90 deg left or right) with audio
+          const targetRotZ = activeOrientation === LevelOrientationType.HorizontalRight ? -HALF_PI : HALF_PI;
+          const targetPosX =
+            CAMERA_HORIZONTAL_OFFSET * (activeOrientation === LevelOrientationType.HorizontalRight ? 1 : -1);
+
+          this.audioManager.PlayAudio(AudioType.HORIZONTAL_TURN);
+
+          const deltaTurn = { rotZ: 0, posX: 0 };
+          this._horizontalTurnTween = new Tween(deltaTurn, mainTweenGroup)
+            .to({ rotZ: targetRotZ, posX: targetPosX }, HORIZONTAL_TURN_DURATION)
+            .easing(Easing.Cubic.InOut)
+            .onUpdate(() => {
+              if (camera) {
+                camera.rotation.z = deltaTurn.rotZ;
+                camera.position.x = deltaTurn.posX;
+              }
+            })
+            .onComplete(() => {
+              if (camera) {
+                camera.rotation.z = targetRotZ;
+                camera.position.x = targetPosX;
+              }
+              this.LevelChangeAnimation.next(false);
+              this.scoringManager.ResetTimer();
+            });
+
+          this._horizontalTurnTween.start();
+        } else {
+          if (camera) {
+            camera.rotation.z = 0;
+            camera.position.x = 0;
+            camera.position.y = 0;
+          }
+          // unlock board (interact manager)
+          this.LevelChangeAnimation.next(false);
+          this.scoringManager.ResetTimer();
+        }
       });
 
     // vertical movement and horizontal rotations tweens

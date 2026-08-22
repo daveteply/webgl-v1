@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { Group, LoadingManager, Scene } from 'three';
+import { Group, LoadingManager, PerspectiveCamera, Scene } from 'three';
 import { SplashText } from './splash-text';
 import { TextSplashEventType } from './text-splash-event-type';
 
@@ -15,6 +15,7 @@ export class TextManagerService {
   private _changaRegular!: Font;
 
   private _scene!: Scene;
+  private _camera?: PerspectiveCamera;
 
   private _queue: SplashText[] = [];
   private _textGroup!: Group;
@@ -24,6 +25,17 @@ export class TextManagerService {
   constructor() {
     this._loadingManager = new LoadingManager();
     this._fontLoader = new FontLoader(this._loadingManager);
+  }
+
+  public SetCamera(camera: PerspectiveCamera): void {
+    this._camera = camera;
+    if (this._textGroup) {
+      if (this._textGroup.parent) {
+        this._textGroup.parent.remove(this._textGroup);
+      }
+      this._camera.add(this._textGroup);
+      this._textGroup.position.set(0, -2.0, -4.5);
+    }
   }
 
   public InitFonts(): void {
@@ -39,11 +51,14 @@ export class TextManagerService {
   public InitScene(scene: Scene): void {
     this._textGroup = new Group();
     this._textGroup.name = 'textGroup';
-    this._textGroup.position.y = -2.0;
-    this._textGroup.position.z = 0.5;
+    this._textGroup.position.set(0, -2.0, -4.5);
 
     this._scene = scene;
-    this._scene.add(this._textGroup);
+    if (this._camera) {
+      this._camera.add(this._textGroup);
+    } else {
+      this._scene.add(this._textGroup);
+    }
   }
 
   public ShowText(message: string[], color?: number, colorCycleFirstLine = false): void {
