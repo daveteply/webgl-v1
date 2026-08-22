@@ -133,7 +133,7 @@ describe('ScoringManagerService', () => {
     expect(capturedMessage).toEqual(['Spin down!', '+50 Points']);
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(capturedMessage).toEqual(['Roll right!', '+50 Points']);
+    expect(capturedMessage).toEqual(['Roll left!', '+50 Points']);
 
     gameEngine.RestoreLevelTypes(
       LevelMaterialType.Color,
@@ -146,7 +146,7 @@ describe('ScoringManagerService', () => {
     expect(capturedMessage).toEqual(['Spin up!', '+50 Points']);
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(capturedMessage).toEqual(['Roll left!', '+50 Points']);
+    expect(capturedMessage).toEqual(['Roll right!', '+50 Points']);
   });
 
   it('should calculate bonus and award +1 move for multi-power move with 1 additional power move', () => {

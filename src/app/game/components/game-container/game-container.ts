@@ -358,6 +358,7 @@ export class GameContainer implements OnInit, AfterViewInit {
       this.gameEngine.LevelMaterialType,
       this.gameEngine.LevelGeometryType,
       this._activeRng,
+      this.gameEngine.LevelOrientation,
     );
   }
 
