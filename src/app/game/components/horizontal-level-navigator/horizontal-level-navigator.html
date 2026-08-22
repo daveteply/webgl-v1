@@ -1,0 +1,48 @@
+<div class="navigator-container" [class.locked]="isBoardLocked()">
+  <button
+    type="button"
+    class="pan-nav-btn pan-left"
+    (click)="stepPan(-0.25)"
+    aria-label="Pan Left"
+    [disabled]="isBoardLocked() || panOffset() <= -0.99"
+  >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+    </svg>
+  </button>
+
+  <div
+    class="navigator-track"
+    #trackRef
+    (click)="onTrackClick($event)"
+    role="slider"
+    tabindex="0"
+    [attr.aria-valuenow]="ariaValueNow()"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-label="Horizontal Cylinder Viewport Position"
+    (keydown)="onKeyDown($event)"
+  >
+    <div class="track-segments">
+      @for (seg of segments; track seg) {
+        <span class="segment-tick"></span>
+      }
+    </div>
+
+    <div class="navigator-thumb" [style.left.%]="thumbPositionPercent()" (pointerdown)="onThumbPointerDown($event)">
+      <div class="thumb-grip"></div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    class="pan-nav-btn pan-right"
+    (click)="stepPan(0.25)"
+    aria-label="Pan Right"
+    [disabled]="isBoardLocked() || panOffset() >= 0.99"
+  >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+      <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+    </svg>
+  </button>
+</div>

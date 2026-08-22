@@ -78,6 +78,7 @@ export class ObjectManagerService {
 
   public SetCamera(camera: PerspectiveCamera): void {
     this._perspectiveCamera = camera;
+    this.textManager.SetCamera(camera);
   }
 
   public SetLight(light: PointLight): void {
@@ -157,6 +158,8 @@ export class ObjectManagerService {
       this._perspectiveCamera,
       this._pointLight,
       true,
+      undefined,
+      this.gameEngine.LevelOrientation,
     );
 
     // change audio
@@ -178,6 +181,8 @@ export class ObjectManagerService {
       this._perspectiveCamera,
       this._pointLight,
       false,
+      undefined,
+      this.gameEngine.LevelOrientation,
     );
   }
 

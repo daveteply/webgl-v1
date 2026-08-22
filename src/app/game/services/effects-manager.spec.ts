@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import { EffectsManagerService as EffectsManager } from './effects-manager';
 import { GameWheel } from '../models/game-wheel';
 import { LevelAnimationStyle } from '../models/level-animation-style';
+import { LevelOrientationType } from '../models/level-orientation-type';
 import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 
@@ -97,5 +98,28 @@ describe('EffectsManager', () => {
 
     service.AnimateRemove([]);
     expect(completed).toBe(true);
+  });
+
+  it('should lock board and initialize camera turn when LevelOrientation is HorizontalRight', () => {
+    let locked = false;
+    service.LevelChangeAnimation.subscribe((isLocked) => {
+      locked = isLocked;
+    });
+
+    const wheels = [new GameWheel(0, [])];
+    const camera = new PerspectiveCamera();
+    const light = new PointLight();
+
+    service.AnimateLevelChangeAnimation(
+      wheels,
+      [0],
+      camera,
+      light,
+      true,
+      undefined,
+      LevelOrientationType.HorizontalRight,
+    );
+
+    expect(locked).toBe(true);
   });
 });

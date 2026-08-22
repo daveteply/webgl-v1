@@ -2,8 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { GameEngineService } from './game-engine';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
-import { LevelGeometryType } from '../level-geometry-type';
-import { LevelMaterialType } from '../level-material-type';
+import { LevelGeometryType } from '../models/level-geometry-type';
+import { LevelMaterialType } from '../models/level-material-type';
+import { LevelOrientationType } from '../models/level-orientation-type';
 import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 import { PLAYABLE_TEXTURE_COUNT } from '../game-constants';
@@ -166,6 +167,44 @@ describe('GameEngineService', () => {
           ]).toContain(service.LevelMaterialType);
         }
       }
+    });
+
+    it('should initialize level 1 orientation to Vertical and IsHorizontal to false', () => {
+      service.InitLevelTypes(1);
+      expect(service.LevelOrientation).toBe(LevelOrientationType.Vertical);
+      expect(service.IsHorizontal).toBe(false);
+    });
+
+    it('should deterministically initialize level orientation given PRNG seed', () => {
+      const rng1 = new PRNG(98765);
+      service.InitLevelTypes(3, rng1);
+      const orient1 = service.LevelOrientation;
+
+      const rng2 = new PRNG(98765);
+      service.InitLevelTypes(3, rng2);
+      const orient2 = service.LevelOrientation;
+
+      expect(orient1).toBe(orient2);
+    });
+
+    it('should restore orientation in RestoreLevelTypes', () => {
+      service.RestoreLevelTypes(
+        LevelMaterialType.Color,
+        LevelGeometryType.Cube,
+        GravityType.None,
+        LevelOrientationType.HorizontalRight,
+      );
+      expect(service.LevelOrientation).toBe(LevelOrientationType.HorizontalRight);
+      expect(service.IsHorizontal).toBe(true);
+
+      service.RestoreLevelTypes(
+        LevelMaterialType.Color,
+        LevelGeometryType.Cube,
+        GravityType.None,
+        LevelOrientationType.HorizontalLeft,
+      );
+      expect(service.LevelOrientation).toBe(LevelOrientationType.HorizontalLeft);
+      expect(service.IsHorizontal).toBe(true);
     });
   });
 

@@ -31,6 +31,7 @@ import { MovesLeft } from '../moves-left/moves-left';
 import { ShareContentComponent } from '../share-content/share-content';
 import { GameMenu } from '../game-menu/game-menu';
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
+import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizontal-level-navigator';
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import {
@@ -42,7 +43,16 @@ import {
 @Component({
   selector: 'wgl-game-container',
   providers: [DecimalPipe],
-  imports: [CommonModule, MatProgressBarModule, TextZoom, MovesLeft, ShareContentComponent, GameMenu, ProgressBar],
+  imports: [
+    CommonModule,
+    MatProgressBarModule,
+    TextZoom,
+    MovesLeft,
+    ShareContentComponent,
+    GameMenu,
+    ProgressBar,
+    HorizontalLevelNavigator,
+  ],
   templateUrl: './game-container.html',
   styleUrl: './game-container.scss',
 })
@@ -57,7 +67,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private textureManager = inject(TextureManagerService);
   private textManager = inject(TextManagerService);
   private dialogNotify = inject(DialogNotifyService);
-  private gameEngine = inject(GameEngineService);
+  public gameEngine = inject(GameEngineService);
   private highScoreManager = inject(HighScoreManagerService);
   private hintsManager = inject(HintsManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
@@ -112,12 +122,14 @@ export class GameContainer implements OnInit, AfterViewInit {
         this.scoringManager.IncLevel();
         this._activeLevelSeed = PRNG.generateSeed();
         this._activeRng = new PRNG(this._activeLevelSeed);
+        this.initTextures();
         this.saveGame
           .SaveState(
             this.scoringManager.Level,
             this.scoringManager.Score,
             this.scoringManager.PlayerMoves,
             this._activeLevelSeed,
+            this.gameEngine.LevelOrientation,
           )
           .pipe(take(1))
           .subscribe();
@@ -127,13 +139,11 @@ export class GameContainer implements OnInit, AfterViewInit {
           score: this.scoringManager.Score,
         });
         this.highScoreManager.UpdateHighScores(this.scoringManager.Score);
+        this.initTextures();
       }
 
       // clear highlighted pieces
       this.postProcessingManager.UpdateOutlinePassObjects([]);
-
-      // initiate texture load for next level
-      this.initTextures();
     });
 
     // texture load started
@@ -152,15 +162,19 @@ export class GameContainer implements OnInit, AfterViewInit {
             this.scoringManager.RestartGame();
             this._activeLevelSeed = PRNG.generateSeed();
             this._activeRng = new PRNG(this._activeLevelSeed);
+            this.initTextures();
           } else {
             // reset stats will take care of move count based on level
             this.scoringManager.ResetStats(!startOver);
+            this._activeRng = new PRNG(this._activeLevelSeed);
+            this.initTextures();
             this.saveGame
               .SaveState(
                 this.scoringManager.Level,
                 this.scoringManager.Score,
                 this.scoringManager.PlayerMoves,
                 this._activeLevelSeed,
+                this.gameEngine.LevelOrientation,
               )
               .pipe(take(1))
               .subscribe();
@@ -248,6 +262,14 @@ export class GameContainer implements OnInit, AfterViewInit {
       this._activeLevelSeed = saved.seed;
       this._activeRng = new PRNG(this._activeLevelSeed);
       this.scoringManager.StartSavedGame(saved.level, saved.score, saved.moves);
+      if (saved.orientation) {
+        this.gameEngine.RestoreLevelTypes(
+          this.gameEngine.LevelMaterialType,
+          this.gameEngine.LevelGeometryType,
+          this.gameEngine.GravityType,
+          saved.orientation,
+        );
+      }
     } else {
       this._activeLevelSeed = PRNG.generateSeed();
       this._activeRng = new PRNG(this._activeLevelSeed);
@@ -317,7 +339,18 @@ export class GameContainer implements OnInit, AfterViewInit {
   }
 
   private initTextures(): void {
+    this._activeRng = new PRNG(this._activeLevelSeed);
     this.gameEngine.InitLevelTypes(this.scoringManager.Level, this._activeRng);
+
+    const saved = this.saveGame.GetSaveState();
+    if (saved && saved.level === this.scoringManager.Level && saved.orientation) {
+      this.gameEngine.RestoreLevelTypes(
+        this.gameEngine.LevelMaterialType,
+        this.gameEngine.LevelGeometryType,
+        this.gameEngine.GravityType,
+        saved.orientation,
+      );
+    }
 
     // select next level material type
     this.textureManager.InitLevelTextures(
@@ -325,6 +358,7 @@ export class GameContainer implements OnInit, AfterViewInit {
       this.gameEngine.LevelMaterialType,
       this.gameEngine.LevelGeometryType,
       this._activeRng,
+      this.gameEngine.LevelOrientation,
     );
   }
 

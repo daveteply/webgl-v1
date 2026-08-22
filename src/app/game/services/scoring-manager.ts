@@ -11,9 +11,9 @@ import {
   POWER_MOVE_USE_SCORE_MULTIPLIER,
   RAINBOW_COLOR_ARRAY,
 } from '../game-constants';
-import { LevelMaterialType } from '../level-material-type';
+import { LevelMaterialType } from '../models/level-material-type';
 import { LevelStats } from '../models/level-stats';
-import { PowerMoveType, PowerMoveLabel } from '../models/power-move-type';
+import { PowerMoveType, GetPowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';
 import { TextManagerService } from '../text/services/text-manager';
 
@@ -164,9 +164,8 @@ export class ScoringManagerService {
       const moveText = additionalMoveCount === 1 ? '+1 Move' : `+${additionalMoveCount} Moves`;
       this.textTextManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
     } else {
-      const info = PowerMoveLabel.find((p) => p.type === moveType);
-      const label = info?.label ? `${info.label}!` : 'Power Move!';
-      this.textTextManager.ShowText([label, `+${usePowerMoveBonus} Points`], this.textColor, true);
+      const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
+      this.textTextManager.ShowText([`${labelText}!`, `+${usePowerMoveBonus} Points`], this.textColor, true);
     }
   }
 

@@ -47,6 +47,10 @@ export const GRAVITY_START_MIX = 14;
 export const MATERIAL_START_COLOR = 3;
 export const MATERIAL_START_BUMP = 5;
 export const MATERIAL_START_EMOJI = 9;
+export const HORIZONTAL_LEVEL_START_LEVEL = 2;
+export const HORIZONTAL_TURN_DURATION = 3000;
+export const CAMERA_HORIZONTAL_OFFSET = -0.6;
+export const CAMERA_PAN_MAX_OFFSET = 2.4;
 
 export const DIFFICULTY_TIER_1 = 10;
 export const DIFFICULTY_TIER_2 = 20;

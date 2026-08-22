@@ -48,6 +48,7 @@ export class SceneManagerService implements OnDestroy {
     this._camera = new PerspectiveCamera(45, width / height, 1, 50);
     this.updateCameraProjection(width, height);
     this._camera.position.z = 5;
+    this._scene.add(this._camera);
     // connect object manager
     this.objectManager.SetCamera(this._camera);
     this.objectManager.SetLight(this._pointLight);

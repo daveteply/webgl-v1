@@ -11,6 +11,10 @@ import { PowerMoveType } from '../models/power-move-type';
 import { AudioType } from '../../shared/services/audio/audio-data';
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { GamePiece } from '../models/game-piece/game-piece';
+import { LevelOrientationType } from '../models/level-orientation-type';
+import { LevelMaterialType } from '../models/level-material-type';
+import { LevelGeometryType } from '../models/level-geometry-type';
+import { GravityType } from '../models/gravity-type';
 
 describe('InteractionManager', () => {
   let service: InteractionManager;
@@ -124,5 +128,61 @@ describe('InteractionManager', () => {
 
     expect(playSpy).toHaveBeenCalled();
     expect(animateLevelSpy).toHaveBeenCalled();
+  });
+
+  it('should clamp pan offset and emit PanChange when SetPan is called', () => {
+    let panEmitted: number | undefined;
+    service.PanChange.subscribe((val) => {
+      panEmitted = val;
+    });
+
+    service.SetPan(0.5);
+    expect(service.PanOffset).toBe(0.5);
+    expect(panEmitted).toBe(0.5);
+
+    service.SetPan(2.5);
+    expect(service.PanOffset).toBe(1.0);
+    expect(panEmitted).toBe(1.0);
+
+    service.SetPan(-3.0);
+    expect(service.PanOffset).toBe(-1.0);
+    expect(panEmitted).toBe(-1.0);
+  });
+
+  it('should reset pan offset to 0 when LevelChangeAnimation starts', () => {
+    const effectsManager = TestBed.inject(EffectsManager);
+    service.SetPan(0.75);
+    expect(service.PanOffset).toBe(0.75);
+
+    effectsManager.LevelChangeAnimation.next(true);
+    expect(service.PanOffset).toBe(0);
+  });
+
+  it('should update camera position Y when SetPan is called on a horizontal level', () => {
+    const gameEngine = TestBed.inject(GameEngineService);
+    const camera = new PerspectiveCamera();
+    service.SetCamera(camera);
+
+    gameEngine.RestoreLevelTypes(
+      LevelMaterialType.Color,
+      LevelGeometryType.Cube,
+      GravityType.None,
+      LevelOrientationType.HorizontalRight,
+    );
+
+    service.SetPan(0.5);
+    // sign for HorizontalRight is -1, so 0.5 * 2.4 * -1 = -1.2
+    expect(camera.position.y).toBeCloseTo(-1.2);
+
+    gameEngine.RestoreLevelTypes(
+      LevelMaterialType.Color,
+      LevelGeometryType.Cube,
+      GravityType.None,
+      LevelOrientationType.HorizontalLeft,
+    );
+
+    service.SetPan(0.5);
+    // sign for HorizontalLeft is 1, so 0.5 * 2.4 * 1 = 1.2
+    expect(camera.position.y).toBeCloseTo(1.2);
   });
 });

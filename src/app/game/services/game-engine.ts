@@ -16,9 +16,11 @@ import {
   POWER_MOVE_START_LEVEL,
   POWER_MOVE_START_MIX,
   POWER_MOVE_START_VERTICAL,
+  HORIZONTAL_LEVEL_START_LEVEL,
 } from '../game-constants';
-import { LevelGeometryType } from '../level-geometry-type';
-import { LevelMaterialType } from '../level-material-type';
+import { LevelGeometryType } from '../models/level-geometry-type';
+import { LevelMaterialType } from '../models/level-material-type';
+import { LevelOrientationType } from '../models/level-orientation-type';
 import { GravityType } from '../models/gravity-type';
 import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
@@ -57,6 +59,15 @@ export class GameEngineService {
   private _gravityType: GravityType = GravityType.None;
   get GravityType(): GravityType {
     return this._gravityType;
+  }
+
+  private _levelOrientation: LevelOrientationType = LevelOrientationType.Vertical;
+  get LevelOrientation(): LevelOrientationType {
+    return this._levelOrientation;
+  }
+
+  get IsHorizontal(): boolean {
+    return this._levelOrientation !== LevelOrientationType.Vertical;
   }
 
   private _levelTransitionType: LevelTransitionType = LevelTransitionType.Default;
@@ -123,10 +134,26 @@ export class GameEngineService {
       this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
     }
 
+    // gradual orientation type introduction
+    if (level < HORIZONTAL_LEVEL_START_LEVEL) {
+      this._levelOrientation = LevelOrientationType.Vertical;
+    } else {
+      const isHoriz = Math.floor(getRandom() * 2) === 1;
+      if (isHoriz) {
+        this._levelOrientation =
+          Math.floor(getRandom() * 2) === 0
+            ? LevelOrientationType.HorizontalRight
+            : LevelOrientationType.HorizontalLeft;
+      } else {
+        this._levelOrientation = LevelOrientationType.Vertical;
+      }
+    }
+
     if (isDevMode()) {
       console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
       console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
       console.info('Level Gravity Type: ', this._gravityType);
+      console.info('Level Orientation: ', LevelOrientationType[this._levelOrientation]);
     }
   }
 
@@ -134,10 +161,12 @@ export class GameEngineService {
     levelMaterialType: LevelMaterialType,
     levelGeometryType: LevelGeometryType,
     gravityType?: GravityType,
+    levelOrientation?: LevelOrientationType,
   ): void {
     this._levelMaterialType = levelMaterialType;
     this._levelGeometryType = levelGeometryType;
     this._gravityType = gravityType ?? GravityType.None;
+    this._levelOrientation = levelOrientation ?? LevelOrientationType.Vertical;
   }
 
   public InitLevelTransitionType(level?: number): void {
