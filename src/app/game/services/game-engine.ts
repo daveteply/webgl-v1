@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable, inject, isDevMode } from '@angular/core';
 import {
   DECIMAL_COMPARISON_TOLERANCE,
   DIFFICULTY_TIER_2,
@@ -27,6 +27,7 @@ import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
 import { LevelTransitionType } from './level-transition-type';
 import { PRNG } from '../../shared/utils/prng';
+import { FeatureFlagsService } from './feature-flags/feature-flags.service';
 
 // forcing strings in enum
 enum SearchDirection {
@@ -40,6 +41,7 @@ enum SearchDirection {
   providedIn: 'root',
 })
 export class GameEngineService {
+  private featureFlags = inject(FeatureFlagsService);
   private _matches: GamePiece[] = [];
 
   get PlayableTextureCount(): number {
@@ -89,16 +91,23 @@ export class GameEngineService {
       }
     }
 
+    // gradual orientation type introduction
+    if (level < HORIZONTAL_LEVEL_START_LEVEL) {
+      this._levelOrientation = LevelOrientationType.Vertical;
+    } else {
+      const isHoriz = Math.floor(getRandom() * 2) === 1;
+      if (isHoriz) {
+        this._levelOrientation =
+          Math.floor(getRandom() * 2) === 0
+            ? LevelOrientationType.HorizontalRight
+            : LevelOrientationType.HorizontalLeft;
+      } else {
+        this._levelOrientation = LevelOrientationType.Vertical;
+      }
+    }
+
     // gradual material type introduction
-    if (this._levelGeometryType === LevelGeometryType.Dodecahedron) {
-      // Dodecahedron levels are constrained to ColorBumpShape, Color, or ColorBumpMaterial
-      const dodecahedronMaterials = [
-        LevelMaterialType.ColorBumpShape,
-        LevelMaterialType.Color,
-        LevelMaterialType.ColorBumpMaterial,
-      ];
-      this._levelMaterialType = dodecahedronMaterials[Math.floor(getRandom() * dodecahedronMaterials.length)];
-    } else if (level < MATERIAL_START_COLOR) {
+    if (level < MATERIAL_START_COLOR) {
       this._levelMaterialType = LevelMaterialType.ColorBumpShape;
     } else if (level < MATERIAL_START_BUMP) {
       const level4Materials = [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color];
@@ -111,12 +120,15 @@ export class GameEngineService {
       ];
       this._levelMaterialType = level8Materials[Math.floor(getRandom() * level8Materials.length)];
     } else {
-      const allMaterials = [
-        LevelMaterialType.ColorBumpShape,
-        LevelMaterialType.Color,
-        LevelMaterialType.ColorBumpMaterial,
-        LevelMaterialType.Emoji,
-      ];
+      const allMaterials =
+        this._levelGeometryType === LevelGeometryType.Dodecahedron || this.IsHorizontal
+          ? [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color, LevelMaterialType.ColorBumpMaterial]
+          : [
+              LevelMaterialType.ColorBumpShape,
+              LevelMaterialType.Color,
+              LevelMaterialType.ColorBumpMaterial,
+              LevelMaterialType.Emoji,
+            ];
       this._levelMaterialType = allMaterials[Math.floor(getRandom() * allMaterials.length)];
     }
 
@@ -134,19 +146,18 @@ export class GameEngineService {
       this._gravityType = gravityOptions[Math.floor(getRandom() * gravityOptions.length)];
     }
 
-    // gradual orientation type introduction
-    if (level < HORIZONTAL_LEVEL_START_LEVEL) {
-      this._levelOrientation = LevelOrientationType.Vertical;
-    } else {
-      const isHoriz = Math.floor(getRandom() * 2) === 1;
-      if (isHoriz) {
-        this._levelOrientation =
-          Math.floor(getRandom() * 2) === 0
-            ? LevelOrientationType.HorizontalRight
-            : LevelOrientationType.HorizontalLeft;
-      } else {
-        this._levelOrientation = LevelOrientationType.Vertical;
-      }
+    // Apply dev feature flags / cheats if set
+    if (this.featureFlags.materialOverride() !== null) {
+      this._levelMaterialType = this.featureFlags.materialOverride()!;
+    }
+    if (this.featureFlags.orientationOverride() !== null) {
+      this._levelOrientation = this.featureFlags.orientationOverride()!;
+    }
+    if (this.featureFlags.geometryOverride() !== null) {
+      this._levelGeometryType = this.featureFlags.geometryOverride()!;
+    }
+    if (this.featureFlags.gravityOverride() !== null) {
+      this._gravityType = this.featureFlags.gravityOverride()!;
     }
 
     if (isDevMode()) {

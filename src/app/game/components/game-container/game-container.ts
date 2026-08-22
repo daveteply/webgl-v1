@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, filter, fromEvent, Observable, take } from 'rxjs';
 
 import { ObjectManagerService } from '../../services/object-manager';
+import { EffectsManagerService } from '../../services/effects-manager';
 import { SceneManagerService } from '../../services/scene-manager';
 import { ScoringManagerService } from '../../services/scoring-manager';
 import { TextureManagerService } from '../../services/texture/texture-manager';
@@ -64,6 +65,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
   private sceneManager = inject(SceneManagerService);
   private objectManager = inject(ObjectManagerService);
+  private effectsManager = inject(EffectsManagerService);
   private textureManager = inject(TextureManagerService);
   private textManager = inject(TextManagerService);
   private dialogNotify = inject(DialogNotifyService);
@@ -92,6 +94,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private _activeRng: PRNG = new PRNG(this._activeLevelSeed);
 
   showScoreProgress = signal<boolean>(false);
+  isLevelChanging = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
   LevelLabelColor = signal<string>('#ffffff');
 
@@ -108,6 +111,13 @@ export class GameContainer implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // level change animation state
+    this.effectsManager.LevelChangeAnimation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+      (isChanging: boolean) => {
+        this.isLevelChanging.set(isChanging);
+      },
+    );
+
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameOver) => {
       // game state
