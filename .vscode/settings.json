@@ -4,5 +4,5 @@
   "explorer.fileNesting.patterns": {
     "*.ts": "$(capture).spec.ts, $(capture).html, $(capture).scss, $(capture).css"
   },
-  "cSpell.words": ["glassmorphic", "Raycaster", "Synthwave", "Tweens"]
+  "cSpell.words": ["glassmorphic", "Raycaster", "rikkle", "Synthwave", "Tweens"]
 }

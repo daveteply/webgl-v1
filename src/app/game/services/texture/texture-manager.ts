@@ -240,22 +240,12 @@ export class TextureManagerService {
         this._canvasContext.fillStyle = '#ffffff';
         this._canvasContext.fillRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
 
-        this._canvasContext.save();
-        this._canvasContext.translate(CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2);
-
-        if (this._levelOrientationType === LevelOrientationType.HorizontalRight) {
-          this._canvasContext.rotate(Math.PI / 2);
-        } else if (this._levelOrientationType === LevelOrientationType.HorizontalLeft) {
-          this._canvasContext.rotate(-Math.PI / 2);
-        }
-
         this._canvasContext.font = CANVAS_TEXTURE_SCALE - 10 + 'px Arial';
         this._canvasContext.textBaseline = 'middle';
         this._canvasContext.textAlign = 'center';
 
         const emojiCode = String.fromCodePoint(...emoji.sequence);
-        this._canvasContext.fillText(emojiCode, 0, 8);
-        this._canvasContext.restore();
+        this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);
 
         // white pixel test (incompatible emojis)
         this.renderTest(this._canvasContext);
@@ -337,17 +327,9 @@ export class TextureManagerService {
       if (this._levelGeometryType === LevelGeometryType.Cylinder) {
         texture.wrapS = RepeatWrapping;
         texture.repeat.set(4, 1);
-        texture.rotation = 0;
-      } else {
-        const symbolRotation =
-          this._levelOrientationType === LevelOrientationType.HorizontalRight
-            ? Math.PI / 2
-            : this._levelOrientationType === LevelOrientationType.HorizontalLeft
-              ? -Math.PI / 2
-              : 0;
-        texture.rotation = symbolRotation;
       }
 
+      texture.rotation = 0;
       texture.needsUpdate = true;
     }
   }
