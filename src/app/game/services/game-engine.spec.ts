@@ -9,6 +9,7 @@ import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 import { PLAYABLE_TEXTURE_COUNT } from '../game-constants';
 import { PRNG } from '../../shared/utils/prng';
+import { FeatureFlagsService } from './feature-flags/feature-flags.service';
 
 describe('GameEngineService', () => {
   let service: GameEngineService;
@@ -205,6 +206,33 @@ describe('GameEngineService', () => {
       );
       expect(service.LevelOrientation).toBe(LevelOrientationType.HorizontalLeft);
       expect(service.IsHorizontal).toBe(true);
+    });
+
+    it('should never select Emoji material on horizontal levels during standard progression', () => {
+      for (let seed = 1; seed <= 50; seed++) {
+        const rng = new PRNG(seed);
+        service.InitLevelTypes(15, rng);
+        if (service.IsHorizontal) {
+          expect(service.LevelMaterialType).not.toBe(LevelMaterialType.Emoji);
+        }
+      }
+    });
+
+    it('should respect FeatureFlagsService overrides in InitLevelTypes', () => {
+      const featureFlags = TestBed.inject(FeatureFlagsService);
+      featureFlags.SetMaterial(LevelMaterialType.Emoji);
+      featureFlags.SetOrientation(LevelOrientationType.HorizontalRight);
+      featureFlags.SetGeometry(LevelGeometryType.Cube);
+      featureFlags.SetGravity(GravityType.Down);
+
+      service.InitLevelTypes(1);
+
+      expect(service.LevelMaterialType).toBe(LevelMaterialType.Emoji);
+      expect(service.LevelOrientation).toBe(LevelOrientationType.HorizontalRight);
+      expect(service.LevelGeometryType).toBe(LevelGeometryType.Cube);
+      expect(service.GravityType).toBe(GravityType.Down);
+
+      featureFlags.Reset();
     });
   });
 
