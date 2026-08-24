@@ -19,10 +19,11 @@ import { AudioType } from '../../shared/services/audio/audio-data';
 import { GameEngineService } from './game-engine';
 import { ObjectManagerService } from './object-manager';
 import { ScoringManagerService } from './scoring-manager';
-import { EffectsManagerService } from './effects-manager';
 import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
 import { HapticsManagerService } from '../../shared/services/haptics-manager';
+import { HintsManagerService, TutorialType } from './hints-manager';
+import { EffectsManagerService } from './effects-manager';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class InteractionManagerService {
   private audioManager = inject(AudioManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
   private hapticsManager = inject(HapticsManagerService);
+  private hintsManager = inject(HintsManagerService);
 
   private _canvasRect!: DOMRect;
   set CanvasRect(rect: DOMRect) {
@@ -132,6 +134,7 @@ export class InteractionManagerService {
               powerMovePiece = this._matchingPieces[0];
               this.audioManager.PlayAudio(AudioType.POWER_MOVE_APPEAR);
               this.objectManager.GamePiecePowerMove(powerMovePiece, moveType);
+              this.hintsManager.ShowTutorial(TutorialType.PowerMove);
             }
 
             // Animate removal of matched pieces (excluding the piece that became a power move)
@@ -193,6 +196,7 @@ export class InteractionManagerService {
   }
 
   private onPointerDown = (event: PointerEvent): void => {
+    this.hintsManager.CancelIdleTimer();
     if (this._locked) return;
 
     if (this._element) {

@@ -12,6 +12,7 @@ import { HighScoreManagerService } from '../../../../../shared/services/high-sco
 import { StorageService } from '../../../../../shared/services/storage/storage.service';
 import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
+import { HintsManagerService } from '../../../../services/hints-manager';
 
 @Component({
   selector: 'wgl-user-settings',
@@ -33,6 +34,7 @@ export class UserSettings implements OnDestroy {
   private storageService = inject(StorageService);
   private hapticsManager = inject(HapticsManagerService);
   private analyticsManager = inject(AnalyticsManagerService);
+  private hintsManager = inject(HintsManagerService);
   private dialogRef = inject(MatDialogRef<UserSettings>);
 
   gameVolume = signal<number>(Math.round(this.audioManager.GetGameVolume() * 100));
@@ -41,6 +43,8 @@ export class UserSettings implements OnDestroy {
   confirmClear = signal<boolean>(false);
   confirmFactoryReset = signal<boolean>(false);
   factoryResetCompleted = signal<boolean>(false);
+  hintsReset = signal<boolean>(false);
+  hintsSkipped = signal<boolean>(false);
 
   private musicPreviewTimeout?: ReturnType<typeof setTimeout>;
 
@@ -130,6 +134,18 @@ export class UserSettings implements OnDestroy {
 
   onCancelFactoryReset(): void {
     this.confirmFactoryReset.set(false);
+  }
+
+  onResetTutorialHints(): void {
+    this.hintsManager.ResetAllTutorials();
+    this.hintsReset.set(true);
+    this.hintsSkipped.set(false);
+  }
+
+  onSkipTutorialHints(): void {
+    this.hintsManager.SkipAllTutorials();
+    this.hintsSkipped.set(true);
+    this.hintsReset.set(false);
   }
 
   onClose(): void {

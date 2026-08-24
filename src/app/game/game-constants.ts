@@ -64,11 +64,16 @@ export const SHARE_FILE_NAME = 'rikkle-screen-shot.png';
 // Storage
 export const STORAGE_HIGH_SCORES = 'High.Scores';
 export const STORAGE_HINT_HOW_TO_PLAY = 'Hint.HowToPlay';
+export const STORAGE_HINT_ROTATE_HORIZONTAL = 'Hint.RotateHorizontal';
+export const STORAGE_HINT_ROTATE_VERTICAL = 'Hint.RotateVertical';
 export const STORAGE_HINT_MOVES_DECREASE = 'Hint.Moves.Decrease';
 export const STORAGE_HINT_MOVES_INCREASE = 'Hint.Moves.Increase';
+export const STORAGE_HINT_POWER_MOVE = 'Hint.PowerMove';
+export const STORAGE_HINT_GAME_MENU = 'Hint.GameMenu';
 export const STORAGE_SAVE_STATE = 'Save.State';
 export const STORAGE_SETTINGS_GAME_VOLUME = 'Settings.GameVolume';
 export const STORAGE_SETTINGS_MUSIC_VOLUME = 'Settings.MusicVolume';
+export const TUTORIAL_IDLE_DELAY_MS = 2000;
 
 // Ads
 // export const LEVEL_START_POSSIBLE_ADS = 3;

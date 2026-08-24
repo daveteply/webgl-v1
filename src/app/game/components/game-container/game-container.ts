@@ -25,8 +25,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Intro } from '../dialogs/components/intro/intro';
 import { LevelComplete } from '../dialogs/components/level-complete/level-complete';
 import { GameOver } from '../dialogs/components/game-over/game-over';
-import { HowToPlay } from '../dialogs/components/how-to-play/how-to-play';
-import { MovesRemaining } from '../dialogs/components/moves-remaining/moves-remaining';
+import { TutorialOverlay } from '../tutorial-overlay/tutorial-overlay';
 import { TextZoom } from '../../text/components/text-zoom/text-zoom';
 import { MovesLeft } from '../moves-left/moves-left';
 import { ShareContentComponent } from '../share-content/share-content';
@@ -35,11 +34,7 @@ import { ProgressBar } from '../../../shared/components/progress-bar/progress-ba
 import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizontal-level-navigator';
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
-import {
-  STORAGE_HINT_HOW_TO_PLAY,
-  STORAGE_HINT_MOVES_DECREASE,
-  STORAGE_HINT_MOVES_INCREASE,
-} from '../../game-constants';
+import { TutorialType } from '../../services/hints-manager';
 
 @Component({
   selector: 'wgl-game-container',
@@ -53,6 +48,7 @@ import {
     GameMenu,
     ProgressBar,
     HorizontalLevelNavigator,
+    TutorialOverlay,
   ],
   templateUrl: './game-container.html',
   styleUrl: './game-container.scss',
@@ -225,44 +221,23 @@ export class GameContainer implements OnInit, AfterViewInit {
       }
     });
 
-    // show the tutorial after the initial level loads
-    this.objectManager.LevelChangeAnimationComplete.pipe(take(1)).subscribe(() => {
-      this.hintsManager.GetHintViewed(STORAGE_HINT_HOW_TO_PLAY).then((result) => {
-        if (result.value !== 'true') {
-          const howToPlay = this.dialog.open(HowToPlay);
-          howToPlay.afterClosed().subscribe(() => {
-            this.hintsManager.SetHintViewed(STORAGE_HINT_HOW_TO_PLAY);
-          });
-        }
-      });
+    // tutorial triggers on level load and orientation changes
+    this.objectManager.LevelChangeAnimationComplete.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (this.scoringManager.Level === 1) {
+        this.hintsManager.StartIdleTimer(TutorialType.RotateHorizontal);
+      } else if (this.scoringManager.Level === 5) {
+        this.hintsManager.ShowTutorial(TutorialType.GameMenu);
+      } else if (this.gameEngine.IsHorizontal) {
+        this.hintsManager.ShowTutorial(TutorialType.RotateVertical);
+      }
     });
 
     // show tutorial for move changes
     this.scoringManager.MovesChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((increase) => {
       if (increase) {
-        this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_INCREASE).then((result) => {
-          if (!result.value) {
-            const dialog = this.dialog.open(MovesRemaining, {
-              position: { top: '3.5em' },
-              data: true,
-            });
-            dialog.afterClosed().subscribe(() => {
-              this.hintsManager.SetHintViewed(STORAGE_HINT_MOVES_INCREASE);
-            });
-          }
-        });
+        this.hintsManager.ShowTutorial(TutorialType.MovesIncrease);
       } else {
-        this.hintsManager.GetHintViewed(STORAGE_HINT_MOVES_DECREASE).then((result) => {
-          if (!result.value) {
-            const dialog = this.dialog.open(MovesRemaining, {
-              position: { top: '3.5em' },
-              data: false,
-            });
-            dialog.afterClosed().subscribe(() => {
-              this.hintsManager.SetHintViewed(STORAGE_HINT_MOVES_DECREASE);
-            });
-          }
-        });
+        this.hintsManager.ShowTutorial(TutorialType.MovesDecrease);
       }
     });
 

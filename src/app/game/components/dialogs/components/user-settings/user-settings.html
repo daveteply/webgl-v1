@@ -86,49 +86,68 @@
           </div>
         </div>
       }
-    </div>
-
-    <!-- Factory Reset -->
-    <div class="setting-row reset-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <span class="emoji-icon">💣</span>
-          <span>Factory Reset</span>
-        </span>
-      </div>
-      @if (!factoryResetCompleted()) {
-        <div class="action-container">
-          <button mat-stroked-button color="warn" (click)="onPromptFactoryReset()">
-            <mat-icon>local_fire_department</mat-icon>
-            <span>Nuke the Rikkle! 💥</span>
+      <!-- Tutorial Hints -->
+      <div class="setting-row reset-row">
+        <div class="setting-header">
+          <span class="setting-label">
+            <span class="emoji-icon">💡</span>
+            <span>Tutorial & Hints</span>
+          </span>
+        </div>
+        <div class="action-container button-group">
+          <button mat-stroked-button color="primary" (click)="onResetTutorialHints()" [disabled]="hintsReset()">
+            <mat-icon>refresh</mat-icon>
+            <span>{{ hintsReset() ? 'Hints Reset!' : 'Reset Hints' }}</span>
+          </button>
+          <button mat-stroked-button (click)="onSkipTutorialHints()" [disabled]="hintsSkipped()">
+            <mat-icon>fast_forward</mat-icon>
+            <span>{{ hintsSkipped() ? 'Hints Skipped' : 'Skip All Hints' }}</span>
           </button>
         </div>
-      }
-      <mat-expansion-panel [expanded]="confirmFactoryReset()" hideToggle class="reset-expansion-panel">
-        <div class="confirm-container factory-reset">
-          <span class="confirm-prompt">
-            💥 Are you sure? This will wipe out <strong>all local storage</strong>, including high scores, saved games,
-            and settings!
+      </div>
+
+      <!-- Factory Reset -->
+      <div class="setting-row reset-row">
+        <div class="setting-header">
+          <span class="setting-label">
+            <span class="emoji-icon">💣</span>
+            <span>Factory Reset</span>
           </span>
-          <div class="confirm-buttons">
-            <button mat-button (click)="onCancelFactoryReset()">Cancel</button>
-            <button mat-raised-button color="warn" (click)="onConfirmFactoryReset()">
-              <mat-icon>delete_forever</mat-icon>
-              Yes, Wipe it All!
+        </div>
+        @if (!factoryResetCompleted()) {
+          <div class="action-container">
+            <button mat-stroked-button color="warn" (click)="onPromptFactoryReset()">
+              <mat-icon>local_fire_department</mat-icon>
+              <span>Nuke the Rikkle! 💥</span>
             </button>
           </div>
-        </div>
-      </mat-expansion-panel>
-      @if (factoryResetCompleted()) {
-        <div class="reset-success-message">
-          <mat-icon class="spin-icon">refresh</mat-icon>
-          <span>Rikkle Nuked! Reloading fresh game...</span>
-        </div>
-      }
+        }
+        <mat-expansion-panel [expanded]="confirmFactoryReset()" hideToggle class="reset-expansion-panel">
+          <div class="confirm-container factory-reset">
+            <span class="confirm-prompt">
+              💥 Are you sure? This will wipe out <strong>all local storage</strong>, including high scores, saved
+              games, and settings!
+            </span>
+            <div class="confirm-buttons">
+              <button mat-button (click)="onCancelFactoryReset()">Cancel</button>
+              <button mat-raised-button color="warn" (click)="onConfirmFactoryReset()">
+                <mat-icon>delete_forever</mat-icon>
+                Yes, Wipe it All!
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        @if (factoryResetCompleted()) {
+          <div class="reset-success-message">
+            <mat-icon class="spin-icon">refresh</mat-icon>
+            <span>Rikkle Nuked! Reloading fresh game...</span>
+          </div>
+        }
+      </div>
     </div>
-  </div>
 
-  <div mat-dialog-actions align="center" class="dialog-actions">
-    <button mat-raised-button color="primary" (click)="onClose()">Close</button>
+    <div mat-dialog-actions align="center" class="dialog-actions">
+      <button mat-raised-button color="primary" (click)="onClose()">Close</button>
+    </div>
   </div>
 </div>

@@ -1,0 +1,288 @@
+:host {
+  display: block;
+}
+
+.tutorial-overlay-container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  user-select: none;
+  touch-action: none;
+  animation: fade-in 0.3s ease-out;
+}
+
+.spotlight-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.spotlight-cutout {
+  transform-origin: center;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim-in .spotlight-cutout {
+  animation: blossom 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.spotlight-ring {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid rgba(0, 229, 255, 0.85);
+  box-shadow:
+    0 0 16px rgba(0, 229, 255, 0.5),
+    inset 0 0 12px rgba(0, 229, 255, 0.3);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: glow-pulse 2s infinite ease-in-out;
+}
+
+.anim-in .spotlight-ring {
+  animation:
+    blossom 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    glow-pulse 2s infinite ease-in-out 0.7s;
+}
+
+.direction-guide,
+.power-move-guide {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10001;
+}
+
+.swipe-indicator,
+.power-move-badge {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+
+.swipe-indicator {
+  position: relative;
+  background: rgba(8, 14, 30, 0.85);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(0, 229, 255, 0.5);
+
+  .arrow {
+    font-size: 1.3rem;
+    color: #00e5ff;
+    animation: arrow-pulse 1.4s infinite ease-in-out;
+  }
+
+  .swipe-track {
+    width: 52px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 0 0.5rem;
+    border-radius: 2px;
+  }
+
+  .swipe-hand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 1.35rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  }
+}
+
+.horizontal-guide .swipe-hand {
+  animation: swipe-h 2.4s infinite ease-in-out;
+}
+
+.vertical-guide {
+  .swipe-indicator {
+    flex-direction: column;
+    padding: 0.9rem 0.4rem;
+  }
+  .swipe-track {
+    width: 4px;
+    height: 52px;
+    margin: 0.5rem 0;
+  }
+  .swipe-hand {
+    animation: swipe-v 2.4s infinite ease-in-out;
+  }
+}
+
+.direction-label {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.power-move-badge {
+  gap: 0.4rem;
+  background: rgba(255, 179, 0, 0.25);
+  border: 2px solid #ffca28;
+  box-shadow:
+    0 0 20px rgba(255, 202, 40, 0.6),
+    inset 0 0 10px rgba(255, 202, 40, 0.3);
+  padding: 0.4rem 0.9rem;
+  animation: glow-pulse 1.8s infinite ease-in-out;
+
+  .power-icon {
+    font-size: 1.35rem;
+  }
+  .power-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.tutorial-card {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(22rem, 90vw);
+  background: rgba(14, 20, 38, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 229, 255, 0.1);
+  z-index: 10002;
+  animation: card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .card-header {
+    margin-bottom: 0.45rem;
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffca28;
+    background: rgba(255, 202, 40, 0.15);
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 202, 40, 0.3);
+  }
+
+  .card-title {
+    margin: 0.2rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .card-description {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .btn-skip {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.82rem;
+    }
+
+    .btn-got-it {
+      background: linear-gradient(135deg, #00b0ff, #00e5ff);
+      color: #001020;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 0 1.2rem;
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 12px rgba(0, 229, 255, 0.5),
+      inset 0 0 8px rgba(0, 229, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 22px rgba(0, 229, 255, 0.8),
+      inset 0 0 14px rgba(0, 229, 255, 0.5);
+  }
+}
+
+@keyframes blossom {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes arrow-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes swipe-h {
+  0%,
+  100% {
+    transform: translate(calc(-50% - 22px), -50%);
+  }
+  50% {
+    transform: translate(calc(-50% + 22px), -50%);
+  }
+}
+
+@keyframes swipe-v {
+  0%,
+  100% {
+    transform: translate(-50%, calc(-50% - 22px));
+  }
+  50% {
+    transform: translate(-50%, calc(-50% + 22px));
+  }
+}
