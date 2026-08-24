@@ -6,6 +6,7 @@ import { HapticsManagerService } from '../../../../../shared/services/haptics-ma
 import { AudioType } from '../../../../../shared/services/audio/audio-data';
 import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
+import { HintsManagerService } from '../../../../services/hints-manager';
 
 describe('UserSettings', () => {
   let component: UserSettings;
@@ -116,5 +117,25 @@ describe('UserSettings', () => {
   it('should log SettingsClearHighScores on confirm clear high scores', () => {
     component.onConfirmClearHighScores();
     expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsClearHighScores);
+  });
+
+  it('should reset tutorial hints when onResetTutorialHints is called', () => {
+    const hintsManager = TestBed.inject(HintsManagerService);
+    const resetSpy = vi.spyOn(hintsManager, 'ResetAllTutorials');
+
+    component.onResetTutorialHints();
+    expect(resetSpy).toHaveBeenCalled();
+    expect(component.hintsReset()).toBe(true);
+    expect(component.hintsSkipped()).toBe(false);
+  });
+
+  it('should skip tutorial hints when onSkipTutorialHints is called', () => {
+    const hintsManager = TestBed.inject(HintsManagerService);
+    const skipSpy = vi.spyOn(hintsManager, 'SkipAllTutorials');
+
+    component.onSkipTutorialHints();
+    expect(skipSpy).toHaveBeenCalled();
+    expect(component.hintsSkipped()).toBe(true);
+    expect(component.hintsReset()).toBe(false);
   });
 });

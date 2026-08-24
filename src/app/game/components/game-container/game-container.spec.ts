@@ -18,6 +18,7 @@ import { ShareManagerService } from '../../services/share-manager';
 import { TextureManagerService } from '../../services/texture/texture-manager';
 import { TextZoom } from '../../text/components/text-zoom/text-zoom';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
+import { HintsManagerService, TutorialType } from '../../services/hints-manager';
 import { GameContainer } from './game-container';
 
 describe('GameContainer', () => {
@@ -81,5 +82,35 @@ describe('GameContainer', () => {
       AnalyticsEventType.GameOver,
       expect.objectContaining({ level: expect.any(Number) }),
     );
+  });
+
+  it('should trigger tutorial on moves changes', () => {
+    const hintsManager = TestBed.inject(HintsManagerService);
+    const scoringManager = TestBed.inject(ScoringManagerService);
+    const showSpy = vi.spyOn(hintsManager, 'ShowTutorial');
+
+    scoringManager.MovesChange.next(false);
+    expect(showSpy).toHaveBeenCalledWith(TutorialType.MovesDecrease);
+
+    scoringManager.MovesChange.next(true);
+    expect(showSpy).toHaveBeenCalledWith(TutorialType.MovesIncrease);
+  });
+
+  it('should start idle timer for RotateHorizontal on Level 1', () => {
+    const hintsManager = TestBed.inject(HintsManagerService);
+    const startIdleSpy = vi.spyOn(hintsManager, 'StartIdleTimer');
+
+    objectManager.LevelChangeAnimationComplete.next();
+    expect(startIdleSpy).toHaveBeenCalledWith(TutorialType.RotateHorizontal);
+  });
+
+  it('should trigger GameMenu tutorial on Level 5', () => {
+    const hintsManager = TestBed.inject(HintsManagerService);
+    const scoringManager = TestBed.inject(ScoringManagerService);
+    const showSpy = vi.spyOn(hintsManager, 'ShowTutorial');
+
+    scoringManager.level.set(5);
+    objectManager.LevelChangeAnimationComplete.next();
+    expect(showSpy).toHaveBeenCalledWith(TutorialType.GameMenu);
   });
 });
