@@ -40,6 +40,17 @@ export class SplashText extends Object3D {
     } as TextGeometryParameters);
     this._textGeometry.scale(0.01, 0.01, 0.01);
 
+    // Auto-fit text geometry to ensure it never clips off-screen on narrow or mobile viewports
+    this._textGeometry.computeBoundingBox();
+    if (this._textGeometry.boundingBox) {
+      const textWidth = this._textGeometry.boundingBox.max.x - this._textGeometry.boundingBox.min.x;
+      const MAX_SAFE_WIDTH = 2.3;
+      if (textWidth > MAX_SAFE_WIDTH) {
+        const fitScale = MAX_SAFE_WIDTH / textWidth;
+        this._textGeometry.scale(fitScale, fitScale, fitScale);
+      }
+    }
+
     // material - front face & bevel/sides
     const baseColor =
       color !== undefined
@@ -146,7 +157,7 @@ export class SplashText extends Object3D {
 
   private initOutroTween(yOffset: number): void {
     const delta = { o: 1.0, z: 0.0, y: this._targetY + yOffset };
-    const target = { o: 0.0, z: 5.0, y: 2.0 };
+    const target = { o: 0.0, z: 3.8, y: 2.0 };
     this._outroTween = new Tween(delta, mainTweenGroup)
       .to(target, 1000)
       .easing(Easing.Quintic.InOut)
