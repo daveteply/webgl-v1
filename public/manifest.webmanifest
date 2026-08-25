@@ -118,21 +118,21 @@
     },
     {
       "src": "/screenshots/mobile/mobile-ss_1.png",
-      "sizes": "1080x1920",
+      "sizes": "386x871",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Rikkle Mobile Puzzle Splash screen"
     },
     {
       "src": "/screenshots/mobile/mobile-ss_2.png",
-      "sizes": "1080x1920",
+      "sizes": "386x871",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Rikkle Mobile Puzzle Level complete"
     },
     {
       "src": "/screenshots/mobile/mobile-ss_3.png",
-      "sizes": "1080x1920",
+      "sizes": "386x871",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Rikkle Mobile Puzzle Level loading"
