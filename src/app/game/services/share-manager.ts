@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { DOCUMENT, formatNumber } from '@angular/common';
 import { forkJoin, Observable, Subject } from 'rxjs';
-import { SHARE_FILE_NAME } from '../game-constants';
+import { SHARE_FILE_NAME, SHARE_URL } from '../game-constants';
 import { ScoringManagerService } from './scoring-manager';
 
 @Injectable({
@@ -155,15 +155,22 @@ export class ShareManagerService {
           ctx.lineWidth = 16;
           ctx.lineJoin = 'round';
 
-          const bottomY = img.height - 100;
+          const bottomY = img.height - 70;
           const levelStr = `Level: ${this.scoringManager.Level}`;
           const scoreStr = `Score: ${formatNumber(this.scoringManager.Score, 'en-US')}`;
+          const urlStr = 'rikkle.app';
 
-          ctx.strokeText(levelStr, img.width / 2, bottomY - 110);
-          ctx.fillText(levelStr, img.width / 2, bottomY - 110);
+          ctx.strokeText(levelStr, img.width / 2, bottomY - 140);
+          ctx.fillText(levelStr, img.width / 2, bottomY - 140);
 
-          ctx.strokeText(scoreStr, img.width / 2, bottomY);
-          ctx.fillText(scoreStr, img.width / 2, bottomY);
+          ctx.strokeText(scoreStr, img.width / 2, bottomY - 45);
+          ctx.fillText(scoreStr, img.width / 2, bottomY - 45);
+
+          ctx.font = 'bold 3.2em "Changa", sans-serif';
+          ctx.lineWidth = 8;
+          ctx.fillStyle = '#00e5ff';
+          ctx.strokeText(urlStr, img.width / 2, bottomY + 35);
+          ctx.fillText(urlStr, img.width / 2, bottomY + 35);
 
           this.startShare(canvas.toDataURL());
         }
@@ -179,9 +186,16 @@ export class ShareManagerService {
       const fileName = SHARE_FILE_NAME || 'rikkle-screen-shot.png';
       const file = new File([blob], fileName, { type: 'image/png' });
 
+      const scoreFormatted = formatNumber(this.scoringManager.Score, 'en-US');
+      const shareText =
+        this.scoringManager.Score > 0
+          ? `Can you beat my score of ${scoreFormatted} on Level ${this.scoringManager.Level}? Play Rikkle: ${SHARE_URL}`
+          : `Check out Rikkle, the 3D cylinder match puzzle! Play now: ${SHARE_URL}`;
+
       const shareData: ShareData = {
-        title: 'Rikkle, a game by Turbogeekbear',
-        text: 'Have you seen Rikkle?!',
+        title: 'Rikkle – 3D Match Puzzle',
+        text: shareText,
+        url: SHARE_URL,
       };
 
       this.ShareInitiated.next();

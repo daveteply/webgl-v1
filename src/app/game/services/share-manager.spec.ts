@@ -32,4 +32,18 @@ describe('ShareManager', () => {
     expect(initiated).toBe(true);
     expect(failed).toBe(true);
   });
+
+  it('should report CanShare observable', () => {
+    let result = false;
+    service.CanShare().subscribe((canShare) => {
+      result = canShare;
+    });
+    expect(typeof result).toBe('boolean');
+  });
+
+  it('should update InLevel signal', () => {
+    expect(service.InLevel).toBe(false);
+    service.UpdateInLevel(true);
+    expect(service.InLevel).toBe(true);
+  });
 });
