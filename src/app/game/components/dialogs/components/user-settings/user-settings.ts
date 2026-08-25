@@ -45,6 +45,7 @@ export class UserSettings implements OnDestroy {
   factoryResetCompleted = signal<boolean>(false);
   hintsReset = signal<boolean>(false);
   hintsSkipped = signal<boolean>(false);
+  isLocked = signal<boolean>(false);
 
   private musicPreviewTimeout?: ReturnType<typeof setTimeout>;
 
@@ -120,6 +121,7 @@ export class UserSettings implements OnDestroy {
   }
 
   onConfirmFactoryReset(): void {
+    this.isLocked.set(true);
     this.storageService.clear();
     this.scoresCleared.set(true);
     this.confirmClear.set(false);

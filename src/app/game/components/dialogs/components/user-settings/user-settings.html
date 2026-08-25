@@ -1,4 +1,4 @@
-<div id="user-settings" class="glass-dialog">
+<div id="user-settings" class="glass-dialog" [attr.inert]="isLocked() ? '' : null">
   <h2 class="dialog-title text-center">
     <mat-icon class="title-icon">settings</mat-icon>
     Settings
