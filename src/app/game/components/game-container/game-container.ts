@@ -80,6 +80,7 @@ export class GameContainer implements OnInit, AfterViewInit {
 
   private _showWelcome = true;
   private _pendingIntroDialog = false;
+  private _pendingLevelCompleteDialog = false;
 
   private _dialogRefLevel!: MatDialogRef<LevelComplete>;
   private _dialogRefIntro!: MatDialogRef<Intro>;
@@ -125,6 +126,7 @@ export class GameContainer implements OnInit, AfterViewInit {
           movesRemaining: this.scoringManager.PlayerMoves,
         });
 
+        this._pendingLevelCompleteDialog = true;
         this.scoringManager.IncLevel();
         this._activeLevelSeed = PRNG.generateSeed();
         this._activeRng = new PRNG(this._activeLevelSeed);
@@ -162,18 +164,39 @@ export class GameContainer implements OnInit, AfterViewInit {
         this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
         this._dialogGameOverRef.afterClosed().subscribe((data?: GameOverData) => {
           this.shareManager.UpdateInLevel(true);
+          this._isGameOver = false;
           const startOver = data?.startOver ?? true;
           if (startOver) {
+            const hadSavedGame = this.scoringManager.Level > 1;
             this.saveGame.ClearSaveState();
             this.scoringManager.RestartGame();
             this._activeLevelSeed = PRNG.generateSeed();
             this._activeRng = new PRNG(this._activeLevelSeed);
-            this.initTextures();
+            if (hadSavedGame) {
+              this.initTextures();
+              this.textureManager.LevelTexturesLoaded.pipe(
+                filter((loaded) => loaded),
+                take(1),
+              ).subscribe(() => {
+                this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+                  level: this.scoringManager.Level,
+                  score: this.scoringManager.Score,
+                  isRestart: true,
+                });
+                this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
+              });
+            } else {
+              this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+                level: this.scoringManager.Level,
+                score: this.scoringManager.Score,
+                isRestart: true,
+              });
+              this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
+            }
           } else {
             // reset stats will take care of move count based on level
             this.scoringManager.ResetStats(!startOver);
             this._activeRng = new PRNG(this._activeLevelSeed);
-            this.initTextures();
             this.saveGame
               .SaveState(
                 this.scoringManager.Level,
@@ -184,32 +207,31 @@ export class GameContainer implements OnInit, AfterViewInit {
               )
               .pipe(take(1))
               .subscribe();
+            this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
+              level: this.scoringManager.Level,
+              score: this.scoringManager.Score,
+              isRestart: true,
+            });
+            this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
           }
-          this.analyticsManager.Log(AnalyticsEventType.LevelStarted, {
-            level: this.scoringManager.Level,
-            score: this.scoringManager.Score,
-            isRestart: true,
-          });
-          this.objectManager.NextLevel(this.scoringManager.Level, true, this._activeRng);
         });
-      } else {
-        if (this._showWelcome) {
-          // intro (deferred until splash screen finishes)
-          if (this.splashPhase() === 'done') {
-            this.openIntroDialog();
-          } else {
-            this._pendingIntroDialog = true;
-          }
+      } else if (this._pendingLevelCompleteDialog) {
+        this._pendingLevelCompleteDialog = false;
+        // level complete
+        const height = `min(${Math.max(17.5, this.scoringManager.StatsEntries() * 2.8 + 10)}em, 88dvh)`;
+        this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
+        this._dialogRefLevel.backdropClick().subscribe(() => {
+          this.dialogNotify.Notify();
+        });
+        this._dialogRefLevel.afterClosed().subscribe(() => {
+          this.handleLevelDialogCLosed();
+        });
+      } else if (this._showWelcome) {
+        // intro (deferred until splash screen finishes)
+        if (this.splashPhase() === 'done') {
+          this.openIntroDialog();
         } else {
-          // level complete
-          const height = `min(${Math.max(17.5, this.scoringManager.StatsEntries() * 2.8 + 10)}em, 88dvh)`;
-          this._dialogRefLevel = this.dialog.open(LevelComplete, this.dialogConfig(height));
-          this._dialogRefLevel.backdropClick().subscribe(() => {
-            this.dialogNotify.Notify();
-          });
-          this._dialogRefLevel.afterClosed().subscribe(() => {
-            this.handleLevelDialogCLosed();
-          });
+          this._pendingIntroDialog = true;
         }
       }
     });

@@ -189,6 +189,7 @@ export class ScoringManagerService {
     }
 
     this.levelProgress.set(0);
+    this.piecesRemaining.set(this.levelPieceTarget());
     this._levelStats = {
       fastestMatchTime: Number.MAX_SAFE_INTEGER,
       fastMatchBonusTotal: 0,

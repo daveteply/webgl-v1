@@ -1,10 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { Subject } from 'rxjs';
 import { vi } from 'vitest';
+
+import { GameOver } from '../dialogs/components/game-over/game-over';
+import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 
 import { AudioManagerService } from '../../../shared/services/audio/audio-manager';
 import { EffectsManagerService } from '../../services/effects-manager';
@@ -112,5 +116,59 @@ describe('GameContainer', () => {
     scoringManager.level.set(5);
     objectManager.LevelChangeAnimationComplete.next();
     expect(showSpy).toHaveBeenCalledWith(TutorialType.GameMenu);
+  });
+
+  it('should reset Level 1 game and moves to 3 when Play Again is chosen on GameOver', () => {
+    const dialog = component['dialog'];
+    const scoringManager = TestBed.inject(ScoringManagerService);
+    scoringManager.level.set(1);
+    while (scoringManager.PlayerMoves > 0) {
+      scoringManager.UpdateMoveCount();
+    }
+    expect(scoringManager.PlayerMoves).toBe(0);
+
+    const nextLevelSpy = vi.spyOn(objectManager, 'NextLevel');
+    const afterClosedSubject = new Subject<GameOverData | undefined>();
+    const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
+      afterClosed: () => afterClosedSubject.asObservable(),
+    } as unknown as MatDialogRef<GameOver, GameOverData>);
+
+    objectManager.LevelCompleted.next(true);
+    expect(openSpy).toHaveBeenCalled();
+
+    // User chooses Play again (startOver: true)
+    afterClosedSubject.next({ startOver: true, level: 1 });
+    expect(scoringManager.Level).toBe(1);
+    expect(scoringManager.PlayerMoves).toBe(3);
+    expect(scoringManager.Score).toBe(0);
+    expect(component['_isGameOver']).toBe(false);
+    expect(nextLevelSpy).toHaveBeenCalledWith(1, true, expect.any(Object));
+  });
+
+  it('should restart Level X with reset moves when Start Level again is chosen on GameOver', () => {
+    const dialog = component['dialog'];
+    const scoringManager = TestBed.inject(ScoringManagerService);
+    scoringManager.level.set(3);
+    while (scoringManager.PlayerMoves > 0) {
+      scoringManager.UpdateMoveCount();
+    }
+    expect(scoringManager.PlayerMoves).toBe(0);
+
+    const nextLevelSpy = vi.spyOn(objectManager, 'NextLevel');
+    const afterClosedSubject = new Subject<GameOverData | undefined>();
+    const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({
+      afterClosed: () => afterClosedSubject.asObservable(),
+    } as unknown as MatDialogRef<GameOver, GameOverData>);
+
+    objectManager.LevelCompleted.next(true);
+    expect(openSpy).toHaveBeenCalled();
+
+    // User chooses Start Level 3 again (startOver: false)
+    afterClosedSubject.next({ startOver: false, level: 3 });
+    expect(scoringManager.Level).toBe(3);
+    expect(scoringManager.PlayerMoves).toBe(3);
+    expect(scoringManager.Score).toBe(0);
+    expect(component['_isGameOver']).toBe(false);
+    expect(nextLevelSpy).toHaveBeenCalledWith(3, true, expect.any(Object));
   });
 });
