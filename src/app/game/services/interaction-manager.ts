@@ -14,14 +14,12 @@ import { GamePiece } from '../models/game-piece/game-piece';
 import { PowerMoveType } from '../models/power-move-type';
 import { GravityType } from '../models/gravity-type';
 import { LevelOrientationType } from '../models/level-orientation-type';
-import { AudioType } from '../../shared/services/audio/audio-data';
-
+import { AudioManagerService, AudioType } from '@rikkle/audio';
+import { HapticsManagerService } from '@rikkle/shared';
 import { GameEngineService } from './game-engine';
 import { ObjectManagerService } from './object-manager';
 import { ScoringManagerService } from './scoring-manager';
-import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
-import { HapticsManagerService } from '../../shared/services/haptics-manager';
 import { HintsManagerService, TutorialType } from './hints-manager';
 import { EffectsManagerService } from './effects-manager';
 

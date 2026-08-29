@@ -8,8 +8,8 @@ import { GamePiece } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
 import { LevelTransitionType } from './level-transition-type';
-import { PRNG } from '../../shared/utils/prng';
-import { GameStateStore } from '../state/game-state.store';
+import { PRNG } from '@rikkle/shared';
+import { GameStateStore } from '@rikkle/state';
 import {
   calculateLevelTransitionType,
   evaluatePowerMove,
@@ -17,7 +17,7 @@ import {
   findAllMatches,
   findMatches,
   selectPowerMove,
-} from '../engine';
+} from '@rikkle/engine';
 
 @Injectable({
   providedIn: 'root',

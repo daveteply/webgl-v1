@@ -7,7 +7,7 @@ import { LevelStats } from '../models/level-stats';
 import { PowerMoveType, GetPowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';
 import { TextManagerService } from '../text/services/text-manager';
-import { GameStateStore } from '../state/game-state.store';
+import { GameStateStore } from '@rikkle/state';
 
 @Injectable({
   providedIn: 'root',

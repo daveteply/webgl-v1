@@ -18,12 +18,11 @@ import { delay, Subject } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../../../services/tween-group';
 
-import { AudioType } from '../../../../../shared/services/audio/audio-data';
+import { AudioManagerService, AudioType } from '@rikkle/audio';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
-import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
 import { DialogNotifyService } from '../../services/dialog-notify';
 import { DialogAnimationService } from '../../services/dialog-animation';
-import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 
 import { LEVEL_COMPLETE_HEADINGS } from '../../../../game-constants';
 import { LevelStats } from '../../../../models/level-stats';

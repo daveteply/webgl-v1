@@ -6,12 +6,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
+import { AudioManagerService } from '@rikkle/audio';
 import { DialogAnimationService } from '../../services/dialog-animation';
 import { ObjectManagerService } from '../../../../services/object-manager';
 import { TextureManagerService } from '../../../../services/texture/texture-manager';
 import { SaveGameService } from '../../../../services/save-game/save-game';
-import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
+import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../../../shared/components/progress-bar/progress-bar';
 import { APP_VERSION } from '../../../../../version';

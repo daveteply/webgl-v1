@@ -11,13 +11,12 @@ import { TextureManagerService } from '../../services/texture/texture-manager';
 import { TextManagerService } from '../../text/services/text-manager';
 import { GameEngineService } from '../../services/game-engine';
 import { DialogNotifyService } from '../dialogs/services/dialog-notify';
-import { HighScoreManagerService } from '../../../shared/services/high-score-manager';
 import { HintsManagerService } from '../../services/hints-manager';
 import { PostProcessingManagerService } from '../../services/post-processing-manager';
 import { SaveGameService } from '../../services/save-game/save-game';
 import { ShareManagerService } from '../../services/share-manager';
-import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
-import { PRNG } from '../../../shared/utils/prng';
+import { AnalyticsEventType, AnalyticsManagerService, HighScoreManagerService, PRNG } from '@rikkle/shared';
+import { GameStateStore } from '@rikkle/state';
 
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -35,7 +34,6 @@ import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizont
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import { TutorialType } from '../../services/hints-manager';
-import { GameStateStore } from '../../state/game-state.store';
 
 @Component({
   selector: 'wgl-game-container',

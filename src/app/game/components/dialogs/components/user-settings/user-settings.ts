@@ -6,12 +6,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AudioType } from '../../../../../shared/services/audio/audio-data';
-import { AudioManagerService } from '../../../../../shared/services/audio/audio-manager';
-import { HighScoreManagerService } from '../../../../../shared/services/high-score-manager';
-import { StorageService } from '../../../../../shared/services/storage/storage.service';
-import { HapticsManagerService } from '../../../../../shared/services/haptics-manager';
-import { AnalyticsEventType, AnalyticsManagerService } from '../../../../../shared/services/analytics-manager';
+import { AudioManagerService, AudioType } from '@rikkle/audio';
+import {
+  AnalyticsEventType,
+  AnalyticsManagerService,
+  HapticsManagerService,
+  HighScoreManagerService,
+  StorageService,
+} from '@rikkle/shared';
 import { HintsManagerService } from '../../../../services/hints-manager';
 
 @Component({
