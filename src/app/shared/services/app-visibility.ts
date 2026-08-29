@@ -11,5 +11,3 @@ export class AppVisibilityService {
     this.VisibilityChanged = new Subject<boolean>();
   }
 }
-
-export { AppVisibilityService as AppVisibility };

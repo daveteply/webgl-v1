@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PostProcessingManager } from './post-processing-manager';
+import { PostProcessingManagerService } from './post-processing-manager';
 
-describe('PostProcessingManager', () => {
-  let service: PostProcessingManager;
+describe('PostProcessingManagerService', () => {
+  let service: PostProcessingManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PostProcessingManager);
+    service = TestBed.inject(PostProcessingManagerService);
   });
 
   it('should be created', () => {

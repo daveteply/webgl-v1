@@ -45,5 +45,3 @@ export class ShareContent implements OnInit {
     this.shareManager.RequestScreenShot(this.document);
   }
 }
-
-export { ShareContent as ShareContentComponent };

@@ -75,5 +75,3 @@ export class SaveGameService {
     }
   }
 }
-
-export { SaveGameService as SaveGame };

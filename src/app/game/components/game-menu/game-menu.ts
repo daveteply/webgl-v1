@@ -6,11 +6,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
-import { NotifyService } from '../../../shared/services/notify';
 import { ShareManagerService } from '../../services/share-manager';
 import { PwaInstallService } from '../../../shared/services/pwa-install';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
 import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
+import { About } from '../../../shared/components/about/about';
 import { APP_VERSION } from '../../../version';
 
 @Component({
@@ -24,13 +24,16 @@ export class GameMenu {
   public pwaInstallService = inject(PwaInstallService);
   public appVersion = APP_VERSION;
 
-  private notify = inject(NotifyService);
   private analyticsManager = inject(AnalyticsManagerService);
   private dialog = inject(MatDialog);
 
   public AboutClick(): void {
     this.analyticsManager.Log(AnalyticsEventType.GameMenuAboutCTA);
-    this.notify.Notify();
+    this.dialog.open(About, {
+      id: 'about-dialog',
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
   }
 
   public SettingsClick(): void {
@@ -60,5 +63,3 @@ export class GameMenu {
     });
   }
 }
-
-export { GameMenu as GameMenuComponent };

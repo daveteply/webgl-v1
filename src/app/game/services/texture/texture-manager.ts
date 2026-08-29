@@ -338,5 +338,3 @@ export class TextureManagerService {
     this.LevelTexturesLoaded.next(true);
   }
 }
-
-export { TextureManagerService as TextureManager };

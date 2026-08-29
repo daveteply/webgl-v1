@@ -1,5 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/typescript-node:22-bookworm
 
+ARG NODE_VERSION="22.22"
+RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} && nvm alias default ${NODE_VERSION}"
+
 # Install latest npm & global Angular CLI
 RUN npm install -g npm@latest @angular/cli@latest
 

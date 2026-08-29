@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera } from 'three';
 import { vi } from 'vitest';
 
-import { InteractionManager } from './interaction-manager';
-import { EffectsManager } from './effects-manager';
+import { InteractionManagerService } from './interaction-manager';
+import { EffectsManagerService } from './effects-manager';
 import { ScoringManagerService } from './scoring-manager';
 import { ObjectManagerService } from './object-manager';
 import { GameEngineService } from './game-engine';
@@ -16,12 +16,12 @@ import { LevelMaterialType } from '../models/level-material-type';
 import { LevelGeometryType } from '../models/level-geometry-type';
 import { GravityType } from '../models/gravity-type';
 
-describe('InteractionManager', () => {
-  let service: InteractionManager;
+describe('InteractionManagerService', () => {
+  let service: InteractionManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(InteractionManager);
+    service = TestBed.inject(InteractionManagerService);
   });
 
   it('should be created', () => {
@@ -73,7 +73,7 @@ describe('InteractionManager', () => {
 
   it('should play POWER_MOVE_USE and keep board locked during vertical power moves until animation completes', () => {
     const audioManager = TestBed.inject(AudioManagerService);
-    const effectsManager = TestBed.inject(EffectsManager);
+    const effectsManager = TestBed.inject(EffectsManagerService);
     const playSpy = vi.spyOn(audioManager, 'PlayAudio');
 
     const mockPiece = {
@@ -93,7 +93,7 @@ describe('InteractionManager', () => {
 
   it('should wait for RemoveAnimationComplete before triggering level complete animation on Bomb', () => {
     const audioManager = TestBed.inject(AudioManagerService);
-    const effectsManager = TestBed.inject(EffectsManager);
+    const effectsManager = TestBed.inject(EffectsManagerService);
     const scoringManager = TestBed.inject(ScoringManagerService);
     const objectManager = TestBed.inject(ObjectManagerService);
     const gameEngine = TestBed.inject(GameEngineService);
@@ -150,7 +150,7 @@ describe('InteractionManager', () => {
   });
 
   it('should reset pan offset to 0 when LevelChangeAnimation starts', () => {
-    const effectsManager = TestBed.inject(EffectsManager);
+    const effectsManager = TestBed.inject(EffectsManagerService);
     service.SetPan(0.75);
     expect(service.PanOffset).toBe(0.75);
 

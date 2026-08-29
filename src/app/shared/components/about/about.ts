@@ -36,5 +36,3 @@ export class About implements OnInit {
     });
   }
 }
-
-export { About as AboutDialogComponent, About as AboutDialog };

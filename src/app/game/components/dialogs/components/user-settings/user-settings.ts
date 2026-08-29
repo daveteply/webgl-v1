@@ -161,5 +161,3 @@ export class UserSettings implements OnDestroy {
     this.audioManager.StopAudio(AudioType.LEVEL_END_7);
   }
 }
-
-export { UserSettings as UserSettingsComponent };

@@ -321,5 +321,3 @@ export class MaterialManagerService {
     return { colors: targetColors, name: selectedScheme?.name, emoji: selectedScheme?.emoji };
   }
 }
-
-export { MaterialManagerService as MaterialManager };

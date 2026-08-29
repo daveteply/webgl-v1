@@ -302,5 +302,3 @@ export class AudioManagerService implements OnDestroy {
     this._audioCtx?.close();
   }
 }
-
-export { AudioManagerService as AudioManager };

@@ -157,5 +157,3 @@ export class TutorialOverlay implements OnInit, OnDestroy {
     this.hintsManager.SkipAllTutorials();
   }
 }
-
-export { TutorialOverlay as TutorialOverlayComponent };

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ShareManager } from './share-manager';
+import { ShareManagerService } from './share-manager';
 
-describe('ShareManager', () => {
-  let service: ShareManager;
+describe('ShareManagerService', () => {
+  let service: ShareManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ShareManager);
+    service = TestBed.inject(ShareManagerService);
   });
 
   it('should be created', () => {
@@ -35,7 +35,7 @@ describe('ShareManager', () => {
 
   it('should report CanShare observable', () => {
     let result = false;
-    service.CanShare().subscribe((canShare) => {
+    service.CanShare().subscribe((canShare: boolean) => {
       result = canShare;
     });
     expect(typeof result).toBe('boolean');

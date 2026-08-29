@@ -102,5 +102,3 @@ export class TextManagerService {
     }
   }
 }
-
-export { TextManagerService as TextManager };

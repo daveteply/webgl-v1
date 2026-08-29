@@ -165,5 +165,3 @@ export class PostProcessingManagerService {
     this._unrealBloomPass.enabled = false;
   }
 }
-
-export { PostProcessingManagerService as PostProcessingManager };

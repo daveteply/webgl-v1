@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera, Scene } from 'three';
 
-import { TextManager } from './text-manager';
+import { TextManagerService } from './text-manager';
 
-describe('TextManager', () => {
-  let service: TextManager;
+describe('TextManagerService', () => {
+  let service: TextManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TextManager);
+    service = TestBed.inject(TextManagerService);
   });
 
   it('should be created', () => {

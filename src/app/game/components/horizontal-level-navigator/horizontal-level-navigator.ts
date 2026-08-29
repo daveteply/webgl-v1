@@ -133,5 +133,3 @@ export class HorizontalLevelNavigator implements OnInit, OnDestroy {
     }
   }
 }
-
-export { HorizontalLevelNavigator as HorizontalLevelNavigatorComponent };

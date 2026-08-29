@@ -31,5 +31,3 @@ export class ZoomChar implements AfterViewInit, OnDestroy {
     this._zoomTween?.stop();
   }
 }
-
-export { ZoomChar as ZoomCharComponent };
