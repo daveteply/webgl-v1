@@ -20,11 +20,11 @@ import { StarField } from '../models/star-field';
 
 import { MaterialManagerService } from '../services/material/material-manager';
 import { EffectsManagerService } from './effects-manager';
-import { AudioManagerService } from '../../shared/services/audio/audio-manager';
+import { AudioManagerService } from '@rikkle/audio';
 import { TextManagerService } from '../text/services/text-manager';
 import { GameEngineService } from './game-engine';
 import { PostProcessingManagerService } from './post-processing-manager';
-import { PRNG } from '../../shared/utils/prng';
+import { PRNG } from '@rikkle/shared';
 
 @Injectable({
   providedIn: 'root',

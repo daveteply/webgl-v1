@@ -12,7 +12,14 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@rikkle/engine": ["./src/app/game/engine/index.ts"],
+      "@rikkle/state": ["./src/app/game/state/index.ts"],
+      "@rikkle/audio": ["./src/app/shared/services/audio/index.ts"],
+      "@rikkle/shared": ["./src/app/shared/index.ts"],
+      "@rikkle/shared/*": ["./src/app/shared/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

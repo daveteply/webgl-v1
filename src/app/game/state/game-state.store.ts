@@ -18,8 +18,8 @@ import { GravityType } from '../models/gravity-type';
 import { LevelStats } from '../models/level-stats';
 import { LevelTransitionType } from '../services/level-transition-type';
 import { FeatureFlagsService } from '../services/feature-flags/feature-flags.service';
-import { PRNG } from '../../shared/utils/prng';
-import { calculateLevelConfiguration, calculateLevelTransitionType } from '../engine';
+import { PRNG } from '@rikkle/shared';
+import { calculateLevelConfiguration, calculateLevelTransitionType } from '@rikkle/engine';
 import { GameStatus } from './game-status';
 
 function createInitialLevelStats(): LevelStats {

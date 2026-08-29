@@ -5,12 +5,12 @@ import { Easing, Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from './tween-group';
 import { MathUtils, Object3D, PerspectiveCamera, PointLight } from 'three';
 
-import { AudioManagerService } from '../../shared/services/audio/audio-manager';
-import { HapticsManagerService } from '../../shared/services/haptics-manager';
+import { AudioManagerService, AudioType } from '@rikkle/audio';
+import { HapticsManagerService } from '@rikkle/shared';
 import { ScoringManagerService } from './scoring-manager';
 import { MaterialManagerService } from './material/material-manager';
 import { GameEngineService } from './game-engine';
-import { calculateGravityShift } from '../engine';
+import { calculateGravityShift } from '@rikkle/engine';
 
 import {
   CAMERA_HORIZONTAL_OFFSET,
@@ -22,7 +22,6 @@ import {
 import { GamePiece, PieceStateSnapshot } from '../models/game-piece/game-piece';
 import { GameWheel } from '../models/game-wheel';
 import { GravityType } from '../models/gravity-type';
-import { AudioType } from '../../shared/services/audio/audio-data';
 import { PowerMoveType } from '../models/power-move-type';
 import { LEVEL_ANIMATION_STYLES, LevelAnimationStyle } from '../models/level-animation-style';
 import { LevelOrientationType } from '../models/level-orientation-type';
