@@ -35,6 +35,7 @@ import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizont
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import { TutorialType } from '../../services/hints-manager';
+import { GameStateStore } from '../../state/game-state.store';
 
 @Component({
   selector: 'wgl-game-container',
@@ -73,6 +74,7 @@ export class GameContainer implements OnInit, AfterViewInit {
   private shareManager = inject(ShareManagerService);
   private analyticsManager = inject(AnalyticsManagerService);
   public scoringManager = inject(ScoringManagerService);
+  public store = inject(GameStateStore);
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 

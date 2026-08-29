@@ -1,21 +1,13 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MathUtils } from 'three';
-import {
-  DIFFICULTY_TIER_4,
-  LEVEL_ADDITIVE,
-  LONG_MATCH_SCORE_MULTIPLIER,
-  MINIMUM_MATCH_COUNT,
-  MINIMUM_SPEED_BONUS,
-  PERFECT_MATCH_SCORE_MULTIPLIER,
-  POWER_MOVE_USE_SCORE_MULTIPLIER,
-  RAINBOW_COLOR_ARRAY,
-} from '../game-constants';
+import { RAINBOW_COLOR_ARRAY } from '../game-constants';
 import { LevelMaterialType } from '../models/level-material-type';
 import { LevelStats } from '../models/level-stats';
 import { PowerMoveType, GetPowerMoveLabel } from '../models/power-move-type';
 import { GameEngineService } from './game-engine';
 import { TextManagerService } from '../text/services/text-manager';
+import { GameStateStore } from '../state/game-state.store';
 
 @Injectable({
   providedIn: 'root',
@@ -23,146 +15,110 @@ import { TextManagerService } from '../text/services/text-manager';
 export class ScoringManagerService {
   private textManager = inject(TextManagerService);
   private gameEngine = inject(GameEngineService);
+  private store = inject(GameStateStore);
 
-  private _levelStats!: LevelStats;
   private _timeStart!: number;
   private _timeStop!: number;
 
   // events
   public MovesChange: Subject<boolean> = new Subject<boolean>();
 
-  // Signals for template reactivity
-  readonly level = signal<number>(1);
+  // Signals for template reactivity (delegated from GameStateStore)
+  readonly level = this.store.level;
   get Level(): number {
     return this.level();
   }
 
-  readonly score = signal<number>(0);
+  readonly score = this.store.score;
   get Score(): number {
     return this.score();
   }
 
-  readonly levelPieceTarget = signal<number>(0);
+  readonly levelPieceTarget = this.store.levelPieceTarget;
   get LevelPieceTarget(): number {
     return this.levelPieceTarget();
   }
 
-  readonly levelProgress = signal<number>(0);
+  readonly levelProgress = this.store.levelProgress;
   get LevelProgress(): number {
     return this.levelProgress();
   }
 
-  readonly piecesRemaining = signal<number>(0);
+  readonly piecesRemaining = this.store.piecesRemaining;
   get PiecesRemaining(): number {
     return this.piecesRemaining();
   }
 
-  readonly playerMoves = signal<number>(0);
+  readonly playerMoves = this.store.movesRemaining;
   get PlayerMoves(): number {
     return this.playerMoves();
   }
 
   constructor() {
-    this.ResetStats();
-    this.initLevelPieceTarget();
+    this._timeStart = performance.now();
   }
 
   get GameOver(): boolean {
-    return this.playerMoves() === 0;
+    return this.store.isGameOver();
   }
 
   get LevelComplete(): boolean {
-    return this.levelProgress() >= 100;
+    return this.store.isLevelComplete();
   }
 
   get LevelStats(): LevelStats {
-    return this._levelStats;
+    return this.store.levelStats();
   }
 
   public ResetTimer(): void {
     this._timeStart = performance.now();
   }
+
   public StopTimer(): void {
     this._timeStop = performance.now();
   }
 
   public IncLevel(): void {
-    this.level.update((l) => l + 1);
+    this.store.incrementLevel();
   }
 
   public NextLevel(): void {
-    this.initLevelPieceTarget();
-    this.ResetStats();
+    this.store.nextLevel();
   }
 
   public UpdateLevelProgress(): void {
-    this._levelStats.pieceCount++;
-    const progress = Math.min((this.LevelStats.pieceCount / this.levelPieceTarget()) * 100, 100);
-    this.levelProgress.set(progress);
-
-    const remaining = Math.max(this.levelPieceTarget() - this.LevelStats.pieceCount, 0);
-    this.piecesRemaining.set(remaining);
+    this.store.updateLevelProgress(1);
   }
 
   public UpdateScore(pieceCount: number, endLevelSkip: boolean): void {
-    // update since previous match
     const timeDiff = this._timeStop - this._timeStart;
-    if (timeDiff < this._levelStats.fastestMatchTime) {
-      this._levelStats.fastestMatchTime = Math.round(timeDiff);
+    const result = this.store.recordMatchScore(pieceCount, timeDiff);
+
+    if (result.speedBonus && !endLevelSkip) {
+      this.textManager.ShowText(['Speed Bonus', `+${result.speedBonus} Points`], this.textColor);
+      this.MovesChange.next(true);
     }
 
-    let scoreDelta = 0;
-
-    // level multiplier
-    scoreDelta = pieceCount * this.level();
-
-    // match speed multiplier
-    const speedBonus = Math.ceil((1000 / timeDiff) * 1000);
-    if (speedBonus >= MINIMUM_SPEED_BONUS) {
-      this._levelStats.fastMatchBonusTotal += speedBonus;
-      scoreDelta += speedBonus;
-
-      // also earn move
-      this._levelStats.moveCountEarned++;
-      this.playerMoves.update((m) => m + 1);
-
-      // splash text
-      if (!endLevelSkip) {
-        this.textManager.ShowText(['Speed Bonus', `+${speedBonus} Points`], this.textColor);
-        this.MovesChange.next(true);
-      }
-    }
-
-    // update score
-    this.score.update((s) => s + scoreDelta);
-
-    // long match multiplier
-    if (pieceCount > MINIMUM_MATCH_COUNT) {
-      this.longMatchBonus(pieceCount, endLevelSkip);
+    if (result.longMatchBonus && !endLevelSkip) {
+      this.textManager.ShowText(['Long Match', `+${result.longMatchBonus} Points`], this.textColor);
+      this.MovesChange.next(true);
     }
 
     this.ResetTimer();
   }
 
   public UpdateMoveCount(): void {
-    this._levelStats.moveCount++;
-    this.playerMoves.update((m) => m - 1);
+    this.store.decrementMoves();
     this.MovesChange.next(false);
   }
 
   public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType): void {
-    let usePowerMoveBonus = this.level() * POWER_MOVE_USE_SCORE_MULTIPLIER;
-    if (additionalMoveCount) {
-      usePowerMoveBonus *= additionalMoveCount + 1;
-      this.playerMoves.update((m) => m + additionalMoveCount);
-      this._levelStats.moveCountEarned += additionalMoveCount;
-      this.MovesChange.next(true);
-    }
-    this.score.update((s) => s + usePowerMoveBonus);
+    const usePowerMoveBonus = this.store.recordPowerMoveBonus(additionalMoveCount);
 
     if (additionalMoveCount > 0) {
       const moveText = additionalMoveCount === 1 ? '+1 Move' : `+${additionalMoveCount} Moves`;
       this.textManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
+      this.MovesChange.next(true);
     } else {
       const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
       this.textManager.ShowText([`${labelText}!`, `+${usePowerMoveBonus} Points`], this.textColor, true);
@@ -170,47 +126,18 @@ export class ScoringManagerService {
   }
 
   public RestartGame(): void {
-    this.level.set(1);
-    this.score.set(0);
-    this.playerMoves.set(LEVEL_ADDITIVE);
-    this.initLevelPieceTarget();
-    this.ResetStats(true);
+    this.store.restartGame();
   }
 
   public ResetStats(restartLevel = false): void {
-    if (restartLevel || this.playerMoves() === 0) {
-      // reset moves for level restart or new game
-      const newMoves = this.level() < LONG_MATCH_SCORE_MULTIPLIER ? LEVEL_ADDITIVE : this.level();
-      this.playerMoves.set(newMoves);
-    }
-
-    if (restartLevel) {
-      this.score.set(0);
-    }
-
-    this.levelProgress.set(0);
-    this.piecesRemaining.set(this.levelPieceTarget());
-    this._levelStats = {
-      fastestMatchTime: Number.MAX_SAFE_INTEGER,
-      fastMatchBonusTotal: 0,
-      moveCount: 0,
-      moveCountEarned: 0,
-      pieceCount: 0,
-      perfectMatchBonus: 0,
-    };
-
+    this.store.resetStats(restartLevel);
     this._timeStart = performance.now();
   }
 
   public CheckPerfectMatch(): boolean {
-    if (
-      this.LevelComplete &&
-      this._levelStats.pieceCount === this.levelPieceTarget() &&
-      !this._levelStats.perfectMatchBonus
-    ) {
-      const perfectBonus = this.level() * PERFECT_MATCH_SCORE_MULTIPLIER;
-      this._levelStats.perfectMatchBonus = perfectBonus;
-      this.score.update((s) => s + perfectBonus);
+    const awarded = this.store.checkPerfectMatch();
+    if (awarded) {
+      const perfectBonus = this.store.levelStats().perfectMatchBonus;
       this.textManager.ShowText(['Perfect Match!', `+${perfectBonus} Points`], this.textColor, true);
       return true;
     }
@@ -218,63 +145,31 @@ export class ScoringManagerService {
   }
 
   public StatsEntries(): number {
+    const stats = this.store.levelStats();
     let entryCount = 0;
-    if (this._levelStats.fastMatchBonusTotal > 0) {
+    if (stats.fastMatchBonusTotal > 0) {
       entryCount++;
-      if (this._levelStats.fastestMatchTime < Number.MAX_SAFE_INTEGER) {
+      if (stats.fastestMatchTime < Number.MAX_SAFE_INTEGER) {
         entryCount++;
       }
     }
-    if (this._levelStats.moveCount > 0) {
+    if (stats.moveCount > 0) {
       entryCount++;
     }
-    if (this._levelStats.moveCountEarned > 0) {
+    if (stats.moveCountEarned > 0) {
       entryCount++;
     }
-    if (this._levelStats.pieceCount > 0) {
+    if (stats.pieceCount > 0) {
       entryCount++;
     }
-    if (this._levelStats.perfectMatchBonus && this._levelStats.perfectMatchBonus > 0) {
+    if (stats.perfectMatchBonus && stats.perfectMatchBonus > 0) {
       entryCount++;
     }
     return entryCount;
   }
 
   public StartSavedGame(level: number, score: number, moves: number): void {
-    this.level.set(level);
-    this.score.set(score);
-    this.playerMoves.set(moves);
-    this.initLevelPieceTarget();
-    this.ResetStats();
-    if (moves > 0) {
-      this.playerMoves.set(moves);
-    }
-  }
-
-  private longMatchBonus(pieceCount: number, endLevelSkip: boolean) {
-    const longMatchMovesEarned = Math.ceil(MINIMUM_MATCH_COUNT * Math.log10(pieceCount - (MINIMUM_MATCH_COUNT - 1)));
-    if (longMatchMovesEarned) {
-      this.playerMoves.update((m) => m + longMatchMovesEarned);
-      this._levelStats.moveCountEarned += longMatchMovesEarned;
-
-      const longMatchBonus = longMatchMovesEarned * this.level() * LONG_MATCH_SCORE_MULTIPLIER;
-      this.score.update((s) => s + longMatchBonus);
-
-      if (!endLevelSkip) {
-        this.textManager.ShowText(['Long Match', `+${longMatchBonus} Points`], this.textColor);
-        this.MovesChange.next(true);
-      }
-    }
-  }
-
-  private initLevelPieceTarget(): void {
-    let target = Math.ceil(Math.log2(this.level())) + this.level() + LEVEL_ADDITIVE;
-    // cap the number of pieces
-    if (target > DIFFICULTY_TIER_4) {
-      target = DIFFICULTY_TIER_4;
-    }
-    this.levelPieceTarget.set(target);
-    this.piecesRemaining.set(target);
+    this.store.startSavedGame(level, score, moves);
   }
 
   private get textColor(): number | undefined {

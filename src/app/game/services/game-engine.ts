@@ -9,9 +9,8 @@ import { GameWheel } from '../models/game-wheel';
 import { PowerMoveType } from '../models/power-move-type';
 import { LevelTransitionType } from './level-transition-type';
 import { PRNG } from '../../shared/utils/prng';
-import { FeatureFlagsService } from './feature-flags/feature-flags.service';
+import { GameStateStore } from '../state/game-state.store';
 import {
-  calculateLevelConfiguration,
   calculateLevelTransitionType,
   evaluatePowerMove,
   findBombTargets,
@@ -24,59 +23,51 @@ import {
   providedIn: 'root',
 })
 export class GameEngineService {
-  private featureFlags = inject(FeatureFlagsService);
+  private store = inject(GameStateStore);
 
   get PlayableTextureCount(): number {
     return PLAYABLE_TEXTURE_COUNT;
   }
 
-  private _levelMaterialType!: LevelMaterialType;
+  // Reactive signals delegated from GameStateStore
+  readonly levelMaterialType = this.store.levelMaterialType;
   get LevelMaterialType(): LevelMaterialType {
-    return this._levelMaterialType;
+    return this.levelMaterialType();
   }
 
-  private _levelGeometryType: LevelGeometryType = LevelGeometryType.Cube;
+  readonly levelGeometryType = this.store.levelGeometryType;
   get LevelGeometryType(): LevelGeometryType {
-    return this._levelGeometryType;
+    return this.levelGeometryType();
   }
 
-  private _gravityType: GravityType = GravityType.None;
+  readonly gravityType = this.store.gravityType;
   get GravityType(): GravityType {
-    return this._gravityType;
+    return this.gravityType();
   }
 
-  private _levelOrientation: LevelOrientationType = LevelOrientationType.Vertical;
+  readonly levelOrientation = this.store.levelOrientation;
   get LevelOrientation(): LevelOrientationType {
-    return this._levelOrientation;
+    return this.levelOrientation();
   }
 
+  readonly isHorizontal = this.store.isHorizontal;
   get IsHorizontal(): boolean {
-    return this._levelOrientation !== LevelOrientationType.Vertical;
+    return this.isHorizontal();
   }
 
-  private _levelTransitionType: LevelTransitionType = LevelTransitionType.Default;
+  readonly levelTransitionType = this.store.levelTransitionType;
   get LevelTransitionType(): LevelTransitionType {
-    return this._levelTransitionType;
+    return this.levelTransitionType();
   }
 
   public InitLevelTypes(level: number, rng?: PRNG): void {
-    const config = calculateLevelConfiguration(level, rng ? () => rng.next() : Math.random, {
-      geometryOverride: this.featureFlags.geometryOverride(),
-      materialOverride: this.featureFlags.materialOverride(),
-      gravityOverride: this.featureFlags.gravityOverride(),
-      orientationOverride: this.featureFlags.orientationOverride(),
-    });
-
-    this._levelGeometryType = config.geometryType;
-    this._levelMaterialType = config.materialType;
-    this._gravityType = config.gravityType;
-    this._levelOrientation = config.orientation;
+    this.store.initLevelConfig(level, rng);
 
     if (isDevMode()) {
-      console.info('Level Material Type: ', LevelMaterialType[this._levelMaterialType]);
-      console.info('Level Geometry Type: ', LevelGeometryType[this._levelGeometryType]);
-      console.info('Level Gravity Type: ', this._gravityType);
-      console.info('Level Orientation: ', LevelOrientationType[this._levelOrientation]);
+      console.info('Level Material Type: ', LevelMaterialType[this.LevelMaterialType]);
+      console.info('Level Geometry Type: ', LevelGeometryType[this.LevelGeometryType]);
+      console.info('Level Gravity Type: ', this.GravityType);
+      console.info('Level Orientation: ', LevelOrientationType[this.LevelOrientation]);
     }
   }
 
@@ -86,16 +77,14 @@ export class GameEngineService {
     gravityType?: GravityType,
     levelOrientation?: LevelOrientationType,
   ): void {
-    this._levelMaterialType = levelMaterialType;
-    this._levelGeometryType = levelGeometryType;
-    this._gravityType = gravityType ?? GravityType.None;
-    this._levelOrientation = levelOrientation ?? LevelOrientationType.Vertical;
+    this.store.restoreLevel(levelMaterialType, levelGeometryType, gravityType, levelOrientation);
   }
 
   public InitLevelTransitionType(level?: number): void {
-    this._levelTransitionType = calculateLevelTransitionType(level);
+    const transitionType = calculateLevelTransitionType(level);
+    this.store.levelTransitionType.set(transitionType);
     if (isDevMode()) {
-      console.info('Level Transition:', LevelTransitionType[this._levelTransitionType]);
+      console.info('Level Transition:', LevelTransitionType[transitionType]);
     }
   }
 

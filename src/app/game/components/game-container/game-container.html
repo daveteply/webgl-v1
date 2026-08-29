@@ -11,12 +11,12 @@
 <div class="game-layout">
   <div class="game-scoring" [class.show]="showScoreProgress()">
     <div class="game-logo"></div>
-    <wgl-text-zoom class="game-score" [text]="scoringManager.Score"></wgl-text-zoom>
-    <wgl-moves-left class="moves-remaining" [amount]="scoringManager.PlayerMoves"></wgl-moves-left>
+    <wgl-text-zoom class="game-score" [text]="store.score()"></wgl-text-zoom>
+    <wgl-moves-left class="moves-remaining" [amount]="store.movesRemaining()"></wgl-moves-left>
     <div class="level-info" [style.color]="LevelLabelColor()">
       <span>Level</span>
       <span>&nbsp;</span>
-      <div>{{ scoringManager.Level }}</div>
+      <div>{{ store.level() }}</div>
     </div>
   </div>
   <div class="game">
@@ -24,14 +24,13 @@
   </div>
   <wgl-horizontal-level-navigator
     class="horizontal-navigator"
-    [class.show]="gameEngine.IsHorizontal && showScoreProgress() && !isLevelChanging()"
+    [class.show]="store.isHorizontal() && showScoreProgress() && !isLevelChanging()"
   ></wgl-horizontal-level-navigator>
   <wgl-share-content class="docked-share-tab" [class.show]="showScoreProgress()"></wgl-share-content>
   <div class="game-footer" [class.show]="showScoreProgress()">
     <div class="level-progress">
-      <div class="level-progress--percent">{{ scoringManager.LevelProgress | number: '1.0-0' }}%</div>
-      <wgl-progress-bar [value]="scoringManager.LevelProgress" [remaining]="scoringManager.PiecesRemaining">
-      </wgl-progress-bar>
+      <div class="level-progress--percent">{{ store.levelProgress() | number: '1.0-0' }}%</div>
+      <wgl-progress-bar [value]="store.levelProgress()" [remaining]="store.piecesRemaining()"> </wgl-progress-bar>
     </div>
     <wgl-game-menu></wgl-game-menu>
   </div>
