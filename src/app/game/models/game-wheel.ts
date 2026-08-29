@@ -71,6 +71,19 @@ export class GameWheel extends Object3D {
     return this._wheelBelow;
   }
 
+  // Pure domain property accessors (camelCase)
+  get pieces(): GamePiece[] {
+    return this.children as GamePiece[];
+  }
+
+  get above(): GameWheel | undefined {
+    return this._wheelAbove;
+  }
+
+  get below(): GameWheel | undefined {
+    return this._wheelBelow;
+  }
+
   public Reset(levelGeometryType: LevelGeometryType): void {
     this._levelChangeTween?.stop();
     this._horizontalMotionTween?.stop();

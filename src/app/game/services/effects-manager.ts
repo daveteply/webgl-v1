@@ -9,13 +9,11 @@ import { AudioManagerService } from '../../shared/services/audio/audio-manager';
 import { HapticsManagerService } from '../../shared/services/haptics-manager';
 import { ScoringManagerService } from './scoring-manager';
 import { MaterialManagerService } from './material/material-manager';
-import { PieceMaterials } from './material/material-models';
 import { GameEngineService } from './game-engine';
+import { calculateGravityShift } from '../engine';
 
 import {
   CAMERA_HORIZONTAL_OFFSET,
-  DECIMAL_COMPARISON_TOLERANCE,
-  GRID_VERTICAL_OFFSET,
   HALF_PI,
   HORIZONTAL_TURN_DURATION,
   MINIMUM_MATCH_COUNT,
@@ -319,13 +317,6 @@ export class EffectsManagerService {
       return;
     }
 
-    if (gravityType === GravityType.Mix) {
-      gravityType = Math.random() < 0.5 ? GravityType.Down : GravityType.Up;
-      if (isDevMode()) {
-        console.info('Mix Gravity Resolved To:', gravityType);
-      }
-    }
-
     this._selectedPieces = [];
 
     // Stop ongoing removal/scatter tweens and reset mesh position/rotation to local origin
@@ -335,138 +326,13 @@ export class EffectsManagerService {
       }
     });
 
-    const numWheels = axle.length;
-    const firstWheel = axle[0];
-    const piecesPerWheel = firstWheel.children.length;
+    const shiftResult = calculateGravityShift<GamePiece>(axle, gravityType);
 
-    // Group pieces into columns by ThetaOffset
-    const columns: GamePiece[][] = [];
-    const samplePieces = firstWheel.children as GamePiece[];
-
-    for (let pIdx = 0; pIdx < piecesPerWheel; pIdx++) {
-      const samplePiece = samplePieces[pIdx];
-      const column: GamePiece[] = [];
-      for (let wIdx = 0; wIdx < numWheels; wIdx++) {
-        const wheelPieces = axle[wIdx].children as GamePiece[];
-        const matchPiece = wheelPieces.find(
-          (p) => Math.abs(p.ThetaOffset - samplePiece.ThetaOffset) < DECIMAL_COMPARISON_TOLERANCE,
-        );
-        if (matchPiece) {
-          column.push(matchPiece);
-        }
-      }
-      if (column.length === numWheels) {
-        columns.push(column);
-      }
+    if (isDevMode() && gravityType === GravityType.Mix) {
+      console.info('Mix Gravity Resolved To:', shiftResult.resolvedGravityType);
     }
 
-    interface ShiftAction {
-      targetPiece: GamePiece;
-      sourcePiece?: GamePiece;
-      isNewSpawn: boolean;
-      startOffsetY: number;
-      newMaterial?: PieceMaterials;
-    }
-
-    const actionsToAnimate: ShiftAction[] = [];
-    let hasAnyShift = false;
-
-    for (const col of columns) {
-      const removedIndices: number[] = [];
-      col.forEach((p, idx) => {
-        if (p.IsRemoved && !p.IsPowerMove) removedIndices.push(idx);
-      });
-
-      if (removedIndices.length === 0) continue;
-
-      hasAnyShift = true;
-      const numRemoved = removedIndices.length;
-
-      if (gravityType === GravityType.Down) {
-        const lowestRemoved = Math.min(...removedIndices);
-
-        const nonRemovedAbove: GamePiece[] = [];
-        for (let i = lowestRemoved; i < numWheels; i++) {
-          if (!col[i].IsRemoved || col[i].IsPowerMove) {
-            nonRemovedAbove.push(col[i]);
-          }
-        }
-
-        nonRemovedAbove.forEach((sourceP, i) => {
-          const targetIdx = lowestRemoved + i;
-          const targetP = col[targetIdx];
-          const sourceIdx = col.indexOf(sourceP);
-          const steps = sourceIdx - targetIdx;
-          const startOffsetY = steps * GRID_VERTICAL_OFFSET;
-
-          actionsToAnimate.push({
-            targetPiece: targetP,
-            sourcePiece: sourceP,
-            isNewSpawn: false,
-            startOffsetY,
-          });
-        });
-
-        const newSpawnCount = numWheels - (lowestRemoved + nonRemovedAbove.length);
-        for (let i = 0; i < newSpawnCount; i++) {
-          const targetIdx = numWheels - newSpawnCount + i;
-          const targetP = col[targetIdx];
-          const startOffsetY = (numRemoved + i) * GRID_VERTICAL_OFFSET;
-          const newMat = this.materialManager.GetRandomPieceMaterial();
-
-          actionsToAnimate.push({
-            targetPiece: targetP,
-            isNewSpawn: true,
-            startOffsetY,
-            newMaterial: newMat,
-          });
-        }
-      } else if (gravityType === GravityType.Up) {
-        const highestRemoved = Math.max(...removedIndices);
-
-        const nonRemovedBelow: GamePiece[] = [];
-        for (let i = 0; i <= highestRemoved; i++) {
-          if (!col[i].IsRemoved || col[i].IsPowerMove) {
-            nonRemovedBelow.push(col[i]);
-          }
-        }
-
-        nonRemovedBelow
-          .slice()
-          .reverse()
-          .forEach((sourceP, i) => {
-            const targetIdx = highestRemoved - i;
-            const targetP = col[targetIdx];
-            const sourceIdx = col.indexOf(sourceP);
-            const steps = sourceIdx - targetIdx;
-            const startOffsetY = steps * GRID_VERTICAL_OFFSET;
-
-            actionsToAnimate.push({
-              targetPiece: targetP,
-              sourcePiece: sourceP,
-              isNewSpawn: false,
-              startOffsetY,
-            });
-          });
-
-        const newSpawnCount = highestRemoved + 1 - nonRemovedBelow.length;
-        for (let i = 0; i < newSpawnCount; i++) {
-          const targetIdx = i;
-          const targetP = col[targetIdx];
-          const startOffsetY = -(numRemoved + (newSpawnCount - 1 - i)) * GRID_VERTICAL_OFFSET;
-          const newMat = this.materialManager.GetRandomPieceMaterial();
-
-          actionsToAnimate.push({
-            targetPiece: targetP,
-            isNewSpawn: true,
-            startOffsetY,
-            newMaterial: newMat,
-          });
-        }
-      }
-    }
-
-    if (!hasAnyShift || actionsToAnimate.length === 0) {
+    if (!shiftResult.hasAnyShift || shiftResult.actions.length === 0) {
       this.GravityAnimationComplete.next();
       return;
     }
@@ -476,7 +342,7 @@ export class EffectsManagerService {
 
     // Save snapshot of source pieces before copying state
     const snapshots = new Map<GamePiece, PieceStateSnapshot>();
-    actionsToAnimate.forEach((action) => {
+    shiftResult.actions.forEach((action) => {
       if (action.sourcePiece && !snapshots.has(action.sourcePiece)) {
         snapshots.set(action.sourcePiece, action.sourcePiece.GetStateSnapshot());
       }
@@ -485,10 +351,11 @@ export class EffectsManagerService {
     const tweens: Tween<Record<string, number>>[] = [];
     const duration = 1000;
 
-    actionsToAnimate.forEach((action) => {
-      if (action.isNewSpawn && action.newMaterial) {
+    shiftResult.actions.forEach((action) => {
+      if (action.isNewSpawn) {
+        const newMaterial = this.materialManager.GetRandomPieceMaterial();
         action.targetPiece.Reset(this.gameEngine.LevelGeometryType ?? 0);
-        action.targetPiece.UpdateMaterials(action.newMaterial);
+        action.targetPiece.UpdateMaterials(newMaterial);
       } else if (action.sourcePiece) {
         const snap = snapshots.get(action.sourcePiece);
         if (snap) {

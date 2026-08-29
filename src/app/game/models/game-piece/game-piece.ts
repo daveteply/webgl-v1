@@ -21,6 +21,7 @@ import { PieceMaterials, PieceSideMaterial } from '../../services/material/mater
 import { LevelGeometryType } from '../level-geometry-type';
 import { GamePieceRemovalStyle } from './game-piece-removal-style';
 import { LevelAnimationStyle } from '../level-animation-style';
+import type { GameWheel } from '../game-wheel';
 
 export interface PieceStateSnapshot {
   isRemoved: boolean;
@@ -92,6 +93,46 @@ export class GamePiece extends Object3D {
   private _powerMoveType!: PowerMoveType;
   get PowerMoveType(): PowerMoveType {
     return this._powerMoveType;
+  }
+
+  // Pure domain property accessors (camelCase)
+  get matchKey(): number {
+    return this._matchKey;
+  }
+
+  get thetaOffset(): number {
+    return this._thetaOffset;
+  }
+
+  get isMatch(): boolean {
+    return this.IsMatch;
+  }
+  set isMatch(val: boolean) {
+    this.IsMatch = val;
+  }
+
+  get isRemoved(): boolean {
+    return this._isRemoved;
+  }
+
+  get isPowerMove(): boolean {
+    return this._isPowerMove;
+  }
+
+  get powerMoveType(): PowerMoveType {
+    return this._powerMoveType;
+  }
+
+  get next(): GamePiece {
+    return this.Next;
+  }
+
+  get prev(): GamePiece {
+    return this.Prev;
+  }
+
+  get parentWheel(): GameWheel | undefined {
+    return this.parent as GameWheel | undefined;
   }
 
   private static sharedCubeGeometry: BoxGeometry | null = null;
