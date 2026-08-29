@@ -52,5 +52,3 @@ export class HighScoreManagerService {
     this.storageService.setItem(STORAGE_HIGH_SCORES, scores);
   }
 }
-
-export { HighScoreManagerService as HighScoreManager };

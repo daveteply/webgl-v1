@@ -141,5 +141,3 @@ export class AnalyticsManagerService {
     }
   }
 }
-
-export { AnalyticsManagerService as AnalyticsManager };

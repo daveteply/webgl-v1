@@ -28,7 +28,7 @@ import { GameOver } from '../dialogs/components/game-over/game-over';
 import { TutorialOverlay } from '../tutorial-overlay/tutorial-overlay';
 import { TextZoom } from '../../text/components/text-zoom/text-zoom';
 import { MovesLeft } from '../moves-left/moves-left';
-import { ShareContentComponent } from '../share-content/share-content';
+import { ShareContent } from '../share-content/share-content';
 import { GameMenu } from '../game-menu/game-menu';
 import { ProgressBar } from '../../../shared/components/progress-bar/progress-bar';
 import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizontal-level-navigator';
@@ -44,7 +44,7 @@ import { TutorialType } from '../../services/hints-manager';
     MatProgressBarModule,
     TextZoom,
     MovesLeft,
-    ShareContentComponent,
+    ShareContent,
     GameMenu,
     ProgressBar,
     HorizontalLevelNavigator,
@@ -412,5 +412,3 @@ export class GameContainer implements OnInit, AfterViewInit {
     }
   }
 }
-
-export { GameContainer as GameContainerComponent };

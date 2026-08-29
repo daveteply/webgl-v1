@@ -22,5 +22,3 @@ export class InstallPwaDialog {
     }
   }
 }
-
-export { InstallPwaDialog as InstallPwaComponent };

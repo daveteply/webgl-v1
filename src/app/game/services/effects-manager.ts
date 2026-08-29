@@ -515,5 +515,3 @@ export class EffectsManagerService {
     }
   }
 }
-
-export { EffectsManagerService as EffectsManager };

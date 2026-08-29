@@ -87,5 +87,3 @@ export class HapticsManagerService {
     return this.Vibrate([25, 40, 35, 40, 50]);
   }
 }
-
-export { HapticsManagerService as HapticsManager };

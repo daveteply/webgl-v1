@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ObjectManager } from './object-manager';
+import { ObjectManagerService } from './object-manager';
 
-describe('ObjectManager', () => {
-  let service: ObjectManager;
+describe('ObjectManagerService', () => {
+  let service: ObjectManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ObjectManager);
+    service = TestBed.inject(ObjectManagerService);
   });
 
   it('should be created', () => {

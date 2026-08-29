@@ -457,5 +457,3 @@ export class InteractionManagerService {
     }
   }
 }
-
-export { InteractionManagerService as InteractionManager };

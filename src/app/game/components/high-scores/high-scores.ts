@@ -21,5 +21,3 @@ export class HighScores implements OnInit {
     });
   }
 }
-
-export { HighScores as HighScoresComponent };

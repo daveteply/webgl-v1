@@ -19,5 +19,3 @@ export class DialogNotifyService {
     this._dialogEvent.next();
   }
 }
-
-export { DialogNotifyService as DialogNotify };

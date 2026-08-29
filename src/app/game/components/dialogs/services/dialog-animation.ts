@@ -265,5 +265,3 @@ export class DialogAnimationService implements OnDestroy {
     }
   }
 }
-
-export { DialogAnimationService as DialogAnimation };

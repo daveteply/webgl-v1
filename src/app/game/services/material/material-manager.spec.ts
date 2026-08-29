@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { Texture } from 'three';
 
-import { MaterialManager } from './material-manager';
+import { MaterialManagerService } from './material-manager';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { GameTexture } from '../texture/game-texture';
 import { PRNG } from '../../../shared/utils/prng';
 
-describe('MaterialManager', () => {
-  let service: MaterialManager;
+describe('MaterialManagerService', () => {
+  let service: MaterialManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MaterialManager);
+    service = TestBed.inject(MaterialManagerService);
   });
 
   it('should be created', () => {

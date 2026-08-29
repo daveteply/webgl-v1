@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DialogNotify } from './dialog-notify';
+import { DialogNotifyService } from './dialog-notify';
 
-describe('DialogNotify', () => {
-  let service: DialogNotify;
+describe('DialogNotifyService', () => {
+  let service: DialogNotifyService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DialogNotify);
+    service = TestBed.inject(DialogNotifyService);
   });
 
   it('should be created', () => {

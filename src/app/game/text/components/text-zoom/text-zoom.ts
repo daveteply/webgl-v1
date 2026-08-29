@@ -23,5 +23,3 @@ export class TextZoom {
     return [];
   });
 }
-
-export { TextZoom as TextZoomComponent };

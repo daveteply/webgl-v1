@@ -6,6 +6,7 @@ import { vi } from 'vitest';
 import { GameMenu } from './game-menu';
 import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
+import { About } from '../../../shared/components/about/about';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../../shared/services/analytics-manager';
 
 describe('GameMenu', () => {
@@ -38,9 +39,14 @@ describe('GameMenu', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should log GameMenuAboutCTA when AboutClick is called', () => {
+  it('should log GameMenuAboutCTA and open dialog when AboutClick is called', () => {
+    const dialog = component['dialog'];
+    const openSpy = vi
+      .spyOn(dialog, 'open')
+      .mockReturnValue({ afterClosed: () => of(true) } as unknown as MatDialogRef<About>);
     component.AboutClick();
     expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.GameMenuAboutCTA);
+    expect(openSpy).toHaveBeenCalled();
   });
 
   it('should log GameMenuSettingsCTA and open dialog when SettingsClick is called', () => {

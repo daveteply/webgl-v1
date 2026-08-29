@@ -112,5 +112,3 @@ export class Intro implements OnInit, OnDestroy {
     this.confirmNewGame.set(false);
   }
 }
-
-export { Intro as IntroDialogComponent, Intro as IntroDialog };

@@ -11,5 +11,3 @@ export class ProgressBar {
   value = input<number>(0);
   remaining = input<number>();
 }
-
-export { ProgressBar as ProgressBarComponent };

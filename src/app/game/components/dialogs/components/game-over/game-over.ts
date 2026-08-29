@@ -97,5 +97,3 @@ export class GameOver implements OnInit {
     this.dialogRef.close(this.data);
   }
 }
-
-export { GameOver as GameOverDialogComponent, GameOver as GameOverDialog };

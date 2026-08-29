@@ -21,7 +21,7 @@ import { TextManagerService } from '../text/services/text-manager';
   providedIn: 'root',
 })
 export class ScoringManagerService {
-  private textTextManager = inject(TextManagerService);
+  private textManager = inject(TextManagerService);
   private gameEngine = inject(GameEngineService);
 
   private _levelStats!: LevelStats;
@@ -128,7 +128,7 @@ export class ScoringManagerService {
 
       // splash text
       if (!endLevelSkip) {
-        this.textTextManager.ShowText(['Speed Bonus', `+${speedBonus} Points`], this.textColor);
+        this.textManager.ShowText(['Speed Bonus', `+${speedBonus} Points`], this.textColor);
         this.MovesChange.next(true);
       }
     }
@@ -162,10 +162,10 @@ export class ScoringManagerService {
 
     if (additionalMoveCount > 0) {
       const moveText = additionalMoveCount === 1 ? '+1 Move' : `+${additionalMoveCount} Moves`;
-      this.textTextManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
+      this.textManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
     } else {
       const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
-      this.textTextManager.ShowText([`${labelText}!`, `+${usePowerMoveBonus} Points`], this.textColor, true);
+      this.textManager.ShowText([`${labelText}!`, `+${usePowerMoveBonus} Points`], this.textColor, true);
     }
   }
 
@@ -199,7 +199,7 @@ export class ScoringManagerService {
       perfectMatchBonus: 0,
     };
 
-    this._timeStart = Date.now();
+    this._timeStart = performance.now();
   }
 
   public CheckPerfectMatch(): boolean {
@@ -211,7 +211,7 @@ export class ScoringManagerService {
       const perfectBonus = this.level() * PERFECT_MATCH_SCORE_MULTIPLIER;
       this._levelStats.perfectMatchBonus = perfectBonus;
       this.score.update((s) => s + perfectBonus);
-      this.textTextManager.ShowText(['Perfect Match!', `+${perfectBonus} Points`], this.textColor, true);
+      this.textManager.ShowText(['Perfect Match!', `+${perfectBonus} Points`], this.textColor, true);
       return true;
     }
     return false;
@@ -261,7 +261,7 @@ export class ScoringManagerService {
       this.score.update((s) => s + longMatchBonus);
 
       if (!endLevelSkip) {
-        this.textTextManager.ShowText(['Long Match', `+${longMatchBonus} Points`], this.textColor);
+        this.textManager.ShowText(['Long Match', `+${longMatchBonus} Points`], this.textColor);
         this.MovesChange.next(true);
       }
     }
@@ -285,5 +285,3 @@ export class ScoringManagerService {
     return targetColor;
   }
 }
-
-export { ScoringManagerService as ScoringManager };

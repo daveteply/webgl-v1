@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TextureManager } from './texture-manager';
+import { TextureManagerService } from './texture-manager';
 import { LevelMaterialType } from '../../models/level-material-type';
 import { LevelGeometryType } from '../../models/level-geometry-type';
 import { LevelOrientationType } from '../../models/level-orientation-type';
 
-describe('TextureManager', () => {
-  let service: TextureManager;
+describe('TextureManagerService', () => {
+  let service: TextureManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TextureManager);
+    service = TestBed.inject(TextureManagerService);
   });
 
   it('should be created', () => {

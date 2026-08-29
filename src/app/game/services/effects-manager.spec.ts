@@ -2,19 +2,19 @@ import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera, PointLight } from 'three';
 import { vi } from 'vitest';
 
-import { EffectsManagerService as EffectsManager } from './effects-manager';
+import { EffectsManagerService } from './effects-manager';
 import { GameWheel } from '../models/game-wheel';
 import { LevelAnimationStyle } from '../models/level-animation-style';
 import { LevelOrientationType } from '../models/level-orientation-type';
 import { GravityType } from '../models/gravity-type';
 import { PowerMoveType } from '../models/power-move-type';
 
-describe('EffectsManager', () => {
-  let service: EffectsManager;
+describe('EffectsManagerService', () => {
+  let service: EffectsManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EffectsManager);
+    service = TestBed.inject(EffectsManagerService);
   });
 
   it('should be created', () => {

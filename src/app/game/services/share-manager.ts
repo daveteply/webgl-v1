@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { DOCUMENT, formatNumber } from '@angular/common';
-import { forkJoin, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SHARE_FILE_NAME, SHARE_URL } from '../game-constants';
 import { ScoringManagerService } from './scoring-manager';
 
@@ -17,7 +17,6 @@ export class ShareManagerService {
   }
 
   private _rikkleLogo!: HTMLImageElement;
-  private _turbogeekbearLogo!: HTMLImageElement;
 
   private _inLevel = signal<boolean>(false);
   get InLevel(): boolean {
@@ -50,7 +49,7 @@ export class ShareManagerService {
     this._screenShotRequested = false;
 
     if (screenShotDataUrl) {
-      forkJoin([this.loadRikkleLogo() /*, this.loadTurbogeekbearLogo()*/]).subscribe({
+      this.loadRikkleLogo().subscribe({
         next: () => {
           this.createScreenShot(screenShotDataUrl);
         },
@@ -81,27 +80,6 @@ export class ShareManagerService {
       }
     });
   }
-
-  // private loadTurbogeekbearLogo(): Observable<void> {
-  //   return new Observable((observer) => {
-  //     if (!this._turbogeekbearLogo) {
-  //       this._turbogeekbearLogo = new Image();
-  //       this._turbogeekbearLogo.onload = (onloadEvent: Event) => {
-  //         this._turbogeekbearLogo = onloadEvent.target as HTMLImageElement;
-  //         observer.next();
-  //         observer.complete();
-  //       };
-  //       this._turbogeekbearLogo.onerror = () => {
-  //         observer.error();
-  //         observer.complete();
-  //       };
-  //       this._turbogeekbearLogo.src = 'assets/turbogeekbear-logo.webp';
-  //     } else {
-  //       observer.next();
-  //       observer.complete();
-  //     }
-  //   });
-  // }
 
   private async createScreenShot(screenShotDataUrl: string, useLogo = true): Promise<void> {
     if (this.document.fonts && typeof this.document.fonts.load === 'function') {
@@ -222,5 +200,3 @@ export class ShareManagerService {
     this.document.body.removeChild(a);
   }
 }
-
-export { ShareManagerService as ShareManager };

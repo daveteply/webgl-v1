@@ -139,5 +139,3 @@ export class SceneManagerService implements OnDestroy {
     });
   }
 }
-
-export { SceneManagerService as SceneManager };

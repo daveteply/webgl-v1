@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HighScoreManager } from './high-score-manager';
+import { HighScoreManagerService } from './high-score-manager';
 
-describe('HighScoreManager', () => {
-  let service: HighScoreManager;
+describe('HighScoreManagerService', () => {
+  let service: HighScoreManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HighScoreManager);
+    service = TestBed.inject(HighScoreManagerService);
   });
 
   it('should be created', () => {

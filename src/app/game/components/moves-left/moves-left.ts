@@ -18,5 +18,3 @@ export class MovesLeft {
   isDanger = computed(() => this.amount() === MOVES_REMAINING_COUNT_DANGER);
   isPanic = computed(() => this.amount() === MOVES_REMAINING_COUNT_PANIC);
 }
-
-export { MovesLeft as MovesLeftComponent };

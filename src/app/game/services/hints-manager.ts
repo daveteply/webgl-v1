@@ -206,5 +206,3 @@ export class HintsManagerService {
     }
   }
 }
-
-export { HintsManagerService as HintsManager };
