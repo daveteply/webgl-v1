@@ -2,7 +2,7 @@ import { Injectable, inject, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { TextureManagerService } from '../texture/texture-manager';
-import { StoreService } from '../../../app-store/services/store.service';
+import { GameStateStore } from '@rikkle/state';
 
 import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
@@ -13,14 +13,14 @@ import { PowerMoveType } from '../../models/power-move-type';
 import { COLOR_SCHEMES, ColorSchemeData } from './color-schemes';
 import { BUMP_SCALE } from '../../game-constants';
 import arrayShuffle from '../../../shared/utils/array-shuffle';
-import { PRNG } from '../../../shared/utils/prng';
+import { PRNG } from '@rikkle/shared';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MaterialManagerService {
   private textureManager = inject(TextureManagerService);
-  private store = inject(StoreService);
+  private store = inject(GameStateStore);
 
   private _gameMaterials!: GameMaterials;
   get GameMaterials(): GameMaterials {
@@ -31,6 +31,8 @@ export class MaterialManagerService {
   get LevelMaterials(): GamePieceMaterialData[] {
     return this._levelMaterials;
   }
+
+  private _spareMaterialPool: PieceMaterials[] = [];
 
   public InitMaterials(wheelCount: number, pieceCount: number): void {
     this.DisposeMaterials();
@@ -61,15 +63,24 @@ export class MaterialManagerService {
   }
 
   public DisposeMaterials(): void {
-    if (!this._gameMaterials?.wheelMaterials) return;
-    for (const wheel of this._gameMaterials.wheelMaterials) {
-      for (const piece of wheel.pieceMaterials) {
-        for (const side of piece.materials) {
-          side.materialPhong?.dispose();
-          side.materialBasic?.dispose();
+    if (this._gameMaterials?.wheelMaterials) {
+      for (const wheel of this._gameMaterials.wheelMaterials) {
+        for (const piece of wheel.pieceMaterials) {
+          for (const side of piece.materials) {
+            side.materialPhong?.dispose();
+            side.materialBasic?.dispose();
+          }
         }
       }
     }
+
+    for (const pooled of this._spareMaterialPool) {
+      for (const side of pooled.materials) {
+        side.materialPhong?.dispose();
+        side.materialBasic?.dispose();
+      }
+    }
+    this._spareMaterialPool = [];
   }
 
   public UpdateMaterials(
@@ -106,22 +117,34 @@ export class MaterialManagerService {
   }
 
   public GetRandomPieceMaterial(): PieceMaterials {
-    const pieceMaterials = arrayShuffle(this._levelMaterials);
-    const maxMaterials = 8;
-    const resultMaterials: PieceSideMaterial[] = [];
+    let pooled = this._spareMaterialPool.pop();
+    if (!pooled) {
+      const maxMaterials = 8;
+      const resultMaterials: PieceSideMaterial[] = [];
 
-    for (let i = 0; i < maxMaterials; i++) {
-      const side: PieceSideMaterial = {
-        matchKey: 0,
-        materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
-        materialBasic: new MeshBasicMaterial({ transparent: true }),
-        useBasic: false,
-      };
-      this.applyMaterialToSide(side, pieceMaterials[i], 0);
-      resultMaterials.push(side);
+      for (let i = 0; i < maxMaterials; i++) {
+        resultMaterials.push({
+          matchKey: 0,
+          materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
+          materialBasic: new MeshBasicMaterial({ transparent: true }),
+          useBasic: false,
+        });
+      }
+      pooled = { materials: resultMaterials };
     }
 
-    return { materials: resultMaterials };
+    const pieceMaterials = arrayShuffle(this._levelMaterials);
+    for (let i = 0; i < pooled.materials.length; i++) {
+      this.applyMaterialToSide(pooled.materials[i], pieceMaterials[i], 0);
+    }
+
+    return pooled;
+  }
+
+  public RecyclePieceMaterial(pieceMaterials: PieceMaterials): void {
+    if (pieceMaterials?.materials) {
+      this._spareMaterialPool.push(pieceMaterials);
+    }
   }
 
   public ApplyPowerMoveTexture(
@@ -222,7 +245,7 @@ export class MaterialManagerService {
       case LevelMaterialType.ColorBumpShape: {
         const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
         selectedColors = schemeInfo.colors;
-        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
+        this.store.updateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
         selectedColors.forEach((c, inx) => {
           const color = new Color(c);
@@ -241,7 +264,7 @@ export class MaterialManagerService {
       case LevelMaterialType.ColorBumpMaterial: {
         const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
         selectedColors = schemeInfo.colors;
-        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
+        this.store.updateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
         const bumpInx = rng ? rng.nextInt(0, textures.length - 1) : MathUtils.randInt(0, textures.length - 1);
         bumpTexture = textures[bumpInx];
@@ -273,7 +296,7 @@ export class MaterialManagerService {
       case LevelMaterialType.Color: {
         const schemeInfo = this.initColorScheme(level, playableTextureCount, rng);
         selectedColors = schemeInfo.colors;
-        this.store.UpdateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
+        this.store.updateLevelColors(selectedColors, { name: schemeInfo.name, emoji: schemeInfo.emoji });
 
         selectedColors.forEach((c: string) => {
           materials.push({

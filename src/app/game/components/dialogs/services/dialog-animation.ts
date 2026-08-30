@@ -3,8 +3,7 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../../services/tween-group';
 
-import { StoreService } from '../../../../app-store/services/store.service';
-import { EmojiInfo } from '../../../../app-store/models/emoji-info';
+import { GameStateStore, EmojiInfo } from '@rikkle/state';
 import { MathUtils } from 'three';
 import { INTRO_DIALOG_COLORS } from '../../../services/material/color-schemes';
 
@@ -32,7 +31,7 @@ enum DialogAnimationType {
   providedIn: 'root',
 })
 export class DialogAnimationService implements OnDestroy {
-  private store = inject(StoreService);
+  private store = inject(GameStateStore);
 
   private _boxesTop!: boxParticle[];
   private _boxesBottom!: boxParticle[];
@@ -74,8 +73,8 @@ export class DialogAnimationService implements OnDestroy {
       canvas.height = canvas.clientHeight;
 
       // get level data
-      this._levelColors = this.store.LevelColors;
-      this._levelEmojis = this.store.EmojiInfo;
+      this._levelColors = this.store.levelColors();
+      this._levelEmojis = this.store.emojiInfo();
 
       // main context
       this._ctx = canvas.getContext('2d');

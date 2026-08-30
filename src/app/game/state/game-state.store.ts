@@ -40,6 +40,24 @@ export interface MatchScoreResult {
   earnedMoves: number;
 }
 
+export interface ColorSchemeMeta {
+  name?: string;
+  emoji?: string;
+  colors: string[];
+}
+
+export interface EmojiInfoSequence {
+  sequence: number[];
+  desc: string;
+  emojiCode?: string;
+}
+
+export interface EmojiInfo {
+  group?: string;
+  subGroups?: string[];
+  emojiList?: EmojiInfoSequence[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -55,6 +73,11 @@ export class GameStateStore {
   readonly piecesRemaining = signal<number>(0);
   readonly levelStats = signal<LevelStats>(createInitialLevelStats());
   readonly gameStatus = signal<GameStatus>('idle');
+
+  // Theme & Appearance State Signals
+  readonly levelColors = signal<string[]>([]);
+  readonly levelColorScheme = signal<ColorSchemeMeta | undefined>(undefined);
+  readonly emojiInfo = signal<EmojiInfo>({});
 
   // Level Configuration Signals
   readonly levelGeometryType = signal<LevelGeometryType>(LevelGeometryType.Cube);
@@ -294,5 +317,39 @@ export class GameStateStore {
     }
     this.levelPieceTarget.set(target);
     this.piecesRemaining.set(target);
+  }
+
+  // Theme & Appearance Actions
+  public updateLevelColors(colorList: string[], meta?: { name?: string; emoji?: string }): void {
+    this.resetTheme();
+    this.levelColors.set(colorList);
+    this.levelColorScheme.set({
+      colors: colorList,
+      name: meta?.name,
+      emoji: meta?.emoji,
+    });
+  }
+
+  public updateEmojiGroup(group: string): void {
+    this.resetTheme();
+    this.emojiInfo.update((info) => ({ ...info, group }));
+  }
+
+  public updateEmojiSubGroups(groups: string[]): void {
+    this.emojiInfo.update((info) => ({ ...info, subGroups: groups }));
+  }
+
+  public updateEmojiList(list: EmojiInfoSequence[]): void {
+    const updatedList = list.map((e) => ({
+      ...e,
+      emojiCode: String.fromCodePoint(...e.sequence),
+    }));
+    this.emojiInfo.update((info) => ({ ...info, emojiList: updatedList }));
+  }
+
+  public resetTheme(): void {
+    this.emojiInfo.set({});
+    this.levelColors.set([]);
+    this.levelColorScheme.set(undefined);
   }
 }

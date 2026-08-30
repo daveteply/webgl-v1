@@ -240,4 +240,13 @@ export class ObjectManagerService {
       this._verticalTargets.push(axisInx * GRID_VERTICAL_OFFSET);
     }
   }
+
+  public Dispose(): void {
+    if (this._axle) {
+      for (const wheel of this._axle) {
+        wheel.Dispose();
+      }
+    }
+    this.materialManager.DisposeMaterials();
+  }
 }

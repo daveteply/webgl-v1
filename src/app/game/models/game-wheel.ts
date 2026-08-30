@@ -272,4 +272,14 @@ export class GameWheel extends Object3D {
       })
       .start();
   }
+
+  public Dispose(): void {
+    this._levelChangeTween?.stop();
+    this._horizontalMotionTween?.stop();
+    for (const child of this.children) {
+      if (child instanceof GamePiece) {
+        child.Dispose();
+      }
+    }
+  }
 }

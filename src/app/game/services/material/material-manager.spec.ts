@@ -105,4 +105,21 @@ describe('MaterialManagerService', () => {
     expect(service.LevelMaterials[0].texture).toBeUndefined();
     expect(service.LevelMaterials[0].bumpTexture).toBeUndefined();
   });
+
+  it('should support pooling and recycling of dynamic piece materials', () => {
+    service.InitMaterials(2, 4);
+    service.UpdateMaterials(2, 3, LevelMaterialType.Color);
+
+    const pieceMat1 = service.GetRandomPieceMaterial();
+    expect(pieceMat1.materials.length).toBe(8);
+
+    service.RecyclePieceMaterial(pieceMat1);
+    const pieceMat2 = service.GetRandomPieceMaterial();
+    expect(pieceMat2).toBe(pieceMat1);
+  });
+
+  it('should safely dispose materials on DisposeMaterials call', () => {
+    service.InitMaterials(2, 4);
+    expect(() => service.DisposeMaterials()).not.toThrow();
+  });
 });
