@@ -2,8 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { EmojiInfo } from '../../../app-store/models/emoji-info';
-import { ColorSchemeMeta, StoreService } from '../../../app-store/services/store.service';
+import { ColorSchemeMeta, EmojiInfo, GameStateStore } from '@rikkle/state';
 import { AnalyticsEventType, AnalyticsManagerService } from '../../services/analytics-manager';
 
 @Component({
@@ -13,7 +12,7 @@ import { AnalyticsEventType, AnalyticsManagerService } from '../../services/anal
   styleUrl: './about.scss',
 })
 export class About implements OnInit {
-  private store = inject(StoreService);
+  private store = inject(GameStateStore);
   private analyticsManager = inject(AnalyticsManagerService);
 
   levelColors = signal<string[]>([]);
@@ -21,9 +20,9 @@ export class About implements OnInit {
   levelEmojis = signal<EmojiInfo | undefined>(undefined);
 
   ngOnInit(): void {
-    const colors = this.store.LevelColors;
-    const colorScheme = this.store.LevelColorScheme;
-    const emojiInfo = this.store.EmojiInfo;
+    const colors = this.store.levelColors();
+    const colorScheme = this.store.levelColorScheme();
+    const emojiInfo = this.store.emojiInfo();
 
     this.levelColors.set(colors);
     this.levelColorScheme.set(colorScheme);

@@ -997,4 +997,18 @@ export class GamePiece extends Object3D {
         return 0;
     }
   }
+
+  public Dispose(): void {
+    this.StopTweens();
+    if (this._powerMove) {
+      this.remove(this._powerMove.PowerMoveMesh);
+      this._powerMove.Dispose();
+      this._powerMove = undefined as unknown as PowerMove;
+    }
+    if (this._cylinderEndCapMaterials) {
+      for (const mat of this._cylinderEndCapMaterials) {
+        mat.dispose();
+      }
+    }
+  }
 }

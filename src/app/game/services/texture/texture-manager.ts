@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Injectable, inject, isDevMode } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { StoreService } from '../../../app-store/services/store.service';
+import { GameStateStore } from '@rikkle/state';
 
 import {
   ClampToEdgeWrapping,
@@ -24,12 +24,13 @@ import arrayShuffle from '../../../shared/utils/array-shuffle';
 import { LevelGeometryType } from '../../models/level-geometry-type';
 import { LevelOrientationType } from '../../models/level-orientation-type';
 import { GameTexture } from './game-texture';
-import { PRNG } from '../../../shared/utils/prng';
+import { PRNG } from '@rikkle/shared';
 
 interface EmojiSequence {
   desc: string;
   sequence: number[];
-  ver: string;
+  ver?: string;
+  version?: string;
   dataUrl?: string;
 }
 
@@ -38,7 +39,7 @@ interface EmojiSequence {
 })
 export class TextureManagerService {
   private document = inject(DOCUMENT);
-  private store = inject(StoreService);
+  private store = inject(GameStateStore);
 
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
@@ -233,7 +234,12 @@ export class TextureManagerService {
 
     if (this._canvasContext) {
       emojiSequence = this.randomEmojiCodeList(playableTextureCount, rng);
-      this.store.UpdateEmojiList(emojiSequence);
+      this.store.updateEmojiList(
+        emojiSequence.map((s) => ({
+          desc: s.desc,
+          sequence: s.sequence,
+        })),
+      );
 
       for (const emoji of emojiSequence) {
         this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
@@ -261,7 +267,7 @@ export class TextureManagerService {
   private randomEmojiCodeList(playableTextureCount: number, rng?: PRNG): EmojiSequence[] {
     const groupInx = rng ? rng.nextInt(0, EmojiData.length - 1) : MathUtils.randInt(0, EmojiData.length - 1);
     const emojiGroup = EmojiData[groupInx];
-    this.store.UpdateEmojiGroup(emojiGroup.id);
+    this.store.updateEmojiGroup(emojiGroup.id);
 
     if (isDevMode()) {
       console.info('emoji group: ', emojiGroup.id);
@@ -271,7 +277,7 @@ export class TextureManagerService {
 
     // grab first 5 shuffled subgroups (some subgroups have a small number of sequences)
     const subGroups = shuffledSubGroups.slice(0, 5);
-    this.store.UpdateEmojiSubGroups(subGroups.map((s) => s.id));
+    this.store.updateEmojiSubGroups(subGroups.map((s) => s.id));
 
     // create long list of codes
     const emojiSequences = subGroups.flatMap((s) => s.codes);

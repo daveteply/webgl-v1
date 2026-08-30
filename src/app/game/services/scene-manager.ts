@@ -33,7 +33,12 @@ export class SceneManagerService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    cancelAnimationFrame(this._animateRequestId);
+    if (this._animateRequestId) {
+      cancelAnimationFrame(this._animateRequestId);
+    }
+    this.interactionManager.Dispose();
+    this.objectManager.Dispose();
+    this._renderer?.dispose();
   }
 
   public InitScene(canvas: HTMLCanvasElement): void {

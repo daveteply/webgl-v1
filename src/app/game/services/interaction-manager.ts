@@ -184,6 +184,16 @@ export class InteractionManagerService {
     window.addEventListener('pointercancel', this.onPointerUp);
   }
 
+  public Dispose(): void {
+    if (this._element) {
+      this._element.removeEventListener('pointerdown', this.onPointerDown);
+      this._element = undefined;
+    }
+    window.removeEventListener('pointermove', this.onPointerMove);
+    window.removeEventListener('pointerup', this.onPointerUp);
+    window.removeEventListener('pointercancel', this.onPointerUp);
+  }
+
   public LockBoard(locked: boolean): void {
     this._locked = locked;
     if (locked) {
