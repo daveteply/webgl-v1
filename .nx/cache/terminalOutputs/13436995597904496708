@@ -1,5 +1,0 @@
-
-Linting "state"...
-[1m[31mError when running ESLint: Cannot find module '@nx/eslint-plugin'[39m[22m
-[1m[31mRequire stack:[39m[22m
-[1m[31m- /workspaces/webgl-v1/eslint.config.js[39m[22m
