@@ -4,7 +4,7 @@ Welcome to the sights and sounds of Rikkle!
 
 **Rikkle** is an immersive, web-based 3D cylindrical puzzle game powered by Angular 22, Three.js 0.185 (WebGL), and the Web Audio API, organized as an **Nx Monorepo**. Spin interlocking 3D wheels, align matching textures and geometries, trigger explosive power moves, and enjoy dynamic soundscapes as you climb through procedural difficulty levels.
 
-🌐 **Play Rikkle now!** [https://rikkle.vercel.app](https://rikkle.vercel.app)
+🌐 **Play Rikkle now!** [https://rikkle.app](https://rikkle.app)
 
 ---
 
