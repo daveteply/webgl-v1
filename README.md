@@ -2,7 +2,7 @@
 
 Welcome to the sights and sounds of Rikkle!
 
-**Rikkle** is an immersive, web-based 3D cylindrical puzzle game powered by Angular 22, Three.js (WebGL), and the Web Audio API. Spin interlocking 3D wheels, align matching textures and geometries, trigger explosive power moves, and enjoy dynamic soundscapes as you climb through procedural difficulty levels.
+**Rikkle** is an immersive, web-based 3D cylindrical puzzle game powered by Angular 22, Three.js 0.185 (WebGL), and the Web Audio API, organized as an **Nx Monorepo**. Spin interlocking 3D wheels, align matching textures and geometries, trigger explosive power moves, and enjoy dynamic soundscapes as you climb through procedural difficulty levels.
 
 🌐 **Play Rikkle now!** [https://rikkle.vercel.app](https://rikkle.vercel.app)
 
@@ -27,60 +27,88 @@ Rikkle reimagines classic puzzle-matching mechanics into a full 3D experience. P
 
 ---
 
-## 🚀 Recent Updates & Improvements
+## 🏛️ Monorepo Architecture
 
-- **Angular 22 & Three.js 0.185 Architecture**: Upgraded core engine dependencies to Angular 22 and Three.js 0.185 for enhanced performance and modern web standard compliance.
-- **Gravity & Physics Sequencing**: Added dynamic vertical gravity shifts (Down, Up, Mix) and sequenced animation lifecycle to ensure piece removals fully finish before gravity slides or level transitions begin.
-- **Dodecahedron Geometry & Bomb Power Move**: Expanded puzzle geometries to include 12-sided dodecahedrons and added the radial Bomb power move with spark emitters.
-- **Dynamic Level Complete Dialogs**: Responsive dialog height auto-scaling based on player statistics with minimum bounds protection for clean, non-clipped mobile displays.
-- **RikkleBacker Splash & Adaptive FOV**: Introduced an animated _RikkleBacker_ splash screen intro sequence and dynamic camera perspective adjustments tailored to device screen aspect ratios.
-- **Enhanced Glassmorphic UI**: Redesigned UI dialogs, victory panels, and footer controls using modern CSS glassmorphism, responsive gap positioning, and mobile-friendly layouts.
-- **Native Web Audio API & Haptics Engine**: Rebuilt audio architecture utilizing native `AudioContext`, gain nodes, and buffer caching for seamless sound playback, paired with haptic vibration feedback.
-- **Expanded Test Suite**: Integrated Vitest unit testing and Playwright end-to-end (E2E) testing simulating full canvas dragging, wheel rotation, and level complete dialog flows.
-- **PWA & Production Hosting**: Added full PWA web manifest, service worker setup, and automated deployment via Vercel.
+Rikkle is structured as an **Nx Monorepo** partitioned into focused libraries and application shells:
+
+```
+webgl-v1/
+├── apps/
+│   ├── rikkle/                  # Angular 22 PWA Application Shell
+│   └── rikkle-e2e/              # Playwright End-to-End Test Suite
+│
+├── libs/
+│   ├── engine/                  # Pure TS Game Engine, Match & Gravity Solvers, Rules
+│   ├── shared/                  # PRNG, Storage, Analytics, Haptics, Feature Flags
+│   ├── audio/                   # Web Audio API Synth, Soundscapes, Gain Nodes
+│   ├── state/                   # Angular Signals GameStateStore & State Machine
+│   ├── graphics/                # Three.js 3D WebGL Rendering, Shaders, Particles
+│   └── ui/                      # Glassmorphic UI Components, Dialogs, HUD Controls
+```
+
+### Domain Documentation
+
+For detailed architectural and API documentation for each domain, explore their respective guides:
+
+- 🎲 [**@rikkle/engine**](file:///home/daveteply/git/webgl-v1/libs/engine/README.md): Pure TypeScript match-finding, gravity resolution, and rules engine (zero framework dependencies).
+- 🛠️ [**@rikkle/shared**](file:///home/daveteply/git/webgl-v1/libs/shared/README.md): Deterministic PRNG (Mulberry32), persistent storage, telemetry, and device sensor integrations.
+- 🎵 [**@rikkle/audio**](file:///home/daveteply/git/webgl-v1/libs/audio/README.md): Native Web Audio API soundscape, tone generator, pitch escalations, and volume controls.
+- ⚡ [**@rikkle/state**](file:///home/daveteply/git/webgl-v1/libs/state/README.md): Angular Signals reactive store managing score, progression, and game state transitions.
+- 🎨 [**@rikkle/graphics**](file:///home/daveteply/git/webgl-v1/libs/graphics/README.md): Three.js WebGL scene, lighting model, post-processing outline passes, and procedural canvas textures.
+- 💎 [**@rikkle/ui**](file:///home/daveteply/git/webgl-v1/libs/ui/README.md): Glassmorphic HUD, Angular Material 3 dialogs, and game controls.
+- 🌐 [**apps/rikkle**](file:///home/daveteply/git/webgl-v1/apps/rikkle/README.md): Root Angular 22 PWA deployment shell and assets.
+- 🎭 [**apps/rikkle-e2e**](file:///home/daveteply/git/webgl-v1/apps/rikkle-e2e/README.md): Playwright test suite for canvas dragging and game loop validation.
 
 ---
 
 ## 💻 Developer Guide
 
-Below is the technical documentation for building, running, and testing Rikkle locally.
+### Prerequisites
 
-### Tech Stack
-
-- **Framework**: Angular 22 (Standalone components, Signals, RxJS)
-- **3D Graphics Engine**: Three.js (WebGL rendering, custom shaders, PostProcessing outline passes)
-- **Audio Engine**: Native Web Audio API
-- **Styling**: Vanilla SCSS & Angular Material 3 with custom Glassmorphism tokens
-- **Test Infrastructure**: Vitest (Unit/Integration) & Playwright (E2E)
+- Node.js `22.x` & npm `10.x` (or DevContainer environment)
+- Playwright system dependencies (installed automatically in DevContainer)
 
 ### Development Server
 
-To start a local development server:
-
-```bash
-ng serve
-```
-
-Or run with host binding:
+To start the local development server:
 
 ```bash
 npm start
+# or
+npx nx serve rikkle
 ```
 
-Once the server is running, navigate to `http://localhost:4200/` in your browser. The application reloads automatically on source changes.
+Navigate to `http://localhost:4200/` in your browser. The application reloads automatically on source changes.
 
-### Code Scaffolding
+### Running Unit Tests
 
-To generate new Angular components or services:
+Run all unit tests across all libraries and applications via Vitest:
 
 ```bash
-ng generate component component-name
+npm test
+# or
+npx nx run-many -t test
 ```
 
-For available schematics:
+To run unit tests for a specific domain library:
 
 ```bash
-ng generate --help
+npx nx test engine
+npx nx test graphics
+npx nx test state
+npx nx test audio
+npx nx test ui
+npx nx test shared
+```
+
+### Linting & Architectural Boundary Checks
+
+Execute ESLint with `@nx/enforce-module-boundaries` checks:
+
+```bash
+npm run lint
+# or
+npx nx run-many -t lint
 ```
 
 ### Building for Production
@@ -88,40 +116,29 @@ ng generate --help
 To build the production bundle:
 
 ```bash
-ng build
+npm run build
+# or
+npx nx build rikkle
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-### Running Unit Tests
-
-To execute unit tests with [Vitest](https://vitest.dev/):
-
-```bash
-npm test
-```
-
-To generate code coverage reports:
-
-```bash
-ng test --coverage
-```
+Production build artifacts are emitted to `dist/apps/rikkle/browser`.
 
 ### Running End-to-End (E2E) Tests
 
-End-to-end tests simulate real user interactions (canvas pointer dragging, wheel rotation, score updates, and dialog flows) using [Playwright](https://playwright.dev/):
+Execute headless Playwright E2E browser tests:
 
 ```bash
-# 1. Install Playwright browser binaries and system libraries (first time setup in running container):
-npx playwright install --with-deps
-
-# 2. Start dev server in container terminal:
-npm start
-
-# 3. In a separate terminal window inside DevContainer:
-npx playwright test
+npm run e2e
+# or
+npx nx e2e rikkle-e2e
 ```
 
-### Additional Resources
+### Visualizing Project Graph
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+To view the interactive dependency graph of apps and libraries:
+
+```bash
+npm run graph
+# or
+npx nx graph
+```

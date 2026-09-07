@@ -1,0 +1,265 @@
+@use '../../styles/style-values' as *;
+
+@mixin fader {
+  opacity: 0;
+  transition: opacity 2s ease-out;
+}
+
+%glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(67, 24, 114, 0.55) 0%,
+    rgba(109, 40, 217, 0.35) 50%,
+    rgba(147, 51, 234, 0.25) 100%
+  );
+  border-radius: 16px;
+  box-shadow:
+    0 12px 30px 0 rgba(46, 16, 101, 0.4),
+    0 0 20px 0 rgba(168, 85, 247, 0.2),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(216, 180, 254, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.splash-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+
+  .splash-black-cover,
+  .splash-image-cover {
+    position: absolute;
+    inset: 0;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .splash-black-cover {
+    background-color: #000000;
+    opacity: 1;
+  }
+
+  .splash-image-cover {
+    background: url('/rikkle-backer.webp') center / cover no-repeat;
+    opacity: 0;
+  }
+
+  &.phase-image {
+    .splash-black-cover {
+      opacity: 0;
+    }
+    .splash-image-cover {
+      opacity: 1;
+    }
+  }
+
+  &.phase-fade-out {
+    .splash-black-cover,
+    .splash-image-cover {
+      opacity: 0;
+    }
+  }
+
+  &.phase-done {
+    display: none;
+  }
+}
+
+.game-layout {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: #0f0f0f;
+  overflow: hidden;
+
+  .game {
+    position: absolute;
+    inset: 0;
+
+    .game-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+  }
+
+  .game-scoring,
+  .game-footer {
+    @extend %glass-panel;
+    @include fader;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 0.75em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
+
+    &.show {
+      opacity: 1;
+    }
+  }
+
+  .game-scoring {
+    top: 0.5em;
+    height: 1.8em;
+    gap: 0.5em;
+    font-size: x-large;
+    padding: 0.4em 0.85em;
+
+    .game-logo {
+      flex: 1 1 auto;
+      height: 3em;
+      background: url('/assets/rikkle-logo-2026.webp') left center / contain no-repeat;
+      filter: drop-shadow(0 0 0.25em rgba(255, 255, 255, 0.4));
+    }
+
+    .game-score {
+      flex: 0 0 auto;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .moves-remaining {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      margin: 0 0.25em;
+    }
+
+    .level-info {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+  }
+
+  .horizontal-navigator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4.6em;
+    z-index: 3;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .docked-share-tab {
+    position: absolute;
+    left: 0;
+    bottom: 5.5em;
+    z-index: 2;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+
+    &.show {
+      opacity: 1;
+    }
+  }
+
+  .game-footer {
+    bottom: 0.5em;
+    padding: 0.35em 0.6em;
+
+    .level-progress {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+      padding: 0.25em;
+      margin: 0 0.75em;
+      font-size: x-large;
+
+      .level-progress--percent {
+        padding-right: 0.5em;
+      }
+    }
+  }
+}
+
+.copyright {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: medium;
+  font-family: 'Changa', sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  position: absolute;
+  bottom: 1.5em;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin: 0 auto;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+
+  &.show {
+    opacity: 1;
+  }
+
+  &.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+// Aspect ratio overrides for mobile portrait
+@media (max-aspect-ratio: 3/4) {
+  $aspect-offset: calc((100vh - (100vw / 0.75)) * 0.28);
+
+  .game-layout {
+    .game-scoring {
+      top: $aspect-offset;
+    }
+    .game-footer {
+      bottom: $aspect-offset;
+    }
+    .horizontal-navigator {
+      bottom: calc(#{$aspect-offset} + 4.2em);
+    }
+    .docked-share-tab {
+      bottom: calc(#{$aspect-offset} + 5em);
+    }
+  }
+
+  .copyright {
+    bottom: calc(#{$aspect-offset} + 1em);
+  }
+}
+
+// Safe area inset overrides
+@supports (padding: max(0px)) {
+  .game-layout {
+    box-sizing: border-box;
+
+    .game-scoring {
+      padding-top: max(0.5em, env(safe-area-inset-top));
+    }
+    .game-footer {
+      padding-bottom: max(0.5em, env(safe-area-inset-bottom));
+    }
+  }
+
+  .copyright {
+    bottom: max(1.5em, env(safe-area-inset-bottom));
+  }
+}

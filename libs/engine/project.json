@@ -1,0 +1,22 @@
+{
+  "name": "engine",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engine/src",
+  "projectType": "library",
+  "tags": ["scope:engine"],
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "libs/engine/tsconfig.spec.json",
+        "buildTarget": "rikkle:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": ["libs/engine/**/*.ts"]
+      }
+    }
+  }
+}

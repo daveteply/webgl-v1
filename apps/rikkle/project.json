@@ -1,0 +1,89 @@
+{
+  "name": "rikkle",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "wgl",
+  "sourceRoot": "apps/rikkle/src",
+  "tags": ["scope:app"],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/rikkle",
+        "index": "apps/rikkle/src/index.html",
+        "browser": "apps/rikkle/src/main.ts",
+        "tsConfig": "apps/rikkle/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/rikkle/src/favicon.ico",
+          {
+            "glob": "**/*",
+            "input": "apps/rikkle/public",
+            "output": "assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/rikkle/public",
+            "output": ""
+          }
+        ],
+        "styles": ["apps/rikkle/src/styles.scss"],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/ui/src/lib/styles", "apps/rikkle/src"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "800kB",
+              "maximumError": "1.2MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kB",
+              "maximumError": "10kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "options": {
+        "host": "0.0.0.0"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "rikkle:build:production"
+        },
+        "development": {
+          "buildTarget": "rikkle:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "apps/rikkle/tsconfig.spec.json",
+        "buildTarget": "rikkle:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": ["apps/rikkle/**/*.ts", "apps/rikkle/**/*.html"]
+      }
+    }
+  }
+}

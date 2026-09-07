@@ -1,39 +1,49 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
+  "extends": "./tsconfig.base.json",
   "compileOnSave": false,
-  "compilerOptions": {
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "preserve",
-    "paths": {
-      "@rikkle/engine": ["./src/app/game/engine/index.ts"],
-      "@rikkle/state": ["./src/app/game/state/index.ts"],
-      "@rikkle/audio": ["./src/app/shared/services/audio/index.ts"],
-      "@rikkle/shared": ["./src/app/shared/index.ts"],
-      "@rikkle/shared/*": ["./src/app/shared/*"]
-    }
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  },
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./apps/rikkle/tsconfig.app.json"
     },
     {
-      "path": "./tsconfig.spec.json"
+      "path": "./apps/rikkle/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/engine/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/engine/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/shared/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/shared/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/audio/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/audio/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/state/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/state/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/graphics/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/graphics/tsconfig.spec.json"
+    },
+    {
+      "path": "./libs/ui/tsconfig.lib.json"
+    },
+    {
+      "path": "./libs/ui/tsconfig.spec.json"
     }
   ]
 }

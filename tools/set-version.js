@@ -27,7 +27,12 @@ const content = `// Generated automatically during build
 export const APP_VERSION = '${versionString}';
 `;
 
-const targetPath = path.join(__dirname, '..', 'src', 'app', 'version.ts');
+const targetPath = path.join(__dirname, '..', 'libs', 'shared', 'src', 'lib', 'version.ts');
+
+const targetDir = path.dirname(targetPath);
+if (!fs.existsSync(targetDir)) {
+  fs.mkdirSync(targetDir, { recursive: true });
+}
 
 let currentContent = '';
 if (fs.existsSync(targetPath)) {

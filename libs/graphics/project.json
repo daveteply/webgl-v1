@@ -1,0 +1,22 @@
+{
+  "name": "graphics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/graphics/src",
+  "projectType": "library",
+  "tags": ["scope:graphics"],
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "libs/graphics/tsconfig.spec.json",
+        "buildTarget": "rikkle:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": ["libs/graphics/**/*.ts"]
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "audio",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/audio/src",
+  "projectType": "library",
+  "tags": ["scope:audio"],
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "tsConfig": "libs/audio/tsconfig.spec.json",
+        "buildTarget": "rikkle:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": ["libs/audio/**/*.ts"]
+      }
+    }
+  }
+}

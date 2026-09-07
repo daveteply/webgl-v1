@@ -17,7 +17,8 @@
         "esbenp.prettier-vscode",
         "ms-azuretools.vscode-docker",
         "streetsidesoftware.code-spell-checker",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "nrwl.angular-console"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true,
@@ -28,5 +29,5 @@
       }
     }
   },
-  "postCreateCommand": "npm install && npx playwright install"
+  "postCreateCommand": "npm install && npx playwright install --with-deps"
 }
