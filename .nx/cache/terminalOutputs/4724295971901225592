@@ -1,0 +1,8 @@
+[1m[31mAn exception occurred while getting runner-specific build options:[39m[22m
+[1m[31mError: No tests found matching the following patterns:[39m[22m
+[1m[31m- Included: **/*.spec.ts, **/*.test.ts[39m[22m
+[1m[31m[39m[22m
+[1m[31mPlease check the 'test' target configuration in your project's 'angular.json' file.[39m[22m
+[1m[31m    at getVitestBuildOptions (/workspaces/webgl-v1/node_modules/@angular/build/src/builders/unit-test/runners/vitest/build-options.js:187:15)[39m[22m
+[1m[31m    at async execute (/workspaces/webgl-v1/node_modules/@angular/build/src/builders/unit-test/builder.js:305:13)[39m[22m
+[1m[31m    at async handleAsyncIterator (/workspaces/webgl-v1/node_modules/@angular-devkit/architect/src/api.js:38:28)[39m[22m

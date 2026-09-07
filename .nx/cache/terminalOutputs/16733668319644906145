@@ -1,0 +1,9 @@
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37mApplication bundle generation failed. [5.439 seconds] - 2026-09-01T12:31:04.410Z[39m
+[37m[39m
+[1m[31m[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2688: Cannot find type definition file for 'node'.[39m[22m
+[1m[31m  The file is in the program because:[39m[22m
+[1m[31m    Entry point of type library 'node' specified in compilerOptions[0m [1m[35m[plugin angular-compiler][0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m

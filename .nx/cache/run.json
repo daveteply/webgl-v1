@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx build rikkle",
+    "startTime": "2026-09-07T16:13:45.117Z",
+    "endTime": "2026-09-07T16:13:59.295Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "rikkle:build:production",
+      "target": "build",
+      "projectName": "rikkle",
+      "hash": "13810818908521076906",
+      "startTime": "2026-09-07T16:13:45.132Z",
+      "endTime": "2026-09-07T16:13:59.222Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    }
+  ]
+}
