@@ -1,18 +1,84 @@
 {
   "run": {
-    "command": "nx build rikkle",
-    "startTime": "2026-09-07T16:13:45.117Z",
-    "endTime": "2026-09-07T16:13:59.295Z",
+    "command": "nx run-many -t test --watch=false",
+    "startTime": "2026-09-07T16:37:34.536Z",
+    "endTime": "2026-09-07T16:38:18.608Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "rikkle:build:production",
-      "target": "build",
+      "taskId": "engine:test",
+      "target": "test",
+      "projectName": "engine",
+      "hash": "8420930705855554908",
+      "startTime": "2026-09-07T16:37:34.552Z",
+      "endTime": "2026-09-07T16:37:51.217Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "audio:test",
+      "target": "test",
+      "projectName": "audio",
+      "hash": "3341388340636342750",
+      "startTime": "2026-09-07T16:37:34.552Z",
+      "endTime": "2026-09-07T16:37:51.407Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "shared:test",
+      "target": "test",
+      "projectName": "shared",
+      "hash": "5894986348164977673",
+      "startTime": "2026-09-07T16:37:34.552Z",
+      "endTime": "2026-09-07T16:37:52.575Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "state:test",
+      "target": "test",
+      "projectName": "state",
+      "hash": "8461806820440630846",
+      "startTime": "2026-09-07T16:37:51.233Z",
+      "endTime": "2026-09-07T16:38:03.120Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "graphics:test",
+      "target": "test",
+      "projectName": "graphics",
+      "hash": "5634305797769187221",
+      "startTime": "2026-09-07T16:37:51.419Z",
+      "endTime": "2026-09-07T16:38:06.043Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "ui:test",
+      "target": "test",
+      "projectName": "ui",
+      "hash": "7643682268330782790",
+      "startTime": "2026-09-07T16:37:52.581Z",
+      "endTime": "2026-09-07T16:38:18.394Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    },
+    {
+      "taskId": "rikkle:test",
+      "target": "test",
       "projectName": "rikkle",
-      "hash": "13810818908521076906",
-      "startTime": "2026-09-07T16:13:45.132Z",
-      "endTime": "2026-09-07T16:13:59.222Z",
+      "hash": "17735750029450584760",
+      "startTime": "2026-09-07T16:38:03.138Z",
+      "endTime": "2026-09-07T16:38:18.599Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

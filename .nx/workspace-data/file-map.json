@@ -24,54 +24,6 @@
   "nxJsonPlugins": [],
   "fileMap": {
     "projectFileMap": {
-      "state": [
-        {
-          "file": "libs/state/README.md",
-          "hash": "14780560762759014111"
-        },
-        {
-          "file": "libs/state/project.json",
-          "hash": "13400031171347181096"
-        },
-        {
-          "file": "libs/state/src/index.ts",
-          "hash": "10107860888978823826"
-        },
-        {
-          "file": "libs/state/src/lib/game-state.store.spec.ts",
-          "hash": "12019830397301892424",
-          "deps": [
-            "npm:@angular/core",
-            "npm:vitest",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/state/src/lib/game-state.store.ts",
-          "hash": "16864720913766107446",
-          "deps": [
-            "npm:@angular/core",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/state/src/lib/game-status.ts",
-          "hash": "16047125111593206592"
-        },
-        {
-          "file": "libs/state/src/lib/index.ts",
-          "hash": "9158911636585584261"
-        },
-        {
-          "file": "libs/state/tsconfig.lib.json",
-          "hash": "1296062206120080412"
-        },
-        {
-          "file": "libs/state/tsconfig.spec.json",
-          "hash": "11889511840676597136"
-        }
-      ],
       "engine": [
         {
           "file": "libs/engine/README.md",
@@ -214,490 +166,459 @@
           "hash": "11889511840676597136"
         }
       ],
-      "ui": [
+      "audio": [
         {
-          "file": "libs/ui/README.md",
-          "hash": "15581380258204856835"
+          "file": "libs/audio/README.md",
+          "hash": "12430951079247412722"
         },
         {
-          "file": "libs/ui/project.json",
-          "hash": "7908638483973596561"
+          "file": "libs/audio/project.json",
+          "hash": "11902750775656432190"
         },
         {
-          "file": "libs/ui/src/index.ts",
-          "hash": "12281959771244244693"
+          "file": "libs/audio/src/index.ts",
+          "hash": "7567209885068793754"
         },
         {
-          "file": "libs/ui/src/lib/components/about/about.html",
-          "hash": "15991324786869987318"
+          "file": "libs/audio/src/lib/audio-data.ts",
+          "hash": "3178814288838638823"
         },
         {
-          "file": "libs/ui/src/lib/components/about/about.scss",
-          "hash": "2318467329455368867"
-        },
-        {
-          "file": "libs/ui/src/lib/components/about/about.spec.ts",
-          "hash": "143436547678775662",
+          "file": "libs/audio/src/lib/audio-manager.spec.ts",
+          "hash": "1194311016148453563",
           "deps": [
             "npm:@angular/core",
             "npm:vitest",
-            "state",
             "shared"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/about/about.ts",
-          "hash": "17842119094776660162",
+          "file": "libs/audio/src/lib/audio-manager.ts",
+          "hash": "17327896178159987123",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/material",
-            "state",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over-type.ts",
-          "hash": "10610436981110325206"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.html",
-          "hash": "16914729033498001653"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.scss",
-          "hash": "8422135157521629380"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.spec.ts",
-          "hash": "7800794206443407940",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:vitest",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.ts",
-          "hash": "10581874041919359446",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/material",
-            "npm:three",
             "engine",
-            "graphics",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.html",
-          "hash": "2774094823029981183"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.scss",
-          "hash": "8997872340903920421"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.spec.ts",
-          "hash": "2615783819149310891",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.ts",
-          "hash": "10419231712094700376",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.html",
-          "hash": "4430737841511445767"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.scss",
-          "hash": "11140937847282215158"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.spec.ts",
-          "hash": "12139336397669978835",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:rxjs",
-            "npm:vitest",
-            "graphics",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.ts",
-          "hash": "12305870615822333385",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "audio",
-            "graphics",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.html",
-          "hash": "9024736906488625202"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.scss",
-          "hash": "5552594358008531490"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.spec.ts",
-          "hash": "9172510980480618831",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.ts",
-          "hash": "12582915698480715186",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:rxjs",
-            "npm:@tweenjs/tween.js",
-            "graphics",
-            "audio",
             "shared",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.html",
-          "hash": "5125614688491480278"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.scss",
-          "hash": "2669352150409491406"
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.spec.ts",
-          "hash": "7164902471340568749",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:vitest",
-            "shared",
-            "audio",
-            "graphics"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.ts",
-          "hash": "1484755417730746011",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/material",
-            "audio",
-            "shared",
-            "graphics"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/services/dialog-animation.ts",
-          "hash": "14852413419025882276",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@tweenjs/tween.js",
-            "graphics",
-            "state",
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/services/dialog-notify.spec.ts",
-          "hash": "3883968322742031181",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/dialogs/services/dialog-notify.ts",
-          "hash": "1315117975268074320",
-          "deps": [
-            "npm:@angular/core",
             "npm:rxjs"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/game-container/game-container.html",
-          "hash": "4616061975027980206"
+          "file": "libs/audio/tsconfig.lib.json",
+          "hash": "1296062206120080412"
         },
         {
-          "file": "libs/ui/src/lib/components/game-container/game-container.scss",
-          "hash": "5049913778308969325"
+          "file": "libs/audio/tsconfig.spec.json",
+          "hash": "11889511840676597136"
+        }
+      ],
+      "graphics": [
+        {
+          "file": "libs/graphics/README.md",
+          "hash": "14483279935325909121"
         },
         {
-          "file": "libs/ui/src/lib/components/game-container/game-container.spec.ts",
-          "hash": "5678014981529099786",
+          "file": "libs/graphics/project.json",
+          "hash": "5855590360427276217"
+        },
+        {
+          "file": "libs/graphics/src/index.ts",
+          "hash": "4229751013564781741"
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-piece/game-piece-material-type.ts",
+          "hash": "11995886741494138254",
           "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:@angular/platform-browser",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-piece/game-piece-removal-style.ts",
+          "hash": "13261469275203970436"
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-piece/game-piece.spec.ts",
+          "hash": "9463704167116705527",
+          "deps": [
+            "engine",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-piece/game-piece.ts",
+          "hash": "6635417999948375511",
+          "deps": [
+            "npm:three",
             "npm:rxjs",
+            "engine",
+            "npm:@tweenjs/tween.js"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-piece/power-move.ts",
+          "hash": "9226371214380349725",
+          "deps": [
+            "npm:@tweenjs/tween.js",
+            "npm:rxjs",
+            "npm:three",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-wheel.spec.ts",
+          "hash": "18237651867866916387"
+        },
+        {
+          "file": "libs/graphics/src/lib/models/game-wheel.ts",
+          "hash": "1387201659952708728",
+          "deps": [
+            "npm:@tweenjs/tween.js",
+            "npm:three",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/particle-emitter.spec.ts",
+          "hash": "419487375580582622"
+        },
+        {
+          "file": "libs/graphics/src/lib/models/particle-emitter.ts",
+          "hash": "11083755129087174637",
+          "deps": [
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/models/star-field.spec.ts",
+          "hash": "13447601674585004545"
+        },
+        {
+          "file": "libs/graphics/src/lib/models/star-field.ts",
+          "hash": "11622101019226667437",
+          "deps": [
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/effects-manager.spec.ts",
+          "hash": "13430668673688322624",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three",
             "npm:vitest",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/effects-manager.ts",
+          "hash": "7452686578769016068",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "npm:@tweenjs/tween.js",
+            "npm:three",
             "audio",
-            "graphics",
+            "shared",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/game-engine.spec.ts",
+          "hash": "16603078521984617196",
+          "deps": [
+            "npm:@angular/core",
+            "engine",
             "shared"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/game-container/game-container.ts",
-          "hash": "12984704805058238949",
+          "file": "libs/graphics/src/lib/services/game-engine.ts",
+          "hash": "231980239570654607",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:rxjs",
-            "graphics",
+            "engine",
             "shared",
-            "state",
-            "npm:@angular/material"
+            "state"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/game-menu/game-menu.html",
-          "hash": "9142853018829371247"
-        },
-        {
-          "file": "libs/ui/src/lib/components/game-menu/game-menu.scss",
-          "hash": "7189763650020186581"
-        },
-        {
-          "file": "libs/ui/src/lib/components/game-menu/game-menu.spec.ts",
-          "hash": "3160243490607300010",
+          "file": "libs/graphics/src/lib/services/hints-manager.spec.ts",
+          "hash": "16282117572686108286",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/material",
-            "npm:rxjs",
             "npm:vitest",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/game-menu/game-menu.ts",
-          "hash": "18240046958955477988",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
             "shared",
-            "graphics"
+            "engine"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/high-scores/high-scores.html",
-          "hash": "10627226394445183392"
-        },
-        {
-          "file": "libs/ui/src/lib/components/high-scores/high-scores.scss",
-          "hash": "5959556184137153416"
-        },
-        {
-          "file": "libs/ui/src/lib/components/high-scores/high-scores.ts",
-          "hash": "14718464958792926811",
+          "file": "libs/graphics/src/lib/services/hints-manager.ts",
+          "hash": "11078610401358817379",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
+            "shared",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/interaction-manager.spec.ts",
+          "hash": "1737501445916885232",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three",
+            "npm:vitest",
+            "engine",
+            "audio"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/interaction-manager.ts",
+          "hash": "3048735166343098324",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "npm:three",
+            "engine",
+            "audio",
             "shared"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.html",
-          "hash": "10411101393539829193"
-        },
-        {
-          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.scss",
-          "hash": "7779008551418620296"
-        },
-        {
-          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.spec.ts",
-          "hash": "17788685334300427305",
+          "file": "libs/graphics/src/lib/services/material/color-schemes.spec.ts",
+          "hash": "7140302063310972683",
           "deps": [
-            "npm:@angular/core",
-            "graphics"
+            "npm:vitest"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.ts",
-          "hash": "12306253737730212612",
+          "file": "libs/graphics/src/lib/services/material/color-schemes.ts",
+          "hash": "9421968130643411853"
+        },
+        {
+          "file": "libs/graphics/src/lib/services/material/material-manager.spec.ts",
+          "hash": "18422533158735092287",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
+            "npm:three",
+            "engine",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/material/material-manager.ts",
+          "hash": "2500955069263592726",
+          "deps": [
+            "npm:@angular/core",
             "npm:rxjs",
-            "graphics"
+            "state",
+            "npm:three",
+            "engine",
+            "shared"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/moves-left/moves-left.html",
-          "hash": "18224668683966783839"
+          "file": "libs/graphics/src/lib/services/material/material-models.ts",
+          "hash": "12021258832272441173",
+          "deps": [
+            "npm:three"
+          ]
         },
         {
-          "file": "libs/ui/src/lib/components/moves-left/moves-left.scss",
-          "hash": "8493753791735825768"
-        },
-        {
-          "file": "libs/ui/src/lib/components/moves-left/moves-left.spec.ts",
-          "hash": "8738332411363738482",
+          "file": "libs/graphics/src/lib/services/object-manager.spec.ts",
+          "hash": "16911458276740690890",
           "deps": [
             "npm:@angular/core"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/moves-left/moves-left.ts",
-          "hash": "16528784854598621236",
+          "file": "libs/graphics/src/lib/services/object-manager.ts",
+          "hash": "17920970045981871108",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "npm:three",
+            "engine",
+            "audio",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/post-processing-manager.spec.ts",
+          "hash": "13530247755232132950",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/post-processing-manager.ts",
+          "hash": "16130667164515654552",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three",
+            "npm:@tweenjs/tween.js",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/save-game/save-game-types.ts",
+          "hash": "7132697237464024946",
+          "deps": [
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/save-game/save-game.spec.ts",
+          "hash": "16597338812526255996",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "shared",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/save-game/save-game.ts",
+          "hash": "17568443039741753469",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs",
+            "engine",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/scene-manager.spec.ts",
+          "hash": "4416208048285751417",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/scene-manager.ts",
+          "hash": "1392887884493625797",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/scoring-manager.spec.ts",
+          "hash": "9905205552409741231",
           "deps": [
             "npm:@angular/core",
             "engine"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.html",
-          "hash": "16879668321639748861"
-        },
-        {
-          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.scss",
-          "hash": "9749734107853313744"
-        },
-        {
-          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.spec.ts",
-          "hash": "1595835825990160701",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.ts",
-          "hash": "556206954803564371",
+          "file": "libs/graphics/src/lib/services/scoring-manager.ts",
+          "hash": "9127865352287024629",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/share-content/share-content.html",
-          "hash": "16071304546459624556"
-        },
-        {
-          "file": "libs/ui/src/lib/components/share-content/share-content.scss",
-          "hash": "9180351282938409742"
-        },
-        {
-          "file": "libs/ui/src/lib/components/share-content/share-content.ts",
-          "hash": "11788661812488915008",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/material",
             "npm:rxjs",
-            "graphics",
-            "shared"
+            "npm:three",
+            "engine",
+            "state"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.html",
-          "hash": "10831124044491521674"
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.scss",
-          "hash": "8120867324556270587"
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.spec.ts",
-          "hash": "1631517129553988711",
+          "file": "libs/graphics/src/lib/services/share-manager.spec.ts",
+          "hash": "11682725480119635815",
           "deps": [
             "npm:@angular/core"
           ]
         },
         {
-          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.ts",
-          "hash": "18306888732208536245",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.html",
-          "hash": "16600639102013822741"
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.scss",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.spec.ts",
-          "hash": "15383828666021741346",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.ts",
-          "hash": "6573910379095442117",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@tweenjs/tween.js",
-            "graphics"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.html",
-          "hash": "8650587310232746503"
-        },
-        {
-          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.scss",
-          "hash": "18367338398842238331"
-        },
-        {
-          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.spec.ts",
-          "hash": "11832904524834501448",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/material",
-            "graphics",
-            "npm:vitest",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.ts",
-          "hash": "3005274068540044234",
+          "file": "libs/graphics/src/lib/services/share-manager.ts",
+          "hash": "8919480746139095700",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
-            "npm:@angular/material",
-            "graphics"
+            "npm:rxjs",
+            "engine"
           ]
         },
         {
-          "file": "libs/ui/src/lib/styles/_style-values.scss",
-          "hash": "16447057118350593656"
+          "file": "libs/graphics/src/lib/services/texture/emoji-data.ts",
+          "hash": "14514437253285147618"
         },
         {
-          "file": "libs/ui/tsconfig.lib.json",
+          "file": "libs/graphics/src/lib/services/texture/game-texture.ts",
+          "hash": "8035896884031380756",
+          "deps": [
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/texture/texture-info.ts",
+          "hash": "10404647961402151105",
+          "deps": [
+            "npm:three",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/texture/texture-manager.spec.ts",
+          "hash": "15048859484036159859",
+          "deps": [
+            "npm:@angular/core",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/texture/texture-manager.ts",
+          "hash": "6492009542071162077",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:rxjs",
+            "state",
+            "npm:three",
+            "engine",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/services/tween-group.ts",
+          "hash": "12677211190577754009",
+          "deps": [
+            "npm:@tweenjs/tween.js"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/text/splash-text.ts",
+          "hash": "8643652216207941402",
+          "deps": [
+            "npm:@tweenjs/tween.js",
+            "npm:rxjs",
+            "npm:three",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/text/text-manager.spec.ts",
+          "hash": "11163963836019052716",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/text/text-manager.ts",
+          "hash": "7148376163139186647",
+          "deps": [
+            "npm:@angular/core",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/graphics/src/lib/text/text-splash-event-type.ts",
+          "hash": "469670844397823490"
+        },
+        {
+          "file": "libs/graphics/tsconfig.lib.json",
           "hash": "1296062206120080412"
         },
         {
-          "file": "libs/ui/tsconfig.spec.json",
+          "file": "libs/graphics/tsconfig.spec.json",
           "hash": "11889511840676597136"
         }
       ],
@@ -1583,417 +1504,6 @@
           "hash": "9029029135572301404"
         }
       ],
-      "graphics": [
-        {
-          "file": "libs/graphics/README.md",
-          "hash": "14483279935325909121"
-        },
-        {
-          "file": "libs/graphics/project.json",
-          "hash": "5855590360427276217"
-        },
-        {
-          "file": "libs/graphics/src/index.ts",
-          "hash": "4229751013564781741"
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-piece/game-piece-material-type.ts",
-          "hash": "11995886741494138254",
-          "deps": [
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-piece/game-piece-removal-style.ts",
-          "hash": "13261469275203970436"
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-piece/game-piece.spec.ts",
-          "hash": "9463704167116705527",
-          "deps": [
-            "engine",
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-piece/game-piece.ts",
-          "hash": "6635417999948375511",
-          "deps": [
-            "npm:three",
-            "npm:rxjs",
-            "engine",
-            "npm:@tweenjs/tween.js"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-piece/power-move.ts",
-          "hash": "9226371214380349725",
-          "deps": [
-            "npm:@tweenjs/tween.js",
-            "npm:rxjs",
-            "npm:three",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-wheel.spec.ts",
-          "hash": "18237651867866916387"
-        },
-        {
-          "file": "libs/graphics/src/lib/models/game-wheel.ts",
-          "hash": "1387201659952708728",
-          "deps": [
-            "npm:@tweenjs/tween.js",
-            "npm:three",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/particle-emitter.spec.ts",
-          "hash": "419487375580582622"
-        },
-        {
-          "file": "libs/graphics/src/lib/models/particle-emitter.ts",
-          "hash": "11083755129087174637",
-          "deps": [
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/models/star-field.spec.ts",
-          "hash": "13447601674585004545"
-        },
-        {
-          "file": "libs/graphics/src/lib/models/star-field.ts",
-          "hash": "11622101019226667437",
-          "deps": [
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/effects-manager.spec.ts",
-          "hash": "13430668673688322624",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three",
-            "npm:vitest",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/effects-manager.ts",
-          "hash": "7452686578769016068",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "npm:@tweenjs/tween.js",
-            "npm:three",
-            "audio",
-            "shared",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/game-engine.spec.ts",
-          "hash": "16603078521984617196",
-          "deps": [
-            "npm:@angular/core",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/game-engine.ts",
-          "hash": "231980239570654607",
-          "deps": [
-            "npm:@angular/core",
-            "engine",
-            "shared",
-            "state"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/hints-manager.spec.ts",
-          "hash": "16282117572686108286",
-          "deps": [
-            "npm:@angular/core",
-            "npm:vitest",
-            "shared",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/hints-manager.ts",
-          "hash": "11078610401358817379",
-          "deps": [
-            "npm:@angular/core",
-            "shared",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/interaction-manager.spec.ts",
-          "hash": "1737501445916885232",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three",
-            "npm:vitest",
-            "engine",
-            "audio"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/interaction-manager.ts",
-          "hash": "3048735166343098324",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "npm:three",
-            "engine",
-            "audio",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/material/color-schemes.spec.ts",
-          "hash": "7140302063310972683",
-          "deps": [
-            "npm:vitest"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/material/color-schemes.ts",
-          "hash": "9421968130643411853"
-        },
-        {
-          "file": "libs/graphics/src/lib/services/material/material-manager.spec.ts",
-          "hash": "18422533158735092287",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/material/material-manager.ts",
-          "hash": "2500955069263592726",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "state",
-            "npm:three",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/material/material-models.ts",
-          "hash": "12021258832272441173",
-          "deps": [
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/object-manager.spec.ts",
-          "hash": "16911458276740690890",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/object-manager.ts",
-          "hash": "17920970045981871108",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "npm:three",
-            "engine",
-            "audio",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/post-processing-manager.spec.ts",
-          "hash": "13530247755232132950",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/post-processing-manager.ts",
-          "hash": "16130667164515654552",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three",
-            "npm:@tweenjs/tween.js",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/save-game/save-game-types.ts",
-          "hash": "7132697237464024946",
-          "deps": [
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/save-game/save-game.spec.ts",
-          "hash": "16597338812526255996",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "shared",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/save-game/save-game.ts",
-          "hash": "17568443039741753469",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/scene-manager.spec.ts",
-          "hash": "4416208048285751417",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/scene-manager.ts",
-          "hash": "1392887884493625797",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/scoring-manager.spec.ts",
-          "hash": "9905205552409741231",
-          "deps": [
-            "npm:@angular/core",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/scoring-manager.ts",
-          "hash": "9127865352287024629",
-          "deps": [
-            "npm:@angular/core",
-            "npm:rxjs",
-            "npm:three",
-            "engine",
-            "state"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/share-manager.spec.ts",
-          "hash": "11682725480119635815",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/share-manager.ts",
-          "hash": "8919480746139095700",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:rxjs",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/texture/emoji-data.ts",
-          "hash": "14514437253285147618"
-        },
-        {
-          "file": "libs/graphics/src/lib/services/texture/game-texture.ts",
-          "hash": "8035896884031380756",
-          "deps": [
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/texture/texture-info.ts",
-          "hash": "10404647961402151105",
-          "deps": [
-            "npm:three",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/texture/texture-manager.spec.ts",
-          "hash": "15048859484036159859",
-          "deps": [
-            "npm:@angular/core",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/texture/texture-manager.ts",
-          "hash": "6492009542071162077",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:rxjs",
-            "state",
-            "npm:three",
-            "engine",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/services/tween-group.ts",
-          "hash": "12677211190577754009",
-          "deps": [
-            "npm:@tweenjs/tween.js"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/text/splash-text.ts",
-          "hash": "8643652216207941402",
-          "deps": [
-            "npm:@tweenjs/tween.js",
-            "npm:rxjs",
-            "npm:three",
-            "engine"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/text/text-manager.spec.ts",
-          "hash": "11163963836019052716",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/text/text-manager.ts",
-          "hash": "7148376163139186647",
-          "deps": [
-            "npm:@angular/core",
-            "npm:three"
-          ]
-        },
-        {
-          "file": "libs/graphics/src/lib/text/text-splash-event-type.ts",
-          "hash": "469670844397823490"
-        },
-        {
-          "file": "libs/graphics/tsconfig.lib.json",
-          "hash": "1296062206120080412"
-        },
-        {
-          "file": "libs/graphics/tsconfig.spec.json",
-          "hash": "11889511840676597136"
-        }
-      ],
       "shared": [
         {
           "file": "libs/shared/README.md",
@@ -2134,6 +1644,541 @@
           "hash": "11889511840676597136"
         }
       ],
+      "state": [
+        {
+          "file": "libs/state/README.md",
+          "hash": "14780560762759014111"
+        },
+        {
+          "file": "libs/state/project.json",
+          "hash": "13400031171347181096"
+        },
+        {
+          "file": "libs/state/src/index.ts",
+          "hash": "10107860888978823826"
+        },
+        {
+          "file": "libs/state/src/lib/game-state.store.spec.ts",
+          "hash": "12019830397301892424",
+          "deps": [
+            "npm:@angular/core",
+            "npm:vitest",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/state/src/lib/game-state.store.ts",
+          "hash": "16864720913766107446",
+          "deps": [
+            "npm:@angular/core",
+            "engine",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/state/src/lib/game-status.ts",
+          "hash": "16047125111593206592"
+        },
+        {
+          "file": "libs/state/src/lib/index.ts",
+          "hash": "9158911636585584261"
+        },
+        {
+          "file": "libs/state/tsconfig.lib.json",
+          "hash": "1296062206120080412"
+        },
+        {
+          "file": "libs/state/tsconfig.spec.json",
+          "hash": "11889511840676597136"
+        }
+      ],
+      "ui": [
+        {
+          "file": "libs/ui/README.md",
+          "hash": "15581380258204856835"
+        },
+        {
+          "file": "libs/ui/project.json",
+          "hash": "7908638483973596561"
+        },
+        {
+          "file": "libs/ui/src/index.ts",
+          "hash": "12281959771244244693"
+        },
+        {
+          "file": "libs/ui/src/lib/components/about/about.html",
+          "hash": "15991324786869987318"
+        },
+        {
+          "file": "libs/ui/src/lib/components/about/about.scss",
+          "hash": "2318467329455368867"
+        },
+        {
+          "file": "libs/ui/src/lib/components/about/about.spec.ts",
+          "hash": "143436547678775662",
+          "deps": [
+            "npm:@angular/core",
+            "npm:vitest",
+            "state",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/about/about.ts",
+          "hash": "17842119094776660162",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "state",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over-type.ts",
+          "hash": "10610436981110325206"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.html",
+          "hash": "16914729033498001653"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.scss",
+          "hash": "8422135157521629380"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.spec.ts",
+          "hash": "7800794206443407940",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/game-over/game-over.ts",
+          "hash": "10581874041919359446",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "npm:three",
+            "engine",
+            "graphics",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.html",
+          "hash": "2774094823029981183"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.scss",
+          "hash": "8997872340903920421"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.spec.ts",
+          "hash": "2615783819149310891",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/install-pwa/install-pwa.ts",
+          "hash": "10419231712094700376",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.html",
+          "hash": "4430737841511445767"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.scss",
+          "hash": "11140937847282215158"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.spec.ts",
+          "hash": "12139336397669978835",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:rxjs",
+            "npm:vitest",
+            "graphics",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/intro/intro.ts",
+          "hash": "12305870615822333385",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "audio",
+            "graphics",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.html",
+          "hash": "9024736906488625202"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.scss",
+          "hash": "5552594358008531490"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.spec.ts",
+          "hash": "9172510980480618831",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/level-complete/level-complete.ts",
+          "hash": "12582915698480715186",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:rxjs",
+            "npm:@tweenjs/tween.js",
+            "graphics",
+            "audio",
+            "shared",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.html",
+          "hash": "5125614688491480278"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.scss",
+          "hash": "2669352150409491406"
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.spec.ts",
+          "hash": "7164902471340568749",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:vitest",
+            "shared",
+            "audio",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/components/user-settings/user-settings.ts",
+          "hash": "1484755417730746011",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "audio",
+            "shared",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/services/dialog-animation.ts",
+          "hash": "14852413419025882276",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@tweenjs/tween.js",
+            "graphics",
+            "state",
+            "npm:three"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/services/dialog-notify.spec.ts",
+          "hash": "3883968322742031181",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/dialogs/services/dialog-notify.ts",
+          "hash": "1315117975268074320",
+          "deps": [
+            "npm:@angular/core",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-container/game-container.html",
+          "hash": "4616061975027980206"
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-container/game-container.scss",
+          "hash": "5049913778308969325"
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-container/game-container.spec.ts",
+          "hash": "5678014981529099786",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:@angular/platform-browser",
+            "npm:rxjs",
+            "npm:vitest",
+            "audio",
+            "graphics",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-container/game-container.ts",
+          "hash": "12984704805058238949",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "graphics",
+            "shared",
+            "state",
+            "npm:@angular/material"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-menu/game-menu.html",
+          "hash": "9142853018829371247"
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-menu/game-menu.scss",
+          "hash": "7189763650020186581"
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-menu/game-menu.spec.ts",
+          "hash": "3160243490607300010",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "npm:rxjs",
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/game-menu/game-menu.ts",
+          "hash": "18240046958955477988",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "shared",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/high-scores/high-scores.html",
+          "hash": "10627226394445183392"
+        },
+        {
+          "file": "libs/ui/src/lib/components/high-scores/high-scores.scss",
+          "hash": "5959556184137153416"
+        },
+        {
+          "file": "libs/ui/src/lib/components/high-scores/high-scores.ts",
+          "hash": "14718464958792926811",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.html",
+          "hash": "10411101393539829193"
+        },
+        {
+          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.scss",
+          "hash": "7779008551418620296"
+        },
+        {
+          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.spec.ts",
+          "hash": "17788685334300427305",
+          "deps": [
+            "npm:@angular/core",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/horizontal-level-navigator/horizontal-level-navigator.ts",
+          "hash": "12306253737730212612",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:rxjs",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/moves-left/moves-left.html",
+          "hash": "18224668683966783839"
+        },
+        {
+          "file": "libs/ui/src/lib/components/moves-left/moves-left.scss",
+          "hash": "8493753791735825768"
+        },
+        {
+          "file": "libs/ui/src/lib/components/moves-left/moves-left.spec.ts",
+          "hash": "8738332411363738482",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/moves-left/moves-left.ts",
+          "hash": "16528784854598621236",
+          "deps": [
+            "npm:@angular/core",
+            "engine"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.html",
+          "hash": "16879668321639748861"
+        },
+        {
+          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.scss",
+          "hash": "9749734107853313744"
+        },
+        {
+          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.spec.ts",
+          "hash": "1595835825990160701",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/progress-bar/progress-bar.ts",
+          "hash": "556206954803564371",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/share-content/share-content.html",
+          "hash": "16071304546459624556"
+        },
+        {
+          "file": "libs/ui/src/lib/components/share-content/share-content.scss",
+          "hash": "9180351282938409742"
+        },
+        {
+          "file": "libs/ui/src/lib/components/share-content/share-content.ts",
+          "hash": "11788661812488915008",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "npm:rxjs",
+            "graphics",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.html",
+          "hash": "10831124044491521674"
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.scss",
+          "hash": "8120867324556270587"
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.spec.ts",
+          "hash": "1631517129553988711",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/text-zoom.ts",
+          "hash": "18306888732208536245",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.html",
+          "hash": "16600639102013822741"
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.scss",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.spec.ts",
+          "hash": "15383828666021741346",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/text-zoom/zoom-char/zoom-char.ts",
+          "hash": "6573910379095442117",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@tweenjs/tween.js",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.html",
+          "hash": "8650587310232746503"
+        },
+        {
+          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.scss",
+          "hash": "18367338398842238331"
+        },
+        {
+          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.spec.ts",
+          "hash": "11832904524834501448",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/material",
+            "graphics",
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/components/tutorial-overlay/tutorial-overlay.ts",
+          "hash": "3005274068540044234",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/material",
+            "graphics"
+          ]
+        },
+        {
+          "file": "libs/ui/src/lib/styles/_style-values.scss",
+          "hash": "16447057118350593656"
+        },
+        {
+          "file": "libs/ui/tsconfig.lib.json",
+          "hash": "1296062206120080412"
+        },
+        {
+          "file": "libs/ui/tsconfig.spec.json",
+          "hash": "11889511840676597136"
+        }
+      ],
       "rikkle-e2e": [
         {
           "file": "apps/rikkle-e2e/README.md",
@@ -2164,51 +2209,6 @@
         {
           "file": "apps/rikkle-e2e/tsconfig.e2e.json",
           "hash": "6278382160003221589"
-        }
-      ],
-      "audio": [
-        {
-          "file": "libs/audio/README.md",
-          "hash": "12430951079247412722"
-        },
-        {
-          "file": "libs/audio/project.json",
-          "hash": "11902750775656432190"
-        },
-        {
-          "file": "libs/audio/src/index.ts",
-          "hash": "7567209885068793754"
-        },
-        {
-          "file": "libs/audio/src/lib/audio-data.ts",
-          "hash": "3178814288838638823"
-        },
-        {
-          "file": "libs/audio/src/lib/audio-manager.spec.ts",
-          "hash": "1194311016148453563",
-          "deps": [
-            "npm:@angular/core",
-            "npm:vitest",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/audio/src/lib/audio-manager.ts",
-          "hash": "17327896178159987123",
-          "deps": [
-            "npm:@angular/core",
-            "engine",
-            "shared",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "libs/audio/tsconfig.lib.json",
-          "hash": "1296062206120080412"
-        },
-        {
-          "file": "libs/audio/tsconfig.spec.json",
-          "hash": "11889511840676597136"
         }
       ]
     },
