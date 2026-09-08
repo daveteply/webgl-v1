@@ -5,6 +5,7 @@
     "*.ts": "$(capture).spec.ts, $(capture).html, $(capture).scss, $(capture).css"
   },
   "cSpell.words": [
+    "changa",
     "glassmorphic",
     "Loopable",
     "Phong",

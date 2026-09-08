@@ -95,12 +95,12 @@ export class ScoringManagerService {
     const result = this.store.recordMatchScore(pieceCount, timeDiff);
 
     if (result.speedBonus && !endLevelSkip) {
-      this.textManager.ShowText(['Speed Bonus', `+${result.speedBonus} Points`], this.textColor);
+      this.textManager.ShowSpeedBonus(result.speedBonus, this.textColor);
       this.MovesChange.next(true);
     }
 
     if (result.longMatchBonus && !endLevelSkip) {
-      this.textManager.ShowText(['Long Match', `+${result.longMatchBonus} Points`], this.textColor);
+      this.textManager.ShowLongMatchBonus(result.longMatchBonus, this.textColor);
       this.MovesChange.next(true);
     }
 
@@ -114,15 +114,9 @@ export class ScoringManagerService {
 
   public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType): void {
     const usePowerMoveBonus = this.store.recordPowerMoveBonus(additionalMoveCount);
-
-    if (additionalMoveCount > 0) {
-      const moveText = additionalMoveCount === 1 ? '+1 Move' : `+${additionalMoveCount} Moves`;
-      this.textManager.ShowText(['Multi-Power!', moveText, `+${usePowerMoveBonus} Points`], this.textColor, true);
-      this.MovesChange.next(true);
-    } else {
-      const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
-      this.textManager.ShowText([`${labelText}!`, `+${usePowerMoveBonus} Points`], this.textColor, true);
-    }
+    const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
+    this.textManager.ShowPowerMove(labelText, usePowerMoveBonus, additionalMoveCount, this.textColor);
+    this.MovesChange.next(true);
   }
 
   public RestartGame(): void {
@@ -137,8 +131,8 @@ export class ScoringManagerService {
   public CheckPerfectMatch(): boolean {
     const awarded = this.store.checkPerfectMatch();
     if (awarded) {
-      const perfectBonus = this.store.levelStats().perfectMatchBonus;
-      this.textManager.ShowText(['Perfect Match!', `+${perfectBonus} Points`], this.textColor, true);
+      const perfectBonus = this.store.levelStats().perfectMatchBonus ?? 0;
+      this.textManager.ShowPerfectMatch(perfectBonus, this.textColor);
       return true;
     }
     return false;
