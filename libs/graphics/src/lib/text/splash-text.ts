@@ -7,6 +7,14 @@ import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextSplashEventType } from './text-splash-event-type';
 import { RAINBOW_COLOR_ARRAY } from '@rikkle/engine';
 
+export interface SplashTextOptions {
+  color?: number;
+  colorCycleFirstLine?: boolean;
+  introDurationMs?: number;
+  holdDurationMs?: number;
+  outroDurationMs?: number;
+}
+
 export class SplashText extends Object3D {
   private _introTween?: Tween<Record<string, number>>;
   private _outroTween?: Tween<Record<string, number>>;
@@ -23,11 +31,27 @@ export class SplashText extends Object3D {
 
   private readonly _targetY: number = 3.0;
 
-  constructor(text: string, font: Font, yOffset: number, color?: number, colorCycle = false) {
+  constructor(
+    text: string,
+    font: Font,
+    yOffset: number,
+    optionsOrColor?: SplashTextOptions | number,
+    colorCycle = false,
+  ) {
     super();
     this._text = text;
     this._font = font;
-    this._colorCycle = colorCycle;
+
+    const options: SplashTextOptions =
+      typeof optionsOrColor === 'number'
+        ? { color: optionsOrColor, colorCycleFirstLine: colorCycle }
+        : (optionsOrColor ?? { colorCycleFirstLine: colorCycle });
+
+    this._colorCycle = options.colorCycleFirstLine ?? colorCycle;
+    const color = options.color;
+    const introDurationMs = options.introDurationMs ?? 750;
+    const holdDurationMs = options.holdDurationMs ?? 0;
+    const outroDurationMs = options.outroDurationMs ?? 1000;
 
     // geometry
     this._textGeometry = new TextGeometry(this._text, {
@@ -78,8 +102,8 @@ export class SplashText extends Object3D {
     this._mesh = new Mesh(this._textGeometry, this._materials);
     this.add(this._mesh);
 
-    this.initIntroTween(this.xOffset(this._textGeometry), yOffset);
-    this.initOutroTween(yOffset);
+    this.initIntroTween(this.xOffset(this._textGeometry), yOffset, introDurationMs);
+    this.initOutroTween(yOffset, outroDurationMs, holdDurationMs);
 
     if (this._introTween && this._outroTween) {
       this._introTween.chain(this._outroTween);
@@ -113,7 +137,7 @@ export class SplashText extends Object3D {
     return 0;
   }
 
-  private initIntroTween(endX: number, yOffset: number): void {
+  private initIntroTween(endX: number, yOffset: number, introDurationMs = 750): void {
     const delta = { o: 0, x: 0, y: 0 };
     const target = { o: 1.0, x: 0, y: 0 };
     switch (MathUtils.randInt(1, 3)) {
@@ -143,7 +167,7 @@ export class SplashText extends Object3D {
     }
 
     this._introTween = new Tween(delta, mainTweenGroup)
-      .to(target, 750)
+      .to(target, introDurationMs)
       .easing(Easing.Elastic.Out)
       .onUpdate(() => {
         if (this._colorCycle) {
@@ -155,11 +179,11 @@ export class SplashText extends Object3D {
       });
   }
 
-  private initOutroTween(yOffset: number): void {
+  private initOutroTween(yOffset: number, outroDurationMs = 1000, holdDurationMs = 0): void {
     const delta = { o: 1.0, z: 0.0, y: this._targetY + yOffset };
     const target = { o: 0.0, z: 3.8, y: 2.0 };
     this._outroTween = new Tween(delta, mainTweenGroup)
-      .to(target, 1000)
+      .to(target, outroDurationMs)
       .easing(Easing.Quintic.InOut)
       .onUpdate(() => {
         if (this._colorCycle) {
@@ -169,6 +193,10 @@ export class SplashText extends Object3D {
         this._mesh.position.z = delta.z;
         this._mesh.position.y = delta.y;
       });
+
+    if (holdDurationMs > 0) {
+      this._outroTween.delay(holdDurationMs);
+    }
   }
 
   private updateColorCycle(): void {

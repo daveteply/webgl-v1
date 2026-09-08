@@ -10,6 +10,10 @@ import { LevelOrientationType } from '@rikkle/engine';
 
 class MockTextManagerService {
   ShowText = () => undefined;
+  ShowPerfectMatch = () => undefined;
+  ShowSpeedBonus = () => undefined;
+  ShowLongMatchBonus = () => undefined;
+  ShowPowerMove = () => undefined;
 }
 
 describe('ScoringManagerService', () => {
@@ -98,9 +102,9 @@ describe('ScoringManagerService', () => {
 
   it('should calculate bonus correctly for a single power move without awarding extra moves', () => {
     const textManager = TestBed.inject(TextManagerService);
-    let capturedMessage: string[] = [];
-    textManager.ShowText = (msg: string[]) => {
-      capturedMessage = msg;
+    let captured: { label: string; points: number; additionalMoves: number } | undefined;
+    textManager.ShowPowerMove = (label: string, points: number, additionalMoves = 0) => {
+      captured = { label, points, additionalMoves };
     };
 
     const initialMoves = service.PlayerMoves;
@@ -111,15 +115,15 @@ describe('ScoringManagerService', () => {
     expect(service.Score).toBe(initialScore + 50);
     expect(service.PlayerMoves).toBe(initialMoves);
     expect(service.LevelStats.moveCountEarned).toBe(0);
-    expect(capturedMessage).toEqual(['Spin right!', '+50 Points']);
+    expect(captured).toEqual({ label: 'Spin right', points: 50, additionalMoves: 0 });
   });
 
   it('should display orientation-aware power move label when level is horizontal', () => {
     const textManager = TestBed.inject(TextManagerService);
     const gameEngine = TestBed.inject(GameEngineService);
-    let capturedMessage: string[] = [];
-    textManager.ShowText = (msg: string[]) => {
-      capturedMessage = msg;
+    let captured: { label: string; points: number; additionalMoves: number } | undefined;
+    textManager.ShowPowerMove = (label: string, points: number, additionalMoves = 0) => {
+      captured = { label, points, additionalMoves };
     };
 
     gameEngine.RestoreLevelTypes(
@@ -130,10 +134,10 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(capturedMessage).toEqual(['Spin down!', '+50 Points']);
+    expect(captured).toEqual({ label: 'Spin down', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(capturedMessage).toEqual(['Roll left!', '+50 Points']);
+    expect(captured).toEqual({ label: 'Roll left', points: 50, additionalMoves: 0 });
 
     gameEngine.RestoreLevelTypes(
       LevelMaterialType.Color,
@@ -143,17 +147,17 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(capturedMessage).toEqual(['Spin up!', '+50 Points']);
+    expect(captured).toEqual({ label: 'Spin up', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(capturedMessage).toEqual(['Roll right!', '+50 Points']);
+    expect(captured).toEqual({ label: 'Roll right', points: 50, additionalMoves: 0 });
   });
 
   it('should calculate bonus and award +1 move for multi-power move with 1 additional power move', () => {
     const textManager = TestBed.inject(TextManagerService);
-    let capturedMessage: string[] = [];
-    textManager.ShowText = (msg: string[]) => {
-      capturedMessage = msg;
+    let captured: { label: string; points: number; additionalMoves: number } | undefined;
+    textManager.ShowPowerMove = (label: string, points: number, additionalMoves = 0) => {
+      captured = { label, points, additionalMoves };
     };
 
     let movesChangeEmitted: boolean | undefined;
@@ -170,14 +174,14 @@ describe('ScoringManagerService', () => {
     expect(service.PlayerMoves).toBe(initialMoves + 1);
     expect(service.LevelStats.moveCountEarned).toBe(1);
     expect(movesChangeEmitted).toBe(true);
-    expect(capturedMessage).toEqual(['Multi-Power!', '+1 Move', '+100 Points']);
+    expect(captured).toEqual({ label: 'Spin right', points: 100, additionalMoves: 1 });
   });
 
   it('should calculate bonus and award +2 moves for multi-power move with 2 additional power moves', () => {
     const textManager = TestBed.inject(TextManagerService);
-    let capturedMessage: string[] = [];
-    textManager.ShowText = (msg: string[]) => {
-      capturedMessage = msg;
+    let captured: { label: string; points: number; additionalMoves: number } | undefined;
+    textManager.ShowPowerMove = (label: string, points: number, additionalMoves = 0) => {
+      captured = { label, points, additionalMoves };
     };
 
     let movesChangeEmitted: boolean | undefined;
@@ -194,7 +198,7 @@ describe('ScoringManagerService', () => {
     expect(service.PlayerMoves).toBe(initialMoves + 2);
     expect(service.LevelStats.moveCountEarned).toBe(2);
     expect(movesChangeEmitted).toBe(true);
-    expect(capturedMessage).toEqual(['Multi-Power!', '+2 Moves', '+150 Points']);
+    expect(captured).toEqual({ label: 'Roll up', points: 150, additionalMoves: 2 });
   });
 
   describe('Perfect Match Scoring & StatsEntries', () => {

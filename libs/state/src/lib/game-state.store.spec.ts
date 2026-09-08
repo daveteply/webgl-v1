@@ -91,6 +91,24 @@ describe('GameStateStore', () => {
     expect(store.score()).toBe(result.scoreDelta);
   });
 
+  it('should stack fast match and long match bonuses when both conditions are met', () => {
+    store.initLevel(1);
+    const initialMoves = store.movesRemaining(); // 3
+
+    // 5 pieces in 500ms -> fast bonus (2000 pts, +1 move) AND long match bonus (20 pts, +2 moves)
+    const result = store.recordMatchScore(5, 500);
+
+    expect(result.speedBonus).toBe(2000);
+    expect(result.longMatchBonus).toBe(20);
+    expect(result.earnedMoves).toBe(3); // 1 from speed + 2 from long match
+    expect(result.scoreDelta).toBe(5 * 1 + 2000 + 20); // 2025
+    expect(store.score()).toBe(2025);
+    expect(store.movesRemaining()).toBe(initialMoves + 3); // 6
+    expect(store.levelStats().fastMatchBonusTotal).toBe(2000);
+    expect(store.levelStats().fastestMatchTime).toBe(500);
+    expect(store.levelStats().moveCountEarned).toBe(3);
+  });
+
   it('should award power move score bonuses and additional moves', () => {
     store.initLevel(2);
     const initialScore = store.score();

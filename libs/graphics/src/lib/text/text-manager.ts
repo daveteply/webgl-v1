@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { Group, LoadingManager, PerspectiveCamera, Scene } from 'three';
-import { SplashText } from './splash-text';
+import { SplashText, SplashTextOptions } from './splash-text';
 import { TextSplashEventType } from './text-splash-event-type';
 
 @Injectable({
@@ -61,21 +61,61 @@ export class TextManagerService {
     }
   }
 
-  public ShowText(message: string[], color?: number, colorCycleFirstLine = false): void {
+  public ShowText(message: string[], optionsOrColor?: SplashTextOptions | number, colorCycleFirstLine = false): void {
     if (!this._changaRegular) {
       return;
     }
 
+    const options: SplashTextOptions =
+      typeof optionsOrColor === 'number'
+        ? { color: optionsOrColor, colorCycleFirstLine }
+        : (optionsOrColor ?? { colorCycleFirstLine });
+
     if (message?.length) {
       let yOffset = 0;
       message.forEach((msg, index) => {
-        const cycle = colorCycleFirstLine && index === 0;
-        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, color, cycle));
+        const lineCycle = (options.colorCycleFirstLine ?? colorCycleFirstLine) && index === 0;
+        const lineOptions: SplashTextOptions = {
+          ...options,
+          colorCycleFirstLine: lineCycle,
+        };
+        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, lineOptions));
         yOffset -= 0.75;
       });
     }
 
     this.nextText();
+  }
+
+  public ShowPerfectMatch(points = 0, color?: number): void {
+    this.ShowText(['Perfect Match!', `+${points} Points`], {
+      color,
+      colorCycleFirstLine: true,
+      holdDurationMs: 1200,
+    });
+  }
+
+  public ShowSpeedBonus(points = 0, color?: number): void {
+    this.ShowText(['Speed Bonus', `+${points} Points`], { color });
+  }
+
+  public ShowLongMatchBonus(points = 0, color?: number): void {
+    this.ShowText(['Long Match', `+${points} Points`], { color });
+  }
+
+  public ShowPowerMove(label: string, points = 0, additionalMoves = 0, color?: number): void {
+    if (additionalMoves > 0) {
+      const moveText = additionalMoves === 1 ? '+1 Move' : `+${additionalMoves} Moves`;
+      this.ShowText(['Multi-Power!', moveText, `+${points} Points`], {
+        color,
+        colorCycleFirstLine: true,
+      });
+    } else {
+      this.ShowText([`${label}!`, `+${points} Points`], {
+        color,
+        colorCycleFirstLine: true,
+      });
+    }
   }
 
   private nextText(): void {
