@@ -20,6 +20,7 @@ import { GameEngineService } from './game-engine';
 import { ObjectManagerService } from './object-manager';
 import { ScoringManagerService } from './scoring-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
+import { MaterialManagerService } from './material/material-manager';
 import { HintsManagerService, TutorialType } from './hints-manager';
 import { EffectsManagerService } from './effects-manager';
 
@@ -35,6 +36,7 @@ export class InteractionManagerService {
   private postProcessingManager = inject(PostProcessingManagerService);
   private hapticsManager = inject(HapticsManagerService);
   private hintsManager = inject(HintsManagerService);
+  private materialManager = inject(MaterialManagerService);
 
   private _canvasRect!: DOMRect;
   set CanvasRect(rect: DOMRect) {
@@ -147,7 +149,6 @@ export class InteractionManagerService {
                   this.effectsManager.ClearSelectedPieces();
                   this.postProcessingManager.UpdateOutlinePassObjects([]);
                   this.objectManager.ResetIsMatch();
-                  this.effectsManager.AnimateLock(this.objectManager.Axle, false);
                   this.LockBoard(false);
                 });
 
@@ -159,7 +160,6 @@ export class InteractionManagerService {
                 this.effectsManager.ClearSelectedPieces();
                 this.postProcessingManager.UpdateOutlinePassObjects([]);
                 this.objectManager.ResetIsMatch();
-                this.effectsManager.AnimateLock(this.objectManager.Axle, false);
                 this.LockBoard(false);
               });
               this.effectsManager.AnimateRemove(piecesToRemove);
@@ -167,7 +167,6 @@ export class InteractionManagerService {
           }
         } else {
           // unselect
-          this.effectsManager.AnimateLock(this.objectManager.Axle, false);
           this.effectsManager.AnimateSelected(this._matchingPieces, false);
         }
       } else {
@@ -196,6 +195,7 @@ export class InteractionManagerService {
 
   public LockBoard(locked: boolean): void {
     this._locked = locked;
+    this.materialManager.AnimateTension(locked);
     if (locked) {
       this._isPointerDown = false;
       this._isDragging = false;
@@ -315,14 +315,13 @@ export class InteractionManagerService {
     if (gamePiece && !gamePiece.IsRemoved) {
       // power move
       if (gamePiece.IsPowerMove) {
-        this.powerMove(gamePiece);
+        this.powerMove(gamePiece, x, y);
       } else {
         // run matches algorithm
         this._matchingPieces = this.gameEngine.FindMatches(gamePiece, this.objectManager.Axle);
 
         // launch animation sequence
         this.effectsManager.AnimateSelected(this._matchingPieces, true);
-        this.effectsManager.AnimateLock(this.objectManager.Axle, true);
       }
       this.postProcessingManager.UpdateOutlinePassObjects(this.effectsManager.SelectedPieces);
     } else {
@@ -331,8 +330,17 @@ export class InteractionManagerService {
     }
   }
 
-  private powerMove(targetGamePiece: GamePiece): void {
+  private powerMove(targetGamePiece: GamePiece, x?: number, y?: number): void {
     this.LockBoard(true);
+
+    // Trigger epic shockwave ripple originating from power move piece coordinate
+    const uvX =
+      x !== undefined && this._canvasRect?.width > 0 ? (x - this._canvasRect.left) / this._canvasRect.width : 0.5;
+    const uvY =
+      y !== undefined && this._canvasRect?.height > 0
+        ? 1.0 - (y - this._canvasRect.top) / this._canvasRect.height
+        : 0.5;
+    this.postProcessingManager.TriggerShockwave(new Vector2(uvX, uvY), 600);
 
     // find other power moves
     const powerMoveGamePieces: GamePiece[] = [];
@@ -391,7 +399,6 @@ export class InteractionManagerService {
               this.effectsManager.ClearSelectedPieces();
               this.postProcessingManager.UpdateOutlinePassObjects([]);
               this.objectManager.ResetIsMatch();
-              this.effectsManager.AnimateLock(this.objectManager.Axle, false);
               this.LockBoard(false);
             });
             this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
@@ -402,7 +409,6 @@ export class InteractionManagerService {
             this.effectsManager.ClearSelectedPieces();
             this.postProcessingManager.UpdateOutlinePassObjects([]);
             this.objectManager.ResetIsMatch();
-            this.effectsManager.AnimateLock(this.objectManager.Axle, false);
             this.LockBoard(false);
           });
           this.effectsManager.AnimateRemove(otherTargets);

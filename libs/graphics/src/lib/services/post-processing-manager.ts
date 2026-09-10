@@ -11,6 +11,8 @@ import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { ShockwaveShader } from '../shaders/shockwave.shader';
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +25,12 @@ export class PostProcessingManagerService {
   private _smaaPass!: SMAAPass;
   private _bokehPass!: BokehPass;
   private _unrealBloomPass!: UnrealBloomPass;
+  private _shockwavePass!: ShaderPass;
   private _outputPass!: OutputPass;
 
   private _bokehTween?: Tween<Record<string, number>>;
   private _unrealBloomTween?: Tween<Record<string, number>>;
+  private _shockwaveTween?: Tween<Record<string, number>>;
 
   private _outlineColor!: number;
   get OutlineColor(): number {
@@ -39,6 +43,10 @@ export class PostProcessingManagerService {
 
   get SMAAPass(): SMAAPass {
     return this._smaaPass;
+  }
+
+  get ShockwavePass(): ShaderPass {
+    return this._shockwavePass;
   }
 
   public InitPostProcessing(
@@ -73,6 +81,11 @@ export class PostProcessingManagerService {
     this._unrealBloomPass = new UnrealBloomPass(new Vector2(width, height), 1, 0, 0);
     this._unrealBloomPass.enabled = false;
 
+    // shockwave pass
+    this._shockwavePass = new ShaderPass(ShockwaveShader);
+    this._shockwavePass.enabled = false;
+    this._shockwavePass.uniforms['aspectRatio'].value = height > 0 ? width / height : 1.0;
+
     // output pass for tone mapping and sRGB color space conversion
     this._outputPass = new OutputPass();
 
@@ -82,8 +95,43 @@ export class PostProcessingManagerService {
     this._composer.addPass(this._outlinePass);
     this._composer.addPass(this._bokehPass);
     this._composer.addPass(this._unrealBloomPass);
+    this._composer.addPass(this._shockwavePass);
     this._composer.addPass(this._smaaPass);
     this._composer.addPass(this._outputPass);
+  }
+
+  public TriggerShockwave(screenUv: Vector2, duration = 400): void {
+    if (!this._shockwavePass) return;
+
+    this._shockwaveTween?.stop();
+    this._shockwavePass.enabled = true;
+    this._shockwavePass.uniforms['center'].value.copy(screenUv);
+    this._shockwavePass.uniforms['progress'].value = 0.0;
+
+    const delta = { progress: 0.0 };
+    const target = { progress: 1.0 };
+
+    this._shockwaveTween = new Tween(delta, mainTweenGroup)
+      .to(target, duration)
+      .easing(Easing.Quadratic.Out)
+      .onUpdate(() => {
+        this._shockwavePass.uniforms['progress'].value = delta.progress;
+      })
+      .onComplete(() => {
+        this._shockwavePass.enabled = false;
+        this._shockwavePass.uniforms['progress'].value = 0.0;
+      })
+      .onStop(() => {
+        this._shockwavePass.enabled = false;
+        this._shockwavePass.uniforms['progress'].value = 0.0;
+      })
+      .start();
+  }
+
+  public UpdateAspectRatio(width: number, height: number): void {
+    if (this._shockwavePass && height > 0) {
+      this._shockwavePass.uniforms['aspectRatio'].value = width / height;
+    }
   }
 
   public UpdateOutlinePassObjects(selectedObjects: Object3D[]): void {

@@ -36,3 +36,7 @@ export * from './lib/services/save-game/save-game-types';
 export * from './lib/text/text-manager';
 export * from './lib/text/splash-text';
 export * from './lib/text/text-splash-event-type';
+
+// Shaders
+export * from './lib/shaders/shockwave.shader';
+export * from './lib/shaders/tension.shader';

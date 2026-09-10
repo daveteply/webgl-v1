@@ -55,7 +55,6 @@ export class GamePiece extends Object3D {
   private _thetaStart: number;
   private _thetaOffset: number;
 
-  private _lockTween?: Tween<Record<string, number>>;
   private _levelChangeTween?: Tween<Record<string, number>>;
   private _removeTween?: Tween<Record<string, number>>;
 
@@ -323,7 +322,6 @@ export class GamePiece extends Object3D {
   public StopTweens(preserveLock = false): void {
     this._removeTween?.stop();
     this._levelChangeTween?.stop();
-    this._lockTween?.stop();
     if (this._mesh) {
       this._mesh.position.set(0, 0, 0);
       this._mesh.rotation.set(0, 0, this.getMeshRestingRotationZ());
@@ -548,39 +546,6 @@ export class GamePiece extends Object3D {
         }
       })
       .start();
-  }
-
-  public AnimateLock(lock: boolean): void {
-    if (!this._isRemoved && !this.IsMatch && !this._isPowerMove) {
-      // stop tween
-      this._lockTween?.stop();
-
-      // set direction
-      const origin = { x: 1.0, y: 1.0, z: 1.0, o: 1.0 };
-      const final = { x: 0.8, y: 0.8, z: 0.8, o: 0.4 };
-
-      const delta = lock ? origin : final;
-      const target = lock ? final : origin;
-
-      // init tween
-      this._lockTween = new Tween(delta, mainTweenGroup).to(target, 500).onUpdate(() => {
-        this._mesh.scale.set(delta.x, delta.y, delta.z);
-        this._pieceMaterials?.forEach((m) => {
-          if (m.useBasic) {
-            m.materialBasic.opacity = delta.o;
-          } else {
-            m.materialPhong.opacity = delta.o;
-          }
-        });
-      });
-
-      if (lock) {
-        this._lockTween.easing(Easing.Exponential.Out);
-        this._lockTween.delay(MathUtils.randInt(50, 500));
-      }
-
-      this._lockTween.start();
-    }
   }
 
   public InitSelectionTween(select: boolean): Tween<{ x: number; y: number; z: number }> {
@@ -882,10 +847,9 @@ export class GamePiece extends Object3D {
     this.ApplyStateSnapshot(source.GetStateSnapshot());
   }
 
-  public AnimateGravitySlide(startOffsetY: number, duration: number, isLocked = true): Tween<{ y: number }> {
+  public AnimateGravitySlide(startOffsetY: number, duration: number): Tween<{ y: number }> {
     this._removeTween?.stop();
     this._levelChangeTween?.stop();
-    this._lockTween?.stop();
     this._isRemoved = false;
 
     if (!this._mesh) {
@@ -901,8 +865,8 @@ export class GamePiece extends Object3D {
       }
     }
 
-    const scale = isLocked ? 0.8 : 1.0;
-    const opacity = isLocked ? 0.4 : 1.0;
+    const scale = 1.0;
+    const opacity = 1.0;
 
     const delta = { y: startOffsetY };
     const target = { y: 0 };

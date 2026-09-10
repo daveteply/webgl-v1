@@ -208,17 +208,6 @@ export class EffectsManagerService {
     }
   }
 
-  public AnimateLock(axle: GameWheel[], lock: boolean): void {
-    axle.forEach((a) => {
-      for (const child of a.children) {
-        const gamePiece = child as GamePiece;
-        if (!gamePiece.IsMatch) {
-          gamePiece.AnimateLock(lock);
-        }
-      }
-    });
-  }
-
   public AnimateSelected(selectedPieces: GamePiece[], select: boolean): void {
     if (selectedPieces.length) {
       // stop if currently running
