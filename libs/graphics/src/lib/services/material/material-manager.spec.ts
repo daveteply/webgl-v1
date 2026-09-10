@@ -122,4 +122,11 @@ describe('MaterialManagerService', () => {
     service.InitMaterials(2, 4);
     expect(() => service.DisposeMaterials()).not.toThrow();
   });
+
+  it('should animate tension intensity on AnimateTension', () => {
+    service.AnimateTension(true);
+    expect(service).toBeTruthy();
+
+    service.AnimateTension(false);
+  });
 });

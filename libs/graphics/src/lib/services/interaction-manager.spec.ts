@@ -15,6 +15,7 @@ import { LevelOrientationType } from '@rikkle/engine';
 import { LevelMaterialType } from '@rikkle/engine';
 import { LevelGeometryType } from '@rikkle/engine';
 import { GravityType } from '@rikkle/engine';
+import { PostProcessingManagerService } from './post-processing-manager';
 
 describe('InteractionManagerService', () => {
   let service: InteractionManagerService;
@@ -184,5 +185,41 @@ describe('InteractionManagerService', () => {
     service.SetPan(0.5);
     // sign for HorizontalLeft is 1, so 0.5 * 2.4 * 1 = 1.2
     expect(camera.position.y).toBeCloseTo(1.2);
+  });
+
+  it('should trigger shockwave when a power move is executed', () => {
+    const postProcessingManager = TestBed.inject(PostProcessingManagerService);
+    const shockwaveSpy = vi.spyOn(postProcessingManager, 'TriggerShockwave');
+
+    service.CanvasRect = {
+      left: 0,
+      right: 1000,
+      top: 0,
+      bottom: 1000,
+      width: 1000,
+      height: 1000,
+      x: 0,
+      y: 0,
+      toJSON: () => undefined,
+    } as DOMRect;
+
+    const mockPiece = {
+      id: 10,
+      IsRemoved: false,
+      IsPowerMove: true,
+      PowerMoveType: PowerMoveType.Bomb,
+      PowerMoveRemove: vi.fn(),
+    } as unknown as GamePiece;
+
+    vi.spyOn(
+      service as unknown as { getPickedGamePiece: (x: number, y: number) => GamePiece | undefined },
+      'getPickedGamePiece',
+    ).mockReturnValue(mockPiece);
+    service['handleTapOrPress'](500, 250);
+
+    expect(shockwaveSpy).toHaveBeenCalled();
+    const passedUv = shockwaveSpy.mock.calls[0]?.[0];
+    expect(passedUv?.x).toBeCloseTo(0.5);
+    expect(passedUv?.y).toBeCloseTo(0.75); // 1.0 - 250/1000 = 0.75
   });
 });

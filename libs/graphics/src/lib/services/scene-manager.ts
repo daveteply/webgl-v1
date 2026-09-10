@@ -3,6 +3,7 @@ import { Color, MathUtils, PerspectiveCamera, PointLight, Scene, WebGLRenderer }
 
 import { InteractionManagerService } from './interaction-manager';
 import { ObjectManagerService } from './object-manager';
+import { MaterialManagerService } from './material/material-manager';
 import { PostProcessingManagerService } from './post-processing-manager';
 import { ShareManagerService } from './share-manager';
 
@@ -16,6 +17,7 @@ export class SceneManagerService implements OnDestroy {
   private interactionManager = inject(InteractionManagerService);
   private postProcessingManager = inject(PostProcessingManagerService);
   private shareManager = inject(ShareManagerService);
+  private materialManager = inject(MaterialManagerService);
 
   private _previousFrameRenderTime!: number;
 
@@ -103,6 +105,9 @@ export class SceneManagerService implements OnDestroy {
 
         // smaa
         this.postProcessingManager.SMAAPass?.setSize(width, height);
+
+        // shockwave aspect ratio
+        this.postProcessingManager.UpdateAspectRatio(width, height);
       }
     }
 
@@ -132,6 +137,7 @@ export class SceneManagerService implements OnDestroy {
     const deltaTime = nowSec - this._previousFrameRenderTime;
     this._previousFrameRenderTime = nowSec;
 
+    this.materialManager.UpdateTensionTime(nowSec);
     this.objectManager.UpdateStarField();
     this.postProcessingManager.Composer.render(deltaTime);
 

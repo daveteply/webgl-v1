@@ -5,6 +5,9 @@ import { TextureManagerService } from '../texture/texture-manager';
 import { GameStateStore } from '@rikkle/state';
 
 import { Color, MathUtils, MeshBasicMaterial, MeshPhongMaterial, Texture } from 'three';
+import { Easing, Tween } from '@tweenjs/tween.js';
+import { mainTweenGroup } from '../tween-group';
+import { attachTensionShader, SharedTensionUniforms } from '../../shaders/tension.shader';
 import { GamePieceMaterialData } from '../../models/game-piece/game-piece-material-type';
 import { PieceMaterials, PieceSideMaterial, WheelMaterial, GameMaterials } from './material-models';
 import { LevelMaterialType } from '@rikkle/engine';
@@ -32,6 +35,57 @@ export class MaterialManagerService {
   }
 
   private _spareMaterialPool: PieceMaterials[] = [];
+  private _tensionTween?: Tween<Record<string, number>>;
+
+  private createPieceSideMaterial(): PieceSideMaterial {
+    const materialPhong = new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true });
+    const materialBasic = new MeshBasicMaterial({ transparent: true });
+
+    attachTensionShader(materialPhong);
+    attachTensionShader(materialBasic);
+
+    return {
+      matchKey: 0,
+      materialPhong,
+      materialBasic,
+      useBasic: false,
+    };
+  }
+
+  public AnimateTension(active: boolean): void {
+    this._tensionTween?.stop();
+
+    if (active) {
+      const delta = { intensity: SharedTensionUniforms.uLockIntensity.value };
+      const target = { intensity: 1.0 };
+
+      this._tensionTween = new Tween(delta, mainTweenGroup)
+        .to(target, 150)
+        .easing(Easing.Quadratic.Out)
+        .onUpdate(() => {
+          SharedTensionUniforms.uLockIntensity.value = delta.intensity;
+        })
+        .start();
+    } else {
+      const delta = { intensity: SharedTensionUniforms.uLockIntensity.value };
+      const target = { intensity: 0.0 };
+
+      this._tensionTween = new Tween(delta, mainTweenGroup)
+        .to(target, 220)
+        .easing(Easing.Back.Out)
+        .onUpdate(() => {
+          SharedTensionUniforms.uLockIntensity.value = delta.intensity;
+        })
+        .onComplete(() => {
+          SharedTensionUniforms.uLockIntensity.value = 0.0;
+        })
+        .start();
+    }
+  }
+
+  public UpdateTensionTime(timeInSec: number): void {
+    SharedTensionUniforms.uLockTime.value = timeInSec;
+  }
 
   public InitMaterials(wheelCount: number, pieceCount: number): void {
     this.DisposeMaterials();
@@ -50,12 +104,8 @@ export class MaterialManagerService {
           materials: new Array<PieceSideMaterial>(maxMaterials),
         };
         for (let textureInx = 0; textureInx < maxMaterials; textureInx++) {
-          this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx].materials[textureInx] = {
-            matchKey: 0,
-            materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
-            materialBasic: new MeshBasicMaterial({ transparent: true }),
-            useBasic: false,
-          };
+          this._gameMaterials.wheelMaterials[wheelInx].pieceMaterials[pieceInx].materials[textureInx] =
+            this.createPieceSideMaterial();
         }
       }
     }
@@ -120,14 +170,8 @@ export class MaterialManagerService {
     if (!pooled) {
       const maxMaterials = 8;
       const resultMaterials: PieceSideMaterial[] = [];
-
       for (let i = 0; i < maxMaterials; i++) {
-        resultMaterials.push({
-          matchKey: 0,
-          materialPhong: new MeshPhongMaterial({ bumpScale: BUMP_SCALE, transparent: true }),
-          materialBasic: new MeshBasicMaterial({ transparent: true }),
-          useBasic: false,
-        });
+        resultMaterials.push(this.createPieceSideMaterial());
       }
       pooled = { materials: resultMaterials };
     }
