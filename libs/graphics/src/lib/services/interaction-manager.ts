@@ -1,6 +1,6 @@
 import { Injectable, isDevMode, inject } from '@angular/core';
 import { Subject, take } from 'rxjs';
-import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2 } from 'three';
+import { MathUtils, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 
 import {
   CAMERA_PAN_MAX_OFFSET,
@@ -99,8 +99,29 @@ export class InteractionManagerService {
       // selection animation complete
       if (selectionMode) {
         if (this._matchingPieces.length >= MINIMUM_MATCH_COUNT) {
+          // compute centroid of matched pieces for in-situ 3D reward positioning
+          const matchCentroid = new Vector3();
+          this._matchingPieces.forEach((p) => {
+            if (typeof p.getWorldPosition === 'function') {
+              const pos = new Vector3();
+              p.getWorldPosition(pos);
+              matchCentroid.add(pos);
+            }
+          });
+          if (this._matchingPieces.length > 0) {
+            matchCentroid.divideScalar(this._matchingPieces.length);
+            if (this._perspectiveCamera) {
+              const toCam = new Vector3().subVectors(this._perspectiveCamera.position, matchCentroid).normalize();
+              matchCentroid.addScaledVector(toCam, 1.0);
+            }
+          }
+
           // update score
-          this.scoringManager.UpdateScore(this._matchingPieces.length, this.scoringManager.LevelComplete);
+          this.scoringManager.UpdateScore(
+            this._matchingPieces.length,
+            this.scoringManager.LevelComplete,
+            matchCentroid,
+          );
           // long match audio
           if (this._matchingPieces.length > MINIMUM_MATCH_COUNT) {
             this.audioManager.PlayLongMatch(this._matchingPieces.length);
@@ -355,8 +376,16 @@ export class InteractionManagerService {
     // execute power move
     this.scoringManager.UpdateMoveCount();
     const moveType = targetGamePiece.PowerMoveType;
+    const targetWorldPos = new Vector3();
+    if (typeof targetGamePiece.getWorldPosition === 'function') {
+      targetGamePiece.getWorldPosition(targetWorldPos);
+      if (this._perspectiveCamera) {
+        const toCam = new Vector3().subVectors(this._perspectiveCamera.position, targetWorldPos).normalize();
+        targetWorldPos.addScaledVector(toCam, 1.0);
+      }
+    }
     targetGamePiece.PowerMoveRemove();
-    this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, moveType);
+    this.scoringManager.UpdatePowerMoveBonus(powerMoveGamePieces.length, moveType, targetWorldPos);
 
     // power move could have been the player's last move
     if (this.scoringManager.GameOver) {

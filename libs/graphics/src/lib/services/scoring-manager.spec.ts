@@ -10,9 +10,11 @@ import { LevelOrientationType } from '@rikkle/engine';
 
 class MockTextManagerService {
   ShowText = () => undefined;
+  ShowFloatingText = () => undefined;
   ShowPerfectMatch = () => undefined;
   ShowSpeedBonus = () => undefined;
   ShowLongMatchBonus = () => undefined;
+  ShowComboBonus = () => undefined;
   ShowPowerMove = () => undefined;
 }
 
