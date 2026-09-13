@@ -122,4 +122,44 @@ describe('EffectsManagerService', () => {
 
     expect(locked).toBe(true);
   });
+
+  it('should trigger AnimateCameraShake and restore camera baseline', () => {
+    const camera = new PerspectiveCamera();
+    camera.position.set(0, 0, 5.0);
+    camera.rotation.set(0, 0, 0);
+
+    service.AnimateCameraShake(camera, 50, 0.2);
+
+    expect(service['_cameraShakeTween']).toBeDefined();
+    service['_cameraShakeTween']?.stop();
+    expect(camera.position.x).toBe(0);
+    expect(camera.position.y).toBe(0);
+    expect(camera.rotation.z).toBe(0);
+  });
+
+  it('should trigger AnimateHorizontalTurnSpin on wheels when horizontal turn begins', () => {
+    const wheels = [new GameWheel(0, []), new GameWheel(1, [])];
+    const spy1 = vi.spyOn(wheels[0], 'AnimateHorizontalTurnSpin');
+    const spy2 = vi.spyOn(wheels[1], 'AnimateHorizontalTurnSpin');
+    const camera = new PerspectiveCamera();
+    const light = new PointLight();
+
+    service.AnimateLevelChangeAnimation(
+      wheels,
+      [0, 1],
+      camera,
+      light,
+      true,
+      undefined,
+      LevelOrientationType.HorizontalRight,
+    );
+
+    const tween2 = service['_levelChangeCameraTween2'];
+    // Trigger onComplete callback of camera tween 2 to start horizontal turn
+    // @ts-expect-error accessing internal callback for test
+    tween2?._onCompleteCallback?.();
+
+    expect(spy1).toHaveBeenCalledWith(3000);
+    expect(spy2).toHaveBeenCalledWith(3000);
+  });
 });

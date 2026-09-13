@@ -17,6 +17,7 @@ export class GameWheel extends Object3D {
 
   private _levelChangeTween?: Tween<Record<string, number>>;
   private _horizontalMotionTween?: Tween<Record<string, number>>;
+  private _horizontalTurnTween?: Tween<Record<string, number>>;
 
   // game save state
   get Theta(): number {
@@ -82,6 +83,7 @@ export class GameWheel extends Object3D {
   public Reset(levelGeometryType: LevelGeometryType): void {
     this._levelChangeTween?.stop();
     this._horizontalMotionTween?.stop();
+    this._horizontalTurnTween?.stop();
 
     this._theta = 0;
     this.position.y = this._originalPositionY;
@@ -195,43 +197,44 @@ export class GameWheel extends Object3D {
   }
 
   public UpdateMoveStartTheta(): void {
+    this._theta = ((this._theta % TWO_PI) + TWO_PI) % TWO_PI;
     this._moveStartTheta = this._theta;
   }
 
   public UpdateTheta(theta: number): void {
-    this._theta += theta;
-
-    // restart if full rotation
-    if (Math.abs(this._theta) >= TWO_PI) {
-      this._theta = 0;
-    }
-
+    this._theta = (((this._theta + theta) % TWO_PI) + TWO_PI) % TWO_PI;
     this.rotation.y = this._theta;
   }
 
   public SnapToGrid(): boolean {
-    // find where the circle has "landed"
-    const tier = Math.ceil(this._theta / GRID_INC);
+    // normalize current theta
+    this._theta = ((this._theta % TWO_PI) + TWO_PI) % TWO_PI;
 
-    // calculate the next and previous "steps" of the snap grid
-    const deltaNext = Math.abs(this._theta - tier * GRID_INC);
-    const deltaPrev = Math.abs(this._theta - (tier - 1) * GRID_INC);
+    // find nearest grid step
+    const tier = Math.round(this._theta / GRID_INC);
+    const targetTheta = (((tier * GRID_INC) % TWO_PI) + TWO_PI) % TWO_PI;
 
-    // snap to grid
-    if (deltaNext < deltaPrev) {
-      this._theta += deltaNext;
-    } else {
-      this._theta -= deltaPrev;
-    }
+    let startDiff = Math.abs(targetTheta - this._moveStartTheta);
+    if (startDiff > Math.PI) startDiff = TWO_PI - startDiff;
+    const actualMove = startDiff >= GRID_INC * 0.5;
 
-    const actualMove = Math.abs(this._theta - this._moveStartTheta) >= GRID_INC;
+    this._theta = targetTheta;
+
+    // determine shortest angular path for smooth snap animation
+    let diff = this._theta - this.rotation.y;
+    while (diff > Math.PI) diff -= TWO_PI;
+    while (diff < -Math.PI) diff += TWO_PI;
+    const snapTarget = this.rotation.y + diff;
 
     const delta = { r: this.rotation.y };
     new Tween(delta, mainTweenGroup)
-      .to({ r: this._theta }, 500)
+      .to({ r: snapTarget }, 500)
       .easing(actualMove ? Easing.Bounce.Out : Easing.Cubic.InOut)
       .onUpdate(() => {
         this.rotation.y = delta.r;
+      })
+      .onComplete(() => {
+        this.rotation.y = this._theta;
       })
       .start();
 
@@ -263,7 +266,35 @@ export class GameWheel extends Object3D {
         this.rotation.y = this._theta;
       })
       .onComplete(() => {
+        this._theta = ((stopTheta % TWO_PI) + TWO_PI) % TWO_PI;
+        this.rotation.y = this._theta;
         this.SnapToGrid();
+      })
+      .start();
+  }
+
+  public AnimateHorizontalTurnSpin(duration: number): void {
+    this._horizontalTurnTween?.stop();
+
+    const startTheta = this._theta;
+    const spinSteps = MathUtils.randInt(12, 48) * (MathUtils.randInt(0, 1) === 1 ? 1 : -1);
+    const targetTheta = startTheta + spinSteps * GRID_INC;
+
+    const delta = { theta: startTheta };
+    this._horizontalTurnTween = new Tween(delta, mainTweenGroup)
+      .to({ theta: targetTheta }, duration)
+      .easing(Easing.Cubic.InOut)
+      .onUpdate(() => {
+        this._theta = delta.theta;
+        this.rotation.y = this._theta;
+      })
+      .onComplete(() => {
+        this._theta = ((targetTheta % TWO_PI) + TWO_PI) % TWO_PI;
+        this.rotation.y = this._theta;
+        for (const child of this.children) {
+          const gamePiece = child as GamePiece;
+          gamePiece.ThetaOffset = this._theta;
+        }
       })
       .start();
   }
@@ -271,6 +302,7 @@ export class GameWheel extends Object3D {
   public Dispose(): void {
     this._levelChangeTween?.stop();
     this._horizontalMotionTween?.stop();
+    this._horizontalTurnTween?.stop();
     for (const child of this.children) {
       if (child instanceof GamePiece) {
         child.Dispose();

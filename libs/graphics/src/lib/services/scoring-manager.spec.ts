@@ -164,7 +164,7 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(captured).toEqual({ label: 'Spin down', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'Spin up', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
     expect(captured).toEqual({ label: 'Roll left', points: 50, additionalMoves: 0 });
@@ -177,7 +177,7 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(captured).toEqual({ label: 'Spin up', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'Spin down', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
     expect(captured).toEqual({ label: 'Roll right', points: 50, additionalMoves: 0 });

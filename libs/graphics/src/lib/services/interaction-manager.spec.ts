@@ -58,9 +58,14 @@ describe('InteractionManagerService', () => {
     expect(service['_isDragging']).toBe(false);
   });
 
-  it('should play POWER_MOVE_BOMB audio when Bomb power move is triggered', () => {
+  it('should play POWER_MOVE_BOMB audio and shake camera when Bomb power move is triggered', () => {
     const audioManager = TestBed.inject(AudioManagerService);
+    const effectsManager = TestBed.inject(EffectsManagerService);
     const playSpy = vi.spyOn(audioManager, 'PlayAudio');
+    const shakeSpy = vi.spyOn(effectsManager, 'AnimateCameraShake');
+
+    const camera = new PerspectiveCamera();
+    service.SetCamera(camera);
 
     const mockPiece = {
       id: 1,
@@ -70,6 +75,7 @@ describe('InteractionManagerService', () => {
 
     service['powerMove'](mockPiece);
     expect(playSpy).toHaveBeenCalledWith(AudioType.POWER_MOVE_BOMB);
+    expect(shakeSpy).toHaveBeenCalledWith(camera);
   });
 
   it('should play POWER_MOVE_USE and keep board locked during vertical power moves until animation completes', () => {

@@ -397,6 +397,9 @@ export class InteractionManagerService {
 
       if (moveType === PowerMoveType.Bomb) {
         this.audioManager.PlayAudio(AudioType.POWER_MOVE_BOMB);
+        if (this._perspectiveCamera) {
+          this.effectsManager.AnimateCameraShake(this._perspectiveCamera);
+        }
 
         const bombTargets = this.gameEngine.FindBombTargets(
           targetGamePiece,

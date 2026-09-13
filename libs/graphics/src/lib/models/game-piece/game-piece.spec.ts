@@ -1,5 +1,5 @@
 import { GamePiece } from './game-piece';
-import { PowerMoveType } from '@rikkle/engine';
+import { LevelOrientationType, PowerMoveType } from '@rikkle/engine';
 import { LevelGeometryType } from '@rikkle/engine';
 import { MeshBasicMaterial, MeshPhongMaterial } from 'three';
 import { PieceSideMaterial } from '../../services/material/material-models';
@@ -80,6 +80,26 @@ describe('GamePiece', () => {
     piece.PowerMoveRemove();
     expect(piece.IsRemoved).toBe(true);
     expect(piece.IsPowerMove).toBe(false);
+  });
+
+  it('should correctly orient Bomb power move for horizontal orientations', () => {
+    const pieceRight = new GamePiece(0, 0, 0, 0);
+    pieceRight.PowerMoveAdd(PowerMoveType.Bomb, 0xff5500, false, LevelOrientationType.HorizontalRight);
+    expect(pieceRight.PowerMove.PowerMoveMesh.rotation.x).toBeCloseTo(Math.PI / 2);
+    expect(pieceRight.PowerMove.PowerMoveMesh.rotation.z).toBeCloseTo(0);
+
+    const pieceLeft = new GamePiece(0, 0, 0, 0);
+    pieceLeft.PowerMoveAdd(PowerMoveType.Bomb, 0xff5500, false, LevelOrientationType.HorizontalLeft);
+    expect(pieceLeft.PowerMove.PowerMoveMesh.rotation.x).toBeCloseTo(-Math.PI / 2);
+    expect(pieceLeft.PowerMove.PowerMoveMesh.rotation.z).toBeCloseTo(0);
+
+    const snapshot = pieceRight.GetStateSnapshot();
+    expect(snapshot.powerMoveOrientation).toBe(LevelOrientationType.HorizontalRight);
+
+    const restoredPiece = new GamePiece(0, 0, 0, 0);
+    restoredPiece.ApplyStateSnapshot(snapshot);
+    expect(restoredPiece.PowerMove.PowerMoveMesh.rotation.x).toBeCloseTo(Math.PI / 2);
+    expect(restoredPiece.PowerMove.PowerMoveMesh.rotation.z).toBeCloseTo(0);
   });
 
   it('should update matchKey and matchKeySequence on AnimateFlipTween for directionUp and directionDown', () => {
