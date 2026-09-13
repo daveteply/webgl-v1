@@ -259,4 +259,38 @@ describe('ScoringManagerService', () => {
       expect(service.LevelPieceTarget).toBe(50);
     });
   });
+
+  describe('UpdateScore with speed and combo bonuses', () => {
+    it('should trigger ShowSpeedBonus when speed threshold is met', () => {
+      const textManager = TestBed.inject(TextManagerService);
+      const speedSpy = vi.spyOn(textManager, 'ShowSpeedBonus');
+
+      let time = 1000;
+      vi.spyOn(performance, 'now').mockImplementation(() => time);
+
+      service.ResetTimer();
+      time = 1500;
+      service.StopTimer();
+
+      service.UpdateScore(3, false);
+
+      expect(speedSpy).toHaveBeenCalledWith(2000, undefined, undefined);
+    });
+
+    it('should trigger ShowComboBonus when both speed and long match bonus occur', () => {
+      const textManager = TestBed.inject(TextManagerService);
+      const comboSpy = vi.spyOn(textManager, 'ShowComboBonus');
+
+      let time = 1000;
+      vi.spyOn(performance, 'now').mockImplementation(() => time);
+
+      service.ResetTimer();
+      time = 1500;
+      service.StopTimer();
+
+      service.UpdateScore(5, false);
+
+      expect(comboSpy).toHaveBeenCalledWith(2020, 5, undefined, undefined);
+    });
+  });
 });

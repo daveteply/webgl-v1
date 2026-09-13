@@ -221,6 +221,8 @@ export class InteractionManagerService {
       this._isPointerDown = false;
       this._isDragging = false;
       this._activeWheel = undefined;
+    } else {
+      this.scoringManager.ResetTimer();
     }
   }
 
@@ -305,6 +307,7 @@ export class InteractionManagerService {
           this.audioManager.PlayAudio(AudioType.PIECE_MOVE);
           this.hapticsManager.SnapTap();
           this.scoringManager.UpdateMoveCount();
+          this.scoringManager.ResetTimer();
 
           // panic
           if (this.scoringManager.PlayerMoves === MOVES_REMAINING_COUNT_PANIC) {

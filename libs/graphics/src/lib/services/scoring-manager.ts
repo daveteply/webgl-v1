@@ -91,7 +91,7 @@ export class ScoringManagerService {
   }
 
   public UpdateScore(pieceCount: number, endLevelSkip: boolean, worldPosition?: Vector3): void {
-    const timeDiff = this._timeStop - this._timeStart;
+    const timeDiff = Math.max(1, (this._timeStop ?? performance.now()) - this._timeStart);
     const result = this.store.recordMatchScore(pieceCount, timeDiff);
 
     if (result.speedBonus && result.longMatchBonus) {

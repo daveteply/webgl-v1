@@ -1,2 +1,2 @@
 // Generated automatically during build
-export const APP_VERSION = 'v2026.09.09.1709';
+export const APP_VERSION = 'v2026.09.13.1309';
