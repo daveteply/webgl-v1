@@ -26,7 +26,7 @@ export const MINIMUM_MATCH_COUNT = 3;
 // logarithmic function to slowly increase as the player
 //  progresses through each level
 export const LEVEL_ADDITIVE = 3;
-export const MINIMUM_SPEED_BONUS = 800;
+export const MINIMUM_SPEED_BONUS = 400;
 export const LONG_MATCH_SCORE_MULTIPLIER = 10;
 export const POWER_MOVE_USE_SCORE_MULTIPLIER = 50;
 export const PERFECT_MATCH_SCORE_MULTIPLIER = 100;

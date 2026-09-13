@@ -5,6 +5,7 @@ export * from './lib/models/game-piece/game-piece-removal-style';
 export * from './lib/models/game-piece/power-move';
 export * from './lib/models/game-wheel';
 export * from './lib/models/particle-emitter';
+export * from './lib/models/confetti-burst';
 export * from './lib/models/star-field';
 
 // Services

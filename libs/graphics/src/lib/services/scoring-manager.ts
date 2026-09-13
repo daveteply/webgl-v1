@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { MathUtils } from 'three';
+import { MathUtils, Vector3 } from 'three';
 import { RAINBOW_COLOR_ARRAY } from '@rikkle/engine';
 import { LevelMaterialType } from '@rikkle/engine';
 import { LevelStats } from '@rikkle/engine';
@@ -90,17 +90,23 @@ export class ScoringManagerService {
     this.store.updateLevelProgress(1);
   }
 
-  public UpdateScore(pieceCount: number, endLevelSkip: boolean): void {
-    const timeDiff = this._timeStop - this._timeStart;
+  public UpdateScore(pieceCount: number, endLevelSkip: boolean, worldPosition?: Vector3): void {
+    const timeDiff = Math.max(1, (this._timeStop ?? performance.now()) - this._timeStart);
     const result = this.store.recordMatchScore(pieceCount, timeDiff);
 
-    if (result.speedBonus && !endLevelSkip) {
-      this.textManager.ShowSpeedBonus(result.speedBonus, this.textColor);
+    if (result.speedBonus && result.longMatchBonus) {
+      this.textManager.ShowComboBonus(
+        result.speedBonus + result.longMatchBonus,
+        pieceCount,
+        this.textColor,
+        worldPosition,
+      );
       this.MovesChange.next(true);
-    }
-
-    if (result.longMatchBonus && !endLevelSkip) {
-      this.textManager.ShowLongMatchBonus(result.longMatchBonus, this.textColor);
+    } else if (result.speedBonus) {
+      this.textManager.ShowSpeedBonus(result.speedBonus, this.textColor, worldPosition);
+      this.MovesChange.next(true);
+    } else if (result.longMatchBonus) {
+      this.textManager.ShowLongMatchBonus(result.longMatchBonus, this.textColor, worldPosition, pieceCount);
       this.MovesChange.next(true);
     }
 
@@ -112,10 +118,10 @@ export class ScoringManagerService {
     this.MovesChange.next(false);
   }
 
-  public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType): void {
+  public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType, worldPosition?: Vector3): void {
     const usePowerMoveBonus = this.store.recordPowerMoveBonus(additionalMoveCount);
     const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
-    this.textManager.ShowPowerMove(labelText, usePowerMoveBonus, additionalMoveCount, this.textColor);
+    this.textManager.ShowPowerMove(labelText, usePowerMoveBonus, additionalMoveCount, this.textColor, worldPosition);
     this.MovesChange.next(true);
   }
 
