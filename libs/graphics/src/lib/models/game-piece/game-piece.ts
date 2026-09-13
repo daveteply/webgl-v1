@@ -15,7 +15,7 @@ import { take } from 'rxjs';
 import { TWO_PI, QUARTER_CIRCLE_RADIANS, DARK_RAINBOW_COLOR_ARRAY, UV_SIDES } from '@rikkle/engine';
 import { Tween, Easing } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '../../services/tween-group';
-import { PowerMoveType, LevelGeometryType, LevelAnimationStyle } from '@rikkle/engine';
+import { PowerMoveType, LevelGeometryType, LevelAnimationStyle, LevelOrientationType } from '@rikkle/engine';
 
 import { PowerMove } from './power-move';
 import { PieceMaterials, PieceSideMaterial } from '../../services/material/material-models';
@@ -33,6 +33,7 @@ export interface PieceStateSnapshot {
   isPowerMove: boolean;
   powerMoveType?: PowerMoveType;
   powerMoveColor?: number;
+  powerMoveOrientation?: LevelOrientationType;
 }
 
 export class GamePiece extends Object3D {
@@ -93,6 +94,11 @@ export class GamePiece extends Object3D {
   private _powerMoveType!: PowerMoveType;
   get PowerMoveType(): PowerMoveType {
     return this._powerMoveType;
+  }
+
+  private _powerMoveOrientation = LevelOrientationType.Vertical;
+  get PowerMoveOrientation(): LevelOrientationType {
+    return this._powerMoveOrientation;
   }
 
   // Pure domain property accessors (camelCase)
@@ -736,12 +742,18 @@ export class GamePiece extends Object3D {
 
   // only 1 instance of power move; when the power move is selected, the
   //  state returns to removed
-  public PowerMoveAdd(moveType: PowerMoveType, color?: number, isIntro = true): void {
+  public PowerMoveAdd(
+    moveType: PowerMoveType,
+    color?: number,
+    isIntro = true,
+    orientation: LevelOrientationType = LevelOrientationType.Vertical,
+  ): void {
     this._removeTween?.stop();
     this._isRemoved = false;
     this._isPowerMove = true;
     this._matchKey = 0;
     this._powerMoveType = moveType;
+    this._powerMoveOrientation = orientation;
 
     // Completely hide base mesh geometries so they do not render or write to depth buffer
     if (this._meshCube) this._meshCube.visible = false;
@@ -767,7 +779,7 @@ export class GamePiece extends Object3D {
       this._powerMove.Dispose();
     }
 
-    this._powerMove = new PowerMove(moveType, color, isIntro);
+    this._powerMove = new PowerMove(moveType, color, isIntro, orientation);
     this.add(this._powerMove.PowerMoveMesh);
 
     if (isIntro) {
@@ -803,6 +815,7 @@ export class GamePiece extends Object3D {
       isPowerMove: this._isPowerMove,
       powerMoveType: this._powerMoveType,
       powerMoveColor: this._powerMove?.PowerMoveColor,
+      powerMoveOrientation: this._powerMoveOrientation,
     };
   }
 
@@ -826,7 +839,12 @@ export class GamePiece extends Object3D {
     }
 
     if (snapshot.isPowerMove && snapshot.powerMoveType !== undefined) {
-      this.PowerMoveAdd(snapshot.powerMoveType, snapshot.powerMoveColor, false);
+      this.PowerMoveAdd(
+        snapshot.powerMoveType,
+        snapshot.powerMoveColor,
+        false,
+        snapshot.powerMoveOrientation ?? LevelOrientationType.Vertical,
+      );
     } else {
       this._isPowerMove = false;
       if (this._mesh) {

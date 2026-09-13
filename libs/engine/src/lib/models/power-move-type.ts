@@ -22,8 +22,8 @@ const POWER_MOVE_LABELS: Record<LevelOrientationType, Partial<Record<PowerMoveTy
     [PowerMoveType.Bomb]: 'Kaboom',
   },
   [LevelOrientationType.HorizontalRight]: {
-    [PowerMoveType.HorizontalRight]: 'Spin down',
-    [PowerMoveType.HorizontalLeft]: 'Spin up',
+    [PowerMoveType.HorizontalRight]: 'Spin up',
+    [PowerMoveType.HorizontalLeft]: 'Spin down',
     [PowerMoveType.HorizontalMix]: 'Spin mix',
     [PowerMoveType.VerticalUp]: 'Roll left',
     [PowerMoveType.VerticalDown]: 'Roll right',
@@ -31,8 +31,8 @@ const POWER_MOVE_LABELS: Record<LevelOrientationType, Partial<Record<PowerMoveTy
     [PowerMoveType.Bomb]: 'Kaboom',
   },
   [LevelOrientationType.HorizontalLeft]: {
-    [PowerMoveType.HorizontalRight]: 'Spin up',
-    [PowerMoveType.HorizontalLeft]: 'Spin down',
+    [PowerMoveType.HorizontalRight]: 'Spin down',
+    [PowerMoveType.HorizontalLeft]: 'Spin up',
     [PowerMoveType.HorizontalMix]: 'Spin mix',
     [PowerMoveType.VerticalUp]: 'Roll right',
     [PowerMoveType.VerticalDown]: 'Roll left',

@@ -16,12 +16,13 @@ import {
   Vector3,
 } from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { RAINBOW_COLOR_ARRAY } from '@rikkle/engine';
+import { HALF_PI, LevelOrientationType, RAINBOW_COLOR_ARRAY } from '@rikkle/engine';
 import { PowerMoveType } from '@rikkle/engine';
 import { ParticleEmitter } from '../particle-emitter';
 
 export class PowerMove {
   private _root: Object3D;
+  private _mesh: Mesh;
   private _materials: MeshPhongMaterial[] = [];
   private _sparkEmitter?: ParticleEmitter;
 
@@ -49,7 +50,12 @@ export class PowerMove {
 
   private static _geometryCache = new Map<PowerMoveType, BufferGeometry>();
 
-  constructor(moveType: PowerMoveType, color?: number, isIntro = true) {
+  constructor(
+    moveType: PowerMoveType,
+    color?: number,
+    isIntro = true,
+    orientation: LevelOrientationType = LevelOrientationType.Vertical,
+  ) {
     this._powerMoveColor = color || RAINBOW_COLOR_ARRAY[MathUtils.randInt(0, RAINBOW_COLOR_ARRAY.length - 1)];
 
     const mainMaterial = new MeshPhongMaterial({
@@ -63,11 +69,20 @@ export class PowerMove {
     this._materials.push(mainMaterial);
 
     const geo = PowerMove.getGeometryForType(moveType);
-    const mesh = new Mesh(geo, mainMaterial);
-    this._root = mesh;
+    this._mesh = new Mesh(geo, mainMaterial);
+    this._root = new Object3D();
+    this._root.add(this._mesh);
 
-    // Attach burning fuse spark emitter for Bomb power move
+    // Attach burning fuse spark emitter for Bomb power move and orient upright towards top of viewport
     if (moveType === PowerMoveType.Bomb) {
+      if (orientation === LevelOrientationType.HorizontalRight) {
+        this._root.rotation.set(HALF_PI, 0, 0);
+      } else if (orientation === LevelOrientationType.HorizontalLeft) {
+        this._root.rotation.set(-HALF_PI, 0, 0);
+      } else {
+        this._root.rotation.set(0, 0, 0);
+      }
+
       this._sparkEmitter = new ParticleEmitter({
         count: 14,
         size: 0.07,
@@ -78,7 +93,7 @@ export class PowerMove {
       });
       // Position emitter at the tip of the curved wick
       this._sparkEmitter.position.set(0.16, 0.44, -0.02);
-      mesh.add(this._sparkEmitter);
+      this._mesh.add(this._sparkEmitter);
     }
 
     if (isIntro) {
@@ -279,8 +294,8 @@ export class PowerMove {
       .repeat(Infinity)
       .onUpdate(() => {
         animTime += 0.05;
-        this._root.rotation.y += 0.008;
-        this._root.position.y = this._slideOffsetY + Math.sin(animTime) * 0.15;
+        this._mesh.rotation.y += 0.008;
+        this._mesh.position.y = Math.sin(animTime) * 0.15;
         this._sparkEmitter?.Update();
       })
       .start();

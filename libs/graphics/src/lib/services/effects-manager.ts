@@ -40,6 +40,7 @@ export class EffectsManagerService {
   private _levelChangeCameraTween1?: Tween<Record<string, number>>;
   private _levelChangeCameraTween2?: Tween<Record<string, number>>;
   private _horizontalTurnTween?: Tween<Record<string, number>>;
+  private _cameraShakeTween?: Tween<Record<string, number>>;
 
   private _selectedPieces: Object3D[] = [];
   get SelectedPieces(): Object3D[] {
@@ -73,6 +74,7 @@ export class EffectsManagerService {
     this._levelChangeCameraTween1?.stop();
     this._levelChangeCameraTween2?.stop();
     this._horizontalTurnTween?.stop();
+    this._cameraShakeTween?.stop();
 
     // Select random level transition animation style if not explicitly passed
     const activeStyle = customStyle ?? LEVEL_ANIMATION_STYLES[MathUtils.randInt(0, LEVEL_ANIMATION_STYLES.length - 1)];
@@ -128,6 +130,11 @@ export class EffectsManagerService {
             CAMERA_HORIZONTAL_OFFSET * (activeOrientation === LevelOrientationType.HorizontalRight ? 1 : -1);
 
           this.audioManager.PlayAudio(AudioType.HORIZONTAL_TURN);
+
+          // Randomly spin game wheels in different directions and speeds during 3s board turn
+          gameWheels.forEach((wheel) => {
+            wheel.AnimateHorizontalTurnSpin(HORIZONTAL_TURN_DURATION);
+          });
 
           const deltaTurn = { rotZ: 0, posX: 0 };
           this._horizontalTurnTween = new Tween(deltaTurn, mainTweenGroup)
@@ -370,5 +377,37 @@ export class EffectsManagerService {
     } else {
       this.GravityAnimationComplete.next();
     }
+  }
+
+  public AnimateCameraShake(camera: PerspectiveCamera, duration = 500, intensity = 0.18): void {
+    if (!camera) return;
+    this._cameraShakeTween?.stop();
+
+    const basePosX = camera.position.x;
+    const basePosY = camera.position.y;
+    const baseRotZ = camera.rotation.z;
+
+    const delta = { progress: 1.0 };
+    this._cameraShakeTween = new Tween(delta, mainTweenGroup)
+      .to({ progress: 0 }, duration)
+      .easing(Easing.Quadratic.Out)
+      .onUpdate(() => {
+        const shake = intensity * delta.progress;
+        const rotShake = 0.02 * delta.progress;
+        camera.position.x = basePosX + (Math.random() * 2 - 1) * shake;
+        camera.position.y = basePosY + (Math.random() * 2 - 1) * shake;
+        camera.rotation.z = baseRotZ + (Math.random() * 2 - 1) * rotShake;
+      })
+      .onComplete(() => {
+        camera.position.x = basePosX;
+        camera.position.y = basePosY;
+        camera.rotation.z = baseRotZ;
+      })
+      .onStop(() => {
+        camera.position.x = basePosX;
+        camera.position.y = basePosY;
+        camera.rotation.z = baseRotZ;
+      })
+      .start();
   }
 }

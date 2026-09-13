@@ -199,7 +199,7 @@ export class ObjectManagerService {
   }
 
   public GamePiecePowerMove(gamePiece: GamePiece, moveType: PowerMoveType, color?: number): void {
-    gamePiece.PowerMoveAdd(moveType, color);
+    gamePiece.PowerMoveAdd(moveType, color, true, this.gameEngine.LevelOrientation);
   }
 
   public AnimatePowerMove(moveType: PowerMoveType): void {
