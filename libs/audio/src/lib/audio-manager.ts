@@ -264,6 +264,20 @@ export class AudioManagerService implements OnDestroy {
     this.PlayAudio(AudioType.MATCH_LONG, true);
   }
 
+  public PlaySpeedBonus(points?: number): void {
+    void points;
+    this.PlayAudio(AudioType.SPEED_BONUS, false);
+  }
+
+  public PlayComboBonus(pieceCount?: number): void {
+    void pieceCount;
+    this.PlayAudio(AudioType.COMBO_BONUS, false);
+  }
+
+  public PlayPerfectMatch(): void {
+    this.PlayAudio(AudioType.PERFECT_MATCH);
+  }
+
   public StopAudio(audioType: AudioType): void {
     const active = this._activeSources.get(audioType);
     if (active) {

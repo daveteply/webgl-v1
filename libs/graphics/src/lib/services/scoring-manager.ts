@@ -8,6 +8,8 @@ import { PowerMoveType, GetPowerMoveLabel } from '@rikkle/engine';
 import { GameEngineService } from './game-engine';
 import { TextManagerService } from '../text/text-manager';
 import { GameStateStore } from '@rikkle/state';
+import { AudioManagerService } from '@rikkle/audio';
+import { HapticsManagerService } from '@rikkle/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,8 @@ export class ScoringManagerService {
   private textManager = inject(TextManagerService);
   private gameEngine = inject(GameEngineService);
   private store = inject(GameStateStore);
+  private audioManager = inject(AudioManagerService);
+  private hapticsManager = inject(HapticsManagerService);
 
   private _timeStart!: number;
   private _timeStop!: number;
@@ -90,11 +94,15 @@ export class ScoringManagerService {
     this.store.updateLevelProgress(1);
   }
 
-  public UpdateScore(pieceCount: number, endLevelSkip: boolean, worldPosition?: Vector3): void {
+  public UpdateScore(pieceCount: number, endLevelSkip: boolean, worldPosition?: Vector3): boolean {
     const timeDiff = Math.max(1, (this._timeStop ?? performance.now()) - this._timeStart);
     const result = this.store.recordMatchScore(pieceCount, timeDiff);
 
+    const hasBonus = !!(result.speedBonus || result.longMatchBonus);
+
     if (result.speedBonus && result.longMatchBonus) {
+      this.audioManager.PlayComboBonus(pieceCount);
+      this.hapticsManager.ComboBonusPulse(pieceCount);
       this.textManager.ShowComboBonus(
         result.speedBonus + result.longMatchBonus,
         pieceCount,
@@ -103,14 +111,19 @@ export class ScoringManagerService {
       );
       this.MovesChange.next(true);
     } else if (result.speedBonus) {
+      this.audioManager.PlaySpeedBonus(result.speedBonus);
+      this.hapticsManager.SpeedBonusPulse(result.speedBonus);
       this.textManager.ShowSpeedBonus(result.speedBonus, this.textColor, worldPosition);
       this.MovesChange.next(true);
     } else if (result.longMatchBonus) {
+      this.audioManager.PlayLongMatch(pieceCount);
+      this.hapticsManager.MatchComplexityPulse(pieceCount);
       this.textManager.ShowLongMatchBonus(result.longMatchBonus, this.textColor, worldPosition, pieceCount);
       this.MovesChange.next(true);
     }
 
     this.ResetTimer();
+    return hasBonus;
   }
 
   public UpdateMoveCount(): void {
@@ -138,6 +151,7 @@ export class ScoringManagerService {
     const awarded = this.store.checkPerfectMatch();
     if (awarded) {
       const perfectBonus = this.store.levelStats().perfectMatchBonus ?? 0;
+      this.hapticsManager.PerfectMatchPulse();
       this.textManager.ShowPerfectMatch(perfectBonus, this.textColor);
       return true;
     }

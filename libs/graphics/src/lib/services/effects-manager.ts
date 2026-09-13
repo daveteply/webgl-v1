@@ -268,7 +268,7 @@ export class EffectsManagerService {
     this._selectedPieces = [];
   }
 
-  public AnimateRemove(selectedPieces: GamePiece[]): void {
+  public AnimateRemove(selectedPieces: GamePiece[], skipSound = false): void {
     if (!selectedPieces || !selectedPieces.length) {
       this.RemoveAnimationComplete.next();
       return;
@@ -289,10 +289,12 @@ export class EffectsManagerService {
       tween.onComplete(notifyComplete).onStop(notifyComplete);
     });
 
-    const removeSoundType =
-      selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
-    this.audioManager.PlayAudio(removeSoundType);
-    this.hapticsManager.LightTap();
+    if (!skipSound) {
+      const removeSoundType =
+        selectedPieces.length > MINIMUM_MATCH_COUNT ? AudioType.PIECE_REMOVE_2 : AudioType.PIECE_REMOVE;
+      this.audioManager.PlayAudio(removeSoundType);
+      this.hapticsManager.LightTap();
+    }
   }
 
   public AnimateFlip(gamePiece: GamePiece, velocity: number, directionUp: boolean): void {

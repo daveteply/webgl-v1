@@ -14,6 +14,8 @@ export enum AudioType {
   PIECE_SELECT,
   MATCH_FAIL,
   MATCH_LONG,
+  SPEED_BONUS,
+  COMBO_BONUS,
   POWER_MOVE_APPEAR,
   POWER_MOVE_USE,
   POWER_MOVE_BOMB,
@@ -88,71 +90,79 @@ export const BACKGROUND_MUSIC_AUDIO_LIST: AudioInfo[] = [
 
 export const GAME_SFX_AUDIO_LIST: AudioInfo[] = [
   {
-    url: 'assets/audio/level-dialog-stat.mp3',
+    url: 'assets/audio/sfx/level-dialog-stat.mp3',
     audioType: AudioType.LEVEL_STAT,
   },
   {
-    url: 'assets/audio/player-select.wav',
+    url: 'assets/audio/sfx/player-select.mp3',
     audioType: AudioType.LEVEL_ENABLE_CTA,
   },
   {
-    url: 'assets/audio/piece-move.wav',
+    url: 'assets/audio/sfx/piece-move.mp3',
     audioType: AudioType.PIECE_MOVE,
   },
   {
-    url: 'assets/audio/piece-non-move.wav',
+    url: 'assets/audio/sfx/piece-non-move.mp3',
     audioType: AudioType.PIECE_NON_MOVE,
   },
   {
-    url: 'assets/audio/moves-remaining-panic.mp3',
+    url: 'assets/audio/sfx/moves-remaining-panic.mp3',
     audioType: AudioType.PIECE_MOVE_REMAINING_PANIC,
   },
   {
-    url: 'assets/audio/piece-remove.wav',
+    url: 'assets/audio/sfx/piece-remove.mp3',
     audioType: AudioType.PIECE_REMOVE,
   },
   {
-    url: 'assets/audio/piece-remove-2.wav',
+    url: 'assets/audio/sfx/piece-remove-2.mp3',
     audioType: AudioType.PIECE_REMOVE_2,
   },
   {
-    url: 'assets/audio/piece-select.wav',
+    url: 'assets/audio/sfx/piece-select.mp3',
     audioType: AudioType.PIECE_SELECT,
   },
   {
-    url: 'assets/audio/match-fail.wav',
+    url: 'assets/audio/sfx/match-fail.mp3',
     audioType: AudioType.MATCH_FAIL,
   },
   {
-    url: 'assets/audio/long-match.mp3',
+    url: 'assets/audio/sfx/long-match.mp3',
     audioType: AudioType.MATCH_LONG,
   },
   {
-    url: 'assets/audio/power-move-appear.mp3',
+    url: 'assets/audio/sfx/speed-bonus.mp3',
+    audioType: AudioType.SPEED_BONUS,
+  },
+  {
+    url: 'assets/audio/sfx/combo-bonus.mp3',
+    audioType: AudioType.COMBO_BONUS,
+  },
+  {
+    url: 'assets/audio/sfx/power-move-appear.mp3',
     audioType: AudioType.POWER_MOVE_APPEAR,
   },
   {
-    url: 'assets/audio/power-move-use.mp3',
+    url: 'assets/audio/sfx/power-move-use.mp3',
     audioType: AudioType.POWER_MOVE_USE,
   },
   {
-    url: 'assets/audio/power-move-bomb.mp3',
+    url: 'assets/audio/sfx/power-move-bomb.mp3',
     audioType: AudioType.POWER_MOVE_BOMB,
   },
   {
-    url: 'assets/audio/game-over.mp3',
+    url: 'assets/audio/sfx/game-over.mp3',
     audioType: AudioType.GAME_OVER,
   },
   {
-    url: 'assets/audio/gravity-effect.wav',
+    url: 'assets/audio/sfx/gravity-effect.mp3',
     audioType: AudioType.GRAVITY_EFFECT,
   },
   {
-    url: 'assets/audio/perfect-match.mp3',
+    url: 'assets/audio/sfx/perfect-match.mp3',
     audioType: AudioType.PERFECT_MATCH,
   },
   {
-    url: 'assets/audio/horizontal-turn.mp3',
+    url: 'assets/audio/sfx/horizontal-turn.mp3',
     audioType: AudioType.HORIZONTAL_TURN,
   },
 ];

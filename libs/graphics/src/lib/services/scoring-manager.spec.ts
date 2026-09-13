@@ -8,6 +8,9 @@ import { LevelGeometryType } from '@rikkle/engine';
 import { GravityType } from '@rikkle/engine';
 import { LevelOrientationType } from '@rikkle/engine';
 
+import { AudioManagerService } from '@rikkle/audio';
+import { HapticsManagerService } from '@rikkle/shared';
+
 class MockTextManagerService {
   ShowText = () => undefined;
   ShowFloatingText = () => undefined;
@@ -18,8 +21,29 @@ class MockTextManagerService {
   ShowPowerMove = () => undefined;
 }
 
+class MockAudioManagerService {
+  PlayAudio = vi.fn();
+  PlaySpeedBonus = vi.fn();
+  PlayComboBonus = vi.fn();
+  PlayLongMatch = vi.fn();
+  PlayPerfectMatch = vi.fn();
+}
+
+class MockHapticsManagerService {
+  LightTap = vi.fn();
+  SnapTap = vi.fn();
+  PowerMovePulse = vi.fn();
+  LevelCompletePulse = vi.fn();
+  SpeedBonusPulse = vi.fn();
+  MatchComplexityPulse = vi.fn();
+  ComboBonusPulse = vi.fn();
+  PerfectMatchPulse = vi.fn();
+}
+
 describe('ScoringManagerService', () => {
   let service: ScoringManagerService;
+  let audioManager: AudioManagerService;
+  let hapticsManager: HapticsManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,9 +51,13 @@ describe('ScoringManagerService', () => {
         ScoringManagerService,
         GameEngineService,
         { provide: TextManagerService, useClass: MockTextManagerService },
+        { provide: AudioManagerService, useClass: MockAudioManagerService },
+        { provide: HapticsManagerService, useClass: MockHapticsManagerService },
       ],
     });
     service = TestBed.inject(ScoringManagerService);
+    audioManager = TestBed.inject(AudioManagerService);
+    hapticsManager = TestBed.inject(HapticsManagerService);
   });
 
   it('should be created with initial level 1 and score 0', () => {
@@ -218,6 +246,7 @@ describe('ScoringManagerService', () => {
       expect(wasAwarded).toBe(true);
       expect(service.LevelStats.perfectMatchBonus).toBe(100); // Level 1 * 100
       expect(service.Score).toBe(initialScore + 100);
+      expect(hapticsManager.PerfectMatchPulse).toHaveBeenCalled();
     });
 
     it('should not award perfect match bonus if piece count exceeds target', () => {
@@ -260,8 +289,8 @@ describe('ScoringManagerService', () => {
     });
   });
 
-  describe('UpdateScore with speed and combo bonuses', () => {
-    it('should trigger ShowSpeedBonus when speed threshold is met', () => {
+  describe('UpdateScore with speed, long match, and combo bonuses', () => {
+    it('should trigger ShowSpeedBonus, audio, and haptics when speed threshold is met', () => {
       const textManager = TestBed.inject(TextManagerService);
       const speedSpy = vi.spyOn(textManager, 'ShowSpeedBonus');
 
@@ -275,9 +304,29 @@ describe('ScoringManagerService', () => {
       service.UpdateScore(3, false);
 
       expect(speedSpy).toHaveBeenCalledWith(2000, undefined, undefined);
+      expect(audioManager.PlaySpeedBonus).toHaveBeenCalledWith(2000);
+      expect(hapticsManager.SpeedBonusPulse).toHaveBeenCalledWith(2000);
     });
 
-    it('should trigger ShowComboBonus when both speed and long match bonus occur', () => {
+    it('should trigger ShowLongMatchBonus, audio, and haptics when long match threshold is met', () => {
+      const textManager = TestBed.inject(TextManagerService);
+      const longSpy = vi.spyOn(textManager, 'ShowLongMatchBonus');
+
+      let time = 1000;
+      vi.spyOn(performance, 'now').mockImplementation(() => time);
+
+      service.ResetTimer();
+      time = 5000;
+      service.StopTimer();
+
+      service.UpdateScore(5, false);
+
+      expect(longSpy).toHaveBeenCalledWith(20, undefined, undefined, 5);
+      expect(audioManager.PlayLongMatch).toHaveBeenCalledWith(5);
+      expect(hapticsManager.MatchComplexityPulse).toHaveBeenCalledWith(5);
+    });
+
+    it('should trigger ShowComboBonus, combo audio, and combo haptics when both speed and long match bonus occur', () => {
       const textManager = TestBed.inject(TextManagerService);
       const comboSpy = vi.spyOn(textManager, 'ShowComboBonus');
 
@@ -291,6 +340,8 @@ describe('ScoringManagerService', () => {
       service.UpdateScore(5, false);
 
       expect(comboSpy).toHaveBeenCalledWith(2020, 5, undefined, undefined);
+      expect(audioManager.PlayComboBonus).toHaveBeenCalledWith(5);
+      expect(hapticsManager.ComboBonusPulse).toHaveBeenCalledWith(5);
     });
   });
 });

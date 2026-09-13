@@ -81,4 +81,61 @@ describe('HapticsManagerService', () => {
 
     vi.unstubAllGlobals();
   });
+
+  it('should trigger calibrated patterns for SpeedBonusPulse tiers', () => {
+    const vibrateSpy = vi.fn().mockReturnValue(true);
+    vi.stubGlobal('navigator', { vibrate: vibrateSpy, maxTouchPoints: 1 });
+    service.HapticsEnabled = true;
+
+    service.SpeedBonusPulse(600);
+    expect(vibrateSpy).toHaveBeenCalledWith([12, 35, 15]);
+
+    service.SpeedBonusPulse(1000);
+    expect(vibrateSpy).toHaveBeenCalledWith([14, 25, 14, 25, 18]);
+
+    service.SpeedBonusPulse(2000);
+    expect(vibrateSpy).toHaveBeenCalledWith([15, 20, 15, 20, 15, 20, 22]);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should trigger calibrated patterns for MatchComplexityPulse tiers', () => {
+    const vibrateSpy = vi.fn().mockReturnValue(true);
+    vi.stubGlobal('navigator', { vibrate: vibrateSpy, maxTouchPoints: 1 });
+    service.HapticsEnabled = true;
+
+    service.MatchComplexityPulse(3);
+    expect(vibrateSpy).toHaveBeenCalledWith(12);
+
+    service.MatchComplexityPulse(4);
+    expect(vibrateSpy).toHaveBeenCalledWith([18, 40, 15]);
+
+    service.MatchComplexityPulse(5);
+    expect(vibrateSpy).toHaveBeenCalledWith([20, 35, 25]);
+
+    service.MatchComplexityPulse(6);
+    expect(vibrateSpy).toHaveBeenCalledWith([22, 30, 32]);
+
+    service.MatchComplexityPulse(8);
+    expect(vibrateSpy).toHaveBeenCalledWith([25, 30, 35, 30, 45]);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('should trigger ComboBonusPulse and PerfectMatchPulse patterns', () => {
+    const vibrateSpy = vi.fn().mockReturnValue(true);
+    vi.stubGlobal('navigator', { vibrate: vibrateSpy, maxTouchPoints: 1 });
+    service.HapticsEnabled = true;
+
+    service.ComboBonusPulse(5);
+    expect(vibrateSpy).toHaveBeenCalledWith([20, 25, 20, 25, 35, 30, 45]);
+
+    service.ComboBonusPulse(7);
+    expect(vibrateSpy).toHaveBeenCalledWith([20, 25, 20, 25, 35, 30, 45, 30, 50]);
+
+    service.PerfectMatchPulse();
+    expect(vibrateSpy).toHaveBeenCalledWith([15, 30, 20, 30, 25, 30, 35, 30, 50]);
+
+    vi.unstubAllGlobals();
+  });
 });
