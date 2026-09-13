@@ -117,15 +117,11 @@ export class InteractionManagerService {
           }
 
           // update score
-          this.scoringManager.UpdateScore(
+          const hasBonusSound = this.scoringManager.UpdateScore(
             this._matchingPieces.length,
             this.scoringManager.LevelComplete,
             matchCentroid,
           );
-          // long match audio
-          if (this._matchingPieces.length > MINIMUM_MATCH_COUNT) {
-            this.audioManager.PlayLongMatch(this._matchingPieces.length);
-          }
 
           // stop panic music
           if (this.scoringManager.PlayerMoves > MOVES_REMAINING_COUNT_PANIC) {
@@ -143,7 +139,7 @@ export class InteractionManagerService {
 
               this.objectManager.LevelCompleted.next(false);
             });
-            this.effectsManager.AnimateRemove(this._matchingPieces);
+            this.effectsManager.AnimateRemove(this._matchingPieces, hasBonusSound);
           } else {
             // power move
             let powerMovePiece: GamePiece | undefined;
@@ -175,7 +171,7 @@ export class InteractionManagerService {
 
                 this.effectsManager.AnimateGravity(this.objectManager.Axle, this.gameEngine.GravityType);
               });
-              this.effectsManager.AnimateRemove(piecesToRemove);
+              this.effectsManager.AnimateRemove(piecesToRemove, hasBonusSound);
             } else {
               this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
                 this.effectsManager.ClearSelectedPieces();
@@ -183,7 +179,7 @@ export class InteractionManagerService {
                 this.objectManager.ResetIsMatch();
                 this.LockBoard(false);
               });
-              this.effectsManager.AnimateRemove(piecesToRemove);
+              this.effectsManager.AnimateRemove(piecesToRemove, hasBonusSound);
             }
           }
         } else {

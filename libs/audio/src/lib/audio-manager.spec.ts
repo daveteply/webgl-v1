@@ -56,5 +56,32 @@ describe('AudioManagerService', () => {
     const gameOverAudio = AUDIO_LIST.find((a) => a.audioType === AudioType.GAME_OVER);
     expect(gameOverAudio).toBeDefined();
     expect(gameOverAudio?.url).toContain('game-over');
+
+    const speedBonusAudio = AUDIO_LIST.find((a) => a.audioType === AudioType.SPEED_BONUS);
+    expect(speedBonusAudio).toBeDefined();
+    expect(speedBonusAudio?.url).toBe('assets/audio/sfx/speed-bonus.mp3');
+
+    const comboBonusAudio = AUDIO_LIST.find((a) => a.audioType === AudioType.COMBO_BONUS);
+    expect(comboBonusAudio).toBeDefined();
+    expect(comboBonusAudio?.url).toBe('assets/audio/sfx/combo-bonus.mp3');
+  });
+
+  it('should provide PlaySpeedBonus, PlayComboBonus, and PlayPerfectMatch methods', () => {
+    const playAudioSpy = vi.spyOn(service, 'PlayAudio').mockImplementation(() => undefined);
+
+    service.PlaySpeedBonus(500);
+    expect(playAudioSpy).toHaveBeenCalledWith(AudioType.SPEED_BONUS, false);
+
+    service.PlaySpeedBonus(1500);
+    expect(playAudioSpy).toHaveBeenCalledWith(AudioType.SPEED_BONUS, false);
+
+    service.PlayComboBonus(4);
+    expect(playAudioSpy).toHaveBeenCalledWith(AudioType.COMBO_BONUS, false);
+
+    service.PlayComboBonus(7);
+    expect(playAudioSpy).toHaveBeenCalledWith(AudioType.COMBO_BONUS, false);
+
+    service.PlayPerfectMatch();
+    expect(playAudioSpy).toHaveBeenCalledWith(AudioType.PERFECT_MATCH);
   });
 });
