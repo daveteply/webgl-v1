@@ -91,7 +91,6 @@ export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
 export const EMOJI_GROUP_STEP = 6;
 
-export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
 export const LEVEL_COMPLETE_HEADING_KEYS = [
   'HEADINGS.LEVEL_COMPLETED',
   'HEADINGS.GREAT_MOVES',
