@@ -5,6 +5,7 @@ import { LevelMaterialType } from '../models/level-material-type';
 import { GravityType } from '../models/gravity-type';
 import { LevelOrientationType } from '../models/level-orientation-type';
 import { LevelTransitionType } from '../models/level-transition-type';
+import { LEVEL_COMPLETE_HEADING_KEYS } from '../game-constants';
 
 describe('level-rules', () => {
   it('should initialize level 1 with Cube, ColorBumpShape, No Gravity, and Vertical orientation', () => {
@@ -55,5 +56,10 @@ describe('level-rules', () => {
     // Levels 7+ have 3 types (Default, Bokeh, UnrealBloom)
     const t7 = calculateLevelTransitionType(8, () => 0.9);
     expect(t7).toBe(LevelTransitionType.UnrealBloom);
+  });
+
+  it('should verify LEVEL_COMPLETE_HEADING_KEYS translation keys', () => {
+    expect(LEVEL_COMPLETE_HEADING_KEYS.length).toBeGreaterThan(0);
+    expect(LEVEL_COMPLETE_HEADING_KEYS).toContain('HEADINGS.SOLVED');
   });
 });

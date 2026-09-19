@@ -90,8 +90,16 @@ export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];
 export const EMOJI_GROUP_PEOPLE_BODY = 'People & Body';
 export const EMOJI_GROUP_SMILEYS_EMOTION = 'Smileys & Emotion';
 export const EMOJI_GROUP_STEP = 6;
+
 export const LEVEL_COMPLETE_HEADINGS = ['Level Completed!', 'Great Moves!', 'Solved!', 'Well Done!'];
+export const LEVEL_COMPLETE_HEADING_KEYS = [
+  'HEADINGS.LEVEL_COMPLETED',
+  'HEADINGS.GREAT_MOVES',
+  'HEADINGS.SOLVED',
+  'HEADINGS.WELL_DONE',
+];
 export const BUMP_SCALE = 5;
+
 export const UV_SIDES = [
   [1, 0, 0, 0, 1, 1, 0, 1], // back (rotate PI)
   [0, 1, 1, 1, 0, 0, 1, 0], // front (keep original)

@@ -14,7 +14,7 @@
     <wgl-text-zoom class="game-score" [text]="store.score()"></wgl-text-zoom>
     <wgl-moves-left class="moves-remaining" [amount]="store.movesRemaining()"></wgl-moves-left>
     <div class="level-info" [style.color]="LevelLabelColor()">
-      <span>Level</span>
+      <span>{{ 'HUD.LEVEL' | transloco }}</span>
       <span>&nbsp;</span>
       <div>{{ store.level() }}</div>
     </div>

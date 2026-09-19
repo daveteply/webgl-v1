@@ -44,6 +44,7 @@ import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizont
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import { TutorialType } from '@rikkle/graphics';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-game-container',
@@ -58,6 +59,7 @@ import { TutorialType } from '@rikkle/graphics';
     ProgressBar,
     HorizontalLevelNavigator,
     TutorialOverlay,
+    TranslocoPipe,
   ],
   templateUrl: './game-container.html',
   styleUrl: './game-container.scss',

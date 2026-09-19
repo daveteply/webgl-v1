@@ -1,10 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MathUtils, Vector3 } from 'three';
-import { RAINBOW_COLOR_ARRAY } from '@rikkle/engine';
-import { LevelMaterialType } from '@rikkle/engine';
-import { LevelStats } from '@rikkle/engine';
-import { PowerMoveType, GetPowerMoveLabel } from '@rikkle/engine';
+import {
+  LevelMaterialType,
+  LevelStats,
+  PowerMoveType,
+  RAINBOW_COLOR_ARRAY,
+  GetPowerMoveTranslationKey,
+} from '@rikkle/engine';
 import { GameEngineService } from './game-engine';
 import { TextManagerService } from '../text/text-manager';
 import { GameStateStore } from '@rikkle/state';
@@ -133,8 +136,10 @@ export class ScoringManagerService {
 
   public UpdatePowerMoveBonus(additionalMoveCount: number, moveType?: PowerMoveType, worldPosition?: Vector3): void {
     const usePowerMoveBonus = this.store.recordPowerMoveBonus(additionalMoveCount);
-    const labelText = moveType ? GetPowerMoveLabel(moveType, this.gameEngine.LevelOrientation) : 'Power Move';
-    this.textManager.ShowPowerMove(labelText, usePowerMoveBonus, additionalMoveCount, this.textColor, worldPosition);
+    const key = moveType
+      ? GetPowerMoveTranslationKey(moveType, this.gameEngine.LevelOrientation)
+      : 'POWER_MOVES.DEFAULT';
+    this.textManager.ShowPowerMove(key, usePowerMoveBonus, additionalMoveCount, this.textColor, worldPosition);
     this.MovesChange.next(true);
   }
 

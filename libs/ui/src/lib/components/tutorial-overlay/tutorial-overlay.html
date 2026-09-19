@@ -45,7 +45,7 @@
           <span class="swipe-hand">👆</span>
           <span class="arrow arrow-right">▶</span>
         </div>
-        <div class="direction-label">Swipe Rows Left / Right</div>
+        <div class="direction-label">{{ 'TUTORIAL.SWIPE_ROWS' | transloco }}</div>
       </div>
     } @else if (activeTutorial()?.arrows === 'vertical') {
       <div class="direction-guide vertical-guide" [style.left.px]="spot.cx" [style.top.px]="spot.cy">
@@ -55,13 +55,13 @@
           <span class="swipe-hand">👆</span>
           <span class="arrow arrow-down">▼</span>
         </div>
-        <div class="direction-label">Swipe Columns Up / Down</div>
+        <div class="direction-label">{{ 'TUTORIAL.SWIPE_COLS' | transloco }}</div>
       </div>
     } @else if (activeTutorial()?.type === 'PowerMove') {
       <div class="power-move-guide" [style.left.px]="spot.cx" [style.top.px]="spot.cy">
         <div class="power-move-badge">
           <span class="power-icon">⚡</span>
-          <span class="power-label">Tap to Detonate!</span>
+          <span class="power-label">{{ 'TUTORIAL.TAP_DETONATE' | transloco }}</span>
         </div>
       </div>
     }
@@ -69,13 +69,15 @@
     <!-- Floating Glassmorphism Tutorial Message Card -->
     <div class="tutorial-card glass-panel" [style.top.px]="spot.cardTop" [style.bottom.px]="spot.cardBottom">
       <div class="card-header">
-        <span class="card-badge">TUTORIAL</span>
+        <span class="card-badge">{{ 'TUTORIAL.BADGE' | transloco }}</span>
         <h3 class="card-title">{{ activeTutorial()?.title }}</h3>
       </div>
       <p class="card-description">{{ activeTutorial()?.description }}</p>
       <div class="card-actions">
-        <button mat-button class="btn-skip" (click)="onSkipAll()">Skip All Hints</button>
-        <button mat-flat-button color="primary" class="btn-got-it" (click)="onGotIt()">Got It!</button>
+        <button mat-button class="btn-skip" (click)="onSkipAll()">{{ 'TUTORIAL.SKIP_ALL' | transloco }}</button>
+        <button mat-flat-button color="primary" class="btn-got-it" (click)="onGotIt()">
+          {{ 'TUTORIAL.GOT_IT' | transloco }}
+        </button>
       </div>
     </div>
   </div>

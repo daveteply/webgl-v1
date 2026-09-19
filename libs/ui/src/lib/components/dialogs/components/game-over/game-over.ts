@@ -13,10 +13,11 @@ import { TextureManagerService } from '@rikkle/graphics';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../progress-bar/progress-bar';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-game-over',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, HighScores, ProgressBar],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, HighScores, ProgressBar, TranslocoPipe],
   templateUrl: './game-over.html',
   styleUrl: './game-over.scss',
 })

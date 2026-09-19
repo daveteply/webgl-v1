@@ -11,39 +11,39 @@ export enum PowerMoveType {
   Bomb,
 }
 
-const POWER_MOVE_LABELS: Record<LevelOrientationType, Partial<Record<PowerMoveType, string>>> = {
+const POWER_MOVE_KEYS: Record<LevelOrientationType, Partial<Record<PowerMoveType, string>>> = {
   [LevelOrientationType.Vertical]: {
-    [PowerMoveType.HorizontalRight]: 'Spin right',
-    [PowerMoveType.HorizontalLeft]: 'Spin left',
-    [PowerMoveType.HorizontalMix]: 'Spin mix',
-    [PowerMoveType.VerticalUp]: 'Roll up',
-    [PowerMoveType.VerticalDown]: 'Roll down',
-    [PowerMoveType.VerticalMix]: 'Roll mix',
-    [PowerMoveType.Bomb]: 'Kaboom',
+    [PowerMoveType.HorizontalRight]: 'POWER_MOVES.SPIN_RIGHT',
+    [PowerMoveType.HorizontalLeft]: 'POWER_MOVES.SPIN_LEFT',
+    [PowerMoveType.HorizontalMix]: 'POWER_MOVES.SPIN_MIX',
+    [PowerMoveType.VerticalUp]: 'POWER_MOVES.ROLL_UP',
+    [PowerMoveType.VerticalDown]: 'POWER_MOVES.ROLL_DOWN',
+    [PowerMoveType.VerticalMix]: 'POWER_MOVES.ROLL_MIX',
+    [PowerMoveType.Bomb]: 'POWER_MOVES.KABOOM',
   },
   [LevelOrientationType.HorizontalRight]: {
-    [PowerMoveType.HorizontalRight]: 'Spin up',
-    [PowerMoveType.HorizontalLeft]: 'Spin down',
-    [PowerMoveType.HorizontalMix]: 'Spin mix',
-    [PowerMoveType.VerticalUp]: 'Roll left',
-    [PowerMoveType.VerticalDown]: 'Roll right',
-    [PowerMoveType.VerticalMix]: 'Roll mix',
-    [PowerMoveType.Bomb]: 'Kaboom',
+    [PowerMoveType.HorizontalRight]: 'POWER_MOVES.SPIN_UP',
+    [PowerMoveType.HorizontalLeft]: 'POWER_MOVES.SPIN_DOWN',
+    [PowerMoveType.HorizontalMix]: 'POWER_MOVES.SPIN_MIX',
+    [PowerMoveType.VerticalUp]: 'POWER_MOVES.ROLL_LEFT',
+    [PowerMoveType.VerticalDown]: 'POWER_MOVES.ROLL_RIGHT',
+    [PowerMoveType.VerticalMix]: 'POWER_MOVES.ROLL_MIX',
+    [PowerMoveType.Bomb]: 'POWER_MOVES.KABOOM',
   },
   [LevelOrientationType.HorizontalLeft]: {
-    [PowerMoveType.HorizontalRight]: 'Spin down',
-    [PowerMoveType.HorizontalLeft]: 'Spin up',
-    [PowerMoveType.HorizontalMix]: 'Spin mix',
-    [PowerMoveType.VerticalUp]: 'Roll right',
-    [PowerMoveType.VerticalDown]: 'Roll left',
-    [PowerMoveType.VerticalMix]: 'Roll mix',
-    [PowerMoveType.Bomb]: 'Kaboom',
+    [PowerMoveType.HorizontalRight]: 'POWER_MOVES.SPIN_DOWN',
+    [PowerMoveType.HorizontalLeft]: 'POWER_MOVES.SPIN_UP',
+    [PowerMoveType.HorizontalMix]: 'POWER_MOVES.SPIN_MIX',
+    [PowerMoveType.VerticalUp]: 'POWER_MOVES.ROLL_RIGHT',
+    [PowerMoveType.VerticalDown]: 'POWER_MOVES.ROLL_LEFT',
+    [PowerMoveType.VerticalMix]: 'POWER_MOVES.ROLL_MIX',
+    [PowerMoveType.Bomb]: 'POWER_MOVES.KABOOM',
   },
 };
 
-export function GetPowerMoveLabel(
+export function GetPowerMoveTranslationKey(
   type: PowerMoveType,
   orientation: LevelOrientationType = LevelOrientationType.Vertical,
 ): string {
-  return POWER_MOVE_LABELS[orientation]?.[type] ?? 'Power move';
+  return POWER_MOVE_KEYS[orientation]?.[type] ?? 'POWER_MOVES.DEFAULT';
 }

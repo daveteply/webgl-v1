@@ -5,9 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { ColorSchemeMeta, EmojiInfo, GameStateStore } from '@rikkle/state';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 @Component({
   selector: 'wgl-about',
-  imports: [CommonModule, MatDialogModule, MatButtonModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, TranslocoPipe],
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })

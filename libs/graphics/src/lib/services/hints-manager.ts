@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { StorageService } from '@rikkle/shared';
+import { LanguageService, StorageService } from '@rikkle/shared';
 import {
   STORAGE_HINT_GAME_MENU,
   STORAGE_HINT_HOW_TO_PLAY,
@@ -49,6 +49,7 @@ export const ALL_TUTORIAL_HINT_KEYS: string[] = [
 })
 export class HintsManagerService {
   private storageService = inject(StorageService);
+  private languageService = inject(LanguageService);
 
   readonly activeTutorial = signal<TutorialConfig | null>(null);
   readonly isTutorialActive = computed(() => this.activeTutorial() !== null);
@@ -79,9 +80,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_ROTATE_HORIZONTAL,
-          title: 'Rotate & Tap to Match',
-          description:
-            'Swipe rows left or right to line up 3+ matching pieces, then tap any matched piece to clear them!',
+          title: this.languageService.translate('TUTORIAL.ROTATE_H_TITLE'),
+          description: this.languageService.translate('TUTORIAL.ROTATE_H_DESC'),
           targetSelector: '.game-canvas',
           spotlightShape: 'board',
           arrows: 'horizontal',
@@ -90,9 +90,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_ROTATE_VERTICAL,
-          title: 'Rotate Up & Down',
-          description:
-            'In horizontal levels, swipe columns up or down to align matching pieces. Swipe the background to pan.',
+          title: this.languageService.translate('TUTORIAL.ROTATE_V_TITLE'),
+          description: this.languageService.translate('TUTORIAL.ROTATE_V_DESC'),
           targetSelector: '.game-canvas',
           spotlightShape: 'board',
           arrows: 'vertical',
@@ -101,8 +100,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_MOVES_DECREASE,
-          title: 'Moves Remaining',
-          description: 'Each rotation uses 1 move. Match pieces before your moves run out!',
+          title: this.languageService.translate('TUTORIAL.MOVES_DEC_TITLE'),
+          description: this.languageService.translate('TUTORIAL.MOVES_DEC_DESC'),
           targetSelector: '.moves-remaining',
           spotlightShape: 'pill',
           arrows: 'none',
@@ -111,8 +110,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_MOVES_INCREASE,
-          title: 'Earn Extra Moves',
-          description: 'Make fast matches (Speed Bonus) or match 4+ pieces (Long Match) to earn bonus moves!',
+          title: this.languageService.translate('TUTORIAL.MOVES_INC_TITLE'),
+          description: this.languageService.translate('TUTORIAL.MOVES_INC_DESC'),
           targetSelector: '.moves-remaining',
           spotlightShape: 'pill',
           arrows: 'none',
@@ -121,9 +120,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_POWER_MOVE,
-          title: 'Power Move!',
-          description:
-            'Power moves appear from 4+ matches. Tap them to clear entire rows or detonate surrounding pieces!',
+          title: this.languageService.translate('TUTORIAL.POWER_MOVE_TITLE'),
+          description: this.languageService.translate('TUTORIAL.POWER_MOVE_DESC'),
           targetSelector: '.game-canvas',
           spotlightShape: 'board',
           arrows: 'none',
@@ -132,8 +130,8 @@ export class HintsManagerService {
         return {
           type,
           storageKey: STORAGE_HINT_GAME_MENU,
-          title: 'Game Menu',
-          description: 'Access audio controls, reset high scores, and other settings here.',
+          title: this.languageService.translate('TUTORIAL.GAME_MENU_TITLE'),
+          description: this.languageService.translate('TUTORIAL.GAME_MENU_DESC'),
           targetSelector: 'wgl-game-menu',
           spotlightShape: 'circle',
           arrows: 'none',

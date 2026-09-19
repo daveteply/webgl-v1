@@ -44,6 +44,7 @@ export enum AnalyticsEventType {
   SettingsMusicVolumeChanged = 8002,
   SettingsClearHighScores = 8003,
   SettingsFactoryReset = 8004,
+  SettingsLanguageChanged = 8005,
 
   // PWA
   PwaInstallPromptOutcome = 9000,

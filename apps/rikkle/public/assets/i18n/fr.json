@@ -1,0 +1,159 @@
+{
+  "SETTINGS": {
+    "TITLE": "Paramètres",
+    "GAME_VOLUME": "Jeu",
+    "MUSIC_VOLUME": "Musique",
+    "HAPTICS": "Retour haptique",
+    "HAPTICS_UNAVAILABLE": "Le retour haptique n'est pas disponible",
+    "LANGUAGE_TITLE": "Langue",
+    "HIGH_SCORES_TITLE": "Meilleurs scores",
+    "RESET_SCORES": "Effacer les scores",
+    "SCORES_CLEARED": "Scores effacés",
+    "CONFIRM_CLEAR_SCORES": "Effacer tous les scores enregistrés ?",
+    "TUTORIAL_TITLE": "Tutoriel et astuces",
+    "RESET_HINTS": "Réinitialiser astuces",
+    "HINTS_RESET": "Astuces réinitialisées !",
+    "SKIP_ALL_HINTS": "Passer les astuces",
+    "HINTS_SKIPPED": "Astuces ignorées",
+    "FACTORY_RESET_TITLE": "Réinitialisation complète",
+    "NUKE_BUTTON": "Tout effacer ! 💥",
+    "NUKE_PROMPT": "💥 Êtes-vous sûr ? Cela effacera toutes les données locales, scores, parties et réglages !",
+    "NUKE_CONFIRM": "Oui, tout effacer !",
+    "NUKE_SUCCESS": "Rikkle réinitialisé ! Rechargement du jeu...",
+    "CANCEL": "Annuler",
+    "CLEAR": "Effacer",
+    "CLOSE": "Fermer"
+  },
+  "GAME_OVER": {
+    "TITLE": "Plus de coups",
+    "MESSAGE": "Vous avez épuisé votre réserve de coups !",
+    "START_LEVEL_AGAIN": "Recommencer niveau {{ level }}",
+    "START_OVER": "Recommencer à zéro",
+    "PLAY_AGAIN": "Rejouer !",
+    "CONFIRM_START_OVER": "⚠️ Êtes-vous sûr ? Vous perdrez votre progression du Niveau {{ level }} !",
+    "CANCEL": "Annuler",
+    "YES_START_OVER": "Oui, recommencer"
+  },
+  "LEVEL_COMPLETE": {
+    "NEXT_LEVEL": "Niveau suivant",
+    "SPEED_BONUS": "Bonus vitesse",
+    "FASTEST_MATCH": "Combinaison la plus rapide",
+    "MOVES_USED": "Coups utilisés",
+    "MOVES_EARNED": "Coups gagnés",
+    "PIECES": "Pièces",
+    "PERFECT_MATCH": "Match parfait"
+  },
+  "INTRO": {
+    "CONTINUE_GAME": "Continuer (Niveau {{ level }})",
+    "NEW_GAME": "Nouvelle partie",
+    "CONFIRM_NEW_GAME": "⚠️ Démarrer une nouvelle partie ? Cela écrasera votre progression du Niveau {{ level }} !",
+    "CANCEL": "Annuler",
+    "START_NEW_GAME": "Démarrer une nouvelle partie"
+  },
+  "ABOUT": {
+    "TITLE": "À propos",
+    "COLORS": "Couleurs",
+    "EMOJIS": "Émojis",
+    "GROUP": "Groupe : {{ group }}",
+    "SUBGROUPS": "Sous-groupes : {{ subGroups }}",
+    "DISMISS": "Fermer"
+  },
+  "PWA": {
+    "TITLE": "Ajouter Rikkle à l'écran d'accueil",
+    "INSTALLED_MSG": "Rikkle est installé sur votre appareil !",
+    "INSTALLED_SUB": "Vous pouvez lancer Rikkle directement depuis votre écran d'accueil ou votre bureau.",
+    "BENEFITS_DESC": "Installez Rikkle pour jouer hors ligne à tout moment et profiter du plein écran !",
+    "IOS_TITLE": "Pour ajouter Rikkle sur iPhone ou iPad :",
+    "IOS_STEP_1": "Appuyez sur le bouton Partager dans Safari",
+    "IOS_STEP_2": "Faites défiler et appuyez sur Sur l'écran d'accueil",
+    "IOS_STEP_3": "Appuyez sur Ajouter en haut à droite",
+    "GENERIC_DESC": "Installez Rikkle pour jouer hors ligne et profiter d'une expérience immersive !",
+    "GENERIC_HINT": "Ouvrez le menu du navigateur et sélectionnez Installer Rikkle ou Ajouter à l'écran d'accueil.",
+    "INSTALL_NOW": "Installer maintenant",
+    "DONE": "Terminé",
+    "CLOSE": "Fermer"
+  },
+  "MENU": {
+    "VERSION": "Version {{ version }}",
+    "ABOUT_LEVEL": "À propos de ce niveau",
+    "SETTINGS": "Paramètres",
+    "ADD_TO_HOME": "Ajouter à l'écran d'accueil"
+  },
+  "HUD": {
+    "LEVEL": "Niveau",
+    "PIECES_REMAINING": "{count, plural, =1 {1 restant} other {# restants}}",
+    "PAN_LEFT": "Panoramique gauche",
+    "PAN_RIGHT": "Panoramique droite",
+    "VIEWPORT_LABEL": "Position de vue du cylindre",
+    "SHARE_LABEL": "Partager Rikkle"
+  },
+  "HIGH_SCORES": {
+    "TITLE": "Meilleurs scores"
+  },
+  "TUTORIAL": {
+    "BADGE": "TUTORIEL",
+    "SKIP_ALL": "Passer les astuces",
+    "GOT_IT": "Compris !",
+    "SWIPE_ROWS": "Glisser les lignes gauche / droite",
+    "SWIPE_COLS": "Glisser les colonnes haut / bas",
+    "TAP_DETONATE": "Toucher pour faire exploser !",
+    "ROTATE_H_TITLE": "Tourner et aligner",
+    "ROTATE_H_DESC": "Glissez les rangées pour aligner 3+ pièces identiques, puis touchez une pièce pour les faire disparaître !",
+    "ROTATE_V_TITLE": "Tourner de haut en bas",
+    "ROTATE_V_DESC": "Dans les niveaux horizontaux, glissez les colonnes vers le haut ou le bas. Glissez le fond pour naviguer.",
+    "MOVES_DEC_TITLE": "Coups restants",
+    "MOVES_DEC_DESC": "Chaque rotation coûte 1 coup. Alignez des pièces avant d'épuiser vos coups !",
+    "MOVES_INC_TITLE": "Gagner des coups bonus",
+    "MOVES_INC_DESC": "Les combinaisons rapides ou de 4+ pièces vous rapportent des coups supplémentaires !",
+    "POWER_MOVE_TITLE": "Coup spécial !",
+    "POWER_MOVE_DESC": "Apparaissent après des combinaisons de 4+ pièces. Touchez-les pour vider des lignes ou exploser !",
+    "GAME_MENU_TITLE": "Menu de jeu",
+    "GAME_MENU_DESC": "Accédez aux réglages audio, aux scores et aux options ici."
+  },
+  "SPLASH_3D": {
+    "PERFECT_MATCH": "Match parfait !",
+    "POINTS_REWARD": "{points, plural, =1 {+1 point} other {+{#} points}}",
+    "SPEED_BONUS": "Bonus vitesse",
+    "LONG_MATCH": "Super alignement",
+    "MULTI_POWER": "Multi-Pouvoir !",
+    "BONUS_MOVES": "{count, plural, =1 {+1 coup} other {+{#} coups}}",
+    "CALLOUT_LIGHTNING": "ÉCLAIR !",
+    "CALLOUT_BLAZING": "FLAMBOYANT !",
+    "CALLOUT_FAST": "RAPIDE !",
+    "CALLOUT_SNAP": "CLAQUÉ !",
+    "CALLOUT_QUICK": "VIF !",
+    "CALLOUT_MEGA_COMBO": "MÉGA COMBO !",
+    "CALLOUT_AWESOME": "GÉNIAL !",
+    "CALLOUT_GREAT": "SUPER !",
+    "CALLOUT_NICE": "CHOUETTE !",
+    "COMBO_MEGA": "Méga Combo",
+    "COMBO_SPEED": "Super Vitesse"
+  },
+  "HEADINGS": {
+    "LEVEL_COMPLETED": "Niveau terminé !",
+    "GREAT_MOVES": "Super coups !",
+    "SOLVED": "Résolu !",
+    "WELL_DONE": "Bravo !"
+  },
+  "POWER_MOVES": {
+    "SPIN_RIGHT": "Rotation droite",
+    "SPIN_LEFT": "Rotation gauche",
+    "SPIN_MIX": "Rotation mixte",
+    "SPIN_UP": "Rotation haut",
+    "SPIN_DOWN": "Rotation bas",
+    "ROLL_UP": "Rouler haut",
+    "ROLL_DOWN": "Rouler bas",
+    "ROLL_LEFT": "Rouler gauche",
+    "ROLL_RIGHT": "Rouler droite",
+    "ROLL_MIX": "Rouler mixte",
+    "KABOOM": "Kaboom !",
+    "DEFAULT": "Coup spécial"
+  },
+  "SHARE": {
+    "CANVAS_LEVEL": "Niveau : {{ level }}",
+    "CANVAS_SCORE": "Score : {{ score }}",
+    "SOCIAL_TITLE": "Rikkle – Puzzle 3D",
+    "SOCIAL_TEXT_SCORE": "Pouvez-vous battre mon score de {{ score }} au Niveau {{ level }} ? Jouez à Rikkle : {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "Découvrez Rikkle, le puzzle cylindrique en 3D ! Jouez maintenant : {{ url }}"
+  }
+}

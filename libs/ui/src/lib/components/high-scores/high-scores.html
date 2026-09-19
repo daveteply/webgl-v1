@@ -1,10 +1,10 @@
 @if (highScores().length) {
   <div id="highScores">
-    <div class="title">High Scores</div>
+    <div class="title">{{ 'HIGH_SCORES.TITLE' | transloco }}</div>
     @for (highScore of highScores(); track $index) {
       <div class="score-entry" [class.new-entry]="showHighligh() && highScore.highlight">
-        <span>{{ highScore.occurred | date: 'mediumDate' }}</span>
-        <span>{{ highScore.score | number }} </span>
+        <span>{{ languageService.formatDate(highScore.occurred) }}</span>
+        <span>{{ languageService.formatNumber(highScore.score) }}</span>
       </div>
     }
   </div>

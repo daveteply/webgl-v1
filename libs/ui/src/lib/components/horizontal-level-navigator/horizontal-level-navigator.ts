@@ -5,9 +5,11 @@ import { InteractionManagerService } from '@rikkle/graphics';
 import { GameEngineService } from '@rikkle/graphics';
 import { EffectsManagerService } from '@rikkle/graphics';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 @Component({
   selector: 'wgl-horizontal-level-navigator',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslocoPipe],
   templateUrl: './horizontal-level-navigator.html',
   styleUrl: './horizontal-level-navigator.scss',
 })

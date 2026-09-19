@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { Group, LoadingManager, MathUtils, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { SplashMotionStyle, SplashText, SplashTextOptions } from './splash-text';
 import { TextSplashEventType } from './text-splash-event-type';
+import { LanguageService } from '@rikkle/shared';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TextManagerService {
+  private languageService = inject(LanguageService);
+
   private _loadingManager: LoadingManager;
   private _fontLoader: FontLoader;
 
@@ -137,7 +140,9 @@ export class TextManagerService {
   }
 
   public ShowPerfectMatch(points = 0, color?: number): void {
-    this.ShowText(['Perfect Match!', `+${points} Points`], {
+    const line1 = this.languageService.translate('SPLASH_3D.PERFECT_MATCH');
+    const line2 = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
+    this.ShowText([line1, line2], {
       color,
       colorCycleFirstLine: true,
       holdDurationMs: 1400,
@@ -149,17 +154,18 @@ export class TextManagerService {
 
   public ShowSpeedBonus(points = 0, color?: number, worldPosition?: Vector3): void {
     if (worldPosition && this._inSituContainer && this._changaRegular) {
-      const callout =
+      const calloutKey =
         points >= 1500
           ? MathUtils.randInt(0, 1) === 0
-            ? 'LIGHTNING!'
-            : 'BLAZING!'
+            ? 'SPLASH_3D.CALLOUT_LIGHTNING'
+            : 'SPLASH_3D.CALLOUT_BLAZING'
           : points >= 800
             ? MathUtils.randInt(0, 1) === 0
-              ? 'FAST!'
-              : 'SNAP!'
-            : 'QUICK!';
+              ? 'SPLASH_3D.CALLOUT_FAST'
+              : 'SPLASH_3D.CALLOUT_SNAP'
+            : 'SPLASH_3D.CALLOUT_QUICK';
 
+      const callout = this.languageService.translate(calloutKey);
       this.ShowFloatingText(`${callout} +${points}`, worldPosition, {
         color: color ?? 0x00f0ff,
         motionStyle: SplashMotionStyle.PunchPop,
@@ -168,7 +174,9 @@ export class TextManagerService {
         particleColors: [0x00f0ff, 0xffea00, 0xffffff],
       });
     } else {
-      this.ShowText(['Speed Bonus', `+${points} Points`], {
+      const line1 = this.languageService.translate('SPLASH_3D.SPEED_BONUS');
+      const line2 = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
+      this.ShowText([line1, line2], {
         color,
         motionStyle: SplashMotionStyle.PunchPop,
         holdDurationMs: 850,
@@ -178,20 +186,21 @@ export class TextManagerService {
 
   public ShowLongMatchBonus(points = 0, color?: number, worldPosition?: Vector3, pieceCount = 4): void {
     if (worldPosition && this._inSituContainer && this._changaRegular) {
-      let callout = 'NICE!';
+      let calloutKey = 'SPLASH_3D.CALLOUT_NICE';
       let scaleMultiplier = 1.0;
 
       if (pieceCount >= 7) {
-        callout = 'MEGA COMBO!';
+        calloutKey = 'SPLASH_3D.CALLOUT_MEGA_COMBO';
         scaleMultiplier = 1.45;
       } else if (pieceCount === 6) {
-        callout = 'AWESOME!';
+        calloutKey = 'SPLASH_3D.CALLOUT_AWESOME';
         scaleMultiplier = 1.3;
       } else if (pieceCount === 5) {
-        callout = 'GREAT!';
+        calloutKey = 'SPLASH_3D.CALLOUT_GREAT';
         scaleMultiplier = 1.15;
       }
 
+      const callout = this.languageService.translate(calloutKey);
       this.ShowFloatingText(`${callout} +${points}`, worldPosition, {
         color: color ?? 0xffb800,
         scaleMultiplier,
@@ -201,7 +210,9 @@ export class TextManagerService {
         particleColors: [0xffb800, 0xff5500, 0xffffff, 0xffd700],
       });
     } else {
-      this.ShowText(['Long Match', `+${points} Points`], {
+      const line1 = this.languageService.translate('SPLASH_3D.LONG_MATCH');
+      const line2 = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
+      this.ShowText([line1, line2], {
         color,
         motionStyle: SplashMotionStyle.ImpactStamp,
         holdDurationMs: 950,
@@ -210,7 +221,8 @@ export class TextManagerService {
   }
 
   public ShowComboBonus(points = 0, pieceCount = 4, color?: number, worldPosition?: Vector3): void {
-    const callout = pieceCount >= 6 ? 'Mega Combo' : 'Super Speed';
+    const calloutKey = pieceCount >= 6 ? 'SPLASH_3D.COMBO_MEGA' : 'SPLASH_3D.COMBO_SPEED';
+    const callout = this.languageService.translate(calloutKey);
     if (worldPosition && this._inSituContainer && this._changaRegular) {
       this.ShowFloatingText(`${callout}! +${points}`, worldPosition, {
         color: color ?? 0xffd700,
@@ -221,7 +233,8 @@ export class TextManagerService {
         particleColors: [0xffd700, 0x00f0ff, 0xff007f, 0x00ff88, 0xffffff],
       });
     } else {
-      this.ShowText([`${callout}!`, `+${points} Points`], {
+      const pointsText = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
+      this.ShowText([`${callout}!`, pointsText], {
         color: color ?? 0xffd700,
         colorCycleFirstLine: true,
         motionStyle: SplashMotionStyle.ImpactStamp,
@@ -231,10 +244,19 @@ export class TextManagerService {
     }
   }
 
-  public ShowPowerMove(label: string, points = 0, additionalMoves = 0, color?: number, worldPosition?: Vector3): void {
+  public ShowPowerMove(
+    labelKeyOrText: string,
+    points = 0,
+    additionalMoves = 0,
+    color?: number,
+    worldPosition?: Vector3,
+  ): void {
+    const translatedLabel = this.languageService.translate(labelKeyOrText);
     if (additionalMoves > 0) {
-      const moveText = additionalMoves === 1 ? '+1 Move' : `+${additionalMoves} Moves`;
-      this.ShowText(['Multi-Power!', moveText, `+${points} Points`], {
+      const moveText = this.languageService.translate('SPLASH_3D.BONUS_MOVES', { count: additionalMoves });
+      const pointsText = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
+      const multiPower = this.languageService.translate('SPLASH_3D.MULTI_POWER');
+      this.ShowText([multiPower, moveText, pointsText], {
         color,
         colorCycleFirstLine: true,
         holdDurationMs: 1200,
@@ -243,8 +265,9 @@ export class TextManagerService {
         particleColors: [0xff00ea, 0x00ffcc, 0xffd700, 0xffffff],
       });
     } else {
+      const pointsText = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
       if (worldPosition && this._inSituContainer && this._changaRegular) {
-        this.ShowFloatingText(`${label}! +${points}`, worldPosition, {
+        this.ShowFloatingText(`${translatedLabel}! +${points}`, worldPosition, {
           color: color ?? 0xff00ea,
           motionStyle: SplashMotionStyle.PunchPop,
           holdDurationMs: 900,
@@ -252,7 +275,7 @@ export class TextManagerService {
           particleColors: [0xff00ea, 0x00f0ff, 0xffffff],
         });
       } else {
-        this.ShowText([`${label}!`, `+${points} Points`], {
+        this.ShowText([`${translatedLabel}!`, pointsText], {
           color,
           colorCycleFirstLine: true,
           motionStyle: SplashMotionStyle.Fanfare,

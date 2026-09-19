@@ -1,8 +1,8 @@
 <div id="game-over" class="glass-dialog">
-  <h1 class="text-center">No More Moves</h1>
+  <h1 class="text-center">{{ 'GAME_OVER.TITLE' | transloco }}</h1>
   <mat-dialog-content>
     <p class="game-over-emoji">{{ gameOverEmoji() }}</p>
-    <p class="text-center">You have exhausted your supply of moves!</p>
+    <p class="text-center">{{ 'GAME_OVER.MESSAGE' | transloco }}</p>
     <wgl-progress-bar
       class="progress"
       [class.fade-out]="!texturesStillLoading()"
@@ -13,29 +13,31 @@
   <mat-dialog-actions align="center">
     @if (!isLevelOne()) {
       <button mat-raised-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseRestartLevel()">
-        Start Level {{ data.level }} again
+        {{ 'GAME_OVER.START_LEVEL_AGAIN' | transloco: { level: data.level } }}
       </button>
 
       @if (!confirmStartOver()) {
         <button mat-stroked-button color="warn" [disabled]="texturesStillLoading()" (click)="onCloseGameOver()">
-          Start Over
+          {{ 'GAME_OVER.START_OVER' | transloco }}
         </button>
       }
 
       <mat-expansion-panel [expanded]="confirmStartOver()" hideToggle class="start-over-expansion-panel">
         <div class="confirm-container">
           <span class="confirm-prompt">
-            ⚠️ Are you sure? You will lose your current <strong>Level {{ data.level }}</strong> run and progress!
+            {{ 'GAME_OVER.CONFIRM_START_OVER' | transloco: { level: data.level } }}
           </span>
           <div class="confirm-buttons">
-            <button mat-button (click)="onCancelStartOver()">Cancel</button>
-            <button mat-raised-button color="warn" (click)="onConfirmStartOver()">Yes, Start Over</button>
+            <button mat-button (click)="onCancelStartOver()">{{ 'GAME_OVER.CANCEL' | transloco }}</button>
+            <button mat-raised-button color="warn" (click)="onConfirmStartOver()">
+              {{ 'GAME_OVER.YES_START_OVER' | transloco }}
+            </button>
           </div>
         </div>
       </mat-expansion-panel>
     } @else {
       <button mat-raised-button color="primary" [disabled]="texturesStillLoading()" (click)="onCloseGameOver()">
-        <span>Play again!</span>
+        <span>{{ 'GAME_OVER.PLAY_AGAIN' | transloco }}</span>
       </button>
     }
   </mat-dialog-actions>

@@ -1,6 +1,6 @@
 <div id="install-pwa-dialog" class="glass-dialog">
   <div mat-dialog-title class="dialog-header text-center">
-    <span class="title">Add Rikkle to Home Screen</span>
+    <span class="title">{{ 'PWA.TITLE' | transloco }}</span>
   </div>
 
   <div mat-dialog-content class="content text-center">
@@ -11,37 +11,30 @@
     @if (pwaInstallService.isStandalone()) {
       <div class="status-msg success">
         <mat-icon class="status-icon">check_circle</mat-icon>
-        <p>Rikkle is installed on your device!</p>
-        <p class="sub-text">You can launch Rikkle directly from your home screen or desktop.</p>
+        <p>{{ 'PWA.INSTALLED_MSG' | transloco }}</p>
+        <p class="sub-text">{{ 'PWA.INSTALLED_SUB' | transloco }}</p>
       </div>
     } @else if (pwaInstallService.canInstall()) {
       <p class="desc">
-        Install Rikkle to play offline anytime, launch directly from your home screen or desktop, and enjoy fullscreen
-        mode!
+        {{ 'PWA.BENEFITS_DESC' | transloco }}
       </p>
     } @else if (pwaInstallService.isIOS()) {
       <div class="ios-instructions">
-        <p class="desc">To add Rikkle to your iPhone or iPad home screen:</p>
+        <p class="desc">{{ 'PWA.IOS_TITLE' | transloco }}</p>
         <ol class="steps">
-          <li>Tap the <strong>Share</strong> button <mat-icon class="inline-icon">ios_share</mat-icon> in Safari</li>
-          <li>
-            Scroll down and tap <strong>Add to Home Screen</strong> <mat-icon class="inline-icon">add_box</mat-icon>
-          </li>
-          <li>Tap <strong>Add</strong> in the top-right corner</li>
+          <li>{{ 'PWA.IOS_STEP_1' | transloco }} <mat-icon class="inline-icon">ios_share</mat-icon></li>
+          <li>{{ 'PWA.IOS_STEP_2' | transloco }} <mat-icon class="inline-icon">add_box</mat-icon></li>
+          <li>{{ 'PWA.IOS_STEP_3' | transloco }}</li>
         </ol>
       </div>
     } @else {
       <div class="generic-instructions">
         <p class="desc">
-          Install Rikkle to play offline anytime, launch from your desktop or home screen, and enjoy fullscreen
-          gameplay!
+          {{ 'PWA.GENERIC_DESC' | transloco }}
         </p>
         <div class="hint-box">
           <mat-icon class="inline-icon">info</mat-icon>
-          <span
-            >Open your browser menu <mat-icon class="inline-icon">more_vert</mat-icon> and select
-            <strong>Install Rikkle</strong> or <strong>Add to Home Screen</strong>.</span
-          >
+          <span>{{ 'PWA.GENERIC_HINT' | transloco }}</span>
         </div>
       </div>
     }
@@ -51,11 +44,11 @@
     @if (!pwaInstallService.isStandalone() && pwaInstallService.canInstall()) {
       <button mat-raised-button color="primary" (click)="onInstallClick()">
         <mat-icon>get_app</mat-icon>
-        <span>Install Now</span>
+        <span>{{ 'PWA.INSTALL_NOW' | transloco }}</span>
       </button>
     }
     <button mat-stroked-button color="primary" mat-dialog-close>
-      <span>{{ pwaInstallService.isStandalone() ? 'Done' : 'Close' }}</span>
+      <span>{{ (pwaInstallService.isStandalone() ? 'PWA.DONE' : 'PWA.CLOSE') | transloco }}</span>
     </button>
   </div>
 </div>

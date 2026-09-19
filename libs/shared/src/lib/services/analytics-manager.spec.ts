@@ -69,6 +69,9 @@ describe('AnalyticsManagerService', () => {
 
     service.Log(AnalyticsEventType.SettingsHapticsChanged, { enabled: true });
     expect(mixpanel.track).toHaveBeenCalledWith('SettingsHapticsChanged', { enabled: true });
+
+    service.Log(AnalyticsEventType.SettingsLanguageChanged, { language: 'es' });
+    expect(mixpanel.track).toHaveBeenCalledWith('SettingsLanguageChanged', { language: 'es' });
   });
 
   it('should queue actions until Mixpanel is loaded', async () => {

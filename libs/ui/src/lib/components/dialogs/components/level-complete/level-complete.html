@@ -1,30 +1,30 @@
 <div id="level-dialog" class="glass-dialog has-canvas-animation" [style]="borderStyle()">
   <canvas #dialogCanvas class="canvas-backer"></canvas>
-  <h1 class="dialog-header">{{ LevelHeadingPhrase() }}</h1>
+  <h1 class="dialog-header">{{ LevelHeadingKey() | transloco }}</h1>
 
   <mat-dialog-content class="content">
     <div class="level-info-line" [class.show]="fastMatchBonusTotal()">
-      <span>Speed bonus</span>
+      <span>{{ 'LEVEL_COMPLETE.SPEED_BONUS' | transloco }}</span>
       <wgl-text-zoom [text]="fastMatchBonusTotal()"></wgl-text-zoom>
     </div>
     <div class="level-info-line" [class.show]="fastestMatchTime()">
-      <span>Fastest match</span>
+      <span>{{ 'LEVEL_COMPLETE.FASTEST_MATCH' | transloco }}</span>
       <wgl-text-zoom [text]="fastestMatchTime()"></wgl-text-zoom>
     </div>
     <div class="level-info-line bad" [class.show]="moveCount()">
-      <span>Moves used</span>
+      <span>{{ 'LEVEL_COMPLETE.MOVES_USED' | transloco }}</span>
       <wgl-text-zoom [text]="moveCount()"></wgl-text-zoom>
     </div>
     <div class="level-info-line good" [class.show]="moveCountEarned()">
-      <span>Moves earned</span>
+      <span>{{ 'LEVEL_COMPLETE.MOVES_EARNED' | transloco }}</span>
       <wgl-text-zoom [text]="moveCountEarned()"></wgl-text-zoom>
     </div>
     <div class="level-info-line" [class.show]="pieceCount()">
-      <span>Pieces</span>
+      <span>{{ 'LEVEL_COMPLETE.PIECES' | transloco }}</span>
       <wgl-text-zoom [text]="pieceCount()"></wgl-text-zoom>
     </div>
     <div class="level-info-line perfect" [class.show]="perfectMatchBonus()">
-      <span>Perfect match</span>
+      <span>{{ 'LEVEL_COMPLETE.PERFECT_MATCH' | transloco }}</span>
       <wgl-text-zoom [text]="'+' + perfectMatchBonus()"></wgl-text-zoom>
     </div>
     <wgl-progress-bar
@@ -40,7 +40,7 @@
       (click)="NextLevel()"
       [disabled]="texturesStillLoading() || levelInfoProcessing()"
     >
-      <span>Next Level</span>
+      <span>{{ 'LEVEL_COMPLETE.NEXT_LEVEL' | transloco }}</span>
     </button>
   </mat-dialog-actions>
 </div>

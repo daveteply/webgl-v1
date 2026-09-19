@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 import { ShareManagerService } from './share-manager';
 
@@ -6,7 +7,9 @@ describe('ShareManagerService', () => {
   let service: ShareManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideTranslocoTesting()],
+    });
     service = TestBed.inject(ShareManagerService);
   });
 

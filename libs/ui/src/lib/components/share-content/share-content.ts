@@ -8,9 +8,11 @@ import { take } from 'rxjs';
 import { ShareManagerService } from '@rikkle/graphics';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 @Component({
   selector: 'wgl-share-content',
-  imports: [CommonModule, MatIconModule, MatProgressBarModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatProgressBarModule, MatButtonModule, TranslocoPipe],
   templateUrl: './share-content.html',
   styleUrl: './share-content.scss',
 })

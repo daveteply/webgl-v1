@@ -40,6 +40,8 @@ class MockHapticsManagerService {
   PerfectMatchPulse = vi.fn();
 }
 
+import { provideTranslocoTesting } from '@rikkle/shared';
+
 describe('ScoringManagerService', () => {
   let service: ScoringManagerService;
   let audioManager: AudioManagerService;
@@ -53,6 +55,7 @@ describe('ScoringManagerService', () => {
         { provide: TextManagerService, useClass: MockTextManagerService },
         { provide: AudioManagerService, useClass: MockAudioManagerService },
         { provide: HapticsManagerService, useClass: MockHapticsManagerService },
+        provideTranslocoTesting(),
       ],
     });
     service = TestBed.inject(ScoringManagerService);
@@ -145,7 +148,7 @@ describe('ScoringManagerService', () => {
     expect(service.Score).toBe(initialScore + 50);
     expect(service.PlayerMoves).toBe(initialMoves);
     expect(service.LevelStats.moveCountEarned).toBe(0);
-    expect(captured).toEqual({ label: 'Spin right', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.SPIN_RIGHT', points: 50, additionalMoves: 0 });
   });
 
   it('should display orientation-aware power move label when level is horizontal', () => {
@@ -164,10 +167,10 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(captured).toEqual({ label: 'Spin up', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.SPIN_UP', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(captured).toEqual({ label: 'Roll left', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.ROLL_LEFT', points: 50, additionalMoves: 0 });
 
     gameEngine.RestoreLevelTypes(
       LevelMaterialType.Color,
@@ -177,10 +180,10 @@ describe('ScoringManagerService', () => {
     );
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.HorizontalRight);
-    expect(captured).toEqual({ label: 'Spin down', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.SPIN_DOWN', points: 50, additionalMoves: 0 });
 
     service.UpdatePowerMoveBonus(0, PowerMoveType.VerticalUp);
-    expect(captured).toEqual({ label: 'Roll right', points: 50, additionalMoves: 0 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.ROLL_RIGHT', points: 50, additionalMoves: 0 });
   });
 
   it('should calculate bonus and award +1 move for multi-power move with 1 additional power move', () => {
@@ -204,7 +207,7 @@ describe('ScoringManagerService', () => {
     expect(service.PlayerMoves).toBe(initialMoves + 1);
     expect(service.LevelStats.moveCountEarned).toBe(1);
     expect(movesChangeEmitted).toBe(true);
-    expect(captured).toEqual({ label: 'Spin right', points: 100, additionalMoves: 1 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.SPIN_RIGHT', points: 100, additionalMoves: 1 });
   });
 
   it('should calculate bonus and award +2 moves for multi-power move with 2 additional power moves', () => {
@@ -228,7 +231,7 @@ describe('ScoringManagerService', () => {
     expect(service.PlayerMoves).toBe(initialMoves + 2);
     expect(service.LevelStats.moveCountEarned).toBe(2);
     expect(movesChangeEmitted).toBe(true);
-    expect(captured).toEqual({ label: 'Roll up', points: 150, additionalMoves: 2 });
+    expect(captured).toEqual({ label: 'POWER_MOVES.ROLL_UP', points: 150, additionalMoves: 2 });
   });
 
   describe('Perfect Match Scoring & StatsEntries', () => {

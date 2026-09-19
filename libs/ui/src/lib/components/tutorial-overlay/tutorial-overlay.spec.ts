@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { HintsManagerService, TutorialType } from '@rikkle/graphics';
-import { InteractionManagerService } from '@rikkle/graphics';
+import { HintsManagerService, InteractionManagerService, TutorialType } from '@rikkle/graphics';
 import { TutorialOverlay } from './tutorial-overlay';
 import { vi } from 'vitest';
-import { StorageService } from '@rikkle/shared';
+import { StorageService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('TutorialOverlay', () => {
   let component: TutorialOverlay;
@@ -25,6 +24,7 @@ describe('TutorialOverlay', () => {
             LockBoard: vi.fn(),
           },
         },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

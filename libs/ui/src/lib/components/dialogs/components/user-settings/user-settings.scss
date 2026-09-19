@@ -85,6 +85,52 @@
     font-style: italic;
   }
 
+  &.language-row {
+    margin-bottom: 1em;
+
+    .language-button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(6.5em, 1fr));
+      gap: 0.4em;
+      margin-top: 0.5em;
+
+      .lang-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35em;
+        padding: 0.25em 0.5em;
+        font-size: 0.85em;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+
+        .flag-icon {
+          font-size: 1.1em;
+          line-height: 1;
+        }
+
+        .lang-name {
+          font-weight: 500;
+        }
+
+        &.selected {
+          background: rgba(0, 229, 255, 0.2);
+          border-color: #00e5ff;
+          box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+          font-weight: 700;
+        }
+
+        &:hover:not(.selected) {
+          background: rgba(255, 255, 255, 0.12);
+        }
+      }
+    }
+  }
+
   &.reset-row {
     margin-top: 0.8em;
     border-top: 1px solid rgba(255, 255, 255, 0.12);

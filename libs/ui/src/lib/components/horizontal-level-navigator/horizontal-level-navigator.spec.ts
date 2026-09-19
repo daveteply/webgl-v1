@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HorizontalLevelNavigator } from './horizontal-level-navigator';
 import { InteractionManagerService } from '@rikkle/graphics';
 import { EffectsManagerService } from '@rikkle/graphics';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('HorizontalLevelNavigator', () => {
   let component: HorizontalLevelNavigator;
@@ -12,6 +13,7 @@ describe('HorizontalLevelNavigator', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HorizontalLevelNavigator],
+      providers: [provideTranslocoTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HorizontalLevelNavigator);

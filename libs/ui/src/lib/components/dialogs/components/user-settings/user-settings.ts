@@ -6,12 +6,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { AudioManagerService, AudioType } from '@rikkle/audio';
 import {
   AnalyticsEventType,
   AnalyticsManagerService,
   HapticsManagerService,
   HighScoreManagerService,
+  LanguageService,
   StorageService,
 } from '@rikkle/shared';
 import { HintsManagerService } from '@rikkle/graphics';
@@ -26,11 +28,13 @@ import { HintsManagerService } from '@rikkle/graphics';
     MatSliderModule,
     MatSlideToggleModule,
     MatExpansionModule,
+    TranslocoPipe,
   ],
   templateUrl: './user-settings.html',
   styleUrl: './user-settings.scss',
 })
 export class UserSettings implements OnDestroy {
+  public languageService = inject(LanguageService);
   private audioManager = inject(AudioManagerService);
   private highScoreManager = inject(HighScoreManagerService);
   private storageService = inject(StorageService);
@@ -55,6 +59,11 @@ export class UserSettings implements OnDestroy {
   musicIcon = computed(() => (this.musicVolume() === 0 ? 'music_off' : 'music_note'));
   isHapticsAvailable = computed(() => this.hapticsManager.isAvailable);
   hapticsEnabled = computed(() => this.hapticsManager.hapticsEnabled);
+
+  onSelectLanguage(code: string): void {
+    this.languageService.setLanguage(code);
+    this.analyticsManager.Log(AnalyticsEventType.SettingsLanguageChanged, { language: code });
+  }
 
   onHapticsChange(enabled: boolean): void {
     this.hapticsManager.HapticsEnabled = enabled;

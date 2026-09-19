@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateBombMaxTargetCount, evaluatePowerMove, selectPowerMove } from './power-move-rules';
-import { PowerMoveType } from '../models/power-move-type';
+import { PowerMoveType, GetPowerMoveTranslationKey } from '../models/power-move-type';
 import { LevelGeometryType } from '../models/level-geometry-type';
 
 describe('power-move-rules', () => {
@@ -46,5 +46,10 @@ describe('power-move-rules', () => {
     expect(calculateBombMaxTargetCount(1)).toBe(5); // clamped to min 5
     expect(calculateBombMaxTargetCount(6)).toBe(9); // floor(6 * 1.5) = 9
     expect(calculateBombMaxTargetCount(20)).toBe(21); // clamped to max 21
+  });
+
+  it('should return valid translation keys for power moves', () => {
+    expect(GetPowerMoveTranslationKey(PowerMoveType.HorizontalRight)).toBe('POWER_MOVES.SPIN_RIGHT');
+    expect(GetPowerMoveTranslationKey(PowerMoveType.Bomb)).toBe('POWER_MOVES.KABOOM');
   });
 });

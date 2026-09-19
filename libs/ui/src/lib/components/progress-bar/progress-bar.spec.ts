@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProgressBar } from './progress-bar';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('ProgressBar', () => {
   let component: ProgressBar;
@@ -9,6 +10,7 @@ describe('ProgressBar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProgressBar],
+      providers: [provideTranslocoTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProgressBar);

@@ -1,7 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { DOCUMENT, formatNumber } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
 import { SHARE_FILE_NAME, SHARE_URL } from '@rikkle/engine';
+import { LanguageService } from '@rikkle/shared';
 import { ScoringManagerService } from './scoring-manager';
 
 @Injectable({
@@ -9,6 +10,7 @@ import { ScoringManagerService } from './scoring-manager';
 })
 export class ShareManagerService {
   private scoringManager = inject(ScoringManagerService);
+  private languageService = inject(LanguageService);
   private document = inject(DOCUMENT);
 
   private _screenShotRequested = false;
@@ -134,8 +136,9 @@ export class ShareManagerService {
           ctx.lineJoin = 'round';
 
           const bottomY = img.height - 70;
-          const levelStr = `Level: ${this.scoringManager.Level}`;
-          const scoreStr = `Score: ${formatNumber(this.scoringManager.Score, 'en-US')}`;
+          const levelStr = this.languageService.translate('SHARE.CANVAS_LEVEL', { level: this.scoringManager.Level });
+          const formattedScore = this.languageService.formatNumber(this.scoringManager.Score);
+          const scoreStr = this.languageService.translate('SHARE.CANVAS_SCORE', { score: formattedScore });
           const urlStr = 'rikkle.app';
 
           ctx.strokeText(levelStr, img.width / 2, bottomY - 140);
@@ -164,14 +167,18 @@ export class ShareManagerService {
       const fileName = SHARE_FILE_NAME || 'rikkle-screen-shot.png';
       const file = new File([blob], fileName, { type: 'image/png' });
 
-      const scoreFormatted = formatNumber(this.scoringManager.Score, 'en-US');
+      const scoreFormatted = this.languageService.formatNumber(this.scoringManager.Score);
       const shareText =
         this.scoringManager.Score > 0
-          ? `Can you beat my score of ${scoreFormatted} on Level ${this.scoringManager.Level}? Play Rikkle: ${SHARE_URL}`
-          : `Check out Rikkle, the 3D cylinder match puzzle! Play now: ${SHARE_URL}`;
+          ? this.languageService.translate('SHARE.SOCIAL_TEXT_SCORE', {
+              score: scoreFormatted,
+              level: this.scoringManager.Level,
+              url: SHARE_URL,
+            })
+          : this.languageService.translate('SHARE.SOCIAL_TEXT_DEFAULT', { url: SHARE_URL });
 
       const shareData: ShareData = {
-        title: 'Rikkle – 3D Match Puzzle',
+        title: this.languageService.translate('SHARE.SOCIAL_TITLE'),
         text: shareText,
         url: SHARE_URL,
       };

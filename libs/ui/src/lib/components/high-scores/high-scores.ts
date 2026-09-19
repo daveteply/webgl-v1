@@ -1,15 +1,16 @@
 import { Component, input, signal, OnInit, inject } from '@angular/core';
-import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
-import { HighScore, HighScoreManagerService } from '@rikkle/shared';
+import { CommonModule } from '@angular/common';
+import { HighScore, HighScoreManagerService, LanguageService } from '@rikkle/shared';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-high-scores',
-  imports: [CommonModule, DatePipe, DecimalPipe],
-  providers: [DecimalPipe],
+  imports: [CommonModule, TranslocoPipe],
   templateUrl: './high-scores.html',
   styleUrl: './high-scores.scss',
 })
 export class HighScores implements OnInit {
+  public languageService = inject(LanguageService);
   private highScoreManager = inject(HighScoreManagerService);
 
   highScores = signal<HighScore[]>([]);

@@ -1,0 +1,159 @@
+{
+  "SETTINGS": {
+    "TITLE": "Settings",
+    "GAME_VOLUME": "Game",
+    "MUSIC_VOLUME": "Music",
+    "HAPTICS": "Haptic Feedback",
+    "HAPTICS_UNAVAILABLE": "Haptic feedback is not available",
+    "LANGUAGE_TITLE": "Language",
+    "HIGH_SCORES_TITLE": "High Scores",
+    "RESET_SCORES": "Reset High Scores",
+    "SCORES_CLEARED": "Scores Cleared",
+    "CONFIRM_CLEAR_SCORES": "Clear all saved high scores?",
+    "TUTORIAL_TITLE": "Tutorial & Hints",
+    "RESET_HINTS": "Reset Hints",
+    "HINTS_RESET": "Hints Reset!",
+    "SKIP_ALL_HINTS": "Skip All Hints",
+    "HINTS_SKIPPED": "Hints Skipped",
+    "FACTORY_RESET_TITLE": "Factory Reset",
+    "NUKE_BUTTON": "Nuke the Rikkle! 💥",
+    "NUKE_PROMPT": "💥 Are you sure? This will wipe out all local storage, including high scores, saved games, and settings!",
+    "NUKE_CONFIRM": "Yes, Wipe it All!",
+    "NUKE_SUCCESS": "Rikkle Nuked! Reloading fresh game...",
+    "CANCEL": "Cancel",
+    "CLEAR": "Clear",
+    "CLOSE": "Close"
+  },
+  "GAME_OVER": {
+    "TITLE": "No More Moves",
+    "MESSAGE": "You have exhausted your supply of moves!",
+    "START_LEVEL_AGAIN": "Start Level {{ level }} again",
+    "START_OVER": "Start Over",
+    "PLAY_AGAIN": "Play again!",
+    "CONFIRM_START_OVER": "⚠️ Are you sure? You will lose your current Level {{ level }} run and progress!",
+    "CANCEL": "Cancel",
+    "YES_START_OVER": "Yes, Start Over"
+  },
+  "LEVEL_COMPLETE": {
+    "NEXT_LEVEL": "Next Level",
+    "SPEED_BONUS": "Speed bonus",
+    "FASTEST_MATCH": "Fastest match",
+    "MOVES_USED": "Moves used",
+    "MOVES_EARNED": "Moves earned",
+    "PIECES": "Pieces",
+    "PERFECT_MATCH": "Perfect match"
+  },
+  "INTRO": {
+    "CONTINUE_GAME": "Continue (Level {{ level }})",
+    "NEW_GAME": "New Game",
+    "CONFIRM_NEW_GAME": "⚠️ Start a new game? This will overwrite your saved Level {{ level }} progress!",
+    "CANCEL": "Cancel",
+    "START_NEW_GAME": "Start New Game"
+  },
+  "ABOUT": {
+    "TITLE": "About",
+    "COLORS": "Colors",
+    "EMOJIS": "Emojis",
+    "GROUP": "Group: {{ group }}",
+    "SUBGROUPS": "Subgroups: {{ subGroups }}",
+    "DISMISS": "Dismiss"
+  },
+  "PWA": {
+    "TITLE": "Add Rikkle to Home Screen",
+    "INSTALLED_MSG": "Rikkle is installed on your device!",
+    "INSTALLED_SUB": "You can launch Rikkle directly from your home screen or desktop.",
+    "BENEFITS_DESC": "Install Rikkle to play offline anytime, launch directly from your home screen or desktop, and enjoy fullscreen mode!",
+    "IOS_TITLE": "To add Rikkle to your iPhone or iPad home screen:",
+    "IOS_STEP_1": "Tap the Share button in Safari",
+    "IOS_STEP_2": "Scroll down and tap Add to Home Screen",
+    "IOS_STEP_3": "Tap Add in the top-right corner",
+    "GENERIC_DESC": "Install Rikkle to play offline anytime, launch from your desktop or home screen, and enjoy fullscreen gameplay!",
+    "GENERIC_HINT": "Open your browser menu and select Install Rikkle or Add to Home Screen.",
+    "INSTALL_NOW": "Install Now",
+    "DONE": "Done",
+    "CLOSE": "Close"
+  },
+  "MENU": {
+    "VERSION": "Version {{ version }}",
+    "ABOUT_LEVEL": "About this Level",
+    "SETTINGS": "Settings",
+    "ADD_TO_HOME": "Add to Home Screen"
+  },
+  "HUD": {
+    "LEVEL": "Level",
+    "PIECES_REMAINING": "{count, plural, =1 {1 remaining} other {# remaining}}",
+    "PAN_LEFT": "Pan Left",
+    "PAN_RIGHT": "Pan Right",
+    "VIEWPORT_LABEL": "Horizontal Cylinder Viewport Position",
+    "SHARE_LABEL": "Share Rikkle"
+  },
+  "HIGH_SCORES": {
+    "TITLE": "High Scores"
+  },
+  "TUTORIAL": {
+    "BADGE": "TUTORIAL",
+    "SKIP_ALL": "Skip All Hints",
+    "GOT_IT": "Got It!",
+    "SWIPE_ROWS": "Swipe Rows Left / Right",
+    "SWIPE_COLS": "Swipe Columns Up / Down",
+    "TAP_DETONATE": "Tap to Detonate!",
+    "ROTATE_H_TITLE": "Rotate & Tap to Match",
+    "ROTATE_H_DESC": "Swipe rows left or right to line up 3+ matching pieces, then tap any matched piece to clear them!",
+    "ROTATE_V_TITLE": "Rotate Up & Down",
+    "ROTATE_V_DESC": "In horizontal levels, swipe columns up or down to align matching pieces. Swipe the background to pan.",
+    "MOVES_DEC_TITLE": "Moves Remaining",
+    "MOVES_DEC_DESC": "Each rotation uses 1 move. Match pieces before your moves run out!",
+    "MOVES_INC_TITLE": "Earn Extra Moves",
+    "MOVES_INC_DESC": "Make fast matches (Speed Bonus) or match 4+ pieces (Long Match) to earn bonus moves!",
+    "POWER_MOVE_TITLE": "Power Move!",
+    "POWER_MOVE_DESC": "Power moves appear from 4+ matches. Tap them to clear entire rows or detonate surrounding pieces!",
+    "GAME_MENU_TITLE": "Game Menu",
+    "GAME_MENU_DESC": "Access audio controls, reset high scores, and other settings here."
+  },
+  "SPLASH_3D": {
+    "PERFECT_MATCH": "Perfect Match!",
+    "POINTS_REWARD": "{points, plural, =1 {+1 Point} other {+{#} Points}}",
+    "SPEED_BONUS": "Speed Bonus",
+    "LONG_MATCH": "Long Match",
+    "MULTI_POWER": "Multi-Power!",
+    "BONUS_MOVES": "{count, plural, =1 {+1 Move} other {+{#} Moves}}",
+    "CALLOUT_LIGHTNING": "LIGHTNING!",
+    "CALLOUT_BLAZING": "BLAZING!",
+    "CALLOUT_FAST": "FAST!",
+    "CALLOUT_SNAP": "SNAP!",
+    "CALLOUT_QUICK": "QUICK!",
+    "CALLOUT_MEGA_COMBO": "MEGA COMBO!",
+    "CALLOUT_AWESOME": "AWESOME!",
+    "CALLOUT_GREAT": "GREAT!",
+    "CALLOUT_NICE": "NICE!",
+    "COMBO_MEGA": "Mega Combo",
+    "COMBO_SPEED": "Super Speed"
+  },
+  "HEADINGS": {
+    "LEVEL_COMPLETED": "Level Completed!",
+    "GREAT_MOVES": "Great Moves!",
+    "SOLVED": "Solved!",
+    "WELL_DONE": "Well Done!"
+  },
+  "POWER_MOVES": {
+    "SPIN_RIGHT": "Spin right",
+    "SPIN_LEFT": "Spin left",
+    "SPIN_MIX": "Spin mix",
+    "SPIN_UP": "Spin up",
+    "SPIN_DOWN": "Spin down",
+    "ROLL_UP": "Roll up",
+    "ROLL_DOWN": "Roll down",
+    "ROLL_LEFT": "Roll left",
+    "ROLL_RIGHT": "Roll right",
+    "ROLL_MIX": "Roll mix",
+    "KABOOM": "Kaboom",
+    "DEFAULT": "Power Move"
+  },
+  "SHARE": {
+    "CANVAS_LEVEL": "Level: {{ level }}",
+    "CANVAS_SCORE": "Score: {{ score }}",
+    "SOCIAL_TITLE": "Rikkle – 3D Match Puzzle",
+    "SOCIAL_TEXT_SCORE": "Can you beat my score of {{ score }} on Level {{ level }}? Play Rikkle: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "Check out Rikkle, the 3D cylinder match puzzle! Play now: {{ url }}"
+  }
+}
