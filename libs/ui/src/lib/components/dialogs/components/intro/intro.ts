@@ -15,10 +15,20 @@ import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../progress-bar/progress-bar';
 import { APP_VERSION } from '@rikkle/shared';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-intro',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, MatIconModule, HighScores, ProgressBar],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatExpansionModule,
+    MatIconModule,
+    HighScores,
+    ProgressBar,
+    TranslocoPipe,
+  ],
   templateUrl: './intro.html',
   styleUrl: './intro.scss',
 })

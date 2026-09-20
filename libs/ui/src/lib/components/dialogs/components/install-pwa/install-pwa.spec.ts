@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { InstallPwaDialog } from './install-pwa';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('InstallPwaDialog', () => {
   let component: InstallPwaDialog;
@@ -16,6 +17,7 @@ describe('InstallPwaDialog', () => {
             close: () => undefined,
           },
         },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

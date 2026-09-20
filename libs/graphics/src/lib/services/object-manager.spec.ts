@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ObjectManagerService } from './object-manager';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('ObjectManagerService', () => {
   let service: ObjectManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideTranslocoTesting()],
+    });
     service = TestBed.inject(ObjectManagerService);
   });
 

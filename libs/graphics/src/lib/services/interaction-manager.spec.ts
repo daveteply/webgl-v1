@@ -16,12 +16,15 @@ import { LevelMaterialType } from '@rikkle/engine';
 import { LevelGeometryType } from '@rikkle/engine';
 import { GravityType } from '@rikkle/engine';
 import { PostProcessingManagerService } from './post-processing-manager';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('InteractionManagerService', () => {
   let service: InteractionManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideTranslocoTesting()],
+    });
     service = TestBed.inject(InteractionManagerService);
   });
 

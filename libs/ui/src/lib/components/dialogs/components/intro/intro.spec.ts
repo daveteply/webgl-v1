@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 
 import { Intro } from './intro';
 import { SaveGameService } from '@rikkle/graphics';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('Intro', () => {
   let component: Intro;
@@ -32,6 +32,7 @@ describe('Intro', () => {
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         { provide: SaveGameService, useValue: mockSaveGameService },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

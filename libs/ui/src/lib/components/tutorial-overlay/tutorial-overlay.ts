@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HintsManagerService, TutorialConfig } from '@rikkle/graphics';
 import { InteractionManagerService } from '@rikkle/graphics';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 export interface SpotlightGeometry {
   x: number;
@@ -20,7 +21,7 @@ export interface SpotlightGeometry {
 
 @Component({
   selector: 'wgl-tutorial-overlay',
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, TranslocoPipe],
   templateUrl: './tutorial-overlay.html',
   styleUrl: './tutorial-overlay.scss',
 })

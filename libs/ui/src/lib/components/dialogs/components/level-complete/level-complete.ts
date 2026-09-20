@@ -24,10 +24,10 @@ import { DialogNotifyService } from '../../services/dialog-notify';
 import { DialogAnimationService } from '../../services/dialog-animation';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
 
-import { LEVEL_COMPLETE_HEADINGS } from '@rikkle/engine';
-import { LevelStats } from '@rikkle/engine';
+import { LEVEL_COMPLETE_HEADING_KEYS, LevelStats } from '@rikkle/engine';
 import { TextZoom } from '../../../text-zoom/text-zoom';
 import { ProgressBar } from '../../../progress-bar/progress-bar';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 interface LevelDialogData {
   stats?: LevelStats;
@@ -52,7 +52,7 @@ interface LevelStat {
 @Component({
   selector: 'wgl-level-complete',
   providers: [DecimalPipe],
-  imports: [CommonModule, MatDialogModule, MatButtonModule, TextZoom, ProgressBar],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, TextZoom, ProgressBar, TranslocoPipe],
   templateUrl: './level-complete.html',
   styleUrl: './level-complete.scss',
 })
@@ -95,8 +95,8 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
 
-  LevelHeadingPhrase = signal<string>(
-    LEVEL_COMPLETE_HEADINGS[Math.floor(Math.random() * LEVEL_COMPLETE_HEADINGS.length)],
+  LevelHeadingKey = signal<string>(
+    LEVEL_COMPLETE_HEADING_KEYS[Math.floor(Math.random() * LEVEL_COMPLETE_HEADING_KEYS.length)],
   );
 
   constructor() {

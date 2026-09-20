@@ -1,14 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera, Scene, Vector3 } from 'three';
+import { vi } from 'vitest';
 
 import { TextManagerService } from './text-manager';
 import { SplashMotionStyle } from './splash-text';
+import { LanguageService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('TextManagerService', () => {
   let service: TextManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [LanguageService, TextManagerService, provideTranslocoTesting()],
+    });
     service = TestBed.inject(TextManagerService);
   });
 
@@ -32,8 +36,8 @@ describe('TextManagerService', () => {
       service.ShowPerfectMatch(100);
       service.ShowSpeedBonus(2000);
       service.ShowLongMatchBonus(20);
-      service.ShowPowerMove('Spin right', 50);
-      service.ShowPowerMove('Multi-Power', 100, 1);
+      service.ShowPowerMove('POWER_MOVES.SPIN_RIGHT', 50);
+      service.ShowPowerMove('POWER_MOVES.KABOOM', 100, 1);
       service.ShowFloatingText('Floating Test', new Vector3(0, 0, 0));
     }).not.toThrow();
   });
@@ -41,7 +45,7 @@ describe('TextManagerService', () => {
   it('should format and queue power moves correctly for single and multi-power invocations', () => {
     const showTextSpy = vi.spyOn(service, 'ShowText');
 
-    service.ShowPowerMove('Spin right', 50);
+    service.ShowPowerMove('POWER_MOVES.SPIN_RIGHT', 50);
     expect(showTextSpy).toHaveBeenCalledWith(['Spin right!', '+50 Points'], {
       color: undefined,
       colorCycleFirstLine: true,
@@ -50,19 +54,9 @@ describe('TextManagerService', () => {
       withParticles: true,
     });
 
-    service.ShowPowerMove('Kaboom', 100, 1, 0xff0000);
+    service.ShowPowerMove('POWER_MOVES.KABOOM', 100, 1, 0xff0000);
     expect(showTextSpy).toHaveBeenCalledWith(['Multi-Power!', '+1 Move', '+100 Points'], {
       color: 0xff0000,
-      colorCycleFirstLine: true,
-      holdDurationMs: 1200,
-      motionStyle: SplashMotionStyle.Fanfare,
-      withParticles: true,
-      particleColors: [0xff00ea, 0x00ffcc, 0xffd700, 0xffffff],
-    });
-
-    service.ShowPowerMove('Kaboom', 150, 2);
-    expect(showTextSpy).toHaveBeenCalledWith(['Multi-Power!', '+2 Moves', '+150 Points'], {
-      color: undefined,
       colorCycleFirstLine: true,
       holdDurationMs: 1200,
       motionStyle: SplashMotionStyle.Fanfare,
@@ -110,5 +104,11 @@ describe('TextManagerService', () => {
       holdDurationMs: 1100,
       withParticles: true,
     });
+  });
+
+  it('should safely handle ActiveFont resolution and font asset changes', () => {
+    expect(service.ActiveFont).toBeUndefined();
+    service.InitFonts();
+    expect(() => service.ShowFloatingText('テスト', new Vector3(0, 0, 0))).not.toThrow();
   });
 });

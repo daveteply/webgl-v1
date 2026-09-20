@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 
 import { About } from './about';
 import { GameStateStore } from '@rikkle/state';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('About', () => {
   let component: About;
@@ -13,6 +13,7 @@ describe('About', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [About],
+      providers: [provideTranslocoTesting()],
     }).compileComponents();
 
     analyticsManager = TestBed.inject(AnalyticsManagerService);

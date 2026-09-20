@@ -1,5 +1,5 @@
 <div id="about-dialog" class="glass-dialog">
-  <h1 mat-dialog-title class="dialog-header">About</h1>
+  <h1 mat-dialog-title class="dialog-header">{{ 'ABOUT.TITLE' | transloco }}</h1>
   <div mat-dialog-content>
     @if (levelColors().length) {
       <div>
@@ -7,7 +7,7 @@
           @if (levelColorScheme()?.name) {
             <span>{{ levelColorScheme()?.emoji }} {{ levelColorScheme()?.name }}</span>
           } @else {
-            <span>Colors</span>
+            <span>{{ 'ABOUT.COLORS' | transloco }}</span>
           }
         </h2>
         <div class="level-colors">
@@ -24,9 +24,9 @@
     }
     @if (levelEmojis()?.emojiList?.length) {
       <div>
-        <h2>Emojis</h2>
-        <p>Group: {{ levelEmojis()?.group }}</p>
-        <p>Subgroups: {{ levelEmojis()?.subGroups?.join(', ') }}</p>
+        <h2>{{ 'ABOUT.EMOJIS' | transloco }}</h2>
+        <p>{{ 'ABOUT.GROUP' | transloco: { group: levelEmojis()?.group } }}</p>
+        <p>{{ 'ABOUT.SUBGROUPS' | transloco: { subGroups: levelEmojis()?.subGroups?.join(', ') } }}</p>
         <div>
           @for (emoji of levelEmojis()?.emojiList; track $index) {
             <div>
@@ -39,7 +39,9 @@
       </div>
     }
     <div mat-dialog-actions align="center">
-      <button mat-stroked-button mat-dialog-close color="primary" cdkFocusInitial>Dismiss</button>
+      <button mat-stroked-button mat-dialog-close color="primary" cdkFocusInitial>
+        {{ 'ABOUT.DISMISS' | transloco }}
+      </button>
     </div>
   </div>
 </div>

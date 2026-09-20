@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { StorageService } from '@rikkle/shared';
+import { StorageService, provideTranslocoTesting } from '@rikkle/shared';
 import { ALL_TUTORIAL_HINT_KEYS, HintsManagerService, TutorialType } from './hints-manager';
 import { STORAGE_HINT_HOW_TO_PLAY, STORAGE_HINT_MOVES_DECREASE, STORAGE_HINT_ROTATE_HORIZONTAL } from '@rikkle/engine';
 
@@ -10,7 +10,7 @@ describe('HintsManagerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HintsManagerService, StorageService],
+      providers: [HintsManagerService, StorageService, provideTranslocoTesting()],
     });
     service = TestBed.inject(HintsManagerService);
     storage = TestBed.inject(StorageService);

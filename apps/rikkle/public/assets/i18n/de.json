@@ -1,0 +1,161 @@
+{
+  "SETTINGS": {
+    "TITLE": "Einstellungen",
+    "TAB_GENERAL": "Allgemein",
+    "TAB_DATA": "Spieldaten",
+    "GAME_VOLUME": "Spiel",
+    "MUSIC_VOLUME": "Musik",
+    "HAPTICS": "Haptisches Feedback",
+    "HAPTICS_UNAVAILABLE": "Haptisches Feedback ist nicht verfügbar",
+    "LANGUAGE_TITLE": "Sprache",
+    "HIGH_SCORES_TITLE": "Bestenliste",
+    "RESET_SCORES": "Bestenliste löschen",
+    "SCORES_CLEARED": "Punkte gelöscht",
+    "CONFIRM_CLEAR_SCORES": "Alle gespeicherten Rekorde löschen?",
+    "TUTORIAL_TITLE": "Anleitung & Tipps",
+    "RESET_HINTS": "Tipps zurücksetzen",
+    "HINTS_RESET": "Tipps zurückgesetzt!",
+    "SKIP_ALL_HINTS": "Alle Tipps überspringen",
+    "HINTS_SKIPPED": "Tipps übersprungen",
+    "FACTORY_RESET_TITLE": "Werkseinstellungen",
+    "NUKE_BUTTON": "Rikkle löschen! 💥",
+    "NUKE_PROMPT": "💥 Bist du sicher? Dies löscht alle lokalen Daten, einschließlich Rekorde, Spielstände und Einstellungen!",
+    "NUKE_CONFIRM": "Ja, alles löschen!",
+    "NUKE_SUCCESS": "Rikkle gelöscht! Spiel wird neu geladen...",
+    "CANCEL": "Abbrechen",
+    "CLEAR": "Löschen",
+    "CLOSE": "Schließen"
+  },
+  "GAME_OVER": {
+    "TITLE": "Keine Züge mehr",
+    "MESSAGE": "Du hast alle deine Züge aufgebraucht!",
+    "START_LEVEL_AGAIN": "Level {{ level }} neu starten",
+    "START_OVER": "Neu beginnen",
+    "PLAY_AGAIN": "Nochmal spielen!",
+    "CONFIRM_START_OVER": "⚠️ Bist du sicher? Du verlierst deinen aktuellen Fortschritt in Level {{ level }}!",
+    "CANCEL": "Abbrechen",
+    "YES_START_OVER": "Ja, neu beginnen"
+  },
+  "LEVEL_COMPLETE": {
+    "NEXT_LEVEL": "Nächstes Level",
+    "SPEED_BONUS": "Geschwindigkeitsbonus",
+    "FASTEST_MATCH": "Schnellster Treffer",
+    "MOVES_USED": "Züge verwendet",
+    "MOVES_EARNED": "Züge erhalten",
+    "PIECES": "Steine",
+    "PERFECT_MATCH": "Perfekter Treffer"
+  },
+  "INTRO": {
+    "CONTINUE_GAME": "Fortsetzen (Level {{ level }})",
+    "NEW_GAME": "Neues Spiel",
+    "CONFIRM_NEW_GAME": "⚠️ Neues Spiel starten? Dies überschreibt deinen Fortschritt in Level {{ level }}!",
+    "CANCEL": "Abbrechen",
+    "START_NEW_GAME": "Neues Spiel starten"
+  },
+  "ABOUT": {
+    "TITLE": "Über",
+    "COLORS": "Farben",
+    "EMOJIS": "Emojis",
+    "GROUP": "Gruppe: {{ group }}",
+    "SUBGROUPS": "Untergruppen: {{ subGroups }}",
+    "DISMISS": "Schließen"
+  },
+  "PWA": {
+    "TITLE": "Rikkle zum Startbildschirm hinzufügen",
+    "INSTALLED_MSG": "Rikkle ist auf deinem Gerät installiert!",
+    "INSTALLED_SUB": "Du kannst Rikkle direkt vom Startbildschirm oder Desktop starten.",
+    "BENEFITS_DESC": "Installiere Rikkle, um jederzeit offline zu spielen und den Vollbildmodus zu genießen!",
+    "IOS_TITLE": "Um Rikkle zum iPhone- oder iPad-Startbildschirm hinzuzufügen:",
+    "IOS_STEP_1": "Tippe in Safari auf Teilen",
+    "IOS_STEP_2": "Scrolle nach unten und wähle Zum Home-Bildschirm",
+    "IOS_STEP_3": "Tippe oben rechts auf Hinzufügen",
+    "GENERIC_DESC": "Installiere Rikkle, um offline zu spielen und im Vollbildmodus zu rätseln!",
+    "GENERIC_HINT": "Öffne das Browsermenü und wähle Rikkle installieren oder Zum Startbildschirm.",
+    "INSTALL_NOW": "Jetzt installieren",
+    "DONE": "Fertig",
+    "CLOSE": "Schließen"
+  },
+  "MENU": {
+    "VERSION": "Version {{ version }}",
+    "ABOUT_LEVEL": "Über dieses Level",
+    "SETTINGS": "Einstellungen",
+    "ADD_TO_HOME": "Zum Startbildschirm"
+  },
+  "HUD": {
+    "LEVEL": "Level",
+    "PIECES_REMAINING": "{{ count }} übrig",
+    "PAN_LEFT": "Nach links schwenken",
+    "PAN_RIGHT": "Nach rechts schwenken",
+    "VIEWPORT_LABEL": "Horizontale Zylinder-Position",
+    "SHARE_LABEL": "Rikkle teilen"
+  },
+  "HIGH_SCORES": {
+    "TITLE": "Bestenliste"
+  },
+  "TUTORIAL": {
+    "BADGE": "ANLEITUNG",
+    "SKIP_ALL": "Alle Tipps überspringen",
+    "GOT_IT": "Verstanden!",
+    "SWIPE_ROWS": "Reihen links / rechts wischen",
+    "SWIPE_COLS": "Spalten auf / ab wischen",
+    "TAP_DETONATE": "Tippen zum Zünden!",
+    "ROTATE_H_TITLE": "Drehen & Treffer tippen",
+    "ROTATE_H_DESC": "Wische Reihen, um 3+ gleiche Steine auszurichten, und tippe auf einen Stein, um sie aufzulösen!",
+    "ROTATE_V_TITLE": "Auf & Ab drehen",
+    "ROTATE_V_DESC": "In horizontalen Levels Spalten nach oben oder unten wischen. Den Hintergrund wischen zum Schwenken.",
+    "MOVES_DEC_TITLE": "Verbleibende Züge",
+    "MOVES_DEC_DESC": "Jede Drehung kostet 1 Zug. Bilde Kombinationen, bevor deine Züge aufgebraucht sind!",
+    "MOVES_INC_TITLE": "Extra-Züge gewinnen",
+    "MOVES_INC_DESC": "Schnelle Treffer oder 4+ Kombinationen bringen zusätzliche Züge ein!",
+    "POWER_MOVE_TITLE": "Power-Zug!",
+    "POWER_MOVE_DESC": "Erscheinen ab 4er-Kombinationen. Antippen, um Reihen zu leeren oder Steine zu sprengen!",
+    "GAME_MENU_TITLE": "Spielmenü",
+    "GAME_MENU_DESC": "Hier findest du Sound-Einstellungen, Rekorde und weitere Optionen."
+  },
+  "SPLASH_3D": {
+    "PERFECT_MATCH": "Perfekter Treffer!",
+    "POINTS_REWARD": "+{{ points }} Punkte",
+    "SPEED_BONUS": "Tempo-Bonus",
+    "LONG_MATCH": "Langer Treffer",
+    "MULTI_POWER": "Multi-Power!",
+    "BONUS_MOVES": "+{{ count }} Züge",
+    "CALLOUT_LIGHTNING": "BLITZ!",
+    "CALLOUT_BLAZING": "FEURIG!",
+    "CALLOUT_FAST": "SCHNELL!",
+    "CALLOUT_SNAP": "ZACK!",
+    "CALLOUT_QUICK": "FLOTT!",
+    "CALLOUT_MEGA_COMBO": "MEGA-COMBO!",
+    "CALLOUT_AWESOME": "GENIAL!",
+    "CALLOUT_GREAT": "KLASSE!",
+    "CALLOUT_NICE": "SCHÖN!",
+    "COMBO_MEGA": "Mega-Combo",
+    "COMBO_SPEED": "Super-Tempo"
+  },
+  "HEADINGS": {
+    "LEVEL_COMPLETED": "Level abgeschlossen!",
+    "GREAT_MOVES": "Tolle Züge!",
+    "SOLVED": "Gelöst!",
+    "WELL_DONE": "Gut gemacht!"
+  },
+  "POWER_MOVES": {
+    "SPIN_RIGHT": "Rechts drehen",
+    "SPIN_LEFT": "Links drehen",
+    "SPIN_MIX": "Mix-Drehung",
+    "SPIN_UP": "Aufwärts drehen",
+    "SPIN_DOWN": "Abwärts drehen",
+    "ROLL_UP": "Nach oben rollen",
+    "ROLL_DOWN": "Nach unten rollen",
+    "ROLL_LEFT": "Nach links rollen",
+    "ROLL_RIGHT": "Nach rechts rollen",
+    "ROLL_MIX": "Mix-Rollen",
+    "KABOOM": "Kaboom!",
+    "DEFAULT": "Power-Zug"
+  },
+  "SHARE": {
+    "CANVAS_LEVEL": "Level: {{ level }}",
+    "CANVAS_SCORE": "Punkte: {{ score }}",
+    "SOCIAL_TITLE": "Rikkle - 3D-Puzzle",
+    "SOCIAL_TEXT_SCORE": "Kannst du meinen Punktestand von {{ score }} in Level {{ level }} schlagen? Spiele Rikkle: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "Entdecke Rikkle, das faszinierende 3D-Zylinderpuzzle! Jetzt spielen: {{ url }}"
+  }
+}

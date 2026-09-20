@@ -18,23 +18,25 @@
           class="continue-btn"
           [disabled]="materialsUpdating()"
         >
-          <span>Continue (Level {{ savedLevel() }})</span>
+          <span>{{ 'INTRO.CONTINUE_GAME' | transloco: { level: savedLevel() } }}</span>
         </button>
 
         @if (!confirmNewGame()) {
           <button (click)="onNewGameClick()" mat-stroked-button class="new-game-btn" [disabled]="materialsUpdating()">
-            <span>New Game</span>
+            <span>{{ 'INTRO.NEW_GAME' | transloco }}</span>
           </button>
         }
 
         <mat-expansion-panel [expanded]="confirmNewGame()" hideToggle class="new-game-expansion-panel">
           <div class="confirm-container">
             <span class="confirm-prompt">
-              ⚠️ Start a new game? This will overwrite your saved <strong>Level {{ savedLevel() }}</strong> progress!
+              {{ 'INTRO.CONFIRM_NEW_GAME' | transloco: { level: savedLevel() } }}
             </span>
             <div class="confirm-buttons">
-              <button mat-button (click)="onCancelNewGame()">Cancel</button>
-              <button mat-raised-button color="warn" (click)="onConfirmNewGame()">Start New Game</button>
+              <button mat-button (click)="onCancelNewGame()">{{ 'SETTINGS.CANCEL' | transloco }}</button>
+              <button mat-raised-button color="warn" (click)="onConfirmNewGame()">
+                {{ 'INTRO.START_NEW_GAME' | transloco }}
+              </button>
             </div>
           </div>
         </mat-expansion-panel>
@@ -46,7 +48,7 @@
           class="new-game-btn"
           [disabled]="materialsUpdating()"
         >
-          <span>New Game</span>
+          <span>{{ 'INTRO.NEW_GAME' | transloco }}</span>
         </button>
       }
     </div>

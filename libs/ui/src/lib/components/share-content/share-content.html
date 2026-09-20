@@ -1,6 +1,12 @@
 @if (ShowSelf()) {
   <div id="share-content">
-    <button mat-icon-button (click)="Share()" class="share-tab-btn" title="Share Rikkle" aria-label="Share Rikkle">
+    <button
+      mat-icon-button
+      (click)="Share()"
+      class="share-tab-btn"
+      [title]="'HUD.SHARE_LABEL' | transloco"
+      [attr.aria-label]="'HUD.SHARE_LABEL' | transloco"
+    >
       <mat-icon>share</mat-icon>
     </button>
   </div>

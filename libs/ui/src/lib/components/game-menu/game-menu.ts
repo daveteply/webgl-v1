@@ -13,9 +13,11 @@ import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa'
 import { About } from '../about/about';
 import { APP_VERSION } from '@rikkle/shared';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 @Component({
   selector: 'wgl-game-menu',
-  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatDialogModule, MatDividerModule],
+  imports: [MatIconModule, MatMenuModule, MatButtonModule, MatDialogModule, MatDividerModule, TranslocoPipe],
   templateUrl: './game-menu.html',
   styleUrl: './game-menu.scss',
 })

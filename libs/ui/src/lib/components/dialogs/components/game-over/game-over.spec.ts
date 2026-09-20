@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { vi } from 'vitest';
 
 import { GameOver } from './game-over';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('GameOver', () => {
   let component: GameOver;
@@ -19,6 +19,7 @@ describe('GameOver', () => {
       providers: [
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: { level: 3, startOver: false } },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

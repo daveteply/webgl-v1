@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
 import { PercentPipe } from '@angular/common';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-progress-bar',
-  imports: [PercentPipe],
+  imports: [PercentPipe, TranslocoPipe],
   templateUrl: './progress-bar.html',
   styleUrl: './progress-bar.scss',
 })

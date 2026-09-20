@@ -8,12 +8,15 @@ import { LevelAnimationStyle } from '@rikkle/engine';
 import { LevelOrientationType } from '@rikkle/engine';
 import { GravityType } from '@rikkle/engine';
 import { PowerMoveType } from '@rikkle/engine';
+import { provideTranslocoTesting } from '@rikkle/shared';
 
 describe('EffectsManagerService', () => {
   let service: EffectsManagerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideTranslocoTesting()],
+    });
     service = TestBed.inject(EffectsManagerService);
   });
 

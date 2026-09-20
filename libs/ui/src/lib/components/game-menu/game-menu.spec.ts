@@ -7,7 +7,7 @@ import { GameMenu } from './game-menu';
 import { InstallPwaDialog } from '../dialogs/components/install-pwa/install-pwa';
 import { UserSettings } from '../dialogs/components/user-settings/user-settings';
 import { About } from '../about/about';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('GameMenu', () => {
   let component: GameMenu;
@@ -24,6 +24,7 @@ describe('GameMenu', () => {
             open: () => ({ afterClosed: () => of(true) }),
           },
         },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

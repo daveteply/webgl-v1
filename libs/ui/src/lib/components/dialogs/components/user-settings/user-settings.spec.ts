@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HapticsManagerService } from '@rikkle/shared';
 import { AudioType } from '@rikkle/audio';
 import { AudioManagerService } from '@rikkle/audio';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 import { HintsManagerService } from '@rikkle/graphics';
 
 describe('UserSettings', () => {
@@ -22,6 +22,7 @@ describe('UserSettings', () => {
           provide: MatDialogRef,
           useValue: { close: vi.fn() },
         },
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 
@@ -127,6 +128,13 @@ describe('UserSettings', () => {
     expect(resetSpy).toHaveBeenCalled();
     expect(component.hintsReset()).toBe(true);
     expect(component.hintsSkipped()).toBe(false);
+  });
+
+  it('should switch language and log SettingsLanguageChanged when onSelectLanguage is called', () => {
+    const setLangSpy = vi.spyOn(component.languageService, 'setLanguage');
+    component.onSelectLanguage('es');
+    expect(setLangSpy).toHaveBeenCalledWith('es');
+    expect(analyticsManager.Log).toHaveBeenCalledWith(AnalyticsEventType.SettingsLanguageChanged, { language: 'es' });
   });
 
   it('should skip tutorial hints when onSkipTutorialHints is called', () => {

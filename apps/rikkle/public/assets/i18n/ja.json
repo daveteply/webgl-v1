@@ -1,0 +1,161 @@
+{
+  "SETTINGS": {
+    "TITLE": "設定",
+    "TAB_GENERAL": "全般",
+    "TAB_DATA": "ゲームデータ",
+    "GAME_VOLUME": "効果音",
+    "MUSIC_VOLUME": "BGM",
+    "HAPTICS": "振動フィードバック",
+    "HAPTICS_UNAVAILABLE": "振動は利用できません",
+    "LANGUAGE_TITLE": "言語",
+    "HIGH_SCORES_TITLE": "ハイスコア",
+    "RESET_SCORES": "スコアリセット",
+    "SCORES_CLEARED": "スコア消去完了",
+    "CONFIRM_CLEAR_SCORES": "保存されたハイスコアを消去しますか？",
+    "TUTORIAL_TITLE": "チュートリアル・ヒント",
+    "RESET_HINTS": "ヒントリセット",
+    "HINTS_RESET": "ヒントをリセットしました！",
+    "SKIP_ALL_HINTS": "ヒントをスキップ",
+    "HINTS_SKIPPED": "ヒントをスキップしました",
+    "FACTORY_RESET_TITLE": "初期化",
+    "NUKE_BUTTON": "全消去！ 💥",
+    "NUKE_PROMPT": "💥 本当によろしいですか？ハイスコア、セーブデータ、設定などすべてのデータが消去されます！",
+    "NUKE_CONFIRM": "はい、すべて消去します",
+    "NUKE_SUCCESS": "データを消去しました！ゲームを再読み込みします...",
+    "CANCEL": "キャンセル",
+    "CLEAR": "消去",
+    "CLOSE": "閉じる"
+  },
+  "GAME_OVER": {
+    "TITLE": "手数がありません",
+    "MESSAGE": "手数を使い果たしました！",
+    "START_LEVEL_AGAIN": "レベル {{ level }} をやり直す",
+    "START_OVER": "最初からやり直す",
+    "PLAY_AGAIN": "もう一度プレイ！",
+    "CONFIRM_START_OVER": "⚠️ 本当によろしいですか？現在のレベル {{ level }} の進行状況が失われます！",
+    "CANCEL": "キャンセル",
+    "YES_START_OVER": "はい、最初からやり直す"
+  },
+  "LEVEL_COMPLETE": {
+    "NEXT_LEVEL": "次のレベルへ",
+    "SPEED_BONUS": "スピードボーナス",
+    "FASTEST_MATCH": "最速マッチ",
+    "MOVES_USED": "使用手数",
+    "MOVES_EARNED": "獲得手数",
+    "PIECES": "ピース数",
+    "PERFECT_MATCH": "パーフェクトマッチ"
+  },
+  "INTRO": {
+    "CONTINUE_GAME": "つづきから (レベル {{ level }})",
+    "NEW_GAME": "はじめから",
+    "CONFIRM_NEW_GAME": "⚠️ 新規ゲームを開始しますか？保存されたレベル {{ level }} のデータが上書きされます！",
+    "CANCEL": "キャンセル",
+    "START_NEW_GAME": "新規ゲーム開始"
+  },
+  "ABOUT": {
+    "TITLE": "ゲーム情報",
+    "COLORS": "カラー",
+    "EMOJIS": "絵文字",
+    "GROUP": "グループ: {{ group }}",
+    "SUBGROUPS": "サブグループ: {{ subGroups }}",
+    "DISMISS": "閉じる"
+  },
+  "PWA": {
+    "TITLE": "ホーム画面に追加",
+    "INSTALLED_MSG": "Rikkle がインストールされています！",
+    "INSTALLED_SUB": "ホーム画面またはデスクトップから直接起動できます。",
+    "BENEFITS_DESC": "Rikkleをインストールして、いつでもオフラインで全画面プレイを楽しみましょう！",
+    "IOS_TITLE": "iPhoneまたはiPadのホーム画面に追加するには：",
+    "IOS_STEP_1": "Safariで共有ボタンをタップ",
+    "IOS_STEP_2": "下にスクロールして「ホーム画面に追加」をタップ",
+    "IOS_STEP_3": "右上の「追加」をタップ",
+    "GENERIC_DESC": "Rikkleをインストールして、全画面でサクサクプレイ！",
+    "GENERIC_HINT": "ブラウザメニューを開き、「Rikkleをインストール」または「ホーム画面に追加」を選択してください。",
+    "INSTALL_NOW": "今すぐインストール",
+    "DONE": "完了",
+    "CLOSE": "閉じる"
+  },
+  "MENU": {
+    "VERSION": "バージョン {{ version }}",
+    "ABOUT_LEVEL": "このレベルについて",
+    "SETTINGS": "設定",
+    "ADD_TO_HOME": "ホーム画面に追加"
+  },
+  "HUD": {
+    "LEVEL": "レベル",
+    "PIECES_REMAINING": "残り {{ count }} 個",
+    "PAN_LEFT": "左へパン",
+    "PAN_RIGHT": "右へパン",
+    "VIEWPORT_LABEL": "円筒視点位置",
+    "SHARE_LABEL": "Rikkleをシェア"
+  },
+  "HIGH_SCORES": {
+    "TITLE": "ハイスコア"
+  },
+  "TUTORIAL": {
+    "BADGE": "チュートリアル",
+    "SKIP_ALL": "ヒントをスキップ",
+    "GOT_IT": "了解！",
+    "SWIPE_ROWS": "列を左右にスワイプ",
+    "SWIPE_COLS": "行を上下にスワイプ",
+    "TAP_DETONATE": "タップで起爆！",
+    "ROTATE_H_TITLE": "回してタップで揃える",
+    "ROTATE_H_DESC": "列をスワイプして同じピースを3つ以上揃え、揃ったピースをタップして消去しましょう！",
+    "ROTATE_V_TITLE": "上下に回転",
+    "ROTATE_V_DESC": "水平レベルでは、列を上下にスワイプして揃えます。背景をスワイプすると移動できます。",
+    "MOVES_DEC_TITLE": "残り手数",
+    "MOVES_DEC_DESC": "1回回転するごとに1手消費します。手数がなくなる前にピースを揃えましょう！",
+    "MOVES_INC_TITLE": "手数を増やす",
+    "MOVES_INC_DESC": "素早く揃えるか（スピードボーナス）、4個以上揃えるとボーナス手数を獲得できます！",
+    "POWER_MOVE_TITLE": "パワームーブ！",
+    "POWER_MOVE_DESC": "4つ以上揃えると出現します。タップして列を一気に消去したり周囲を爆破しましょう！",
+    "GAME_MENU_TITLE": "ゲームメニュー",
+    "GAME_MENU_DESC": "音声設定やスコアリセットなどはここから行えます。"
+  },
+  "SPLASH_3D": {
+    "PERFECT_MATCH": "パーフェクト！",
+    "POINTS_REWARD": "+{{ points }} 点",
+    "SPEED_BONUS": "スピードボーナス",
+    "LONG_MATCH": "ロングマッチ",
+    "MULTI_POWER": "マルチパワー！",
+    "BONUS_MOVES": "+{{ count }} 手数",
+    "CALLOUT_LIGHTNING": "電光石火！",
+    "CALLOUT_BLAZING": "超激熱！",
+    "CALLOUT_FAST": "スピーディ！",
+    "CALLOUT_SNAP": "バッチリ！",
+    "CALLOUT_QUICK": "ナイス速さ！",
+    "CALLOUT_MEGA_COMBO": "メガコンボ！",
+    "CALLOUT_AWESOME": "スゴイ！",
+    "CALLOUT_GREAT": "いいね！",
+    "CALLOUT_NICE": "ナイス！",
+    "COMBO_MEGA": "メガコンボ",
+    "COMBO_SPEED": "スーパースピード"
+  },
+  "HEADINGS": {
+    "LEVEL_COMPLETED": "レベルクリア！",
+    "GREAT_MOVES": "見事なプレイ！",
+    "SOLVED": "クリア！",
+    "WELL_DONE": "お見事！"
+  },
+  "POWER_MOVES": {
+    "SPIN_RIGHT": "右回転",
+    "SPIN_LEFT": "左回転",
+    "SPIN_MIX": "ミックス回転",
+    "SPIN_UP": "上回転",
+    "SPIN_DOWN": "下回転",
+    "ROLL_UP": "上スクロール",
+    "ROLL_DOWN": "下スクロール",
+    "ROLL_LEFT": "左スクロール",
+    "ROLL_RIGHT": "右スクロール",
+    "ROLL_MIX": "ミックスロール",
+    "KABOOM": "ドカン！",
+    "DEFAULT": "パワームーブ"
+  },
+  "SHARE": {
+    "CANVAS_LEVEL": "レベル: {{ level }}",
+    "CANVAS_SCORE": "スコア: {{ score }}",
+    "SOCIAL_TITLE": "Rikkle - 3Dパズル",
+    "SOCIAL_TEXT_SCORE": "レベル {{ level }} で私のスコア {{ score }} 点を超えられる？ Rikkleをプレイ: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "3Dシリンダーパズル Rikkle をプレイしよう！: {{ url }}"
+  }
+}

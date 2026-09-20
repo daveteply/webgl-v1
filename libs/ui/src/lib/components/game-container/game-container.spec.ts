@@ -21,7 +21,7 @@ import { ScoringManagerService } from '@rikkle/graphics';
 import { ShareManagerService } from '@rikkle/graphics';
 import { TextureManagerService } from '@rikkle/graphics';
 import { TextZoom } from '../text-zoom/text-zoom';
-import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 import { HintsManagerService, TutorialType } from '@rikkle/graphics';
 import { GameContainer } from './game-container';
 
@@ -47,6 +47,7 @@ describe('GameContainer', () => {
         TextureManagerService,
         AudioManagerService,
         ShareManagerService,
+        provideTranslocoTesting(),
       ],
     }).compileComponents();
 

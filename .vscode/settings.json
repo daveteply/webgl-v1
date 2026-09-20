@@ -5,9 +5,16 @@
     "*.ts": "$(capture).spec.ts, $(capture).html, $(capture).scss, $(capture).css"
   },
   "cSpell.words": [
+    "Bokeh",
     "changa",
+    "Deutsch",
+    "Dodeca",
+    "Español",
     "Forcefield",
+    "Français",
     "glassmorphic",
+    "Horiz",
+    "jsverse",
     "Loopable",
     "mult",
     "Phong",
@@ -15,6 +22,7 @@
     "rikkle",
     "SMAA",
     "Synthwave",
+    "Transloco",
     "tweenjs",
     "Tweens",
     "webgl"

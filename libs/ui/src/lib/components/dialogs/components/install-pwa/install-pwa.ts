@@ -4,10 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { PwaInstallService } from '@rikkle/shared';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-install-pwa',
-  imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule, TranslocoPipe],
   templateUrl: './install-pwa.html',
   styleUrl: './install-pwa.scss',
 })
