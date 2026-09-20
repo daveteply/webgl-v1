@@ -1,6 +1,8 @@
 {
   "SETTINGS": {
     "TITLE": "Settings",
+    "TAB_GENERAL": "General",
+    "TAB_DATA": "Game Data",
     "GAME_VOLUME": "Game",
     "MUSIC_VOLUME": "Music",
     "HAPTICS": "Haptic Feedback",
@@ -81,7 +83,7 @@
   },
   "HUD": {
     "LEVEL": "Level",
-    "PIECES_REMAINING": "{count, plural, =1 {1 remaining} other {# remaining}}",
+    "PIECES_REMAINING": "{{ count }} remaining",
     "PAN_LEFT": "Pan Left",
     "PAN_RIGHT": "Pan Right",
     "VIEWPORT_LABEL": "Horizontal Cylinder Viewport Position",
@@ -112,11 +114,11 @@
   },
   "SPLASH_3D": {
     "PERFECT_MATCH": "Perfect Match!",
-    "POINTS_REWARD": "{points, plural, =1 {+1 Point} other {+{#} Points}}",
+    "POINTS_REWARD": "+{{ points }} Points",
     "SPEED_BONUS": "Speed Bonus",
     "LONG_MATCH": "Long Match",
     "MULTI_POWER": "Multi-Power!",
-    "BONUS_MOVES": "{count, plural, =1 {+1 Move} other {+{#} Moves}}",
+    "BONUS_MOVES": "+{{ count }} Moves",
     "CALLOUT_LIGHTNING": "LIGHTNING!",
     "CALLOUT_BLAZING": "BLAZING!",
     "CALLOUT_FAST": "FAST!",
@@ -152,7 +154,7 @@
   "SHARE": {
     "CANVAS_LEVEL": "Level: {{ level }}",
     "CANVAS_SCORE": "Score: {{ score }}",
-    "SOCIAL_TITLE": "Rikkle – 3D Match Puzzle",
+    "SOCIAL_TITLE": "Rikkle - 3D Match Puzzle",
     "SOCIAL_TEXT_SCORE": "Can you beat my score of {{ score }} on Level {{ level }}? Play Rikkle: {{ url }}",
     "SOCIAL_TEXT_DEFAULT": "Check out Rikkle, the 3D cylinder match puzzle! Play now: {{ url }}"
   }

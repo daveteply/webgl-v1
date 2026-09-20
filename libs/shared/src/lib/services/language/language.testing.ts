@@ -51,6 +51,8 @@ export const DEFAULT_TEST_TRANSLATIONS: Record<string, unknown> = {
   },
   SETTINGS: {
     TITLE: 'User Settings',
+    TAB_GENERAL: 'General',
+    TAB_DATA: 'Game Data',
     LANGUAGE: 'Language',
     HAPTICS: 'Haptic Feedback',
     HAPTICS_UNAVAILABLE: 'Haptic feedback is not available',
@@ -60,6 +62,7 @@ export const DEFAULT_TEST_TRANSLATIONS: Record<string, unknown> = {
     SCORE: 'Score',
     MOVES: 'Moves',
     POINTS: 'Points',
+    PIECES_REMAINING: '{{ count }} remaining',
   },
   BUTTONS: {
     CONTINUE: 'Continue',

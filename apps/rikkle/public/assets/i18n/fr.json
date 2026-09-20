@@ -1,6 +1,8 @@
 {
   "SETTINGS": {
     "TITLE": "Paramètres",
+    "TAB_GENERAL": "Général",
+    "TAB_DATA": "Données",
     "GAME_VOLUME": "Jeu",
     "MUSIC_VOLUME": "Musique",
     "HAPTICS": "Retour haptique",
@@ -81,7 +83,7 @@
   },
   "HUD": {
     "LEVEL": "Niveau",
-    "PIECES_REMAINING": "{count, plural, =1 {1 restant} other {# restants}}",
+    "PIECES_REMAINING": "{{ count }} restants",
     "PAN_LEFT": "Panoramique gauche",
     "PAN_RIGHT": "Panoramique droite",
     "VIEWPORT_LABEL": "Position de vue du cylindre",
@@ -112,11 +114,11 @@
   },
   "SPLASH_3D": {
     "PERFECT_MATCH": "Match parfait !",
-    "POINTS_REWARD": "{points, plural, =1 {+1 point} other {+{#} points}}",
+    "POINTS_REWARD": "+{{ points }} points",
     "SPEED_BONUS": "Bonus vitesse",
     "LONG_MATCH": "Super alignement",
     "MULTI_POWER": "Multi-Pouvoir !",
-    "BONUS_MOVES": "{count, plural, =1 {+1 coup} other {+{#} coups}}",
+    "BONUS_MOVES": "+{{ count }} coups",
     "CALLOUT_LIGHTNING": "ÉCLAIR !",
     "CALLOUT_BLAZING": "FLAMBOYANT !",
     "CALLOUT_FAST": "RAPIDE !",
@@ -152,7 +154,7 @@
   "SHARE": {
     "CANVAS_LEVEL": "Niveau : {{ level }}",
     "CANVAS_SCORE": "Score : {{ score }}",
-    "SOCIAL_TITLE": "Rikkle – Puzzle 3D",
+    "SOCIAL_TITLE": "Rikkle - Puzzle 3D",
     "SOCIAL_TEXT_SCORE": "Pouvez-vous battre mon score de {{ score }} au Niveau {{ level }} ? Jouez à Rikkle : {{ url }}",
     "SOCIAL_TEXT_DEFAULT": "Découvrez Rikkle, le puzzle cylindrique en 3D ! Jouez maintenant : {{ url }}"
   }

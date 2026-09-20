@@ -5,173 +5,201 @@
   </h2>
 
   <div mat-dialog-content class="content-body">
-    <!-- Language Selection -->
-    <div class="setting-row language-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <span class="emoji-icon">🌐</span>
-          <span>{{ 'SETTINGS.LANGUAGE_TITLE' | transloco }}</span>
-        </span>
-      </div>
-      <div class="language-button-group">
-        @for (lang of languageService.availableLanguages(); track lang.code) {
-          <button
-            mat-stroked-button
-            type="button"
-            class="lang-btn"
-            [class.selected]="lang.code === languageService.currentLanguageCode()"
-            (click)="onSelectLanguage(lang.code)"
-          >
-            <span class="flag-icon">{{ lang.flagEmoji }}</span>
-            <span class="lang-name">{{ lang.label }}</span>
-          </button>
-        }
-      </div>
-    </div>
+    <mat-tab-group class="settings-tabs" dynamicHeight animationDuration="200ms">
+      <!-- Tab 1: General (Language, Audio, Haptics) -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <mat-icon class="tab-icon">tune</mat-icon>
+            <span>{{ 'SETTINGS.TAB_GENERAL' | transloco }}</span>
+          </div>
+        </ng-template>
+        <div class="tab-content">
+          <!-- Language Selection -->
+          <div class="setting-row language-row">
+            <div class="setting-header">
+              <span class="setting-label">
+                <span class="emoji-icon">🌐</span>
+                <span>{{ 'SETTINGS.LANGUAGE_TITLE' | transloco }}</span>
+              </span>
+            </div>
+            <div class="language-button-group">
+              @for (lang of languageService.availableLanguages(); track lang.code) {
+                <button
+                  mat-stroked-button
+                  type="button"
+                  class="lang-btn"
+                  [class.selected]="lang.code === languageService.currentLanguageCode()"
+                  (click)="onSelectLanguage(lang.code)"
+                >
+                  <span class="lang-name">{{ lang.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
 
-    <!-- Game SFX Volume -->
-    <div class="setting-row inline-row">
-      <span class="setting-label">
-        <mat-icon class="setting-icon">{{ gameIcon() }}</mat-icon>
-        <span>{{ 'SETTINGS.GAME_VOLUME' | transloco }}</span>
-      </span>
-      <div class="slider-container">
-        <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input
-            matSliderThumb
-            [value]="gameVolume()"
-            (input)="onGameVolumeInput($event)"
-            (change)="onGameVolumeChange($event)"
-          />
-        </mat-slider>
-      </div>
-      <span class="setting-value">{{ gameVolume() }}%</span>
-    </div>
+          <!-- Game SFX Volume -->
+          <div class="setting-row inline-row">
+            <span class="setting-label">
+              <mat-icon class="setting-icon">{{ gameIcon() }}</mat-icon>
+              <span>{{ 'SETTINGS.GAME_VOLUME' | transloco }}</span>
+            </span>
+            <div class="slider-container">
+              <mat-slider min="0" max="100" step="1" class="volume-slider">
+                <input
+                  matSliderThumb
+                  [value]="gameVolume()"
+                  (input)="onGameVolumeInput($event)"
+                  (change)="onGameVolumeChange($event)"
+                />
+              </mat-slider>
+            </div>
+            <span class="setting-value">{{ gameVolume() }}%</span>
+          </div>
 
-    <!-- Background Music Volume -->
-    <div class="setting-row inline-row">
-      <span class="setting-label">
-        <mat-icon class="setting-icon">{{ musicIcon() }}</mat-icon>
-        <span>{{ 'SETTINGS.MUSIC_VOLUME' | transloco }}</span>
-      </span>
-      <div class="slider-container">
-        <mat-slider min="0" max="100" step="1" class="volume-slider">
-          <input
-            matSliderThumb
-            [value]="musicVolume()"
-            (input)="onMusicVolumeInput($event)"
-            (change)="onMusicVolumeChange($event)"
-          />
-        </mat-slider>
-      </div>
-      <span class="setting-value">{{ musicVolume() }}%</span>
-    </div>
+          <!-- Background Music Volume -->
+          <div class="setting-row inline-row">
+            <span class="setting-label">
+              <mat-icon class="setting-icon">{{ musicIcon() }}</mat-icon>
+              <span>{{ 'SETTINGS.MUSIC_VOLUME' | transloco }}</span>
+            </span>
+            <div class="slider-container">
+              <mat-slider min="0" max="100" step="1" class="volume-slider">
+                <input
+                  matSliderThumb
+                  [value]="musicVolume()"
+                  (input)="onMusicVolumeInput($event)"
+                  (change)="onMusicVolumeChange($event)"
+                />
+              </mat-slider>
+            </div>
+            <span class="setting-value">{{ musicVolume() }}%</span>
+          </div>
 
-    <!-- Haptic Feedback Toggle -->
-    <div class="setting-row toggle-wrapper">
-      <div class="toggle-row">
-        <span class="setting-label" [class.disabled-label]="!isHapticsAvailable()">
-          <mat-icon class="setting-icon">vibration</mat-icon>
-          <span>{{ 'SETTINGS.HAPTICS' | transloco }}</span>
-        </span>
-        <mat-slide-toggle
-          [checked]="hapticsEnabled()"
-          [disabled]="!isHapticsAvailable()"
-          (change)="onHapticsChange($event.checked)"
-          color="primary"
-        ></mat-slide-toggle>
-      </div>
-      @if (!isHapticsAvailable()) {
-        <div class="haptics-unavailable-note">{{ 'SETTINGS.HAPTICS_UNAVAILABLE' | transloco }}</div>
-      }
-    </div>
-
-    <!-- High Scores Reset -->
-    <div class="setting-row reset-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <span class="emoji-icon">🏆</span>
-          <span>{{ 'SETTINGS.HIGH_SCORES_TITLE' | transloco }}</span>
-        </span>
-      </div>
-      @if (!confirmClear()) {
-        <div class="action-container">
-          <button mat-stroked-button color="warn" (click)="onPromptClearHighScores()" [disabled]="scoresCleared()">
-            <mat-icon>delete_forever</mat-icon>
-            <span>{{ (scoresCleared() ? 'SETTINGS.SCORES_CLEARED' : 'SETTINGS.RESET_SCORES') | transloco }}</span>
-          </button>
-        </div>
-      } @else {
-        <div class="confirm-container score-reset">
-          <span class="confirm-prompt">{{ 'SETTINGS.CONFIRM_CLEAR_SCORES' | transloco }}</span>
-          <div class="confirm-buttons">
-            <button mat-button (click)="onCancelClearHighScores()">{{ 'SETTINGS.CANCEL' | transloco }}</button>
-            <button mat-raised-button color="warn" (click)="onConfirmClearHighScores()">
-              {{ 'SETTINGS.CLEAR' | transloco }}
-            </button>
+          <!-- Haptic Feedback Toggle -->
+          <div class="setting-row toggle-wrapper">
+            <div class="toggle-row">
+              <span class="setting-label" [class.disabled-label]="!isHapticsAvailable()">
+                <mat-icon class="setting-icon">vibration</mat-icon>
+                <span>{{ 'SETTINGS.HAPTICS' | transloco }}</span>
+              </span>
+              <mat-slide-toggle
+                [checked]="hapticsEnabled()"
+                [disabled]="!isHapticsAvailable()"
+                (change)="onHapticsChange($event.checked)"
+                color="primary"
+              ></mat-slide-toggle>
+            </div>
+            @if (!isHapticsAvailable()) {
+              <div class="haptics-unavailable-note">{{ 'SETTINGS.HAPTICS_UNAVAILABLE' | transloco }}</div>
+            }
           </div>
         </div>
-      }
-    </div>
+      </mat-tab>
 
-    <!-- Tutorial Hints -->
-    <div class="setting-row reset-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <span class="emoji-icon">💡</span>
-          <span>{{ 'SETTINGS.TUTORIAL_TITLE' | transloco }}</span>
-        </span>
-      </div>
-      <div class="action-container button-group">
-        <button mat-stroked-button color="primary" (click)="onResetTutorialHints()" [disabled]="hintsReset()">
-          <mat-icon>refresh</mat-icon>
-          <span>{{ (hintsReset() ? 'SETTINGS.HINTS_RESET' : 'SETTINGS.RESET_HINTS') | transloco }}</span>
-        </button>
-        <button mat-stroked-button (click)="onSkipTutorialHints()" [disabled]="hintsSkipped()">
-          <mat-icon>fast_forward</mat-icon>
-          <span>{{ (hintsSkipped() ? 'SETTINGS.HINTS_SKIPPED' : 'SETTINGS.SKIP_ALL_HINTS') | transloco }}</span>
-        </button>
-      </div>
-    </div>
+      <!-- Tab 2: Game Data (Hints, High Scores, Factory Reset) -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <div class="tab-label">
+            <mat-icon class="tab-icon">restore</mat-icon>
+            <span>{{ 'SETTINGS.TAB_DATA' | transloco }}</span>
+          </div>
+        </ng-template>
+        <div class="tab-content">
+          <!-- Tutorial Hints -->
+          <div class="setting-row reset-row first-reset">
+            <div class="setting-header">
+              <span class="setting-label">
+                <span class="emoji-icon">💡</span>
+                <span>{{ 'SETTINGS.TUTORIAL_TITLE' | transloco }}</span>
+              </span>
+            </div>
+            <div class="action-container button-group">
+              <button mat-stroked-button color="primary" (click)="onResetTutorialHints()" [disabled]="hintsReset()">
+                <mat-icon>refresh</mat-icon>
+                <span>{{ (hintsReset() ? 'SETTINGS.HINTS_RESET' : 'SETTINGS.RESET_HINTS') | transloco }}</span>
+              </button>
+              <button mat-stroked-button (click)="onSkipTutorialHints()" [disabled]="hintsSkipped()">
+                <mat-icon>fast_forward</mat-icon>
+                <span>{{ (hintsSkipped() ? 'SETTINGS.HINTS_SKIPPED' : 'SETTINGS.SKIP_ALL_HINTS') | transloco }}</span>
+              </button>
+            </div>
+          </div>
 
-    <!-- Factory Reset -->
-    <div class="setting-row reset-row">
-      <div class="setting-header">
-        <span class="setting-label">
-          <span class="emoji-icon">💣</span>
-          <span>{{ 'SETTINGS.FACTORY_RESET_TITLE' | transloco }}</span>
-        </span>
-      </div>
-      @if (!factoryResetCompleted()) {
-        <div class="action-container">
-          <button mat-stroked-button color="warn" (click)="onPromptFactoryReset()">
-            <mat-icon>local_fire_department</mat-icon>
-            <span>{{ 'SETTINGS.NUKE_BUTTON' | transloco }}</span>
-          </button>
-        </div>
-      }
-      <mat-expansion-panel [expanded]="confirmFactoryReset()" hideToggle class="reset-expansion-panel">
-        <div class="confirm-container factory-reset">
-          <span class="confirm-prompt">{{ 'SETTINGS.NUKE_PROMPT' | transloco }}</span>
-          <div class="confirm-buttons">
-            <button mat-button (click)="onCancelFactoryReset()">{{ 'SETTINGS.CANCEL' | transloco }}</button>
-            <button mat-raised-button color="warn" (click)="onConfirmFactoryReset()">
-              <mat-icon>delete_forever</mat-icon>
-              {{ 'SETTINGS.NUKE_CONFIRM' | transloco }}
-            </button>
+          <!-- High Scores Reset -->
+          <div class="setting-row reset-row">
+            <div class="setting-header">
+              <span class="setting-label">
+                <span class="emoji-icon">🏆</span>
+                <span>{{ 'SETTINGS.HIGH_SCORES_TITLE' | transloco }}</span>
+              </span>
+            </div>
+            @if (!confirmClear()) {
+              <div class="action-container">
+                <button
+                  mat-stroked-button
+                  color="warn"
+                  (click)="onPromptClearHighScores()"
+                  [disabled]="scoresCleared()"
+                >
+                  <mat-icon>delete_forever</mat-icon>
+                  <span>{{ (scoresCleared() ? 'SETTINGS.SCORES_CLEARED' : 'SETTINGS.RESET_SCORES') | transloco }}</span>
+                </button>
+              </div>
+            } @else {
+              <div class="confirm-container score-reset">
+                <span class="confirm-prompt">{{ 'SETTINGS.CONFIRM_CLEAR_SCORES' | transloco }}</span>
+                <div class="confirm-buttons">
+                  <button mat-button (click)="onCancelClearHighScores()">{{ 'SETTINGS.CANCEL' | transloco }}</button>
+                  <button mat-raised-button color="warn" (click)="onConfirmClearHighScores()">
+                    {{ 'SETTINGS.CLEAR' | transloco }}
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Factory Reset -->
+          <div class="setting-row reset-row">
+            <div class="setting-header">
+              <span class="setting-label">
+                <span class="emoji-icon">💣</span>
+                <span>{{ 'SETTINGS.FACTORY_RESET_TITLE' | transloco }}</span>
+              </span>
+            </div>
+            @if (!factoryResetCompleted()) {
+              <div class="action-container">
+                <button mat-stroked-button color="warn" (click)="onPromptFactoryReset()">
+                  <mat-icon>local_fire_department</mat-icon>
+                  <span>{{ 'SETTINGS.NUKE_BUTTON' | transloco }}</span>
+                </button>
+              </div>
+            }
+            <mat-expansion-panel [expanded]="confirmFactoryReset()" hideToggle class="reset-expansion-panel">
+              <div class="confirm-container factory-reset">
+                <span class="confirm-prompt">{{ 'SETTINGS.NUKE_PROMPT' | transloco }}</span>
+                <div class="confirm-buttons">
+                  <button mat-button (click)="onCancelFactoryReset()">{{ 'SETTINGS.CANCEL' | transloco }}</button>
+                  <button mat-raised-button color="warn" (click)="onConfirmFactoryReset()">
+                    <mat-icon>delete_forever</mat-icon>
+                    {{ 'SETTINGS.NUKE_CONFIRM' | transloco }}
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+            @if (factoryResetCompleted()) {
+              <div class="reset-success-message">
+                <mat-icon class="spin-icon">refresh</mat-icon>
+                <span>{{ 'SETTINGS.NUKE_SUCCESS' | transloco }}</span>
+              </div>
+            }
           </div>
         </div>
-      </mat-expansion-panel>
-      @if (factoryResetCompleted()) {
-        <div class="reset-success-message">
-          <mat-icon class="spin-icon">refresh</mat-icon>
-          <span>{{ 'SETTINGS.NUKE_SUCCESS' | transloco }}</span>
-        </div>
-      }
-    </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 
-    <div mat-dialog-actions align="center" class="dialog-actions">
-      <button mat-raised-button color="primary" (click)="onClose()">{{ 'SETTINGS.CLOSE' | transloco }}</button>
-    </div>
+  <div mat-dialog-actions align="center" class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="onClose()">{{ 'SETTINGS.CLOSE' | transloco }}</button>
   </div>
 </div>

@@ -1,6 +1,8 @@
 {
   "SETTINGS": {
     "TITLE": "Einstellungen",
+    "TAB_GENERAL": "Allgemein",
+    "TAB_DATA": "Spieldaten",
     "GAME_VOLUME": "Spiel",
     "MUSIC_VOLUME": "Musik",
     "HAPTICS": "Haptisches Feedback",
@@ -81,7 +83,7 @@
   },
   "HUD": {
     "LEVEL": "Level",
-    "PIECES_REMAINING": "{count, plural, =1 {1 übrig} other {# übrig}}",
+    "PIECES_REMAINING": "{{ count }} übrig",
     "PAN_LEFT": "Nach links schwenken",
     "PAN_RIGHT": "Nach rechts schwenken",
     "VIEWPORT_LABEL": "Horizontale Zylinder-Position",
@@ -112,11 +114,11 @@
   },
   "SPLASH_3D": {
     "PERFECT_MATCH": "Perfekter Treffer!",
-    "POINTS_REWARD": "{points, plural, =1 {+1 Punkt} other {+{#} Punkte}}",
+    "POINTS_REWARD": "+{{ points }} Punkte",
     "SPEED_BONUS": "Tempo-Bonus",
     "LONG_MATCH": "Langer Treffer",
     "MULTI_POWER": "Multi-Power!",
-    "BONUS_MOVES": "{count, plural, =1 {+1 Zug} other {+{#} Züge}}",
+    "BONUS_MOVES": "+{{ count }} Züge",
     "CALLOUT_LIGHTNING": "BLITZ!",
     "CALLOUT_BLAZING": "FEURIG!",
     "CALLOUT_FAST": "SCHNELL!",
@@ -152,7 +154,7 @@
   "SHARE": {
     "CANVAS_LEVEL": "Level: {{ level }}",
     "CANVAS_SCORE": "Punkte: {{ score }}",
-    "SOCIAL_TITLE": "Rikkle – 3D-Puzzle",
+    "SOCIAL_TITLE": "Rikkle - 3D-Puzzle",
     "SOCIAL_TEXT_SCORE": "Kannst du meinen Punktestand von {{ score }} in Level {{ level }} schlagen? Spiele Rikkle: {{ url }}",
     "SOCIAL_TEXT_DEFAULT": "Entdecke Rikkle, das faszinierende 3D-Zylinderpuzzle! Jetzt spielen: {{ url }}"
   }

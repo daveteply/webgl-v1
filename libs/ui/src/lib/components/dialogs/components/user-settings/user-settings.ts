@@ -6,6 +6,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { AudioManagerService, AudioType } from '@rikkle/audio';
 import {
@@ -28,6 +29,7 @@ import { HintsManagerService } from '@rikkle/graphics';
     MatSliderModule,
     MatSlideToggleModule,
     MatExpansionModule,
+    MatTabsModule,
     TranslocoPipe,
   ],
   templateUrl: './user-settings.html',
