@@ -1,50 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { PerspectiveCamera, Scene, Vector3 } from 'three';
-import { TranslocoService } from '@jsverse/transloco';
 import { vi } from 'vitest';
 
 import { TextManagerService } from './text-manager';
 import { SplashMotionStyle } from './splash-text';
 import { LanguageService, provideTranslocoTesting } from '@rikkle/shared';
 
-const enTranslations = {
-  SPLASH_3D: {
-    PERFECT_MATCH: 'Perfect Match!',
-    POINTS_REWARD: '+{{ points }} Points',
-    SPEED_BONUS: 'Speed Bonus',
-    LONG_MATCH: 'Long Match',
-    MULTI_POWER: 'Multi-Power!',
-    BONUS_MOVES: '+{{ count }} Move',
-    CALLOUT_LIGHTNING: 'LIGHTNING!',
-    CALLOUT_BLAZING: 'BLAZING!',
-    CALLOUT_FAST: 'FAST!',
-    CALLOUT_SNAP: 'SNAP!',
-    CALLOUT_QUICK: 'QUICK!',
-    CALLOUT_MEGA_COMBO: 'MEGA COMBO!',
-    CALLOUT_AWESOME: 'AWESOME!',
-    CALLOUT_GREAT: 'GREAT!',
-    CALLOUT_NICE: 'NICE!',
-    COMBO_MEGA: 'Mega Combo',
-    COMBO_SPEED: 'Super Speed',
-  },
-  POWER_MOVES: {
-    SPIN_RIGHT: 'Spin right',
-    KABOOM: 'Kaboom',
-  },
-};
-
 describe('TextManagerService', () => {
   let service: TextManagerService;
-  let translocoService: TranslocoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [LanguageService, TextManagerService, provideTranslocoTesting()],
     });
     service = TestBed.inject(TextManagerService);
-    translocoService = TestBed.inject(TranslocoService);
-    translocoService.setTranslation(enTranslations, 'en');
-    translocoService.setActiveLang('en');
   });
 
   it('should be created', () => {

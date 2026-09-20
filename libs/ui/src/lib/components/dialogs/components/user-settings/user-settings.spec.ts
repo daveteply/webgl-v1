@@ -7,14 +7,12 @@ import { AudioType } from '@rikkle/audio';
 import { AudioManagerService } from '@rikkle/audio';
 import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 import { HintsManagerService } from '@rikkle/graphics';
-import { TranslocoService } from '@jsverse/transloco';
 
 describe('UserSettings', () => {
   let component: UserSettings;
   let fixture: ComponentFixture<UserSettings>;
   let hapticsManager: HapticsManagerService;
   let analyticsManager: AnalyticsManagerService;
-  let translocoService: TranslocoService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,17 +25,6 @@ describe('UserSettings', () => {
         provideTranslocoTesting(),
       ],
     }).compileComponents();
-
-    translocoService = TestBed.inject(TranslocoService);
-    translocoService.setTranslation(
-      {
-        SETTINGS: {
-          HAPTICS_UNAVAILABLE: 'Haptic feedback is not available',
-        },
-      },
-      'en',
-    );
-    translocoService.setActiveLang('en');
 
     analyticsManager = TestBed.inject(AnalyticsManagerService);
     vi.spyOn(analyticsManager, 'Log');
