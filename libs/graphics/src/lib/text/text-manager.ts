@@ -16,6 +16,7 @@ export class TextManagerService {
   private _fontLoader: FontLoader;
 
   private _changaRegular!: Font;
+  private _fonts = new Map<string, Font>();
 
   private _scene!: Scene;
   private _camera?: PerspectiveCamera;
@@ -33,6 +34,11 @@ export class TextManagerService {
     this._fontLoader = new FontLoader(this._loadingManager);
   }
 
+  public get ActiveFont(): Font | undefined {
+    const fontAsset = this.languageService.currentLanguage()?.fontAsset ?? 'fonts/typeface/Changa_Regular.json';
+    return this._fonts.get(fontAsset) ?? this._changaRegular;
+  }
+
   public SetCamera(camera: PerspectiveCamera): void {
     this._camera = camera;
     if (this._textGroup) {
@@ -48,6 +54,10 @@ export class TextManagerService {
     try {
       this._fontLoader.load('./assets/fonts/typeface/Changa_Regular.json', (response) => {
         this._changaRegular = response;
+        this._fonts.set('fonts/typeface/Changa_Regular.json', response);
+      });
+      this._fontLoader.load('./assets/fonts/typeface/NotoSansJP_Regular.json', (response) => {
+        this._fonts.set('fonts/typeface/NotoSansJP_Regular.json', response);
       });
     } catch {
       // Ignore font load errors in unit test / headless environment
@@ -77,7 +87,8 @@ export class TextManagerService {
    * Automatically handles vertical stacking and stagger delays if multiple messages occur at the same location.
    */
   public ShowFloatingText(text: string, worldPosition: Vector3, options?: Partial<SplashTextOptions>): void {
-    if (!this._changaRegular || !this._inSituContainer) {
+    const font = this.ActiveFont;
+    if (!font || !this._inSituContainer) {
       return;
     }
 
@@ -92,7 +103,7 @@ export class TextManagerService {
 
     const delayMs = options?.delayMs ?? (nearbyCount > 0 ? nearbyCount * 200 : 0);
 
-    const splash = new SplashText(text, this._changaRegular, 0, {
+    const splash = new SplashText(text, font, 0, {
       ...options,
       worldPosition: adjustedPos,
       delayMs,
@@ -113,7 +124,8 @@ export class TextManagerService {
   }
 
   public ShowText(message: string[], optionsOrColor?: SplashTextOptions | number, colorCycleFirstLine = false): void {
-    if (!this._changaRegular) {
+    const font = this.ActiveFont;
+    if (!font) {
       return;
     }
 
@@ -131,7 +143,7 @@ export class TextManagerService {
           colorCycleFirstLine: lineCycle,
           camera: this._camera,
         };
-        this._queue.push(new SplashText(msg, this._changaRegular, yOffset, lineOptions));
+        this._queue.push(new SplashText(msg, font, yOffset, lineOptions));
         yOffset -= 0.75;
       });
     }
@@ -153,7 +165,7 @@ export class TextManagerService {
   }
 
   public ShowSpeedBonus(points = 0, color?: number, worldPosition?: Vector3): void {
-    if (worldPosition && this._inSituContainer && this._changaRegular) {
+    if (worldPosition && this._inSituContainer && this.ActiveFont) {
       const calloutKey =
         points >= 1500
           ? MathUtils.randInt(0, 1) === 0
@@ -185,7 +197,7 @@ export class TextManagerService {
   }
 
   public ShowLongMatchBonus(points = 0, color?: number, worldPosition?: Vector3, pieceCount = 4): void {
-    if (worldPosition && this._inSituContainer && this._changaRegular) {
+    if (worldPosition && this._inSituContainer && this.ActiveFont) {
       let calloutKey = 'SPLASH_3D.CALLOUT_NICE';
       let scaleMultiplier = 1.0;
 
@@ -223,7 +235,7 @@ export class TextManagerService {
   public ShowComboBonus(points = 0, pieceCount = 4, color?: number, worldPosition?: Vector3): void {
     const calloutKey = pieceCount >= 6 ? 'SPLASH_3D.COMBO_MEGA' : 'SPLASH_3D.COMBO_SPEED';
     const callout = this.languageService.translate(calloutKey);
-    if (worldPosition && this._inSituContainer && this._changaRegular) {
+    if (worldPosition && this._inSituContainer && this.ActiveFont) {
       this.ShowFloatingText(`${callout}! +${points}`, worldPosition, {
         color: color ?? 0xffd700,
         scaleMultiplier: 1.3,
@@ -266,7 +278,7 @@ export class TextManagerService {
       });
     } else {
       const pointsText = this.languageService.translate('SPLASH_3D.POINTS_REWARD', { points });
-      if (worldPosition && this._inSituContainer && this._changaRegular) {
+      if (worldPosition && this._inSituContainer && this.ActiveFont) {
         this.ShowFloatingText(`${translatedLabel}! +${points}`, worldPosition, {
           color: color ?? 0xff00ea,
           motionStyle: SplashMotionStyle.PunchPop,

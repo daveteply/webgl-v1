@@ -105,4 +105,10 @@ describe('TextManagerService', () => {
       withParticles: true,
     });
   });
+
+  it('should safely handle ActiveFont resolution and font asset changes', () => {
+    expect(service.ActiveFont).toBeUndefined();
+    service.InitFonts();
+    expect(() => service.ShowFloatingText('テスト', new Vector3(0, 0, 0))).not.toThrow();
+  });
 });

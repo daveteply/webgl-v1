@@ -15,7 +15,7 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
     fontAsset: 'fonts/typeface/Changa_Regular.json',
     localeId: 'fr-FR',
   },
-  { code: 'ja', label: '日本語', fontAsset: 'fonts/typeface/Changa_Regular.json', localeId: 'ja-JP' },
+  { code: 'ja', label: '日本語', fontAsset: 'fonts/typeface/NotoSansJP_Regular.json', localeId: 'ja-JP' },
 ];
 
 export const DEFAULT_LANGUAGE = 'en';
