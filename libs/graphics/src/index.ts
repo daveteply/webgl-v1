@@ -27,7 +27,7 @@ export * from './lib/services/material/color-schemes';
 export * from './lib/services/texture/texture-manager';
 export * from './lib/services/texture/game-texture';
 export * from './lib/services/texture/texture-info';
-export * from './lib/services/texture/emoji-data';
+export * from './lib/services/texture/emoji-support';
 
 // Save Game
 export * from './lib/services/save-game/save-game';

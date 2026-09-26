@@ -11,6 +11,7 @@
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
     "e2e": "nx e2e rikkle-e2e",
+    "update-emoji": "node tools/emoji/update-emoji-data.mjs",
     "prepare": "test -d .git && husky || true",
     "format": "prettier --write .",
     "graph": "nx graph"

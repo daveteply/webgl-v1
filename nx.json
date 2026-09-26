@@ -23,7 +23,9 @@
     "@angular/build:unit-test": {
       "options": {
         "watch": false
-      }
+      },
+      "inputs": ["default", "^production"],
+      "cache": true
     },
     "test": {
       "options": {

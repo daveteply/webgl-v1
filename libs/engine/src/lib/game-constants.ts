@@ -48,8 +48,8 @@ export const GRAVITY_START_DOWN = 6;
 export const GRAVITY_START_UP = 10;
 export const GRAVITY_START_MIX = 14;
 export const MATERIAL_START_COLOR = 3;
-export const MATERIAL_START_BUMP = 5;
-export const MATERIAL_START_EMOJI = 9;
+export const MATERIAL_START_BUMP = 4;
+export const MATERIAL_START_EMOJI = 5;
 export const HORIZONTAL_LEVEL_START_LEVEL = 2;
 export const HORIZONTAL_TURN_DURATION = 3000;
 export const CAMERA_HORIZONTAL_OFFSET = -0.6;
@@ -83,7 +83,7 @@ export const TUTORIAL_IDLE_DELAY_MS = 2000;
 // export const LEVEL_START_FULL_ADS = 8;
 
 // Misc
-export const CANVAS_TEXTURE_SCALE = 80;
+export const CANVAS_TEXTURE_SCALE = 256;
 export const RAINBOW_COLOR_ARRAY = [0xff0000, 0xffa500, 0xffff00, 0x008000, 0x0000ff, 0x800080];
 export const DARK_RAINBOW_COLOR_ARRAY = [0x510000, 0x401a00, 0x353600, 0x002f01, 0x000a3e];
 export const GAME_OVER_EMOJI = [0x1f97a, 0x1f627, 0x1f625, 0x1f616, 0x1f62b];

@@ -1,7 +1,8 @@
 // tool to create an html view of emojis for testing on various systems
 
 const fs = require('fs');
-const sourceFile = '../../src/app/game/services/texture/emoji-data.ts';
+const path = require('path');
+const sourceFile = path.join(__dirname, '../../apps/rikkle/public/assets/emoji-data.json');
 const targetFile = 'output.html';
 
 const targetLines = [];
@@ -11,22 +12,18 @@ targetLines.push('<!DOCTYPE html>');
 targetLines.push('<html>');
 targetLines.push('<body>');
 
-const sourceContents = fs.readFileSync(sourceFile, { encoding: 'utf-8' });
-sourceContents.split(/\r?\n/).forEach((line) => {
-  if (line.startsWith('[')) {
-    const data = JSON.parse(line);
-    data.forEach((group) => {
-      targetLines.push(`<h1>${group.id}</h1>`);
-      group.subGroup.forEach((subGroup) => {
-        targetLines.push(`<h2>${subGroup.id}</h2>`);
-        subGroup.codes.forEach((code) => {
-          const sequence = code.sequence.map((c) => `&#${c};`).join('');
-          // console.log(code);
-          targetLines.push(`${sequence} ${code.version} ${code.desc} <br>`);
-        });
-      });
+const payload = JSON.parse(fs.readFileSync(sourceFile, { encoding: 'utf-8' }));
+const groups = Array.isArray(payload) ? payload : payload.groups;
+
+groups.forEach((group) => {
+  targetLines.push(`<h1>${group.id}</h1>`);
+  group.subGroup.forEach((subGroup) => {
+    targetLines.push(`<h2>${subGroup.id}</h2>`);
+    subGroup.codes.forEach((code) => {
+      const sequence = code.sequence.map((c) => `&#${c};`).join('');
+      targetLines.push(`${sequence} ${code.version} ${code.desc} <br>`);
     });
-  }
+  });
 });
 
 // finish html

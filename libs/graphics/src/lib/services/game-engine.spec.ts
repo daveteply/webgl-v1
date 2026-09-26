@@ -51,7 +51,7 @@ describe('GameEngineService', () => {
       expect(res1).toEqual(res2);
     });
 
-    it('should initialize levels 1-2 to ColorBumpShape, levels 3-4 to ColorBumpShape or Color, levels 5-8 with BumpMaterial, and levels 9+ with Emoji', () => {
+    it('should initialize levels 1-2 to ColorBumpShape, level 3 to ColorBumpShape or Color, level 4 with BumpMaterial, and levels 5+ with Emoji', () => {
       for (let i = 0; i < 20; i++) {
         service.InitLevelTypes(2);
         expect(service.GravityType).toBe(GravityType.None);
@@ -59,30 +59,30 @@ describe('GameEngineService', () => {
         expect(service.LevelMaterialType).toBe(LevelMaterialType.ColorBumpShape);
       }
 
+      const l3Materials = new Set<LevelMaterialType>();
+      for (let i = 0; i < 50; i++) {
+        service.InitLevelTypes(3);
+        l3Materials.add(service.LevelMaterialType);
+      }
+      expect(l3Materials.has(LevelMaterialType.ColorBumpShape)).toBe(true);
+      expect(l3Materials.has(LevelMaterialType.Color)).toBe(true);
+      expect(l3Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(false);
+      expect(l3Materials.has(LevelMaterialType.Emoji)).toBe(false);
+
       const l4Materials = new Set<LevelMaterialType>();
       for (let i = 0; i < 50; i++) {
         service.InitLevelTypes(4);
         l4Materials.add(service.LevelMaterialType);
       }
-      expect(l4Materials.has(LevelMaterialType.ColorBumpShape)).toBe(true);
-      expect(l4Materials.has(LevelMaterialType.Color)).toBe(true);
-      expect(l4Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(false);
+      expect(l4Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(true);
       expect(l4Materials.has(LevelMaterialType.Emoji)).toBe(false);
 
-      const l8Materials = new Set<LevelMaterialType>();
-      for (let i = 0; i < 50; i++) {
-        service.InitLevelTypes(8);
-        l8Materials.add(service.LevelMaterialType);
-      }
-      expect(l8Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(true);
-      expect(l8Materials.has(LevelMaterialType.Emoji)).toBe(false);
-
-      const l9Materials = new Set<LevelMaterialType>();
+      const l5Materials = new Set<LevelMaterialType>();
       for (let i = 0; i < 100; i++) {
-        service.InitLevelTypes(9);
-        l9Materials.add(service.LevelMaterialType);
+        service.InitLevelTypes(5);
+        l5Materials.add(service.LevelMaterialType);
       }
-      expect(l9Materials.has(LevelMaterialType.Emoji)).toBe(true);
+      expect(l5Materials.has(LevelMaterialType.Emoji)).toBe(true);
     });
 
     it('should initialize level 6 gravity to None or Down', () => {
