@@ -84,9 +84,6 @@
   "HUD": {
     "LEVEL": "Level",
     "PIECES_REMAINING": "{{ count }} remaining",
-    "PAN_LEFT": "Pan Left",
-    "PAN_RIGHT": "Pan Right",
-    "VIEWPORT_LABEL": "Horizontal Cylinder Viewport Position",
     "SHARE_LABEL": "Share Rikkle"
   },
   "HIGH_SCORES": {

@@ -84,9 +84,6 @@
   "HUD": {
     "LEVEL": "Niveau",
     "PIECES_REMAINING": "{{ count }} restants",
-    "PAN_LEFT": "Panoramique gauche",
-    "PAN_RIGHT": "Panoramique droite",
-    "VIEWPORT_LABEL": "Position de vue du cylindre",
     "SHARE_LABEL": "Partager Rikkle"
   },
   "HIGH_SCORES": {

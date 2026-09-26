@@ -2,7 +2,6 @@
 export * from './lib/components/game-container/game-container';
 export * from './lib/components/game-menu/game-menu';
 export * from './lib/components/moves-left/moves-left';
-export * from './lib/components/horizontal-level-navigator/horizontal-level-navigator';
 export * from './lib/components/tutorial-overlay/tutorial-overlay';
 export * from './lib/components/share-content/share-content';
 export * from './lib/components/high-scores/high-scores';
