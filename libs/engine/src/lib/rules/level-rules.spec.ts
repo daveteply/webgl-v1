@@ -87,6 +87,21 @@ describe('level-rules', () => {
     expect(l5Config.materialType).toBe(LevelMaterialType.Emoji);
   });
 
+  it('should give Emoji material 40% weight on vertical non-dodecahedron levels', () => {
+    let emojiCount = 0;
+    const trials = 1000;
+    for (let i = 0; i < trials; i++) {
+      const config = calculateLevelConfiguration(5, () => i / trials, {
+        orientationOverride: LevelOrientationType.Vertical,
+        geometryOverride: LevelGeometryType.Cube,
+      });
+      if (config.materialType === LevelMaterialType.Emoji) {
+        emojiCount++;
+      }
+    }
+    expect(emojiCount).toBe(400);
+  });
+
   it('should calculate level transition types based on level tier', () => {
     expect(calculateLevelTransitionType(1)).toBe(LevelTransitionType.Default);
     expect(calculateLevelTransitionType(3)).toBe(LevelTransitionType.Default);

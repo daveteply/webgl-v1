@@ -10,6 +10,7 @@ In standard player progression:
 
 - **Horizontal Levels** are constrained to `ColorBumpShape`, `Color`, and `ColorBumpMaterial` (emojis are vertical-only).
 - **Dodecahedron Levels** are constrained to `ColorBumpShape`, `Color`, and `ColorBumpMaterial`.
+- **Emoji Progression**: Starting at Level 5, `Emoji` material is unlocked on vertical levels with a 40% selection weight to compensate for horizontal/dodecahedron exclusions and maintain a balanced ~20% overall game appearance rate.
 - **Developer Cheats / Feature Flags** allow testing any combination (including forcing emoji on horizontal levels if desired).
 
 ---

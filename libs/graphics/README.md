@@ -13,7 +13,8 @@ Three.js 3D rendering pipeline, procedural materials, shader effects, and scene 
 - **Object Management (`object-manager.ts`)**: Lifecycle of 3D `GameWheel` stacks and `GamePiece` objects (Cubes, Cylinders, Dodecahedrons).
 - **Procedural Textures & Materials**:
   - `material-manager.ts`: Generates specular Phong materials and dynamic bump maps.
-  - `texture-manager.ts`: High-res procedural canvas rendering, emoji composite sheets, and color schemes.
+  - `texture-manager.ts`: High-res procedural canvas rendering, 256x256 synchronous `CanvasTexture` emoji generation, and color schemes.
+  - `emoji-support.ts`: Device canary version detection (Unicode 1.0–16.0) and missing-glyph/tofu filtering.
 - **Effects & Particles (`effects-manager.ts`, `particle-emitter.ts`, `star-field.ts`)**: Spark particle bursts, dynamic gravity drop/implode/explode removal animations, and background starfields.
 - **Interaction & Raycasting (`interaction-manager.ts`, `hints-manager.ts`)**: Pointer/touch drag rotation, collision detection, and animated hint highlights.
 - **Floating Splash Text (`text-manager.ts`, `splash-text.ts`)**: 3D in-scene floating score bonuses and combo text.

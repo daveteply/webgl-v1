@@ -89,6 +89,9 @@ export function calculateLevelConfiguration(
             LevelMaterialType.ColorBumpShape,
             LevelMaterialType.Color,
             LevelMaterialType.ColorBumpMaterial,
+            // Emoji is weighted twice (40% chance on vertical eligible levels) to compensate for being
+            // excluded on horizontal (50% of levels) and dodecahedron levels, maintaining an overall ~20% game appearance rate.
+            LevelMaterialType.Emoji,
             LevelMaterialType.Emoji,
           ];
     materialType = allMaterials[Math.floor(rng() * allMaterials.length)];
