@@ -295,6 +295,9 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
 
     // start loading fonts for splash text
     this.textManager.InitFonts();
+
+    // pre-load emoji data in background before level 5
+    this.textureManager.PreloadEmojiData();
   }
 
   ngAfterViewInit(): void {

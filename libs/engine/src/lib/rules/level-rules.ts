@@ -48,6 +48,9 @@ export function calculateLevelConfiguration(
       geometryType = LevelGeometryType.Cylinder;
     }
   }
+  if (overrides?.geometryOverride !== null && overrides?.geometryOverride !== undefined) {
+    geometryType = overrides.geometryOverride;
+  }
 
   // Orientation
   let orientation = LevelOrientationType.Vertical;
@@ -58,6 +61,9 @@ export function calculateLevelConfiguration(
         Math.floor(rng() * 2) === 0 ? LevelOrientationType.HorizontalRight : LevelOrientationType.HorizontalLeft;
     }
   }
+  if (overrides?.orientationOverride !== null && overrides?.orientationOverride !== undefined) {
+    orientation = overrides.orientationOverride;
+  }
 
   const isHorizontal = orientation !== LevelOrientationType.Vertical;
 
@@ -66,15 +72,15 @@ export function calculateLevelConfiguration(
   if (level < MATERIAL_START_COLOR) {
     materialType = LevelMaterialType.ColorBumpShape;
   } else if (level < MATERIAL_START_BUMP) {
-    const level4Materials = [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color];
-    materialType = level4Materials[Math.floor(rng() * level4Materials.length)];
+    const level3Materials = [LevelMaterialType.ColorBumpShape, LevelMaterialType.Color];
+    materialType = level3Materials[Math.floor(rng() * level3Materials.length)];
   } else if (level < MATERIAL_START_EMOJI) {
-    const level8Materials = [
+    const level4Materials = [
       LevelMaterialType.ColorBumpShape,
       LevelMaterialType.Color,
       LevelMaterialType.ColorBumpMaterial,
     ];
-    materialType = level8Materials[Math.floor(rng() * level8Materials.length)];
+    materialType = level4Materials[Math.floor(rng() * level4Materials.length)];
   } else {
     const allMaterials =
       geometryType === LevelGeometryType.Dodecahedron || isHorizontal
@@ -83,6 +89,9 @@ export function calculateLevelConfiguration(
             LevelMaterialType.ColorBumpShape,
             LevelMaterialType.Color,
             LevelMaterialType.ColorBumpMaterial,
+            // Emoji is weighted twice (40% chance on vertical eligible levels) to compensate for being
+            // excluded on horizontal (50% of levels) and dodecahedron levels, maintaining an overall ~20% game appearance rate.
+            LevelMaterialType.Emoji,
             LevelMaterialType.Emoji,
           ];
     materialType = allMaterials[Math.floor(rng() * allMaterials.length)];
@@ -103,15 +112,9 @@ export function calculateLevelConfiguration(
     gravityType = gravityOptions[Math.floor(rng() * gravityOptions.length)];
   }
 
-  // Apply overrides if provided
-  if (overrides?.geometryOverride !== null && overrides?.geometryOverride !== undefined) {
-    geometryType = overrides.geometryOverride;
-  }
+  // Apply material and gravity overrides if provided
   if (overrides?.materialOverride !== null && overrides?.materialOverride !== undefined) {
     materialType = overrides.materialOverride;
-  }
-  if (overrides?.orientationOverride !== null && overrides?.orientationOverride !== undefined) {
-    orientation = overrides.orientationOverride;
   }
   if (overrides?.gravityOverride !== null && overrides?.gravityOverride !== undefined) {
     gravityType = overrides.gravityOverride;

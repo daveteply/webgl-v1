@@ -45,6 +45,63 @@ describe('level-rules', () => {
     expect(configHoriz.materialType).not.toBe(LevelMaterialType.Emoji);
   });
 
+  it('should introduce materials progressively: Color at level 3, BumpMaterial at level 4, and Emoji at level 5+', () => {
+    // Level 1-2: only ColorBumpShape
+    for (let l = 1; l <= 2; l++) {
+      const config = calculateLevelConfiguration(l, () => 0.99, { orientationOverride: LevelOrientationType.Vertical });
+      expect(config.materialType).toBe(LevelMaterialType.ColorBumpShape);
+    }
+
+    // Level 3: ColorBumpShape or Color
+    const l3Materials = new Set<LevelMaterialType>();
+    l3Materials.add(
+      calculateLevelConfiguration(3, () => 0.0, { orientationOverride: LevelOrientationType.Vertical }).materialType,
+    );
+    l3Materials.add(
+      calculateLevelConfiguration(3, () => 0.99, { orientationOverride: LevelOrientationType.Vertical }).materialType,
+    );
+    expect(l3Materials.has(LevelMaterialType.ColorBumpShape)).toBe(true);
+    expect(l3Materials.has(LevelMaterialType.Color)).toBe(true);
+    expect(l3Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(false);
+    expect(l3Materials.has(LevelMaterialType.Emoji)).toBe(false);
+
+    // Level 4: adds ColorBumpMaterial
+    const l4Materials = new Set<LevelMaterialType>();
+    l4Materials.add(
+      calculateLevelConfiguration(4, () => 0.0, { orientationOverride: LevelOrientationType.Vertical }).materialType,
+    );
+    l4Materials.add(
+      calculateLevelConfiguration(4, () => 0.5, { orientationOverride: LevelOrientationType.Vertical }).materialType,
+    );
+    l4Materials.add(
+      calculateLevelConfiguration(4, () => 0.99, { orientationOverride: LevelOrientationType.Vertical }).materialType,
+    );
+    expect(l4Materials.has(LevelMaterialType.ColorBumpMaterial)).toBe(true);
+    expect(l4Materials.has(LevelMaterialType.Emoji)).toBe(false);
+
+    // Level 5+: vertical non-dodecahedron can select Emoji
+    const l5Config = calculateLevelConfiguration(5, () => 0.99, {
+      orientationOverride: LevelOrientationType.Vertical,
+      geometryOverride: LevelGeometryType.Cube,
+    });
+    expect(l5Config.materialType).toBe(LevelMaterialType.Emoji);
+  });
+
+  it('should give Emoji material 40% weight on vertical non-dodecahedron levels', () => {
+    let emojiCount = 0;
+    const trials = 1000;
+    for (let i = 0; i < trials; i++) {
+      const config = calculateLevelConfiguration(5, () => i / trials, {
+        orientationOverride: LevelOrientationType.Vertical,
+        geometryOverride: LevelGeometryType.Cube,
+      });
+      if (config.materialType === LevelMaterialType.Emoji) {
+        emojiCount++;
+      }
+    }
+    expect(emojiCount).toBe(400);
+  });
+
   it('should calculate level transition types based on level tier', () => {
     expect(calculateLevelTransitionType(1)).toBe(LevelTransitionType.Default);
     expect(calculateLevelTransitionType(3)).toBe(LevelTransitionType.Default);

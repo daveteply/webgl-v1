@@ -5,7 +5,10 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { GameStateStore } from '@rikkle/state';
 
 import {
+  CanvasTexture,
   ClampToEdgeWrapping,
+  LinearFilter,
+  LinearMipmapLinearFilter,
   LoadingManager,
   MathUtils,
   NoColorSpace,
@@ -22,18 +25,17 @@ import {
   LevelOrientationType,
   PowerMoveType,
 } from '@rikkle/engine';
-import { EmojiData } from './emoji-data';
+import {
+  detectMaxSupportedEmojiVersion,
+  filterSupportedEmojis,
+  EmojiCode,
+  EmojiGroup,
+  EmojiDataPayload,
+  EMOJI_FONT_STACK,
+} from './emoji-support';
 import { BumpTextures, BumpSymbolTextures, PowerMoveTextures } from './texture-info';
 import { arrayShuffle, PRNG } from '@rikkle/shared';
 import { GameTexture } from './game-texture';
-
-interface EmojiSequence {
-  desc: string;
-  sequence: number[];
-  ver?: string;
-  version?: string;
-  dataUrl?: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -45,8 +47,9 @@ export class TextureManagerService {
   private _loaderManager: LoadingManager;
   private _textureLoader: TextureLoader;
 
-  private _canvasElement!: HTMLCanvasElement;
-  private _canvasContext!: CanvasRenderingContext2D | null;
+  private _emojiDataCache: EmojiGroup[] | null = null;
+  private _maxSupportedEmojiVersion: number | null = null;
+  private _isEmojiLoading = false;
 
   private _levelGeometryType!: LevelGeometryType;
   private _levelMaterialType!: LevelMaterialType;
@@ -84,6 +87,19 @@ export class TextureManagerService {
     this._textureLoader = new TextureLoader(this._loaderManager);
   }
 
+  public SetEmojiDataCache(groups: EmojiGroup[]): void {
+    this._emojiDataCache = groups;
+  }
+
+  public async PreloadEmojiData(): Promise<void> {
+    if (this._emojiDataCache || this._isEmojiLoading) return;
+    try {
+      await this.fetchEmojiData();
+    } catch {
+      // Background preload can fail silently
+    }
+  }
+
   public InitLevelTextures(
     playableTextureCount: number,
     levelMaterialType: LevelMaterialType,
@@ -105,7 +121,6 @@ export class TextureManagerService {
 
     // clear existing textures
     this._textures = [];
-    let emojiList: EmojiSequence[];
 
     switch (this._levelMaterialType) {
       case LevelMaterialType.ColorBumpShape:
@@ -117,20 +132,7 @@ export class TextureManagerService {
         break;
 
       case LevelMaterialType.Emoji:
-        emojiList = this.initEmojiData(playableTextureCount, rng);
-        emojiList.forEach((data) => {
-          this._textureLoader.load(data?.dataUrl || '', (texture) => {
-            const gameTexture: GameTexture = { id: data.desc, texture: texture };
-            gameTexture.texture.userData = { sequence: data.sequence };
-            gameTexture.texture.center = new Vector2(0.5, 0.5);
-            this.setTextureWrapping(gameTexture.texture);
-            this._textures.push(gameTexture);
-          });
-        });
-
-        if (isDevMode()) {
-          console.info(emojiList.map((emoji) => `  ${emoji.desc} ${emoji.sequence}`).join('\n'));
-        }
+        this.loadEmojiTextures(playableTextureCount, rng);
         break;
 
       case LevelMaterialType.Color:
@@ -221,53 +223,81 @@ export class TextureManagerService {
     }
   }
 
-  private initEmojiData(playableTextureCount: number, rng?: PRNG): EmojiSequence[] {
-    if (!this._canvasElement) {
-      this._canvasElement = this.document.createElement('canvas');
-      this._canvasElement.width = this._canvasElement.height = CANVAS_TEXTURE_SCALE;
-    }
+  private async loadEmojiTextures(playableTextureCount: number, rng?: PRNG): Promise<void> {
+    try {
+      this.LevelTextureLoadProgress.next(25);
+      const emojiGroups = await this.fetchEmojiData();
+      this.LevelTextureLoadProgress.next(60);
 
-    if (!this._canvasContext) {
-      this._canvasContext = this._canvasElement.getContext('2d');
-    }
-
-    let emojiSequence: EmojiSequence[] = [];
-
-    if (this._canvasContext) {
-      emojiSequence = this.randomEmojiCodeList(playableTextureCount, rng);
+      const selectedEmojis = this.randomEmojiCodeList(emojiGroups, playableTextureCount, rng);
       this.store.updateEmojiList(
-        emojiSequence.map((s) => ({
+        selectedEmojis.map((s) => ({
           desc: s.desc,
           sequence: s.sequence,
         })),
       );
 
-      for (const emoji of emojiSequence) {
-        this._canvasContext.clearRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
-        this._canvasContext.fillStyle = '#ffffff';
-        this._canvasContext.fillRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
-
-        this._canvasContext.font = CANVAS_TEXTURE_SCALE - 10 + 'px Arial';
-        this._canvasContext.textBaseline = 'middle';
-        this._canvasContext.textAlign = 'center';
-
-        const emojiCode = String.fromCodePoint(...emoji.sequence);
-        this._canvasContext.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, CANVAS_TEXTURE_SCALE / 2 + 8);
-
-        // white pixel test (incompatible emojis)
-        this.renderTest(this._canvasContext);
-
-        // set data Url (to be used by three js texture engine)
-        emoji.dataUrl = this._canvasElement.toDataURL();
+      for (const emoji of selectedEmojis) {
+        const gameTexture = this.createEmojiTexture(emoji);
+        this._textures.push(gameTexture);
       }
-    }
 
-    return emojiSequence;
+      if (isDevMode()) {
+        console.info(selectedEmojis.map((emoji) => `  ${emoji.desc} ${emoji.sequence}`).join('\n'));
+      }
+
+      this.LevelTextureLoadProgress.next(100);
+      this.emitCompletion();
+    } catch (err) {
+      console.error('Error loading emoji textures:', err);
+      this.LevelTextureLoadError.next('emoji-data');
+      this.emitCompletion();
+    }
   }
 
-  private randomEmojiCodeList(playableTextureCount: number, rng?: PRNG): EmojiSequence[] {
-    const groupInx = rng ? rng.nextInt(0, EmojiData.length - 1) : MathUtils.randInt(0, EmojiData.length - 1);
-    const emojiGroup = EmojiData[groupInx];
+  private createEmojiTexture(emoji: EmojiCode): GameTexture {
+    const canvas = this.document.createElement('canvas');
+    canvas.width = CANVAS_TEXTURE_SCALE;
+    canvas.height = CANVAS_TEXTURE_SCALE;
+    const ctx = canvas.getContext('2d');
+
+    if (ctx) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
+
+      const fontSize = Math.floor(CANVAS_TEXTURE_SCALE * 0.72);
+      ctx.font = `${fontSize}px ${EMOJI_FONT_STACK}`;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+
+      const emojiCode = String.fromCodePoint(...emoji.sequence);
+      const metrics = ctx.measureText(emojiCode);
+      let y = CANVAS_TEXTURE_SCALE / 2;
+      if (metrics.actualBoundingBoxAscent && metrics.actualBoundingBoxDescent) {
+        y = (CANVAS_TEXTURE_SCALE + metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2;
+      }
+      ctx.fillText(emojiCode, CANVAS_TEXTURE_SCALE / 2, y);
+    }
+
+    const texture = new CanvasTexture(canvas);
+    texture.colorSpace = SRGBColorSpace;
+    texture.generateMipmaps = true;
+    texture.minFilter = LinearMipmapLinearFilter;
+    texture.magFilter = LinearFilter;
+    texture.center = new Vector2(0.5, 0.5);
+    texture.userData = { sequence: emoji.sequence };
+    this.setTextureWrapping(texture);
+
+    return {
+      id: emoji.desc,
+      texture,
+    };
+  }
+
+  private randomEmojiCodeList(emojiGroups: EmojiGroup[], playableTextureCount: number, rng?: PRNG): EmojiCode[] {
+    if (!emojiGroups.length) return [];
+    const groupInx = rng ? rng.nextInt(0, emojiGroups.length - 1) : MathUtils.randInt(0, emojiGroups.length - 1);
+    const emojiGroup = emojiGroups[groupInx];
     this.store.updateEmojiGroup(emojiGroup.id);
 
     if (isDevMode()) {
@@ -275,47 +305,40 @@ export class TextureManagerService {
     }
 
     const shuffledSubGroups = arrayShuffle(emojiGroup.subGroup, rng);
-
-    // grab first 5 shuffled subgroups (some subgroups have a small number of sequences)
     const subGroups = shuffledSubGroups.slice(0, 5);
     this.store.updateEmojiSubGroups(subGroups.map((s) => s.id));
 
-    // create long list of codes
     const emojiSequences = subGroups.flatMap((s) => s.codes);
-    return arrayShuffle(emojiSequences, rng)
-      .map((s) => {
-        return { desc: s.desc, sequence: s.sequence, ver: s.version };
-      })
-      .slice(0, playableTextureCount);
+    return arrayShuffle(emojiSequences, rng).slice(0, playableTextureCount);
   }
 
-  private renderTest(canvasContext: CanvasRenderingContext2D) {
-    if (canvasContext) {
-      const imgData = canvasContext.getImageData(0, 0, CANVAS_TEXTURE_SCALE, CANVAS_TEXTURE_SCALE);
-      const data = imgData.data;
-      const width = CANVAS_TEXTURE_SCALE;
-      let isBlank = true;
-
-      // Diagonal line test sampling pixels along (i, i)
-      const step = 4;
-      for (let i = 0; i < width; i += step) {
-        const offset = (i * width + i) * 4;
-        if (data[offset] !== 255 || data[offset + 1] !== 255 || data[offset + 2] !== 255) {
-          isBlank = false;
-          break;
-        }
+  private async fetchEmojiData(): Promise<EmojiGroup[]> {
+    if (this._emojiDataCache) {
+      return this._emojiDataCache;
+    }
+    this._isEmojiLoading = true;
+    try {
+      if (typeof fetch === 'undefined') {
+        return [];
       }
+      const response = await fetch('assets/emoji-data.json');
+      if (!response.ok) {
+        throw new Error(`Failed to load emoji data: ${response.statusText}`);
+      }
+      const data: EmojiDataPayload | EmojiGroup[] = await response.json();
+      const groups: EmojiGroup[] = Array.isArray(data) ? data : data.groups;
 
-      if (isBlank) {
-        const targetScale = CANVAS_TEXTURE_SCALE * 0.2;
-        const targetStart = CANVAS_TEXTURE_SCALE / 2 - targetScale / 2;
+      if (this._maxSupportedEmojiVersion === null) {
+        this._maxSupportedEmojiVersion = detectMaxSupportedEmojiVersion(this.document);
         if (isDevMode()) {
-          console.info('  - Blank emoji, back-filling');
+          console.info(`Detected max supported Emoji version: E${this._maxSupportedEmojiVersion}`);
         }
-        const randColor = Math.floor(Math.random() * 16777215).toString(16);
-        canvasContext.fillStyle = `#${randColor}`;
-        canvasContext.fillRect(targetStart, targetStart, targetScale, targetScale);
       }
+
+      this._emojiDataCache = filterSupportedEmojis(groups, this._maxSupportedEmojiVersion);
+      return this._emojiDataCache;
+    } finally {
+      this._isEmojiLoading = false;
     }
   }
 
