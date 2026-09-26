@@ -40,10 +40,10 @@
     "@angular/cli": "^22.1.2",
     "@angular/compiler-cli": "^22.1.0",
     "@eslint/js": "^9.22.0",
-    "@nx/eslint": "^20.4.0",
-    "@nx/eslint-plugin": "^20.4.0",
-    "@nx/js": "^20.4.0",
-    "@nx/playwright": "^20.4.0",
+    "@nx/eslint": "23.2.1",
+    "@nx/eslint-plugin": "23.2.1",
+    "@nx/js": "23.2.1",
+    "@nx/playwright": "23.2.1",
     "@playwright/test": "^1.50.0",
     "@types/node": "^22.13.0",
     "@types/three": "^0.185.4",
@@ -51,7 +51,7 @@
     "eslint": "^9.22.0",
     "husky": "^9.1.7",
     "jsdom": "^28.0.0",
-    "nx": "^20.4.0",
+    "nx": "23.2.1",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "8.62.1",
@@ -59,6 +59,15 @@
   },
   "overrides": {
     "minimatch": "^9.0.7",
-    "picomatch": "^4.0.4"
+    "picomatch": "^4.0.4",
+    "smol-toml": "^1.8.0"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "esbuild@0.28.2": true,
+    "lmdb@3.5.6": true,
+    "msgpackr-extract@3.0.4": true,
+    "nx@20.8.4": true,
+    "nx@23.2.1": true
   }
 }

@@ -20,7 +20,15 @@
       "inputs": ["default", "{workspaceRoot}/eslint.config.js"],
       "cache": true
     },
+    "@angular/build:unit-test": {
+      "options": {
+        "watch": false
+      }
+    },
     "test": {
+      "options": {
+        "watch": false
+      },
       "inputs": ["default", "^production"],
       "cache": true
     },
@@ -28,5 +36,6 @@
       "inputs": ["default", "^production"],
       "cache": true
     }
-  }
+  },
+  "analytics": true
 }
