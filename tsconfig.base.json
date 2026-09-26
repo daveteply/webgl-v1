@@ -23,7 +23,11 @@
       "@rikkle/state": ["libs/state/src/index.ts"],
       "@rikkle/graphics": ["libs/graphics/src/index.ts"],
       "@rikkle/ui": ["libs/ui/src/index.ts"]
-    }
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
