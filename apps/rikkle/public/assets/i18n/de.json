@@ -84,9 +84,6 @@
   "HUD": {
     "LEVEL": "Level",
     "PIECES_REMAINING": "{{ count }} übrig",
-    "PAN_LEFT": "Nach links schwenken",
-    "PAN_RIGHT": "Nach rechts schwenken",
-    "VIEWPORT_LABEL": "Horizontale Zylinder-Position",
     "SHARE_LABEL": "Rikkle teilen"
   },
   "HIGH_SCORES": {

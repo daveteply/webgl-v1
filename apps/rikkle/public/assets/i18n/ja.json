@@ -84,9 +84,6 @@
   "HUD": {
     "LEVEL": "レベル",
     "PIECES_REMAINING": "残り {{ count }} 個",
-    "PAN_LEFT": "左へパン",
-    "PAN_RIGHT": "右へパン",
-    "VIEWPORT_LABEL": "円筒視点位置",
     "SHARE_LABEL": "Rikkleをシェア"
   },
   "HIGH_SCORES": {

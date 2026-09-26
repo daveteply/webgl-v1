@@ -84,9 +84,6 @@
   "HUD": {
     "LEVEL": "Nivel",
     "PIECES_REMAINING": "{{ count }} restantes",
-    "PAN_LEFT": "Desplazar a la izquierda",
-    "PAN_RIGHT": "Desplazar a la derecha",
-    "VIEWPORT_LABEL": "Posición del visor cilíndrico horizontal",
     "SHARE_LABEL": "Compartir Rikkle"
   },
   "HIGH_SCORES": {

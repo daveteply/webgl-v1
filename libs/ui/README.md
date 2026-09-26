@@ -11,7 +11,6 @@ Glassmorphic Angular UI components, Material dialogs, HUD controls, and overlay 
 - **`GameContainer` (`game-container.ts`)**: Main game viewport host mounting the WebGL canvas, HUD overlays, and dialog subscriptions.
 - **HUD Controls**:
   - `MovesLeft`: Displays remaining turns with animated color urgency state badges.
-  - `HorizontalLevelNavigator`: Dynamic carousel allowing quick level navigation.
   - `ProgressBar`: Glassmorphic level progression indicator.
   - `GameMenu`: Glass action panel triggering user settings, install prompts, and high scores.
 - **Glassmorphic Dialogs**:

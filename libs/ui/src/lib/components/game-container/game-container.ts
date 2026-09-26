@@ -14,7 +14,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, filter, fromEvent, Observable, take } from 'rxjs';
 
 import { ObjectManagerService } from '@rikkle/graphics';
-import { EffectsManagerService } from '@rikkle/graphics';
 import { SceneManagerService } from '@rikkle/graphics';
 import { ScoringManagerService } from '@rikkle/graphics';
 import { TextureManagerService } from '@rikkle/graphics';
@@ -40,7 +39,6 @@ import { MovesLeft } from '../moves-left/moves-left';
 import { ShareContent } from '../share-content/share-content';
 import { GameMenu } from '../game-menu/game-menu';
 import { ProgressBar } from '../progress-bar/progress-bar';
-import { HorizontalLevelNavigator } from '../horizontal-level-navigator/horizontal-level-navigator';
 
 import { GameOverData } from '../dialogs/components/game-over/game-over-type';
 import { TutorialType } from '@rikkle/graphics';
@@ -57,7 +55,6 @@ import { TranslocoPipe } from '@jsverse/transloco';
     ShareContent,
     GameMenu,
     ProgressBar,
-    HorizontalLevelNavigator,
     TutorialOverlay,
     TranslocoPipe,
   ],
@@ -74,7 +71,6 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
   private dialog = inject(MatDialog);
   private sceneManager = inject(SceneManagerService);
   private objectManager = inject(ObjectManagerService);
-  private effectsManager = inject(EffectsManagerService);
   private textureManager = inject(TextureManagerService);
   private textManager = inject(TextManagerService);
   private dialogNotify = inject(DialogNotifyService);
@@ -105,7 +101,6 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
   private _activeRng: PRNG = new PRNG(this._activeLevelSeed);
 
   showScoreProgress = signal<boolean>(false);
-  isLevelChanging = signal<boolean>(false);
   splashPhase = signal<'black' | 'image' | 'fade-out' | 'done'>('black');
   LevelLabelColor = signal<string>('#ffffff');
 
@@ -122,13 +117,6 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // level change animation state
-    this.effectsManager.LevelChangeAnimation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
-      (isChanging: boolean) => {
-        this.isLevelChanging.set(isChanging);
-      },
-    );
-
     // level completed
     this.objectManager.LevelCompleted.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameOver) => {
       // game state
