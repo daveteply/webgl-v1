@@ -349,21 +349,21 @@ export class ShareManagerService {
       const availableH = bottomY - topY;
 
       const isLandscape = width > height;
-      const cardWidth = Math.min(width * 0.9, isLandscape ? 940 : 880);
+      const cardWidth = Math.min(width * 0.78, isLandscape ? 760 : 700);
       const cardX = (width - cardWidth) / 2;
 
-      const titleFontSize = Math.round(Math.min(48, Math.max(26, cardWidth * 0.055)));
+      const titleFontSize = Math.round(Math.min(48, Math.max(26, cardWidth * 0.058)));
       const paddingTop = Math.min(28, availableH * 0.04);
       const paddingBottom = Math.min(24, availableH * 0.03);
       const titleH = titleFontSize + 16;
       const dividerH = 20;
 
       const availForRows = availableH - paddingTop - titleH - dividerH - paddingBottom;
-      const idealRowH = Math.round(cardWidth * 0.075);
+      const idealRowH = Math.round(cardWidth * 0.084);
       const rowHeight = Math.max(34, Math.min(idealRowH, Math.floor(availForRows / statRows.length)));
-      const labelFontSize = Math.round(rowHeight * 0.46);
-      const valueFontSize = Math.round(rowHeight * 0.54);
-      const scoreFontSize = Math.round(rowHeight * 0.6);
+      const labelFontSize = Math.round(rowHeight * 0.5);
+      const valueFontSize = Math.round(rowHeight * 0.58);
+      const scoreFontSize = Math.round(rowHeight * 0.65);
 
       const totalRowsH = statRows.length * rowHeight;
       const cardHeight = paddingTop + titleH + dividerH + totalRowsH + paddingBottom;
@@ -391,16 +391,23 @@ export class ShareManagerService {
       ctx.restore();
 
       // 7. Render header: LEVEL X - COMPLETED
-      ctx.textAlign = 'center';
-      ctx.font = `bold ${titleFontSize}px "Changa", sans-serif`;
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.85)';
-      ctx.lineWidth = Math.max(4, Math.round(titleFontSize * 0.12));
-      ctx.lineJoin = 'round';
       const levelLabel = this.languageService.translate('SHARE.CANVAS_LEVEL', { level: data.level });
       const completedText = this.languageService.translate('HEADINGS.LEVEL_COMPLETED');
       const heading = `${levelLabel} - ${completedText}`;
-      const titleY = cardY + paddingTop + titleFontSize * 0.85;
+
+      let renderedTitleFontSize = titleFontSize;
+      ctx.font = `bold ${renderedTitleFontSize}px "Changa", sans-serif`;
+      while (ctx.measureText(heading).width > cardWidth - 48 && renderedTitleFontSize > 20) {
+        renderedTitleFontSize -= 2;
+        ctx.font = `bold ${renderedTitleFontSize}px "Changa", sans-serif`;
+      }
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.85)';
+      ctx.lineWidth = Math.max(4, Math.round(renderedTitleFontSize * 0.12));
+      ctx.lineJoin = 'round';
+      const titleY = cardY + paddingTop + renderedTitleFontSize * 0.85;
       ctx.strokeText(heading, width / 2, titleY);
       ctx.fillText(heading, width / 2, titleY);
 
