@@ -64,4 +64,39 @@ describe('ShareManagerService', () => {
     service.ClearLevelSnapshot();
     expect(service.CachedLevelSnapshotDataUrl).toBeUndefined();
   });
+
+  it('should call createLevelCompleteVictoryCard on ShareLevelComplete', () => {
+    const spy = vi
+      .spyOn(
+        service as unknown as { createLevelCompleteVictoryCard: () => Promise<void> },
+        'createLevelCompleteVictoryCard',
+      )
+      .mockImplementation(() => Promise.resolve());
+
+    // Mock _rikkleLogo so loadRikkleLogo resolves synchronously
+    (service as unknown as { _rikkleLogo: HTMLImageElement })._rikkleLogo = new Image();
+
+    service.ShareLevelComplete({
+      level: 2,
+      score: 4200,
+      fastestMatchTime: 1200,
+      fastMatchBonusTotal: 300,
+      moveCount: 12,
+      moveCountEarned: 2,
+      pieceCount: 28,
+    });
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        level: 2,
+        score: 4200,
+        fastestMatchTime: 1200,
+        fastMatchBonusTotal: 300,
+        moveCount: 12,
+        moveCountEarned: 2,
+        pieceCount: 28,
+      }),
+      true,
+    );
+  });
 });
