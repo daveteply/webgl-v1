@@ -49,4 +49,19 @@ describe('ShareManagerService', () => {
     service.UpdateInLevel(true);
     expect(service.InLevel).toBe(true);
   });
+
+  it('should manage level snapshot lifecycle', () => {
+    expect(service.LevelSnapshotRequested).toBe(false);
+    expect(service.CachedLevelSnapshotDataUrl).toBeUndefined();
+
+    service.CaptureLevelSnapshot();
+    expect(service.LevelSnapshotRequested).toBe(true);
+
+    service.UpdateScreenShotData('data:image/png;base64,mockframe');
+    expect(service.LevelSnapshotRequested).toBe(false);
+    expect(service.CachedLevelSnapshotDataUrl).toBe('data:image/png;base64,mockframe');
+
+    service.ClearLevelSnapshot();
+    expect(service.CachedLevelSnapshotDataUrl).toBeUndefined();
+  });
 });

@@ -1,7 +1,8 @@
 import { Component, inject, ChangeDetectorRef, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef } from '@angular/core';
@@ -11,13 +12,23 @@ import { GAME_OVER_EMOJI } from '@rikkle/engine';
 import { GameOverData } from './game-over-type';
 import { TextureManagerService } from '@rikkle/graphics';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { UserSettings } from '../user-settings/user-settings';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../progress-bar/progress-bar';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'wgl-game-over',
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatExpansionModule, HighScores, ProgressBar, TranslocoPipe],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatExpansionModule,
+    HighScores,
+    ProgressBar,
+    TranslocoPipe,
+  ],
   templateUrl: './game-over.html',
   styleUrl: './game-over.scss',
 })
@@ -33,6 +44,7 @@ export class GameOver implements OnInit {
 
   private textureManager = inject(TextureManagerService);
   private analyticsManager = inject(AnalyticsManagerService);
+  private dialog = inject(MatDialog);
   private dialogRef = inject(MatDialogRef<GameOver>);
   public data: GameOverData = inject(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
@@ -96,5 +108,12 @@ export class GameOver implements OnInit {
     });
     this.data.startOver = false;
     this.dialogRef.close(this.data);
+  }
+
+  openSettings(): void {
+    this.dialog.open(UserSettings, {
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
   }
 }

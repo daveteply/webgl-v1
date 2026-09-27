@@ -1,5 +1,14 @@
 <div id="intro-dialog" class="glass-dialog has-canvas-animation">
   <canvas #dialogCanvas class="canvas-backer"></canvas>
+  <button
+    mat-icon-button
+    class="dialog-corner-btn"
+    (click)="openSettings()"
+    [attr.aria-label]="'MENU.SETTINGS' | transloco"
+    [title]="'MENU.SETTINGS' | transloco"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
   <div class="logo"></div>
   <div class="version-label">{{ appVersion }}</div>
 

@@ -43,7 +43,8 @@
     "MOVES_USED": "Züge verwendet",
     "MOVES_EARNED": "Züge erhalten",
     "PIECES": "Steine",
-    "PERFECT_MATCH": "Perfekter Treffer"
+    "PERFECT_MATCH": "Perfekter Treffer",
+    "SCORE": "Punkte"
   },
   "INTRO": {
     "CONTINUE_GAME": "Fortsetzen (Level {{ level }})",
@@ -153,6 +154,7 @@
     "CANVAS_SCORE": "Punkte: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - 3D-Puzzle",
     "SOCIAL_TEXT_SCORE": "Kannst du meinen Punktestand von {{ score }} in Level {{ level }} schlagen? Spiele Rikkle: {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "Entdecke Rikkle, das faszinierende 3D-Zylinderpuzzle! Jetzt spielen: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT": "Entdecke Rikkle, das faszinierende 3D-Zylinderpuzzle! Jetzt spielen: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Habe gerade Level {{ level }} in Rikkle gemeistert mit einem {{ fastest }}s schnellsten Match! Punkte: {{ score }}. Jetzt spielen: {{ url }}"
   }
 }

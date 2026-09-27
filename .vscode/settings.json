@@ -19,6 +19,7 @@
     "mult",
     "Phong",
     "Raycaster",
+    "Renderable",
     "rikkle",
     "SMAA",
     "Synthwave",

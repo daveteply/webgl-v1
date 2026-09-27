@@ -43,7 +43,8 @@
     "MOVES_USED": "Moves used",
     "MOVES_EARNED": "Moves earned",
     "PIECES": "Pieces",
-    "PERFECT_MATCH": "Perfect match"
+    "PERFECT_MATCH": "Perfect match",
+    "SCORE": "Score"
   },
   "INTRO": {
     "CONTINUE_GAME": "Continue (Level {{ level }})",
@@ -153,6 +154,7 @@
     "CANVAS_SCORE": "Score: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - 3D Match Puzzle",
     "SOCIAL_TEXT_SCORE": "Can you beat my score of {{ score }} on Level {{ level }}? Play Rikkle: {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "Check out Rikkle, the 3D cylinder match puzzle! Play now: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT": "Check out Rikkle, the 3D cylinder match puzzle! Play now: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Just cleared Level {{ level }} in Rikkle with a {{ fastest }}s fastest match! Score: {{ score }}. Play now: {{ url }}"
   }
 }

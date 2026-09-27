@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, DestroyRef, inject, signal } from '@angular/core';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,7 @@ import { ObjectManagerService } from '@rikkle/graphics';
 import { TextureManagerService } from '@rikkle/graphics';
 import { SaveGameService } from '@rikkle/graphics';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { UserSettings } from '../user-settings/user-settings';
 import { HighScores } from '../../../high-scores/high-scores';
 import { ProgressBar } from '../../../progress-bar/progress-bar';
 import { APP_VERSION } from '@rikkle/shared';
@@ -44,6 +45,7 @@ export class Intro implements OnInit, OnDestroy {
   private dialogAnimation = inject(DialogAnimationService);
   private saveGame = inject(SaveGameService);
   private analyticsManager = inject(AnalyticsManagerService);
+  private dialog = inject(MatDialog);
   public dialogRef = inject(MatDialogRef<Intro>);
   private destroyRef = inject(DestroyRef);
 
@@ -120,5 +122,12 @@ export class Intro implements OnInit, OnDestroy {
       savedLevel: this.savedLevel(),
     });
     this.confirmNewGame.set(false);
+  }
+
+  openSettings(): void {
+    this.dialog.open(UserSettings, {
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
   }
 }

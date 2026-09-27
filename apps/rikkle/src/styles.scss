@@ -194,4 +194,18 @@ body {
     opacity: 0.45 !important;
     transform: none !important;
   }
+
+  .dialog-corner-btn {
+    position: absolute !important;
+    top: 0.5em !important;
+    right: 0.5em !important;
+    z-index: 10 !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    transition: all 0.25s ease !important;
+
+    &:hover {
+      color: #ffffff !important;
+      transform: rotate(35deg) scale(1.1);
+    }
+  }
 }

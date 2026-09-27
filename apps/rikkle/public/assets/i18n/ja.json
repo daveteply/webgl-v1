@@ -43,7 +43,8 @@
     "MOVES_USED": "使用手数",
     "MOVES_EARNED": "獲得手数",
     "PIECES": "ピース数",
-    "PERFECT_MATCH": "パーフェクトマッチ"
+    "PERFECT_MATCH": "パーフェクトマッチ",
+    "SCORE": "スコア"
   },
   "INTRO": {
     "CONTINUE_GAME": "つづきから (レベル {{ level }})",
@@ -153,6 +154,7 @@
     "CANVAS_SCORE": "スコア: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - 3Dパズル",
     "SOCIAL_TEXT_SCORE": "レベル {{ level }} で私のスコア {{ score }} 点を超えられる？ Rikkleをプレイ: {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "3Dシリンダーパズル Rikkle をプレイしよう！: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT": "3Dシリンダーパズル Rikkle をプレイしよう！: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Rikkleでレベル {{ level }} をクリア！最速マッチ: {{ fastest }}秒、スコア: {{ score }}点。挑戦してみて！: {{ url }}"
   }
 }

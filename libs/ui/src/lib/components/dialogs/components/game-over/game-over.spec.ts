@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { vi } from 'vitest';
 
 import { GameOver } from './game-over';
+import { UserSettings } from '../user-settings/user-settings';
 import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
 describe('GameOver', () => {
@@ -77,5 +78,18 @@ describe('GameOver', () => {
       expect.objectContaining({ level: 3 }),
     );
     expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ startOver: false }));
+  });
+
+  it('should open settings dialog', () => {
+    const dialog = component['dialog'];
+    const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({} as unknown as MatDialogRef<UserSettings>);
+    component.openSettings();
+    expect(openSpy).toHaveBeenCalledWith(
+      UserSettings,
+      expect.objectContaining({
+        minWidth: '20em',
+        panelClass: ['wgl-pane-bounce'],
+      }),
+    );
   });
 });

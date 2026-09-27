@@ -74,6 +74,44 @@
     }
   }
 
+  .actions-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75em;
+    flex-wrap: wrap;
+    padding: 0.25em 0;
+
+    .share-btn {
+      font-size: 1.15rem;
+      border-radius: 12px;
+      padding: 0.4em 0.9em;
+      border: 1px solid rgba(216, 180, 254, 0.45);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f3e8ff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      transition: all 0.2s ease;
+
+      &:hover:not([disabled]) {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(216, 180, 254, 0.75);
+        transform: translateY(-2px);
+      }
+
+      mat-icon {
+        font-size: 1.2em;
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
+
+    .mat-mdc-raised-button {
+      margin-bottom: 0;
+    }
+  }
+
   .mat-mdc-raised-button {
     font-size: 1.2rem;
     margin-bottom: 0.15em;
@@ -92,6 +130,12 @@
       font-size: 1.25rem;
       line-height: 1.45rem;
       padding-bottom: 0.4em;
+    }
+
+    .actions-row {
+      .share-btn {
+        font-size: 1.3rem;
+      }
     }
 
     .mat-mdc-raised-button {

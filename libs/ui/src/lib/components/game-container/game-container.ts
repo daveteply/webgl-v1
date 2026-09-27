@@ -166,6 +166,7 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
         this._dialogGameOverRef = this.dialog.open(GameOver, this.dialogConfig());
         this._dialogGameOverRef.afterClosed().subscribe((data?: GameOverData) => {
           this.shareManager.UpdateInLevel(true);
+          this.shareManager.ClearLevelSnapshot();
           this._isGameOver = false;
           const startOver = data?.startOver ?? true;
           if (startOver) {
@@ -407,6 +408,7 @@ export class GameContainer implements OnInit, AfterViewInit, OnDestroy {
   private handleLevelDialogCLosed(): void {
     // show share
     this.shareManager.UpdateInLevel(true);
+    this.shareManager.ClearLevelSnapshot();
 
     // dismiss dialog and launch next level
     if (this._showWelcome) {

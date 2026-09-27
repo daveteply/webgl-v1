@@ -23,6 +23,7 @@ import { PostProcessingManagerService } from './post-processing-manager';
 import { MaterialManagerService } from './material/material-manager';
 import { HintsManagerService, TutorialType } from './hints-manager';
 import { EffectsManagerService } from './effects-manager';
+import { ShareManagerService } from './share-manager';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,7 @@ export class InteractionManagerService {
   private hapticsManager = inject(HapticsManagerService);
   private hintsManager = inject(HintsManagerService);
   private materialManager = inject(MaterialManagerService);
+  private shareManager = inject(ShareManagerService);
 
   private _canvasRect!: DOMRect;
   set CanvasRect(rect: DOMRect) {
@@ -134,6 +136,7 @@ export class InteractionManagerService {
             this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
               this.audioManager.PlayLevelComplete();
               this.hapticsManager.LevelCompletePulse();
+              this.shareManager.CaptureLevelSnapshot();
               this.objectManager.AnimateLevelComplete();
               this.LockBoard(false);
 
@@ -419,6 +422,7 @@ export class InteractionManagerService {
           this.effectsManager.RemoveAnimationComplete.pipe(take(1)).subscribe(() => {
             this.audioManager.PlayLevelComplete();
             this.hapticsManager.LevelCompletePulse();
+            this.shareManager.CaptureLevelSnapshot();
             this.objectManager.AnimateLevelComplete();
             this.LockBoard(false);
             this.objectManager.LevelCompleted.next(false);

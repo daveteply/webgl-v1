@@ -6,3 +6,8 @@ export interface LevelStats {
   pieceCount: number;
   perfectMatchBonus?: number;
 }
+
+export interface LevelCompleteShareData extends LevelStats {
+  level: number;
+  score: number;
+}

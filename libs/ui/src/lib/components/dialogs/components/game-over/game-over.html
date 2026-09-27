@@ -1,4 +1,13 @@
 <div id="game-over" class="glass-dialog">
+  <button
+    mat-icon-button
+    class="dialog-corner-btn"
+    (click)="openSettings()"
+    [attr.aria-label]="'MENU.SETTINGS' | transloco"
+    [title]="'MENU.SETTINGS' | transloco"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
   <h1 class="text-center">{{ 'GAME_OVER.TITLE' | transloco }}</h1>
   <mat-dialog-content>
     <p class="game-over-emoji">{{ gameOverEmoji() }}</p>

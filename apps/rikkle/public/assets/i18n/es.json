@@ -43,7 +43,8 @@
     "MOVES_USED": "Movimientos usados",
     "MOVES_EARNED": "Movimientos ganados",
     "PIECES": "Piezas",
-    "PERFECT_MATCH": "Combinación perfecta"
+    "PERFECT_MATCH": "Combinación perfecta",
+    "SCORE": "Puntuación"
   },
   "INTRO": {
     "CONTINUE_GAME": "Continuar (Nivel {{ level }})",
@@ -153,6 +154,7 @@
     "CANVAS_SCORE": "Puntuación: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - Puzzle 3D",
     "SOCIAL_TEXT_SCORE": "¿Puedes superar mi puntuación de {{ score }} en el Nivel {{ level }}? Juega a Rikkle: {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "¡Descubre Rikkle, el puzzle 3D de cilindros! Juega ahora: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT": "¡Descubre Rikkle, el puzzle 3D de cilindros! Juega ahora: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "¡Completé el Nivel {{ level }} en Rikkle con una combinación de {{ fastest }}s! Puntuación: {{ score }}. Juega ahora: {{ url }}"
   }
 }

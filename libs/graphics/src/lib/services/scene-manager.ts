@@ -141,7 +141,10 @@ export class SceneManagerService implements OnDestroy {
     this.objectManager.UpdateStarField();
     this.postProcessingManager.Composer.render(deltaTime);
 
-    if (this.shareManager.ScreenShotRequested && this._renderer?.domElement) {
+    if (
+      (this.shareManager.ScreenShotRequested || this.shareManager.LevelSnapshotRequested) &&
+      this._renderer?.domElement
+    ) {
       this.shareManager.UpdateScreenShotData(this._renderer.domElement.toDataURL());
     }
 
