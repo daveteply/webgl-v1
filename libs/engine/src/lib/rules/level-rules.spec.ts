@@ -5,7 +5,12 @@ import { LevelMaterialType } from '../models/level-material-type';
 import { GravityType } from '../models/gravity-type';
 import { LevelOrientationType } from '../models/level-orientation-type';
 import { LevelTransitionType } from '../models/level-transition-type';
-import { LEVEL_COMPLETE_HEADING_KEYS } from '../game-constants';
+import {
+  LEVEL_COMPLETE_HEADING_KEYS,
+  SOCIAL_TEXT_DEFAULT_KEYS,
+  SOCIAL_TEXT_LEVEL_COMPLETE_KEYS,
+  SOCIAL_TEXT_SCORE_KEYS,
+} from '../game-constants';
 
 describe('level-rules', () => {
   it('should initialize level 1 with Cube, ColorBumpShape, No Gravity, and Vertical orientation', () => {
@@ -118,5 +123,16 @@ describe('level-rules', () => {
   it('should verify LEVEL_COMPLETE_HEADING_KEYS translation keys', () => {
     expect(LEVEL_COMPLETE_HEADING_KEYS.length).toBeGreaterThan(0);
     expect(LEVEL_COMPLETE_HEADING_KEYS).toContain('HEADINGS.SOLVED');
+  });
+
+  it('should verify social share text translation key arrays', () => {
+    expect(SOCIAL_TEXT_LEVEL_COMPLETE_KEYS.length).toBeGreaterThanOrEqual(4);
+    expect(SOCIAL_TEXT_LEVEL_COMPLETE_KEYS).toContain('SHARE.SOCIAL_TEXT_LEVEL_COMPLETE');
+
+    expect(SOCIAL_TEXT_SCORE_KEYS.length).toBeGreaterThanOrEqual(4);
+    expect(SOCIAL_TEXT_SCORE_KEYS).toContain('SHARE.SOCIAL_TEXT_SCORE');
+
+    expect(SOCIAL_TEXT_DEFAULT_KEYS.length).toBeGreaterThanOrEqual(4);
+    expect(SOCIAL_TEXT_DEFAULT_KEYS).toContain('SHARE.SOCIAL_TEXT_DEFAULT');
   });
 });

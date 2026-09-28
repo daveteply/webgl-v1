@@ -1,4 +1,4 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule, DOCUMENT, DecimalPipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -12,17 +12,19 @@ import {
   computed,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay, Subject } from 'rxjs';
 import { Tween } from '@tweenjs/tween.js';
 import { mainTweenGroup } from '@rikkle/graphics';
 
 import { AudioManagerService, AudioType } from '@rikkle/audio';
-import { TextureManagerService } from '@rikkle/graphics';
+import { ScoringManagerService, ShareManagerService, TextureManagerService } from '@rikkle/graphics';
 import { DialogNotifyService } from '../../services/dialog-notify';
 import { DialogAnimationService } from '../../services/dialog-animation';
 import { AnalyticsEventType, AnalyticsManagerService } from '@rikkle/shared';
+import { UserSettings } from '../user-settings/user-settings';
 
 import { LEVEL_COMPLETE_HEADING_KEYS, LevelStats } from '@rikkle/engine';
 import { TextZoom } from '../../../text-zoom/text-zoom';
@@ -52,7 +54,7 @@ interface LevelStat {
 @Component({
   selector: 'wgl-level-complete',
   providers: [DecimalPipe],
-  imports: [CommonModule, MatDialogModule, MatButtonModule, TextZoom, ProgressBar, TranslocoPipe],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, TextZoom, ProgressBar, TranslocoPipe],
   templateUrl: './level-complete.html',
   styleUrl: './level-complete.scss',
 })
@@ -90,6 +92,10 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
   private dialogNotify = inject(DialogNotifyService);
   private dialogAnimation = inject(DialogAnimationService);
   private analyticsManager = inject(AnalyticsManagerService);
+  private shareManager = inject(ShareManagerService);
+  private scoringManager = inject(ScoringManagerService);
+  private dialog = inject(MatDialog);
+  private document = inject(DOCUMENT);
   public dialogRef = inject(MatDialogRef<LevelComplete>);
   public data = inject<LevelDialogData | null>(MAT_DIALOG_DATA);
   private destroyRef = inject(DestroyRef);
@@ -177,6 +183,30 @@ export class LevelComplete implements OnDestroy, AfterViewInit {
     if (this.data) {
       this.setData(this.data);
     }
+  }
+
+  openSettings(): void {
+    this.dialog.open(UserSettings, {
+      minWidth: '20em',
+      panelClass: ['wgl-pane-bounce'],
+    });
+  }
+
+  Share(): void {
+    this.analyticsManager.Log(AnalyticsEventType.ShareCTA);
+    this.shareManager.ShareLevelComplete(
+      {
+        level: this.data?.level ?? this.scoringManager.Level,
+        score: this.scoringManager.Score,
+        fastestMatchTime: this.fastestMatchTimeRaw(),
+        fastMatchBonusTotal: this.fastMatchBonusTotal(),
+        moveCount: this.moveCount(),
+        moveCountEarned: this.moveCountEarned(),
+        pieceCount: this.pieceCount(),
+        perfectMatchBonus: this.perfectMatchBonus(),
+      },
+      this.document,
+    );
   }
 
   NextLevel(): void {

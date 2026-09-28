@@ -1,5 +1,14 @@
 <div id="level-dialog" class="glass-dialog has-canvas-animation" [style]="borderStyle()">
   <canvas #dialogCanvas class="canvas-backer"></canvas>
+  <button
+    mat-icon-button
+    class="dialog-corner-btn"
+    (click)="openSettings()"
+    [attr.aria-label]="'MENU.SETTINGS' | transloco"
+    [title]="'MENU.SETTINGS' | transloco"
+  >
+    <mat-icon>settings</mat-icon>
+  </button>
   <h1 class="dialog-header">{{ LevelHeadingKey() | transloco }}</h1>
 
   <mat-dialog-content class="content">
@@ -33,7 +42,17 @@
       [value]="progress()"
     ></wgl-progress-bar>
   </mat-dialog-content>
-  <mat-dialog-actions align="center">
+  <mat-dialog-actions align="center" class="actions-row">
+    <button
+      mat-stroked-button
+      class="share-btn"
+      (click)="Share()"
+      [disabled]="texturesStillLoading() || levelInfoProcessing()"
+      [title]="'HUD.SHARE_LABEL' | transloco"
+    >
+      <mat-icon>share</mat-icon>
+      <span>{{ 'HUD.SHARE_LABEL' | transloco }}</span>
+    </button>
     <button
       mat-raised-button
       color="primary"

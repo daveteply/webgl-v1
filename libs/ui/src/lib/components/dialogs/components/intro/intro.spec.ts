@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { vi } from 'vitest';
 
 import { Intro } from './intro';
+import { UserSettings } from '../user-settings/user-settings';
 import { SaveGameService } from '@rikkle/graphics';
 import { AnalyticsEventType, AnalyticsManagerService, provideTranslocoTesting } from '@rikkle/shared';
 
@@ -88,5 +89,18 @@ describe('Intro', () => {
       expect.objectContaining({ savedLevel: 4 }),
     );
     expect(component.confirmNewGame()).toBe(false);
+  });
+
+  it('should open settings dialog', () => {
+    const dialog = component['dialog'];
+    const openSpy = vi.spyOn(dialog, 'open').mockReturnValue({} as unknown as MatDialogRef<UserSettings>);
+    component.openSettings();
+    expect(openSpy).toHaveBeenCalledWith(
+      UserSettings,
+      expect.objectContaining({
+        minWidth: '20em',
+        panelClass: ['wgl-pane-bounce'],
+      }),
+    );
   });
 });

@@ -49,4 +49,54 @@ describe('ShareManagerService', () => {
     service.UpdateInLevel(true);
     expect(service.InLevel).toBe(true);
   });
+
+  it('should manage level snapshot lifecycle', () => {
+    expect(service.LevelSnapshotRequested).toBe(false);
+    expect(service.CachedLevelSnapshotDataUrl).toBeUndefined();
+
+    service.CaptureLevelSnapshot();
+    expect(service.LevelSnapshotRequested).toBe(true);
+
+    service.UpdateScreenShotData('data:image/png;base64,mockframe');
+    expect(service.LevelSnapshotRequested).toBe(false);
+    expect(service.CachedLevelSnapshotDataUrl).toBe('data:image/png;base64,mockframe');
+
+    service.ClearLevelSnapshot();
+    expect(service.CachedLevelSnapshotDataUrl).toBeUndefined();
+  });
+
+  it('should call createLevelCompleteVictoryCard on ShareLevelComplete', () => {
+    const spy = vi
+      .spyOn(
+        service as unknown as { createLevelCompleteVictoryCard: () => Promise<void> },
+        'createLevelCompleteVictoryCard',
+      )
+      .mockImplementation(() => Promise.resolve());
+
+    // Mock _rikkleLogo so loadRikkleLogo resolves synchronously
+    (service as unknown as { _rikkleLogo: HTMLImageElement })._rikkleLogo = new Image();
+
+    service.ShareLevelComplete({
+      level: 2,
+      score: 4200,
+      fastestMatchTime: 1200,
+      fastMatchBonusTotal: 300,
+      moveCount: 12,
+      moveCountEarned: 2,
+      pieceCount: 28,
+    });
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        level: 2,
+        score: 4200,
+        fastestMatchTime: 1200,
+        fastMatchBonusTotal: 300,
+        moveCount: 12,
+        moveCountEarned: 2,
+        pieceCount: 28,
+      }),
+      true,
+    );
+  });
 });

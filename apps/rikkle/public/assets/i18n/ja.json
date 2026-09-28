@@ -43,7 +43,8 @@
     "MOVES_USED": "使用手数",
     "MOVES_EARNED": "獲得手数",
     "PIECES": "ピース数",
-    "PERFECT_MATCH": "パーフェクトマッチ"
+    "PERFECT_MATCH": "パーフェクトマッチ",
+    "SCORE": "スコア"
   },
   "INTRO": {
     "CONTINUE_GAME": "つづきから (レベル {{ level }})",
@@ -153,6 +154,16 @@
     "CANVAS_SCORE": "スコア: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - 3Dパズル",
     "SOCIAL_TEXT_SCORE": "レベル {{ level }} で私のスコア {{ score }} 点を超えられる？ Rikkleをプレイ: {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "3Dシリンダーパズル Rikkle をプレイしよう！: {{ url }}"
+    "SOCIAL_TEXT_SCORE_2": "Rikkleのレベル {{ level }} で {{ score }} 点獲得！この記録を超えられる？ {{ url }}",
+    "SOCIAL_TEXT_SCORE_3": "Rikkleで絶好調！レベル {{ level }} で {{ score }} 点を達成。ぜひプレイしてみて: {{ url }}",
+    "SOCIAL_TEXT_SCORE_4": "レベル {{ level }} クリア、スコアは {{ score }} 点！誰かこのスコアに挑戦して！ {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "3Dシリンダーパズル Rikkle をプレイしよう！: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_2": "回して揃えて消す！3Dシリンダーパズル『Rikkle』に挑戦しよう: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_3": "ハマる面白さの3D回転マッチパズル。Rikkleを今すぐ遊ぼう！ {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_4": "回転させてマッチ！ブラウザで遊べる無料3Dパズル Rikkle: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Rikkleでレベル {{ level }} をクリア！最速マッチ: {{ fastest }}秒、スコア: {{ score }}点。挑戦してみて！: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_2": "レベル {{ level }} を完全制覇！最速 {{ fastest }}秒マッチ＆スコア {{ score }}点。Rikkleで勝負！ {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_3": "レベル {{ level }} 勝利！🧩 最速 {{ fastest }}秒でマッチしてスコア {{ score }}点。Rikkleで遊ぼう: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_4": "Rikkleのレベル {{ level }} を撃破！スコア {{ score }}点（最速マッチ {{ fastest }}秒）。この記録に届くかな？ {{ url }}"
   }
 }

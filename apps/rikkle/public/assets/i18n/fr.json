@@ -43,7 +43,8 @@
     "MOVES_USED": "Coups utilisés",
     "MOVES_EARNED": "Coups gagnés",
     "PIECES": "Pièces",
-    "PERFECT_MATCH": "Match parfait"
+    "PERFECT_MATCH": "Match parfait",
+    "SCORE": "Score"
   },
   "INTRO": {
     "CONTINUE_GAME": "Continuer (Niveau {{ level }})",
@@ -153,6 +154,16 @@
     "CANVAS_SCORE": "Score : {{ score }}",
     "SOCIAL_TITLE": "Rikkle - Puzzle 3D",
     "SOCIAL_TEXT_SCORE": "Pouvez-vous battre mon score de {{ score }} au Niveau {{ level }} ? Jouez à Rikkle : {{ url }}",
-    "SOCIAL_TEXT_DEFAULT": "Découvrez Rikkle, le puzzle cylindrique en 3D ! Jouez maintenant : {{ url }}"
+    "SOCIAL_TEXT_SCORE_2": "{{ score }} points au Niveau {{ level }} sur Rikkle ! Pouvez-vous faire mieux ? {{ url }}",
+    "SOCIAL_TEXT_SCORE_3": "En plein rush sur Rikkle ! Je viens d'atteindre {{ score }} points au Niveau {{ level }}. Essayez : {{ url }}",
+    "SOCIAL_TEXT_SCORE_4": "Niveau {{ level }} réussi, {{ score }} points au compteur ! Qui peut battre ça sur Rikkle ? {{ url }}",
+    "SOCIAL_TEXT_DEFAULT": "Découvrez Rikkle, le puzzle cylindrique en 3D ! Jouez maintenant : {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_2": "Tournez, alignez et gagnez ! Découvrez le puzzle 3D Rikkle : {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_3": "Un super puzzle cylindrique en 3D. Lancez une partie sur Rikkle ! {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_4": "Prêt à tourner et aligner ? Jouez gratuitement à Rikkle sur votre navigateur : {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Niveau {{ level }} terminé sur Rikkle avec un match rapide de {{ fastest }}s ! Score : {{ score }}. Jouez maintenant : {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_2": "Niveau {{ level }} écrasé ! {{ score }} points et un match éclair en {{ fastest }}s. Pouvez-vous faire mieux sur Rikkle ? {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_3": "Victoire au Niveau {{ level }} ! 🧩 Match éclair de {{ fastest }}s et {{ score }} points. Rejoignez Rikkle : {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_4": "Niveau {{ level }} débloqué sur Rikkle ! Score : {{ score }} pts (match le plus rapide : {{ fastest }}s). À votre tour : {{ url }}"
   }
 }

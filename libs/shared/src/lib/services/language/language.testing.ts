@@ -71,6 +71,29 @@ export const DEFAULT_TEST_TRANSLATIONS: Record<string, unknown> = {
     CLOSE: 'Close',
     SHARE: 'Share',
   },
+  SHARE: {
+    CANVAS_LEVEL: 'Level: {{ level }}',
+    CANVAS_SCORE: 'Score: {{ score }}',
+    SOCIAL_TITLE: 'Rikkle - 3D Match Puzzle',
+    SOCIAL_TEXT_SCORE: 'Can you beat my score of {{ score }} on Level {{ level }}? Play Rikkle: {{ url }}',
+    SOCIAL_TEXT_SCORE_2:
+      'Sitting on {{ score }} points at Level {{ level }} in Rikkle! Think you can top that? {{ url }}',
+    SOCIAL_TEXT_SCORE_3: 'On a roll in Rikkle! Just hit {{ score }} on Level {{ level }}. Try it out: {{ url }}',
+    SOCIAL_TEXT_SCORE_4:
+      'Level {{ level }} down, {{ score }} points on the board! Who can beat this in Rikkle? {{ url }}',
+    SOCIAL_TEXT_DEFAULT: 'Check out Rikkle, the 3D cylinder match puzzle! Play now: {{ url }}',
+    SOCIAL_TEXT_DEFAULT_2: 'Spin, match, and clear! Dive into Rikkle, the 3D puzzle challenge: {{ url }}',
+    SOCIAL_TEXT_DEFAULT_3: 'Loving this 3D cylinder matching puzzle. Give Rikkle a spin! {{ url }}',
+    SOCIAL_TEXT_DEFAULT_4: 'Ready to rotate and match? Play Rikkle free in your browser: {{ url }}',
+    SOCIAL_TEXT_LEVEL_COMPLETE:
+      'Just cleared Level {{ level }} in Rikkle with a {{ fastest }}s fastest match! Score: {{ score }}. Play now: {{ url }}',
+    SOCIAL_TEXT_LEVEL_COMPLETE_2:
+      'Level {{ level }} crushed! Scored {{ score }} with a {{ fastest }}s blitz match. Can you beat that in Rikkle? {{ url }}',
+    SOCIAL_TEXT_LEVEL_COMPLETE_3:
+      'Victory on Level {{ level }}! 🧩 Clocked a {{ fastest }}s match and scored {{ score }}. Jump into Rikkle: {{ url }}',
+    SOCIAL_TEXT_LEVEL_COMPLETE_4:
+      'Cracked Level {{ level }} in Rikkle! Finished with {{ score }} pts (fastest match: {{ fastest }}s). Can you match this? {{ url }}',
+  },
 };
 
 /**
