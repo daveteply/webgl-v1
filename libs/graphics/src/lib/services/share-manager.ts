@@ -1,7 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
-import { LevelCompleteShareData, SHARE_FILE_NAME, SHARE_URL } from '@rikkle/engine';
+import {
+  LevelCompleteShareData,
+  SHARE_FILE_NAME,
+  SHARE_URL,
+  SOCIAL_TEXT_DEFAULT_KEYS,
+  SOCIAL_TEXT_LEVEL_COMPLETE_KEYS,
+  SOCIAL_TEXT_SCORE_KEYS,
+} from '@rikkle/engine';
 import { LanguageService } from '@rikkle/shared';
 import { ScoringManagerService } from './scoring-manager';
 
@@ -478,7 +485,9 @@ export class ShareManagerService {
       // 9. Prepare social share text & start sharing
       const fastestSec = data.fastestMatchTime ? `${Math.round((data.fastestMatchTime / 1000) * 10) / 10}` : '0';
       const scoreFormatted = this.languageService.formatNumber(data.score);
-      const shareText = this.languageService.translate('SHARE.SOCIAL_TEXT_LEVEL_COMPLETE', {
+      const levelCompleteKey =
+        SOCIAL_TEXT_LEVEL_COMPLETE_KEYS[Math.floor(Math.random() * SOCIAL_TEXT_LEVEL_COMPLETE_KEYS.length)];
+      const shareText = this.languageService.translate(levelCompleteKey, {
         level: data.level,
         fastest: fastestSec,
         score: scoreFormatted,
@@ -506,15 +515,17 @@ export class ShareManagerService {
       const file = new File([blob], fileName, { type: 'image/png' });
 
       const scoreFormatted = this.languageService.formatNumber(this.scoringManager.Score);
+      const scoreKey = SOCIAL_TEXT_SCORE_KEYS[Math.floor(Math.random() * SOCIAL_TEXT_SCORE_KEYS.length)];
+      const defaultKey = SOCIAL_TEXT_DEFAULT_KEYS[Math.floor(Math.random() * SOCIAL_TEXT_DEFAULT_KEYS.length)];
       const shareText =
         customText ||
         (this.scoringManager.Score > 0
-          ? this.languageService.translate('SHARE.SOCIAL_TEXT_SCORE', {
+          ? this.languageService.translate(scoreKey, {
               score: scoreFormatted,
               level: this.scoringManager.Level,
               url: SHARE_URL,
             })
-          : this.languageService.translate('SHARE.SOCIAL_TEXT_DEFAULT', { url: SHARE_URL }));
+          : this.languageService.translate(defaultKey, { url: SHARE_URL }));
 
       const shareData: ShareData = {
         title: this.languageService.translate('SHARE.SOCIAL_TITLE'),

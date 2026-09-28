@@ -154,7 +154,16 @@
     "CANVAS_SCORE": "Puntuación: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - Puzzle 3D",
     "SOCIAL_TEXT_SCORE": "¿Puedes superar mi puntuación de {{ score }} en el Nivel {{ level }}? Juega a Rikkle: {{ url }}",
+    "SOCIAL_TEXT_SCORE_2": "¡{{ score }} puntos en el Nivel {{ level }} de Rikkle! ¿Crees que puedes superarme? {{ url }}",
+    "SOCIAL_TEXT_SCORE_3": "¡Buena racha en Rikkle! Acabo de lograr {{ score }} puntos en el Nivel {{ level }}. Pruébalo: {{ url }}",
+    "SOCIAL_TEXT_SCORE_4": "¡Nivel {{ level }} superado con {{ score }} puntos! ¿Quién puede batir esto en Rikkle? {{ url }}",
     "SOCIAL_TEXT_DEFAULT": "¡Descubre Rikkle, el puzzle 3D de cilindros! Juega ahora: {{ url }}",
-    "SOCIAL_TEXT_LEVEL_COMPLETE": "¡Completé el Nivel {{ level }} en Rikkle con una combinación de {{ fastest }}s! Puntuación: {{ score }}. Juega ahora: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT_2": "¡Gira, alinea y despeja! Sumérgete en el desafío 3D de Rikkle: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_3": "Un puzzle 3D de cilindros increíble. ¡Pruébalo gratis en Rikkle! {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_4": "¿Listo para girar y combinar? Juega a Rikkle en tu navegador: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "¡Completé el Nivel {{ level }} en Rikkle con una combinación de {{ fastest }}s! Puntuación: {{ score }}. Juega ahora: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_2": "¡Nivel {{ level }} superado con éxito! {{ score }} puntos y mejor combinación en {{ fastest }}s. ¿Puedes superarlo en Rikkle? {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_3": "¡Victoria en el Nivel {{ level }}! 🧩 Combinación récord de {{ fastest }}s y {{ score }} puntos. Juega a Rikkle: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_4": "¡Completado el Nivel {{ level }} en Rikkle! Puntos: {{ score }} (tiempo más rápido: {{ fastest }}s). ¿Te atreves? {{ url }}"
   }
 }

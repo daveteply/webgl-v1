@@ -154,7 +154,16 @@
     "CANVAS_SCORE": "Punkte: {{ score }}",
     "SOCIAL_TITLE": "Rikkle - 3D-Puzzle",
     "SOCIAL_TEXT_SCORE": "Kannst du meinen Punktestand von {{ score }} in Level {{ level }} schlagen? Spiele Rikkle: {{ url }}",
+    "SOCIAL_TEXT_SCORE_2": "{{ score }} Punkte in Level {{ level }} bei Rikkle! Schaffst du mehr? {{ url }}",
+    "SOCIAL_TEXT_SCORE_3": "Neuer Highscore-Lauf bei Rikkle: {{ score }} Punkte in Level {{ level }}! Probier es aus: {{ url }}",
+    "SOCIAL_TEXT_SCORE_4": "Level {{ level }} geschafft und {{ score }} Punkte gesammelt! Wer schlägt das in Rikkle? {{ url }}",
     "SOCIAL_TEXT_DEFAULT": "Entdecke Rikkle, das faszinierende 3D-Zylinderpuzzle! Jetzt spielen: {{ url }}",
-    "SOCIAL_TEXT_LEVEL_COMPLETE": "Habe gerade Level {{ level }} in Rikkle gemeistert mit einem {{ fastest }}s schnellsten Match! Punkte: {{ score }}. Jetzt spielen: {{ url }}"
+    "SOCIAL_TEXT_DEFAULT_2": "Drehen, kombinieren und abräumen! Rikkle, das 3D-Zylinderpuzzle: {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_3": "Macht richtig Laune: Rikkle 3D-Puzzlespiel. Dreh auch eine Runde! {{ url }}",
+    "SOCIAL_TEXT_DEFAULT_4": "Bereit zum Drehen und Kombinieren? Spiele Rikkle kostenlos im Browser: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE": "Habe gerade Level {{ level }} in Rikkle gemeistert mit einem {{ fastest }}s schnellsten Match! Punkte: {{ score }}. Jetzt spielen: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_2": "Level {{ level }} geknackt! {{ score }} Punkte und schnellstes Match in {{ fastest }}s. Schlägst du mich in Rikkle? {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_3": "Sieg in Level {{ level }}! 🧩 {{ fastest }}s Blitz-Match und {{ score }} Punkte. Jetzt Rikkle spielen: {{ url }}",
+    "SOCIAL_TEXT_LEVEL_COMPLETE_4": "Level {{ level }} in Rikkle abgeschlossen! Endstand: {{ score }} Punkte (Bestzeit: {{ fastest }}s). Schaffst du das auch? {{ url }}"
   }
 }
