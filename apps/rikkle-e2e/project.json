@@ -5,12 +5,6 @@
   "sourceRoot": "apps/rikkle-e2e/src",
   "tags": ["scope:e2e"],
   "targets": {
-    "e2e": {
-      "executor": "@nx/playwright:playwright",
-      "options": {
-        "config": "apps/rikkle-e2e/playwright.config.ts"
-      }
-    },
     "lint": {
       "executor": "@angular-eslint/builder:lint",
       "options": {
