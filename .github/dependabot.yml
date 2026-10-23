@@ -12,8 +12,26 @@ updates:
         patterns:
           - '@nx/*'
           - 'nx'
-      devDependencies:
+      three:
+        patterns:
+          - 'three'
+          - '@types/three'
+      devDependencies-minor-patch:
         dependency-type: 'development'
+        update-types:
+          - 'minor'
+          - 'patch'
         exclude-patterns:
           - '@angular/*'
           - '@nx/*'
+          - 'three'
+          - '@types/three'
+          - 'typescript'
+          - '@types/node'
+    ignore:
+      # Keep TypeScript managed in lockstep with Angular & Nx
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      # Keep @types/node aligned with Node 22 LTS
+      - dependency-name: '@types/node'
+        versions: ['>=23.0.0']
