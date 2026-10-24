@@ -35,3 +35,8 @@ updates:
       # Keep @types/node aligned with Node 22 LTS
       - dependency-name: '@types/node'
         versions: ['>=23.0.0']
+      # Keep ESLint on v9 until plugins support v10
+      - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
