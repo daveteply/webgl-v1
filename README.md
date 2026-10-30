@@ -2,7 +2,7 @@
 
 Welcome to the sights and sounds of Rikkle!
 
-**Rikkle** is an immersive, web-based 3D cylindrical puzzle game powered by Angular 22, Three.js 0.185 (WebGL), and the Web Audio API, organized as an **Nx Monorepo**. Spin interlocking 3D wheels, align matching textures and geometries, trigger explosive power moves, and enjoy dynamic soundscapes as you climb through procedural difficulty levels.
+**Rikkle** is an immersive, web-based 3D cylindrical puzzle game powered by Angular 22, Three.js 0.186 (WebGL), and the Web Audio API, organized as an **Nx Monorepo**. Spin interlocking 3D wheels, align matching textures and geometries, trigger explosive power moves, and enjoy dynamic soundscapes as you climb through procedural difficulty levels.
 
 🌐 **Play Rikkle now!** [https://rikkle.app](https://rikkle.app)
 
@@ -14,14 +14,16 @@ Rikkle reimagines classic puzzle-matching mechanics into a full 3D experience. P
 
 ### Key Game Features & Mechanics
 
-- 🔄 **3D Cylindrical Grid Gameplay**: Rotate individual wheels in 360° space to find and align matching game pieces.
-- 🎨 **Procedural Materials & Geometries**: Levels alternate between cubic, cylindrical, and dodecahedron geometry types, accompanied by procedurally styled textures (ColorBumpShape, Emoji, Pattern, Shape, and Texture materials) and difficulty-tinted ambient starfield backdrops.
+- 🔄 **3D Cylindrical Grid Gameplay**: Rotate individual wheels in 360° space across vertical and horizontal cylinder orientations to find and align matching game pieces.
+- 🎨 **Procedural Materials & Geometries**: Levels alternate between cubic, cylindrical, and dodecahedron geometry types, accompanied by procedurally styled materials (`ColorBumpShape`, `ColorBumpMaterial`, `Emoji`, and `Color`), device-aware Unicode 1.0–16.0 emoji profiling, and difficulty-tinted ambient starfield backdrops.
 - 🌌 **Dynamic Gravity System**: Higher difficulty tiers introduce vertical gravity effects (Down, Up, or Mix) where remaining pieces fall or rise to fill cleared spaces and new pieces spawn dynamically.
 - 💥 **Explosive Power Moves**: Unlock directional power-ups (Horizontal/Vertical Spins and Mix moves) as well as radial Bomb moves ("Kaboom!") with spark emitter particle effects to clear tight spots.
-- ✨ **Dynamic Removal & Transition Animations**: Multiple procedural piece removal effects (Fade, Implode/Pop, Explode/Scatter, Vortex/Spiral, Gravitational Drop) and level transition styles (Radial Assemble, Spiral Vortex, Scatter Snap, Cascade Wave) with strict sequential animation timing.
+- ✨ **Dynamic Removal, Celebration & Transition Animations**: Multiple procedural piece removal effects (Fade, Implode/Pop, Explode/Scatter, Vortex/Spiral, Gravitational Drop), level transition styles (Radial Assemble, Spiral Vortex, Scatter Snap, Cascade Wave), confetti burst celebrations, and in-situ 3D floating reward text with black outlines.
 - 📈 **Dynamic Level Scaling**: Texture complexity ramps up from 6 base textures up to 9 as difficulty tiers increase, testing recognition and strategic move planning.
+- 🌐 **Multi-Language Localization (i18n)**: Localized in English, German, Spanish, French, and Japanese via `@jsverse/transloco` with automatic browser locale detection, locale-aware number/date formatting, and multilingual 3D WebGL splash typography (`NotoSansJP`).
+- 🏆 **Social Victory Card Sharing**: Generate and share custom high-DPI canvas victory cards featuring level statistics and randomized localized social text via the Web Share API or clipboard/image download fallbacks.
 - 🎵 **Web Audio API Soundscape & Haptics**: Features musical note scale escalation on long chain matches, directional match sounds, audio panic cues when low on moves, haptic feedback pulses on mobile, and randomized level music with independent SFX and Music volume controls.
-- 💎 **Glassmorphic UI & Visual Polish**: Built with purple glassmorphic UI panels (`backdrop-filter` glass design), Three.js edge outline passes, smooth camera transition animations, dynamic stat calculation dialogs, and adaptive field-of-view scaling for mobile and desktop screens.
+- 💎 **Glassmorphic UI & Visual Polish**: Built with purple glassmorphic UI panels (`backdrop-filter` glass design), Three.js edge outline and custom shockwave/tension post-processing passes, smooth camera transition animations, tabbed user settings, and adaptive field-of-view scaling for mobile and desktop screens.
 - 📱 **Progressive Web App (PWA)**: Full PWA support with service worker offline caching, responsive touch/drag controls, and instant installability.
 - 💾 **State Persistence**: Automatic game saving and local high score tracking allow you to resume your game anytime using deterministic PRNG seeds.
 
@@ -50,14 +52,15 @@ webgl-v1/
 
 For detailed architectural and API documentation for each domain, explore their respective guides:
 
-- 🎲 [**@rikkle/engine**](file:///home/daveteply/git/webgl-v1/libs/engine/README.md): Pure TypeScript match-finding, gravity resolution, and rules engine (zero framework dependencies).
-- 🛠️ [**@rikkle/shared**](file:///home/daveteply/git/webgl-v1/libs/shared/README.md): Deterministic PRNG (Mulberry32), persistent storage, telemetry, and device sensor integrations.
-- 🎵 [**@rikkle/audio**](file:///home/daveteply/git/webgl-v1/libs/audio/README.md): Native Web Audio API soundscape, tone generator, pitch escalations, and volume controls.
-- ⚡ [**@rikkle/state**](file:///home/daveteply/git/webgl-v1/libs/state/README.md): Angular Signals reactive store managing score, progression, and game state transitions.
-- 🎨 [**@rikkle/graphics**](file:///home/daveteply/git/webgl-v1/libs/graphics/README.md): Three.js WebGL scene, lighting model, post-processing outline passes, and procedural canvas textures.
-- 💎 [**@rikkle/ui**](file:///home/daveteply/git/webgl-v1/libs/ui/README.md): Glassmorphic HUD, Angular Material 3 dialogs, and game controls.
-- 🌐 [**apps/rikkle**](file:///home/daveteply/git/webgl-v1/apps/rikkle/README.md): Root Angular 22 PWA deployment shell and assets.
-- 🎭 [**apps/rikkle-e2e**](file:///home/daveteply/git/webgl-v1/apps/rikkle-e2e/README.md): Playwright test suite for canvas dragging and game loop validation.
+- 🎲 [**@rikkle/engine**](libs/engine/README.md): Pure TypeScript match-finding, gravity resolution, and rules engine (zero framework dependencies).
+- 🛠️ [**@rikkle/shared**](libs/shared/README.md): Deterministic PRNG (Mulberry32), i18n language service, persistent storage, telemetry, feature flags, and device sensor integrations.
+- 🎵 [**@rikkle/audio**](libs/audio/README.md): Native Web Audio API soundscape, tone generator, pitch escalations, and volume controls.
+- ⚡ [**@rikkle/state**](libs/state/README.md): Angular Signals reactive store managing score, progression, and game state transitions.
+- 🎨 [**@rikkle/graphics**](libs/graphics/README.md): Three.js WebGL scene, lighting model, post-processing shaders, victory card sharing, and procedural canvas textures.
+- 💎 [**@rikkle/ui**](libs/ui/README.md): Glassmorphic HUD, Angular Material 3 dialogs, tabbed user settings, and game controls.
+- 🌐 [**apps/rikkle**](apps/rikkle/README.md): Root Angular 22 PWA deployment shell, localization bundles, and assets.
+- 🎭 [**apps/rikkle-e2e**](apps/rikkle-e2e/README.md): Playwright test suite for canvas dragging and game loop validation.
+- 🕹️ [**Feature Flags & Cheat Codes**](libs/shared/src/lib/services/feature-flags/README.md): Developer URL parameters, console helpers (`window.rikkle`), and keyboard overrides for testing specific level configurations.
 
 ---
 
@@ -141,4 +144,13 @@ To view the interactive dependency graph of apps and libraries:
 npm run graph
 # or
 npx nx graph
+```
+
+### Formatting & Tooling Scripts
+
+Format workspace files with Prettier or refresh the Unicode emoji dataset:
+
+```bash
+npm run format
+npm run update-emoji
 ```

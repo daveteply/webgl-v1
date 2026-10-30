@@ -9,11 +9,12 @@ Reactive game state management powered by Angular Signals for Rikkle.
 ## Managed State Signals
 
 - **`score`**: Cumulative gameplay score with combo multipliers and speed bonuses.
-- **`movesRemaining`**: Move countdown with danger and panic state computation.
-- **`level` & `levelProgress`**: Current level index and percentage of target matches completed.
-- **`gameStatus`**: High-level state machine (`Playing`, `Paused`, `LevelComplete`, `GameOver`).
-- **`levelConfiguration`**: Active geometry type, material style, vertical/horizontal orientation, and gravity mode.
-- **`levelStats`**: Move counts, fastest match times, perfect match bonuses, and piece statistics.
+- **`movesRemaining` & `movesStatus`**: Move countdown with computed warning, danger, and panic status (`'normal' | 'warn' | 'danger' | 'panic'`).
+- **`level`, `levelProgress`, `levelPieceTarget`, & `piecesRemaining`**: Current level index, target piece count, remaining pieces, and completion percentage.
+- **`gameStatus`**: High-level state machine (`'idle' | 'playing' | 'paused' | 'level-complete' | 'game-over'`), paired with computed `isLevelComplete` and `isGameOver` flags.
+- **Level Configuration Signals**: `levelGeometryType`, `levelMaterialType`, `gravityType`, `levelOrientation` (and computed `isHorizontal`), and `levelTransitionType`.
+- **Theme & Appearance Signals**: `levelColors`, `levelColorScheme`, and `emojiInfo` for active level palette and emoji metadata.
+- **`levelStats`**: Move counts, earned moves, fastest match times, fast match bonus totals, perfect match bonuses, and cleared piece counts.
 
 ## Testing & Linting
 

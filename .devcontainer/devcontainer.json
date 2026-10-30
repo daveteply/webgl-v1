@@ -1,7 +1,8 @@
 {
-  "name": "WebGL-V1A Dev Container",
-  "dockerFile": "Dockerfile",
-  "appPort": [4200],
+  "name": "WebGL-V1 (Rikkle) Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "forwardPorts": [4200],
   "portsAttributes": {
     "4200": {
@@ -15,10 +16,11 @@
         "angular.ng-template",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker",
         "streetsidesoftware.code-spell-checker",
         "github.vscode-github-actions",
-        "nrwl.angular-console"
+        "nrwl.angular-console",
+        "vitest.explorer",
+        "ms-playwright.playwright"
       ],
       "settings": {
         "explorer.fileNesting.enabled": true,
@@ -29,5 +31,5 @@
       }
     }
   },
-  "postCreateCommand": "npm install && npx playwright install --with-deps"
+  "postCreateCommand": "npm install && npx playwright install"
 }
