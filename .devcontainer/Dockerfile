@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/devcontainers/typescript-node:22-bookworm
 
-ARG NODE_VERSION="22.22"
-RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} && nvm alias default ${NODE_VERSION}"
+ARG NODE_VERSION="22"
+RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} && nvm alias default ${NODE_VERSION} && nvm use default"
 
-# Install latest npm & global Angular CLI & Nx CLI
-RUN npm install -g npm@latest @angular/cli@latest nx@latest
+# Install pinned npm 10 & global Angular CLI & Nx CLI matching workspace major versions
+RUN npm install -g npm@^10 @angular/cli@^22 nx@^24
 
 # Install system dependencies required by Playwright headless browsers
 RUN apt-get update && apt-get install -y \

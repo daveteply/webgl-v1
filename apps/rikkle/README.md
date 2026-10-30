@@ -9,9 +9,9 @@ The main Angular 22 Progressive Web App (PWA) deployment shell for Rikkle.
 ## Project Structure
 
 - **`src/main.ts`**: Angular bootstrap entry point.
-- **`src/app/`**: Root component (`app.ts`), lazy route configurations (`app.routes.ts`), and global error handling providers (`app.config.ts`).
+- **`src/app/`**: Root component (`app.ts`), lazy route configurations (`app.routes.ts`), Transloco i18n HTTP loader (`transloco-loader.ts`), and global application providers (`app.config.ts`).
 - **`src/styles.scss` & `src/style-values.scss`**: Global SCSS reset, CSS custom properties, and glassmorphism styling tokens.
-- **`public/`**: Web manifest (`manifest.webmanifest`), offline service worker (`sw.js`), app icons, splash screens, and audio/texture assets.
+- **`public/`**: Web manifest (`manifest.webmanifest`), offline service worker (`sw.js`), app icons, splash screens, localization bundles (`assets/i18n/*.json`), Unicode emoji dataset (`assets/emoji-data.json`), 3D typeface fonts (`fonts/typeface/`), and audio/texture assets.
 
 ## Commands
 

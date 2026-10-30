@@ -21,15 +21,7 @@ deployed to production. We do not backport fixes to previous commits or releases
 
 ### Preferred Method: GitHub Private Vulnerability Reporting
 
-Please submit vulnerability reports through GitHub's [Private Vulnerability Reporting](https://github.
-com/<owner>/<repo>/security/advisories/new) tab on this repository. This keeps the report confidential
-while maintainers investigate and patch the issue.
-
-### Alternative Method: Direct Contact
-
-If you cannot use GitHub's advisory system, email your report to:
-
-- **`security@<your-domain-or-email>`** (or maintainer contact)
+Please submit vulnerability reports through GitHub's [Private Vulnerability Reporting](https://github.com/daveteply/webgl-v1/security/advisories/new) tab on this repository. This keeps the report confidential while maintainers investigate and patch the issue.
 
 ### What to Include in Your Report
 
