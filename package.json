@@ -31,7 +31,7 @@
     "@angular/router": "~22.2.6",
     "@jsverse/transloco": "^8.4.0",
     "@tweenjs/tween.js": "^25.0.0",
-    "mixpanel-browser": "^2.84.0",
+    "mixpanel-browser": "^2.85.0",
     "rxjs": "~7.8.0",
     "three": "^0.187.0",
     "tslib": "^2.9.1"
